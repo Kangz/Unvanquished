@@ -33,195 +33,198 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Log {
 
-    /*
-     * There are 4 log levels that code can use:
-     *   - WARNING when something is not going as expected, it is very visible.
-     *   - NOTICE when we want to say something interesting, not very visible.
-     *   - DEBUG shouldn't be visible by default.
-     */
+/*
+ * There are 4 log levels that code can use:
+ *   - WARNING when something is not going as expected, it is very visible.
+ *   - NOTICE when we want to say something interesting, not very visible.
+ *   - DEBUG shouldn't be visible by default.
+ */
 
-    enum Level {
-        LOG_DEBUG,
-        LOG_NOTICE,
-        LOG_WARNING,
-    };
+enum Level {
+    LOG_DEBUG,
+    LOG_NOTICE,
+    LOG_WARNING,
+};
 
-    // The default filtering level
-    const Level DEFAULT_FILTER_LEVEL = LOG_WARNING;
+// The default filtering level
+const Level DEFAULT_FILTER_LEVEL = LOG_WARNING;
 
-    /*
-     * Loggers are used to group logs by subsystems and allow logs
-     * to be filtered by log level by subsystem. They are used like so
-     * in a submodule "Foo" in a module "bar"
-     *
-     *   static Logger fooLog("bar.foo"); // filters with the default filtering level
-     *
-     *   fooLog.Warn("%s %i", string, int); // "appends" the newline automatically
-     *   fooLog.Debug(<expensive formatting>); // if the log is filtered, no formatting occurs
-     *
-     *   // However functions calls will still be performed.
-     *   // To run code depending on the logger state use the following:
-     *   fooLog.DoNoticeCode([&](){
-     *       ExpensiveCall();
-     *       fooLog.Notice("Printing the expensive expression %s", <the expression>);
-     *   });
-     *
-     * In addition the user/developer can control the filtering level with
-     *   /set logs.logLevel.foo.bar {error, warning, info, debug}
-     */
+/*
+ * Loggers are used to group logs by subsystems and allow logs
+ * to be filtered by log level by subsystem. They are used like so
+ * in a submodule "Foo" in a module "bar"
+ *
+ *   static Logger fooLog("bar.foo"); // filters with the default filtering
+ *level
+ *
+ *   fooLog.Warn("%s %i", string, int); // "appends" the newline automatically
+ *   fooLog.Debug(<expensive formatting>); // if the log is filtered, no
+ *formatting occurs
+ *
+ *   // However functions calls will still be performed.
+ *   // To run code depending on the logger state use the following:
+ *   fooLog.DoNoticeCode([&](){
+ *       ExpensiveCall();
+ *       fooLog.Notice("Printing the expensive expression %s", <the
+ *expression>);
+ *   });
+ *
+ * In addition the user/developer can control the filtering level with
+ *   /set logs.logLevel.foo.bar {error, warning, info, debug}
+ */
 
-    class Logger {
-        public:
-            Logger(Str::StringRef name, Level defaultLevel = DEFAULT_FILTER_LEVEL);
+class Logger {
+public:
+    Logger(Str::StringRef name, Level defaultLevel = DEFAULT_FILTER_LEVEL);
 
-            template<typename ... Args>
-            void Warn(Str::StringRef format, Args&& ... args);
+    template <typename... Args>
+    void Warn(Str::StringRef format, Args&&... args);
 
-            template<typename ... Args>
-            void Notice(Str::StringRef format, Args&& ... args);
+    template <typename... Args>
+    void Notice(Str::StringRef format, Args&&... args);
 
-            template<typename ... Args>
-            void Debug(Str::StringRef format, Args&& ... args);
+    template <typename... Args>
+    void Debug(Str::StringRef format, Args&&... args);
 
-            template<typename F>
-            void DoWarnCode(F&& code);
+    template <typename F>
+    void DoWarnCode(F&& code);
 
-            template<typename F>
-            void DoNoticeCode(F&& code);
+    template <typename F>
+    void DoNoticeCode(F&& code);
 
-            template<typename F>
-            void DoDebugCode(F&& code);
+    template <typename F>
+    void DoDebugCode(F&& code);
 
-        private:
-            // the cvar logs.logLevel.<name>
-            Cvar::Cvar<Level> filterLevel;
-    };
+private:
+    // the cvar logs.logLevel.<name>
+    Cvar::Cvar<Level> filterLevel;
+};
 
-    /*
-     * When debugging a function or before a logger is introduced for
-     * a module the following functions can be used for less typing.
-     * However it shouldn't stay in production code because it
-     * cannot be filtered and will clutter the console.
-     */
+/*
+ * When debugging a function or before a logger is introduced for
+ * a module the following functions can be used for less typing.
+ * However it shouldn't stay in production code because it
+ * cannot be filtered and will clutter the console.
+ */
 
-    template<typename ... Args>
-    void Warn(Str::StringRef format, Args&& ... args);
+template <typename... Args>
+void Warn(Str::StringRef format, Args&&... args);
 
-    template<typename ... Args>
-    void Notice(Str::StringRef format, Args&& ... args);
+template <typename... Args>
+void Notice(Str::StringRef format, Args&&... args);
 
-    template<typename ... Args>
-    void Debug(Str::StringRef format, Args&& ... args);
+template <typename... Args>
+void Debug(Str::StringRef format, Args&&... args);
 
-    /*
-     * A log Event, sent to the log system along a list of targets to output
-     * it to. Event are not all generated by the loggers (e.g. kill messages)
-     */
+/*
+ * A log Event, sent to the log system along a list of targets to output
+ * it to. Event are not all generated by the loggers (e.g. kill messages)
+ */
 
-    struct Event {
-        Event(std::string text)
+struct Event {
+    Event(std::string text)
             : text(std::move(text)) {}
-        std::string text;
-    };
+    std::string text;
+};
 
-    /*
-     * The list of potential targets for a log event.
-     * TODO: avoid people having to do (1 << TARGET1) | (1 << TARGET2) ...
-     */
+/*
+ * The list of potential targets for a log event.
+ * TODO: avoid people having to do (1 << TARGET1) | (1 << TARGET2) ...
+ */
 
-    enum TargetId {
-        GRAPHICAL_CONSOLE,
-        TTY_CONSOLE,
-        CRASHLOG,
-        LOGFILE,
-        GAMELOG,
-        HUD,
-        MAX_TARGET_ID
-    };
+enum TargetId {
+    GRAPHICAL_CONSOLE,
+    TTY_CONSOLE,
+    CRASHLOG,
+    LOGFILE,
+    GAMELOG,
+    HUD,
+    MAX_TARGET_ID
+};
 
-    //Internals
+// Internals
 
-    // Functions used for Cvar<Log::Level>
-    bool ParseCvarValue(std::string value, Log::Level& result);
-    std::string SerializeCvarValue(Log::Level value);
+// Functions used for Cvar<Log::Level>
+bool ParseCvarValue(std::string value, Log::Level& result);
+std::string SerializeCvarValue(Log::Level value);
 
-    // Common entry points for all the formatted logs of the same level
-    // (decide to which log targets the event goes)
-    void CodeSourceWarn(std::string message);
-    void CodeSourceNotice(std::string message);
-    void CodeSourceDebug(std::string message);
+// Common entry points for all the formatted logs of the same level
+// (decide to which log targets the event goes)
+void CodeSourceWarn(std::string message);
+void CodeSourceNotice(std::string message);
+void CodeSourceDebug(std::string message);
 
-    // Engine calls available everywhere
+// Engine calls available everywhere
 
-    void Dispatch(Log::Event event, int targetControl);
+void Dispatch(Log::Event event, int targetControl);
 
-    // Implementation of templates
+// Implementation of templates
 
-    // Logger
+// Logger
 
-    template<typename ... Args>
-    void Logger::Warn(Str::StringRef format, Args&& ... args) {
-        if (filterLevel.Get() <= LOG_WARNING) {
-            CodeSourceWarn(Str::Format(format, std::forward<Args>(args) ...));
-        }
+template <typename... Args>
+void Logger::Warn(Str::StringRef format, Args&&... args) {
+    if (filterLevel.Get() <= LOG_WARNING) {
+        CodeSourceWarn(Str::Format(format, std::forward<Args>(args)...));
     }
+}
 
-    template<typename ... Args>
-    void Logger::Notice(Str::StringRef format, Args&& ... args) {
-        if (filterLevel.Get() <= LOG_NOTICE) {
-            CodeSourceNotice(Str::Format(format, std::forward<Args>(args) ...));
-        }
+template <typename... Args>
+void Logger::Notice(Str::StringRef format, Args&&... args) {
+    if (filterLevel.Get() <= LOG_NOTICE) {
+        CodeSourceNotice(Str::Format(format, std::forward<Args>(args)...));
     }
+}
 
-    template<typename ... Args>
-    void Logger::Debug(Str::StringRef format, Args&& ... args) {
-        if (filterLevel.Get() <= LOG_DEBUG) {
-            CodeSourceDebug(Str::Format(format, std::forward<Args>(args) ...));
-        }
+template <typename... Args>
+void Logger::Debug(Str::StringRef format, Args&&... args) {
+    if (filterLevel.Get() <= LOG_DEBUG) {
+        CodeSourceDebug(Str::Format(format, std::forward<Args>(args)...));
     }
+}
 
-    template<typename F>
-    inline void Logger::DoWarnCode(F&& code) {
-        if (filterLevel.Get() <= LOG_WARNING) {
-            code();
-        }
+template <typename F>
+inline void Logger::DoWarnCode(F&& code) {
+    if (filterLevel.Get() <= LOG_WARNING) {
+        code();
     }
+}
 
-    template<typename F>
-    inline void Logger::DoNoticeCode(F&& code) {
-        if (filterLevel.Get() <= LOG_NOTICE) {
-            code();
-        }
+template <typename F>
+inline void Logger::DoNoticeCode(F&& code) {
+    if (filterLevel.Get() <= LOG_NOTICE) {
+        code();
     }
+}
 
-    template<typename F>
-    inline void Logger::DoDebugCode(F&& code) {
-        if (filterLevel.Get() <= LOG_DEBUG) {
-            code();
-        }
+template <typename F>
+inline void Logger::DoDebugCode(F&& code) {
+    if (filterLevel.Get() <= LOG_DEBUG) {
+        code();
     }
+}
 
-    // Quick Logs
+// Quick Logs
 
-    template<typename ... Args>
-    void Warn(Str::StringRef format, Args&& ... args) {
-        CodeSourceWarn(Str::Format(format, std::forward<Args>(args) ...));
-    }
+template <typename... Args>
+void Warn(Str::StringRef format, Args&&... args) {
+    CodeSourceWarn(Str::Format(format, std::forward<Args>(args)...));
+}
 
-    template<typename ... Args>
-    void Notice(Str::StringRef format, Args&& ... args) {
-        CodeSourceNotice(Str::Format(format, std::forward<Args>(args) ...));
-    }
+template <typename... Args>
+void Notice(Str::StringRef format, Args&&... args) {
+    CodeSourceNotice(Str::Format(format, std::forward<Args>(args)...));
+}
 
-    template<typename ... Args>
-    void Debug(Str::StringRef format, Args&& ... args) {
-        CodeSourceDebug(Str::Format(format, std::forward<Args>(args) ...));
-    }
+template <typename... Args>
+void Debug(Str::StringRef format, Args&&... args) {
+    CodeSourceDebug(Str::Format(format, std::forward<Args>(args)...));
+}
 }
 
 namespace Cvar {
-    template<>
-    std::string GetCvarTypeName<Log::Level>();
+template <>
+std::string GetCvarTypeName<Log::Level>();
 }
 
-#endif //COMMON_LOG_H_
+#endif // COMMON_LOG_H_

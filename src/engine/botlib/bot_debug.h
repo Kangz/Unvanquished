@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -37,21 +42,19 @@ Maryland 20850 USA.
 
 #include "gamelogic/shared/bg_public.h"
 
-typedef enum
-{
-	D_DRAW_POINTS,
-	D_DRAW_LINES,
-	D_DRAW_TRIS,
-	D_DRAW_QUADS
+typedef enum {
+    D_DRAW_POINTS,
+    D_DRAW_LINES,
+    D_DRAW_TRIS,
+    D_DRAW_QUADS
 } debugDrawMode_t;
 
-typedef struct
-{
-	void ( *DebugDrawBegin ) ( debugDrawMode_t mode, float size );
-	void ( *DebugDrawDepthMask )( bool state );
-	void ( *DebugDrawVertex ) ( const vec3_t pos, unsigned int color,const vec2_t uv );
-	void ( *DebugDrawEnd ) ();
+typedef struct {
+    void (*DebugDrawBegin)(debugDrawMode_t mode, float size);
+    void (*DebugDrawDepthMask)(bool state);
+    void (*DebugDrawVertex)(const vec3_t pos, unsigned int color, const vec2_t uv);
+    void (*DebugDrawEnd)();
 } BotDebugInterface_t;
 
-void     BotDebugDrawMesh(BotDebugInterface_t *in);
+void BotDebugDrawMesh(BotDebugInterface_t* in);
 #endif

@@ -32,74 +32,94 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace IPC {
 
-    static const int DEFAULT_SIZE = 2 * 1024 * 1024;
-    static const int MINIMUM_SIZE = CommandBuffer::DATA_OFFSET + 128;
+static const int DEFAULT_SIZE = 2 * 1024 * 1024;
+static const int MINIMUM_SIZE = CommandBuffer::DATA_OFFSET + 128;
 
-    CommandBufferClient::CommandBufferClient(std::string name)
-    : name(name),
-    bufferSize("vm." + name + "commandBuffer.size", "The size of the shared memory command buffer used by " + name, Cvar::NONE, DEFAULT_SIZE, MINIMUM_SIZE, 16 * 1024 * 1024),
-    logs(name + ".commandBufferClient"), initialized(false) {
+CommandBufferClient::CommandBufferClient(std::string name)
+        : name(name),
+          bufferSize("vm." + name + "commandBuffer.size",
+                     "The size of the shared memory command buffer used by " + name,
+                     Cvar::NONE,
+                     DEFAULT_SIZE,
+                     MINIMUM_SIZE,
+                     16 * 1024 * 1024),
+          logs(name + ".commandBufferClient"),
+          initialized(false) {
+}
+
+void CommandBufferClient::Init() {
+    shm = IPC::SharedMemory::Create(bufferSize.Get());
+    buffer.Init(shm.GetBase(), shm.GetSize());
+    buffer.Reset();
+
+    VM::SendMsg<CommandBufferLocateMsg>(shm);
+
+    initialized = true;
+    logs.Debug("Created circular buffer of size %i for %s", bufferSize.Get(), name);
+}
+
+void CommandBufferClient::TryFlush() {
+    if (!initialized) {
+        return;
     }
 
-    void CommandBufferClient::Init() {
-        shm = IPC::SharedMemory::Create(bufferSize.Get());
-        buffer.Init(shm.GetBase(), shm.GetSize());
-        buffer.Reset();
-
-        VM::SendMsg<CommandBufferLocateMsg>(shm);
-
-        initialized = true;
-        logs.Debug("Created circular buffer of size %i for %s", bufferSize.Get(), name);
+    if (!VM::rootChannel.canSendSyncMsg) {
+        Sys::Drop(
+                "Trying to Flush the %s command buffer when handling an async message "
+                "or in toplevel",
+                name);
     }
 
-    void CommandBufferClient::TryFlush() {
-        if (!initialized) {
-            return;
-        }
+    buffer.LoadReaderData();
+    if (buffer.GetMaxReadLength() == 0) {
+        return;
+    }
+    Flush();
+}
 
-        if (!VM::rootChannel.canSendSyncMsg) {
-            Sys::Drop("Trying to Flush the %s command buffer when handling an async message or in toplevel", name);
-        }
+void CommandBufferClient::Write(Util::Writer& writer) {
+    if (!VM::rootChannel.canSendSyncMsg) {
+        Sys::Drop(
+                "Trying to write to the %s command buffer when handling an async "
+                "message or in toplevel",
+                name);
+    }
+    auto& writerData = writer.GetData();
+    uint32_t dataSize = writerData.size();
+    uint32_t totalSize = dataSize + sizeof(uint32_t);
 
-        buffer.LoadReaderData();
-        if (buffer.GetMaxReadLength() == 0) {
-            return;
-        }
+    if (writer.GetHandles().size() != 0) {
+        Sys::Drop("Command buffer %s: handles sent to the command buffer", name);
+    }
+
+    buffer.LoadReaderData();
+    if (!buffer.CanWrite(totalSize)) {
+        logs.Debug(
+                "Message of size %i(+4) for %s doesn't fit the remaining %i, flushing.",
+                dataSize,
+                name,
+                buffer.GetMaxWriteLength());
         Flush();
-    }
-
-    void CommandBufferClient::Write(Util::Writer& writer) {
-        if (!VM::rootChannel.canSendSyncMsg) {
-            Sys::Drop("Trying to write to the %s command buffer when handling an async message or in toplevel", name);
-        }
-        auto& writerData = writer.GetData();
-        uint32_t dataSize = writerData.size();
-        uint32_t totalSize = dataSize + sizeof(uint32_t);
-
-        if (writer.GetHandles().size() != 0) {
-            Sys::Drop("Command buffer %s: handles sent to the command buffer", name);
-        }
-
         buffer.LoadReaderData();
         if (!buffer.CanWrite(totalSize)) {
-            logs.Debug("Message of size %i(+4) for %s doesn't fit the remaining %i, flushing.", dataSize, name, buffer.GetMaxWriteLength());
-            Flush();
-            buffer.LoadReaderData();
-            if (!buffer.CanWrite(totalSize)) {
-                Sys::Drop("Message of size %i(+4) doesn't fit in buffer for %s of size %i", dataSize, name, buffer.GetSize());
-            }
+            Sys::Drop(
+                    "Message of size %i(+4) doesn't fit in buffer for %s of size %i",
+                    dataSize,
+                    name,
+                    buffer.GetSize());
         }
-
-        buffer.Write((char*)&dataSize, sizeof(uint32_t));
-        buffer.Write(writerData.data(), dataSize, sizeof(uint32_t));
-
-        buffer.AdvanceWritePointer(totalSize);
     }
 
-    void CommandBufferClient::Flush() {//TODO prevent recursion
-        logs.Debug("Flushing %s command buffer with up to %i bytes", name, buffer.GetMaxReadLength());
+    buffer.Write((char*) &dataSize, sizeof(uint32_t));
+    buffer.Write(writerData.data(), dataSize, sizeof(uint32_t));
 
-        VM::SendMsg<CommandBufferConsumeMsg>();
-    }
+    buffer.AdvanceWritePointer(totalSize);
+}
+
+void CommandBufferClient::Flush() { // TODO prevent recursion
+    logs.Debug("Flushing %s command buffer with up to %i bytes", name, buffer.GetMaxReadLength());
+
+    VM::SendMsg<CommandBufferConsumeMsg>();
+}
 
 } // namespace IPC

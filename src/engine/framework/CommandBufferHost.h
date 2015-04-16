@@ -36,26 +36,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace IPC {
 
-    class CommandBufferHost {
-        public:
-            CommandBufferHost(std::string name);
+class CommandBufferHost {
+public:
+    CommandBufferHost(std::string name);
 
-            void Syscall(int index, Util::Reader& reader, IPC::Channel& channel);
-            void Close();
+    void Syscall(int index, Util::Reader& reader, IPC::Channel& channel);
+    void Close();
 
-        private:
-            std::string name;
-            Log::Logger logs;
-            IPC::CommandBuffer buffer;
-            IPC::SharedMemory shm;
+private:
+    std::string name;
+    Log::Logger logs;
+    IPC::CommandBuffer buffer;
+    IPC::SharedMemory shm;
 
-            virtual void HandleCommandBufferSyscall(int major, int minor, Util::Reader& reader) = 0;
+    virtual void HandleCommandBufferSyscall(int major, int minor, Util::Reader& reader) = 0;
 
-            void Init(IPC::SharedMemory mem);
+    void Init(IPC::SharedMemory mem);
 
-            void Consume();
-            bool ConsumeOne(Util::Reader& reader);
-    };
+    void Consume();
+    bool ConsumeOne(Util::Reader& reader);
+};
 }
 
 #endif // FRAMEWORK_COMMAND_BUFFER_HOST_H_

@@ -47,103 +47,103 @@ class ExitException {};
 #endif
 
 // Common initialization code for both VM types
-static void CommonInit(Sys::OSHandle rootSocket)
-{
-	VM::rootChannel = IPC::Channel(IPC::Socket::FromHandle(rootSocket));
+static void CommonInit(Sys::OSHandle rootSocket) {
+    VM::rootChannel = IPC::Channel(IPC::Socket::FromHandle(rootSocket));
 
-	// Send syscall ABI version, also acts as a sign that the module loaded
-	Util::Writer writer;
-	writer.Write<uint32_t>(VM::VM_API_VERSION);
-	VM::rootChannel.SendMsg(writer);
+    // Send syscall ABI version, also acts as a sign that the module loaded
+    Util::Writer writer;
+    writer.Write<uint32_t>(VM::VM_API_VERSION);
+    VM::rootChannel.SendMsg(writer);
 
-	// Start the main loop
-	while (true) {
-		Util::Reader reader = VM::rootChannel.RecvMsg();
-		uint32_t id = reader.Read<uint32_t>();
-		if (id == IPC::ID_EXIT) {
-			return;
-		}
-		VM::VMHandleSyscall(id, std::move(reader));
-	}
+    // Start the main loop
+    while (true) {
+        Util::Reader reader = VM::rootChannel.RecvMsg();
+        uint32_t id = reader.Read<uint32_t>();
+        if (id == IPC::ID_EXIT) {
+            return;
+        }
+        VM::VMHandleSyscall(id, std::move(reader));
+    }
 }
 
-void Sys::Error(Str::StringRef message)
-{
-	// Only try sending an ErrorMsg once
-	static std::atomic_flag errorEntered;
-	if (!errorEntered.test_and_set()) {
-		// Disable checks for sending sync messages when handling async messages.
-		// At this point we don't really care since this is an error.
-		VM::rootChannel.canSendSyncMsg = true;
+void Sys::Error(Str::StringRef message) {
+    // Only try sending an ErrorMsg once
+    static std::atomic_flag errorEntered;
+    if (!errorEntered.test_and_set()) {
+        // Disable checks for sending sync messages when handling async messages.
+        // At this point we don't really care since this is an error.
+        VM::rootChannel.canSendSyncMsg = true;
 
-		// Try to tell the engine about the error, but ignore errors doing so.
-		try {
-			VM::SendMsg<VM::ErrorMsg>(message);
-		} catch (...) {}
-	}
+        // Try to tell the engine about the error, but ignore errors doing so.
+        try {
+            VM::SendMsg<VM::ErrorMsg>(message);
+        } catch (...) {
+        }
+    }
 
 #ifdef BUILD_VM_IN_PROCESS
-	// Then engine will close the root socket when it wants us to exit, which
-	// will trigger an error in the IPC functions. If we reached this point then
-	// we try to exit the thread semi-cleanly by throwing an exception.
-	throw ExitException();
+    // Then engine will close the root socket when it wants us to exit, which
+    // will trigger an error in the IPC functions. If we reached this point then
+    // we try to exit the thread semi-cleanly by throwing an exception.
+    throw ExitException();
 #else
-	// The SendMsg should never return since the engine should kill our process.
-	// Just in case it doesn't, exit here.
-	_exit(255);
+    // The SendMsg should never return since the engine should kill our process.
+    // Just in case it doesn't, exit here.
+    _exit(255);
 #endif
 }
 
 #ifdef BUILD_VM_IN_PROCESS
 
 // Entry point called in a new thread inside the existing server process
-extern "C" DLLEXPORT void vmMain(Sys::OSHandle rootSocket)
-{
-	try {
-		try {
-			CommonInit(rootSocket);
-		} catch (ExitException&) {
-			return;
-		} catch (Sys::DropErr& err) {
-			Sys::Error(err.what());
-		} catch (std::exception& err) {
-			Sys::Error("Unhandled exception (%s): %s", typeid(err).name(), err.what());
-		} catch (...) {
-			Sys::Error("Unhandled exception of unknown type");
-		}
-	} catch (...) {}
+extern "C" DLLEXPORT void vmMain(Sys::OSHandle rootSocket) {
+    try {
+        try {
+            CommonInit(rootSocket);
+        } catch (ExitException&) {
+            return;
+        } catch (Sys::DropErr& err) {
+            Sys::Error(err.what());
+        } catch (std::exception& err) {
+            Sys::Error("Unhandled exception (%s): %s", typeid(err).name(), err.what());
+        } catch (...) {
+            Sys::Error("Unhandled exception of unknown type");
+        }
+    } catch (...) {
+    }
 }
 
 #else
 
 // Entry point called in a new process
-int main(int argc, char** argv)
-{
-	// The socket handle is sent as the first argument
-	if (argc != 2) {
-		fprintf(stderr, "This program is not meant to be invoked directly, it must be invoked by the engine's VM loader.\n");
-		Sys::OSExit(1);
-	}
-	char* end;
-	Sys::OSHandle rootSocket = (Sys::OSHandle)strtol(argv[1], &end, 10);
-	if (argv[1] == end || *end != '\0') {
-		fprintf(stderr, "Parameter is not a valid handle number\n");
-		Sys::OSExit(1);
-	}
+int main(int argc, char** argv) {
+    // The socket handle is sent as the first argument
+    if (argc != 2) {
+        fprintf(stderr,
+                "This program is not meant to be invoked directly, it must be "
+                "invoked by the engine's VM loader.\n");
+        Sys::OSExit(1);
+    }
+    char* end;
+    Sys::OSHandle rootSocket = (Sys::OSHandle) strtol(argv[1], &end, 10);
+    if (argv[1] == end || *end != '\0') {
+        fprintf(stderr, "Parameter is not a valid handle number\n");
+        Sys::OSExit(1);
+    }
 
-	// Set up crash handling for this process. This will allow crashes to be
-	// sent back to the engine and reported to the user.
-	Sys::SetupCrashHandler();
+    // Set up crash handling for this process. This will allow crashes to be
+    // sent back to the engine and reported to the user.
+    Sys::SetupCrashHandler();
 
-	try {
-		CommonInit(rootSocket);
-	} catch (Sys::DropErr& err) {
-		Sys::Error(err.what());
-	} catch (std::exception& err) {
-		Sys::Error("Unhandled exception (%s): %s", typeid(err).name(), err.what());
-	} catch (...) {
-		Sys::Error("Unhandled exception of unknown type");
-	}
+    try {
+        CommonInit(rootSocket);
+    } catch (Sys::DropErr& err) {
+        Sys::Error(err.what());
+    } catch (std::exception& err) {
+        Sys::Error("Unhandled exception (%s): %s", typeid(err).name(), err.what());
+    } catch (...) {
+        Sys::Error("Unhandled exception of unknown type");
+    }
 }
 
 #endif

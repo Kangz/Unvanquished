@@ -33,100 +33,101 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Audio {
 
-    Resource::Manager<Sample>* sampleManager;
+Resource::Manager<Sample>* sampleManager;
 
-    // Implementation of Sample
+// Implementation of Sample
 
-    Sample::Sample(std::string filename): Resource(filename) {
+Sample::Sample(std::string filename)
+        : Resource(filename) {
+}
+
+Sample::~Sample() {
+    audioLogs.Debug("Deleting Sample '%s'", GetName());
+}
+
+bool Sample::Load() {
+    audioLogs.Debug("Loading Sample '%s'", GetName());
+    auto audioData = LoadSoundCodec(GetName());
+
+    if (audioData.size == 0) {
+        audioLogs.Warn("Couldn't load sound %s, it's empty!", GetName());
+        return false;
     }
 
-    Sample::~Sample() {
-        audioLogs.Debug("Deleting Sample '%s'", GetName());
+    // TODO handle errors, especially out of memory errors
+    buffer.Feed(audioData);
+
+    return true;
+}
+
+void Sample::Cleanup() {
+    // Destroy the OpenAL buffer by moving it in the scope
+    AL::Buffer toDelete = std::move(buffer);
+}
+
+AL::Buffer& Sample::GetBuffer() {
+    return buffer;
+}
+
+// Implementation of the sample storage
+
+static const char errorSampleName[] = "sound/feedback/hit.wav";
+static std::shared_ptr<Sample> errorSample = nullptr;
+bool initialized = false;
+
+void InitSamples() {
+    if (initialized) {
+        return;
     }
 
-    bool Sample::Load() {
-        audioLogs.Debug("Loading Sample '%s'", GetName());
-	    auto audioData = LoadSoundCodec(GetName());
+    sampleManager = new Resource::Manager<Sample>(errorSampleName);
 
-	    if (audioData.size == 0) {
-		    audioLogs.Warn("Couldn't load sound %s, it's empty!", GetName());
-            return false;
-        }
+    // Work around for the lack of VM Handles, initiliaze the HandledResource
+    auto errorSample = sampleManager->GetResource(errorSampleName).Get();
+    errorSample->InitHandle(errorSample);
 
-        //TODO handle errors, especially out of memory errors
-        buffer.Feed(audioData);
+    initialized = true;
+}
 
-	    return true;
+void ShutdownSamples() {
+    if (not initialized) {
+        return;
     }
 
-    void Sample::Cleanup() {
-        // Destroy the OpenAL buffer by moving it in the scope
-        AL::Buffer toDelete = std::move(buffer);
+    errorSample = nullptr;
+
+    delete sampleManager;
+    sampleManager = nullptr;
+
+    initialized = false;
+}
+
+std::vector<std::string> ListSamples() {
+    if (not initialized) {
+        return {};
     }
 
-    AL::Buffer& Sample::GetBuffer() {
-        return buffer;
+    std::vector<std::string> res;
+
+    for (auto& it : *sampleManager) {
+        res.push_back(it.first);
     }
 
-    // Implementation of the sample storage
+    return res;
+}
 
-    static const char errorSampleName[] = "sound/feedback/hit.wav";
-    static std::shared_ptr<Sample> errorSample = nullptr;
-    bool initialized = false;
+void BeginSampleRegistration() {
+    sampleManager->BeginRegistration();
+}
 
-    void InitSamples() {
-        if (initialized) {
-            return;
-        }
+std::shared_ptr<Sample> RegisterSample(Str::StringRef filename) {
+    Resource::Handle<Sample> sample = sampleManager->Register(filename);
+    // Work around for the lack of VM Handles, initiliaze the HandledResource
+    sample.Get()->InitHandle(sample.Get());
+    return sample.Get();
+}
 
-        sampleManager = new Resource::Manager<Sample>(errorSampleName);
-
-        // Work around for the lack of VM Handles, initiliaze the HandledResource
-        auto errorSample = sampleManager->GetResource(errorSampleName).Get();
-        errorSample->InitHandle(errorSample);
-
-        initialized = true;
-    }
-
-    void ShutdownSamples() {
-        if (not initialized) {
-            return;
-        }
-
-        errorSample = nullptr;
-
-        delete sampleManager;
-        sampleManager = nullptr;
-
-        initialized = false;
-    }
-
-	std::vector<std::string> ListSamples() {
-		if (not initialized) {
-			return {};
-		}
-
-		std::vector<std::string> res;
-
-		for (auto& it : *sampleManager) {
-			res.push_back(it.first);
-		}
-
-		return res;
-	}
-
-    void BeginSampleRegistration() {
-        sampleManager->BeginRegistration();
-    }
-
-    std::shared_ptr<Sample> RegisterSample(Str::StringRef filename) {
-        Resource::Handle<Sample> sample = sampleManager->Register(filename);
-        // Work around for the lack of VM Handles, initiliaze the HandledResource
-        sample.Get()->InitHandle(sample.Get());
-        return sample.Get();
-    }
-
-    void EndSampleRegistration() {
-        sampleManager->EndRegistration();
-    }
+void EndSampleRegistration() {
+    sampleManager->EndRegistration();
+}
 }

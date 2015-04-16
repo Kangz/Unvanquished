@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -45,145 +50,123 @@ Maryland 20850 USA.
 #include "client.h"
 #include "rocket.h"
 
-Rocket::Core::Element *activeElement = nullptr;
+Rocket::Core::Element* activeElement = nullptr;
 
-class RocketElement : public Rocket::Core::Element
-{
+class RocketElement : public Rocket::Core::Element {
 public:
-	RocketElement( const Rocket::Core::String &tag ) : Rocket::Core::Element( tag ) { }
-	~RocketElement() { }
+    RocketElement(const Rocket::Core::String& tag)
+            : Rocket::Core::Element(tag) {}
+    ~RocketElement() {}
 
-	bool GetIntrinsicDimensions( Rocket::Core::Vector2f &dimension )
-	{
-		const Rocket::Core::Property *property;
-		property = GetProperty( "width" );
+    bool GetIntrinsicDimensions(Rocket::Core::Vector2f& dimension) {
+        const Rocket::Core::Property* property;
+        property = GetProperty("width");
 
-		// Absolute unit. We can use it as is
-		if ( property->unit & Rocket::Core::Property::ABSOLUTE_UNIT )
-		{
-			dimensions.x = property->value.Get<float>();
-		}
-		else
-		{
-			float base_size = 0;
-			Rocket::Core::Element *parent = this;
-			std::stack<Rocket::Core::Element*> stack;
-			stack.push( this );
+        // Absolute unit. We can use it as is
+        if (property->unit & Rocket::Core::Property::ABSOLUTE_UNIT) {
+            dimensions.x = property->value.Get<float>();
+        } else {
+            float base_size = 0;
+            Rocket::Core::Element* parent = this;
+            std::stack<Rocket::Core::Element*> stack;
+            stack.push(this);
 
-			while ( ( parent = parent->GetParentNode() ) )
-			{
-				if ( ( base_size = parent->GetOffsetWidth() ) != 0 )
-				{
-					dimensions.x = base_size;
-					while ( !stack.empty() )
-					{
-						dimensions.x = stack.top()->ResolveProperty( "width", dimensions.x );
+            while ((parent = parent->GetParentNode())) {
+                if ((base_size = parent->GetOffsetWidth()) != 0) {
+                    dimensions.x = base_size;
+                    while (!stack.empty()) {
+                        dimensions.x = stack.top()->ResolveProperty("width", dimensions.x);
 
-						stack.pop();
-					}
-					break;
-				}
+                        stack.pop();
+                    }
+                    break;
+                }
 
-				stack.push( parent );
-			}
-		}
+                stack.push(parent);
+            }
+        }
 
-		property = GetProperty( "height" );
-		if ( property->unit & Rocket::Core::Property::ABSOLUTE_UNIT )
-		{
-			dimensions.y = property->value.Get<float>();
-		}
-		else
-		{
-			float base_size = 0;
-			Rocket::Core::Element *parent = this;
-			std::stack<Rocket::Core::Element*> stack;
-			stack.push( this );
+        property = GetProperty("height");
+        if (property->unit & Rocket::Core::Property::ABSOLUTE_UNIT) {
+            dimensions.y = property->value.Get<float>();
+        } else {
+            float base_size = 0;
+            Rocket::Core::Element* parent = this;
+            std::stack<Rocket::Core::Element*> stack;
+            stack.push(this);
 
-			while ( ( parent = parent->GetParentNode() ) )
-			{
-				if ( ( base_size = parent->GetOffsetHeight() ) != 0 )
-				{
-					dimensions.y = base_size;
-					while ( !stack.empty() )
-					{
-						dimensions.y = stack.top()->ResolveProperty( "height", dimensions.y );
+            while ((parent = parent->GetParentNode())) {
+                if ((base_size = parent->GetOffsetHeight()) != 0) {
+                    dimensions.y = base_size;
+                    while (!stack.empty()) {
+                        dimensions.y = stack.top()->ResolveProperty("height", dimensions.y);
 
-						stack.pop();
-					}
-					break;
-				}
+                        stack.pop();
+                    }
+                    break;
+                }
 
-				stack.push( parent );
-			}
-		}
-		
-		// Return the calculated dimensions. If this changes the size of the element, it will result in
-		// a 'resize' event which is caught below and will regenerate the geometry.
+                stack.push(parent);
+            }
+        }
 
-		dimension = dimensions;
+        // Return the calculated dimensions. If this changes the size of the
+        // element, it will result in
+        // a 'resize' event which is caught below and will regenerate the geometry.
 
-		return true;
-	}
+        dimension = dimensions;
 
-	void ProcessEvent( Rocket::Core::Event &event )
-	{
-		extern std::queue< RocketEvent_t* > eventQueue;
+        return true;
+    }
 
-		// Class base class's Event processor
-		Rocket::Core::Element::ProcessEvent( event );
+    void ProcessEvent(Rocket::Core::Event& event) {
+        extern std::queue<RocketEvent_t*> eventQueue;
 
+        // Class base class's Event processor
+        Rocket::Core::Element::ProcessEvent(event);
 
-		// Let this be picked up in the event loop if it is meant for us
-		// HACK: Ignore mouse and resize events
-		if ( event.GetTargetElement() == this && !Q_stristr( event.GetType().CString(), "mouse" ) && !Q_stristr( event.GetType().CString(), "resize" ) )
-		{
-			eventQueue.push( new RocketEvent_t( event, event.GetType() ) );
-		}
-	}
+        // Let this be picked up in the event loop if it is meant for us
+        // HACK: Ignore mouse and resize events
+        if (event.GetTargetElement() == this &&
+            !Q_stristr(event.GetType().CString(), "mouse") &&
+            !Q_stristr(event.GetType().CString(), "resize")) {
+            eventQueue.push(new RocketEvent_t(event, event.GetType()));
+        }
+    }
 
-	void SetDimensions( float x, float y )
-	{
-		dimensions.x = x;
-		dimensions.y = y;
-	}
+    void SetDimensions(float x, float y) {
+        dimensions.x = x;
+        dimensions.y = y;
+    }
 
-	void OnRender()
-	{
-		activeElement = this;
+    void OnRender() {
+        activeElement = this;
 
-		cgvm.CGameRocketRenderElement();
+        cgvm.CGameRocketRenderElement();
 
-		// Render text on top
-		Rocket::Core::Element::OnRender();
-	}
+        // Render text on top
+        Rocket::Core::Element::OnRender();
+    }
 
+    Rocket::Core::Vector2f dimensions;
 
-	Rocket::Core::Vector2f dimensions;
 private:
-	bool dirty_geometry;
+    bool dirty_geometry;
 };
 
-class RocketElementInstancer : public Rocket::Core::ElementInstancer
-{
+class RocketElementInstancer : public Rocket::Core::ElementInstancer {
 public:
-	RocketElementInstancer() { }
-	~RocketElementInstancer() { }
-	Rocket::Core::Element *InstanceElement( Rocket::Core::Element *parent,
-											const Rocket::Core::String &tag,
-											const Rocket::Core::XMLAttributes &attributes )
-	{
-		return new RocketElement( tag );
-	}
+    RocketElementInstancer() {}
+    ~RocketElementInstancer() {}
+    Rocket::Core::Element*
+    InstanceElement(Rocket::Core::Element* parent,
+                    const Rocket::Core::String& tag,
+                    const Rocket::Core::XMLAttributes& attributes) {
+        return new RocketElement(tag);
+    }
 
-	void ReleaseElement( Rocket::Core::Element *element )
-	{
-		delete element;
-	}
+    void ReleaseElement(Rocket::Core::Element* element) { delete element; }
 
-	void Release()
-	{
-		delete this;
-	}
+    void Release() { delete this; }
 };
 #endif

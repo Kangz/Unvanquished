@@ -37,10 +37,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef LIBSTDCXX_BROKEN_CXX11
 namespace std {
 
-template<size_t Index, typename... T>
-typename std::tuple_element<Index, std::tuple<T...>>::type&& get(std::tuple<T...>&& tuple)
-{
-    return static_cast<typename std::tuple_element<Index, std::tuple<T...>>::type&&>(std::get<Index>(tuple));
+template <size_t Index, typename... T>
+typename std::tuple_element<Index, std::tuple<T...>>::type&&
+get(std::tuple<T...>&& tuple) {
+    return static_cast<
+            typename std::tuple_element<Index, std::tuple<T...>>::type&&>(
+            std::get<Index>(tuple));
 }
 
 } // namespace std
@@ -48,106 +50,116 @@ typename std::tuple_element<Index, std::tuple<T...>>::type&& get(std::tuple<T...
 
 namespace Util {
 
-// Binary search function which returns an iterator to the result or end if not found
-template<typename Iter, typename T>
-Iter binary_find(Iter begin, Iter end, const T& value)
-{
-	Iter i = std::lower_bound(begin, end, value);
-	if (i != end && !(value < *i))
-		return i;
-	else
-		return end;
+// Binary search function which returns an iterator to the result or end if not
+// found
+template <typename Iter, typename T>
+Iter binary_find(Iter begin, Iter end, const T& value) {
+    Iter i = std::lower_bound(begin, end, value);
+    if (i != end && !(value < *i))
+        return i;
+    else
+        return end;
 }
-template<typename Iter, typename T, typename Compare>
-Iter binary_find(Iter begin, Iter end, const T& value, Compare comp)
-{
-	Iter i = std::lower_bound(begin, end, value, comp);
-	if (i != end && !comp(value, *i))
-		return i;
-	else
-		return end;
+template <typename Iter, typename T, typename Compare>
+Iter binary_find(Iter begin, Iter end, const T& value, Compare comp) {
+    Iter i = std::lower_bound(begin, end, value, comp);
+    if (i != end && !comp(value, *i))
+        return i;
+    else
+        return end;
 }
 
 // Compile-time integer sequences
-template<size_t...> struct seq {
-	typedef seq type;
-};
+template <size_t...>
+struct seq { typedef seq type; };
 
-template<class S1, class S2> struct concat;
-template<size_t... I1, size_t... I2> struct concat<seq<I1...>, seq<I2...>>: seq<I1..., (sizeof...(I1) + I2)...> {};
+template <class S1, class S2>
+struct concat;
+template <size_t... I1, size_t... I2>
+struct concat<seq<I1...>, seq<I2...>> : seq<I1..., (sizeof...(I1) + I2)...> {};
 
-template<size_t N> struct gen_seq;
-template<size_t N> struct gen_seq: concat<typename gen_seq<N / 2>::type, typename gen_seq<N - N / 2>::type>::type {};
-template<> struct gen_seq<0>: seq<>{};
-template<> struct gen_seq<1>: seq<0>{};
+template <size_t N>
+struct gen_seq;
+template <size_t N>
+struct gen_seq : concat<typename gen_seq<N / 2>::type,
+                        typename gen_seq<N - N / 2>::type>::type {};
+template <>
+struct gen_seq<0> : seq<> {};
+template <>
+struct gen_seq<1> : seq<0> {};
 
 // Simple type list template, useful for pattern matching in functions
-template<typename... T> struct TypeList {};
-template<typename T> struct TypeListFromTuple {};
-template<typename... T> struct TypeListFromTuple<std::tuple<T...>>: TypeList<T...> {};
+template <typename... T>
+struct TypeList {};
+template <typename T>
+struct TypeListFromTuple {};
+template <typename... T>
+struct TypeListFromTuple<std::tuple<T...>> : TypeList<T...> {};
 
-// Create a tuple of references from a tuple. The type of reference is the same as that with which the tuple is passed in.
-template<typename Tuple, size_t... Seq> decltype(std::forward_as_tuple(std::get<Seq>(std::declval<Tuple>())...)) ref_tuple_impl(Tuple&& tuple, seq<Seq...>)
-{
-	return std::forward_as_tuple(std::get<Seq>(std::forward<Tuple>(tuple))...);
+// Create a tuple of references from a tuple. The type of reference is the same
+// as that with which the tuple is passed in.
+template <typename Tuple, size_t... Seq>
+decltype(std::forward_as_tuple(std::get<Seq>(std::declval<Tuple>())...))
+ref_tuple_impl(Tuple&& tuple, seq<Seq...>) {
+    return std::forward_as_tuple(std::get<Seq>(std::forward<Tuple>(tuple))...);
 }
-template<typename Tuple> decltype(ref_tuple_impl(std::declval<Tuple>(), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>())) ref_tuple(Tuple&& tuple)
-{
-	return ref_tuple_impl(std::forward<Tuple>(tuple), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>());
+template <typename Tuple>
+decltype(ref_tuple_impl(
+        std::declval<Tuple>(),
+        gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>()))
+ref_tuple(Tuple&& tuple) {
+    return ref_tuple_impl(
+            std::forward<Tuple>(tuple),
+            gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>());
 }
 
 // Invoke a function using parameters from a tuple
-template<typename Func, typename Tuple, size_t... Seq>
-decltype(std::declval<Func>()(std::get<Seq>(std::declval<Tuple>())...)) apply_impl(Func&& func, Tuple&& tuple, seq<Seq...>)
-{
-	return std::forward<Func>(func)(std::get<Seq>(std::forward<Tuple>(tuple))...);
+template <typename Func, typename Tuple, size_t... Seq>
+decltype(std::declval<Func>()(std::get<Seq>(std::declval<Tuple>())...))
+apply_impl(Func&& func, Tuple&& tuple, seq<Seq...>) {
+    return std::forward<Func>(func)(std::get<Seq>(std::forward<Tuple>(tuple))...);
 }
-template<typename Func, typename Tuple>
-decltype(apply_impl(std::declval<Func>(), std::declval<Tuple>(), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>())) apply(Func&& func, Tuple&& tuple)
-{
-	return apply_impl(std::forward<Func>(func), std::forward<Tuple>(tuple), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>());
+template <typename Func, typename Tuple>
+decltype(apply_impl(
+        std::declval<Func>(), std::declval<Tuple>(), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>()))
+apply(Func&& func, Tuple&& tuple) {
+    return apply_impl(
+            std::forward<Func>(func), std::forward<Tuple>(tuple), gen_seq<std::tuple_size<typename std::decay<Tuple>::type>::value>());
 }
 
 // Utility class to hold a possibly uninitialized object.
-template<typename T> class uninitialized {
+template <typename T>
+class uninitialized {
 public:
-	uninitialized() {}
-	template<typename... Args> void construct(Args&&... args)
-	{
-		new(&data) T(std::forward<Args>(args)...);
-	}
+    uninitialized() {}
+    template <typename... Args>
+    void construct(Args&&... args) {
+        new (&data) T(std::forward<Args>(args)...);
+    }
 #ifdef GCC_BROKEN_CXX11
-	template<typename Arg> T& assign(Arg&& arg)
-	{
-		return get() = std::forward<Arg>(arg);
-	}
+    template <typename Arg>
+    T& assign(Arg&& arg) {
+        return get() = std::forward<Arg>(arg);
+    }
 #else
-	template<typename Arg> decltype(std::declval<T&>() = std::declval<Arg>()) assign(Arg&& arg)
-	{
-		return get() = std::forward<Arg>(arg);
-	}
+    template <typename Arg>
+    decltype(std::declval<T&>() = std::declval<Arg>()) assign(Arg&& arg) {
+        return get() = std::forward<Arg>(arg);
+    }
 #endif
-	void destroy()
-	{
-		get().~T();
-	}
-	T& get()
-	{
-		return *reinterpret_cast<T*>(&data);
-	}
-	const T& get() const
-	{
-		return *reinterpret_cast<const T*>(&data);
-	}
+    void destroy() { get().~T(); }
+    T& get() { return *reinterpret_cast<T*>(&data); }
+    const T& get() const { return *reinterpret_cast<const T*>(&data); }
 
 private:
-	typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type data;
+    typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type
+            data;
 
-	// Not copyable or movable
-	uninitialized(const uninitialized&) = delete;
-	uninitialized(uninitialized&&) = delete;
-	uninitialized& operator=(const uninitialized&) = delete;
-	uninitialized& operator=(uninitialized&&) = delete;
+    // Not copyable or movable
+    uninitialized(const uninitialized&) = delete;
+    uninitialized(uninitialized&&) = delete;
+    uninitialized& operator=(const uninitialized&) = delete;
+    uninitialized& operator=(uninitialized&&) = delete;
 };
 
 } // namespace Util

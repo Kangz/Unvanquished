@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -44,71 +49,67 @@ Maryland 20850 USA.
 typedef std::map<std::string, RocketDataGrid*> StringGridMap_t;
 StringGridMap_t dataSourceMap;
 
-void Rocket_RegisterDataSource( const char *name )
-{
-	dataSourceMap[ name ] = new RocketDataGrid( name );
+void Rocket_RegisterDataSource(const char* name) {
+    dataSourceMap[name] = new RocketDataGrid(name);
 }
 
-static RocketDataGrid *FindDataSource( const char *name )
-{
-	StringGridMap_t::iterator it = dataSourceMap.find( name );
+static RocketDataGrid* FindDataSource(const char* name) {
+    StringGridMap_t::iterator it = dataSourceMap.find(name);
 
-	if ( it == dataSourceMap.end() )
-	{
-		return nullptr;
-	}
+    if (it == dataSourceMap.end()) {
+        return nullptr;
+    }
 
-	return it->second;
+    return it->second;
 }
 
-void Rocket_DSAddRow( const char *name, const char *table, const char *data )
-{
-	RocketDataGrid *ds = FindDataSource( name );
+void Rocket_DSAddRow(const char* name, const char* table, const char* data) {
+    RocketDataGrid* ds = FindDataSource(name);
 
-	if ( !ds )
-	{
-		Com_Printf( "^1ERROR: ^7Rocket_DSAddRow: data source %s does not exist.\n", name );
-		return;
-	}
+    if (!ds) {
+        Com_Printf("^1ERROR: ^7Rocket_DSAddRow: data source %s does not exist.\n",
+                   name);
+        return;
+    }
 
-	ds->AddRow( table, data );
+    ds->AddRow(table, data);
 }
 
-void Rocket_DSChangeRow( const char *name, const char *table, const int row, const char *data )
-{
-	RocketDataGrid *ds = FindDataSource( name );
+void Rocket_DSChangeRow(const char* name, const char* table, const int row, const char* data) {
+    RocketDataGrid* ds = FindDataSource(name);
 
-	if ( !ds )
-	{
-		Com_Printf( "^1ERROR: ^7Rocket_DSChangeRow: data source %s does not exist.\n", name );
-		return;
-	}
+    if (!ds) {
+        Com_Printf(
+                "^1ERROR: ^7Rocket_DSChangeRow: data source %s does not exist.\n",
+                name);
+        return;
+    }
 
-	ds->ChangeRow( table, row, data );
+    ds->ChangeRow(table, row, data);
 }
 
-void Rocket_DSRemoveRow( const char *name, const char *table, const int row )
-{
-	RocketDataGrid *ds = FindDataSource( name );
+void Rocket_DSRemoveRow(const char* name, const char* table, const int row) {
+    RocketDataGrid* ds = FindDataSource(name);
 
-	if ( !ds )
-	{
-		Com_Printf( "^1ERROR: ^7Rocket_DSRemoveRow: data source %s does not exist.\n", name );
-		return;
-	}
+    if (!ds) {
+        Com_Printf(
+                "^1ERROR: ^7Rocket_DSRemoveRow: data source %s does not exist.\n",
+                name);
+        return;
+    }
 
-	ds->RemoveRow( table, row );
+    ds->RemoveRow(table, row);
 }
 
-void Rocket_DSClearTable( const char *name, const char *table )
-{
-	RocketDataGrid *ds = FindDataSource( name );
+void Rocket_DSClearTable(const char* name, const char* table) {
+    RocketDataGrid* ds = FindDataSource(name);
 
-	if ( !ds )
-	{
-		Com_Printf( "^1ERROR: ^7Rocket_DSClearTable: data source %s does not exist.\n", name );
-		return;
-	}
+    if (!ds) {
+        Com_Printf(
+                "^1ERROR: ^7Rocket_DSClearTable: data source %s does not exist.\n",
+                name);
+        return;
+    }
 
-	ds->ClearTable( table );
+    ds->ClearTable(table);
 }

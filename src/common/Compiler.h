@@ -90,14 +90,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // To mark functions which cause issues with address sanitizer
 #if __clang__
 #if __has_attribute(no_sanitize_address)
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
 #else
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS
 #endif
 #elif __SANITIZE_ADDRESS__
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
 #else
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS
 #endif
 
 // GCC 4.6 has incomplete support for C++11
@@ -106,13 +106,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifdef __cplusplus
 #include <new>
-#if defined(__GLIBCXX__) && (__GLIBCXX__ == 20110325 || __GLIBCXX__ == 20110627 || __GLIBCXX__ == 20111026 || __GLIBCXX__ == 20120301 || __GLIBCXX__ == 20130412)
+#if defined(__GLIBCXX__) &&                                    \
+        (__GLIBCXX__ == 20110325 || __GLIBCXX__ == 20110627 || \
+         __GLIBCXX__ == 20111026 || __GLIBCXX__ == 20120301 || \
+         __GLIBCXX__ == 20130412)
 #define LIBSTDCXX_BROKEN_CXX11
 #endif
 #endif
 
 // Microsoft Visual C++
-#elif defined( _MSC_VER )
+#elif defined(_MSC_VER)
 
 // Disable some warnings
 #pragma warning(disable : 4018) // signed/unsigned mismatch
@@ -121,33 +124,44 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma warning(disable : 4057) // slightly different base types
 #pragma warning(disable : 4100) // unreferenced formal parameter
 #pragma warning(disable : 4115)
-#pragma warning(disable : 4125) // decimal digit terminates octal escape sequence
+#pragma warning( \
+        disable : 4125)         // decimal digit terminates octal escape sequence
 #pragma warning(disable : 4127) // conditional expression is constant
 #pragma warning(disable : 4136)
-#pragma warning(disable : 4152) // nonstandard extension, function/data pointer conversion in expression
+#pragma warning(disable : 4152) // nonstandard extension, function/data pointer
+// conversion in expression
 #pragma warning(disable : 4201)
 #pragma warning(disable : 4214)
 #pragma warning(disable : 4244)
 //#pragma warning(disable : 4142)   // benign redefinition
 #pragma warning(disable : 4305) // truncation from const double to float
 //#pragma warning(disable : 4310)   // cast truncates constant value
-//#pragma warning(disable : 4505)   // unreferenced local function has been removed
+//#pragma warning(disable : 4505)   // unreferenced local function has been
+// removed
 #pragma warning(disable : 4514)
 #pragma warning(disable : 4702) // unreachable code
 #pragma warning(disable : 4711) // selected for automatic inline expansion
 #pragma warning(disable : 4220) // varargs matches remaining parameters
-#pragma warning(disable : 4706) // assignment within conditional expression // cs: probably should correct all of these at some point
+#pragma warning(disable : 4706) // assignment within conditional expression //
+// cs: probably should correct all of these at
+// some point
 #pragma warning(disable : 4005) // macro redefinition
-#pragma warning(disable : 4996) // This function or variable may be unsafe. Consider using 'function_s' instead
-#pragma warning(disable : 4075) // initializers put in unrecognized initialization area
+#pragma warning(disable : 4996) // This function or variable may be unsafe.
+// Consider using 'function_s' instead
+#pragma warning( \
+        disable : 4075)         // initializers put in unrecognized initialization area
 #pragma warning(disable : 4355) // 'this': used in member initializer list
 #pragma warning(disable : 4305) // signed unsigned mismatch
 #pragma warning(disable : 4554) // qualifier applied to reference type; ignored
-#pragma warning(disable : 4800) // forcing bool variable to one or zero, possible performance loss
+#pragma warning(disable : 4800) // forcing bool variable to one or zero,
+// possible performance loss
 #pragma warning(disable : 4090) // 'function' : different 'const' qualifiers
-#pragma warning(disable : 4267) // 'initializing' : conversion from 'size_t' to 'int', possible loss of data
-#pragma warning(disable : 4146) // unary minus operator applied to unsigned type, result still unsigned
-#pragma warning(disable : 4133) // 'function' : incompatible types - from 'unsigned long *' to 'const time_t *'
+#pragma warning(disable : 4267) // 'initializing' : conversion from 'size_t' to
+// 'int', possible loss of data
+#pragma warning(disable : 4146) // unary minus operator applied to unsigned
+// type, result still unsigned
+#pragma warning(disable : 4133) // 'function' : incompatible types - from
+// 'unsigned long *' to 'const time_t *'
 #pragma warning(disable : 4127) // conditional expression is constant
 #pragma warning(disable : 4389) // '==' : signed/unsigned mismatch
 
@@ -160,7 +174,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define VPRINTF_LIKE(n)
 #define PRINTF_TRANSLATE_ARG(a)
 #define MALLOC_LIKE __declspec(restrict)
-#define ALIGNED(a,x) __declspec(align(a)) x
+#define ALIGNED(a, x) __declspec(align(a)) x
 #define DLLEXPORT __declspec(dllexport)
 #define DLLIMPORT __declspec(dllimport)
 #define OVERRIDE override
@@ -191,7 +205,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define VPRINTF_LIKE(n)
 #define PRINTF_TRANSLATE_ARG(a)
 #define MALLOC_LIKE
-#define ALIGNED(a,x) x
+#define ALIGNED(a, x) x
 #define DLLEXPORT
 #define DLLIMPORT
 #endif

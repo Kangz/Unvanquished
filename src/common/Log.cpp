@@ -32,62 +32,69 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Log {
 
-    Logger::Logger(Str::StringRef name, Level defaultLevel)
-    :filterLevel("logs.logLevel." + name, "Log::Level - logs from '" + name + "' below the level specified are filtered", 0, defaultLevel) {
+Logger::Logger(Str::StringRef name, Level defaultLevel)
+        : filterLevel("logs.logLevel." + name,
+                      "Log::Level - logs from '" + name +
+                              "' below the level specified are filtered",
+                      0,
+                      defaultLevel) {
+}
+
+bool ParseCvarValue(std::string value, Log::Level& result) {
+    if (value == "warning" or value == "warn") {
+        result = Log::LOG_WARNING;
+        return true;
     }
 
-    bool ParseCvarValue(std::string value, Log::Level& result) {
-        if (value == "warning" or value == "warn") {
-            result = Log::LOG_WARNING;
-            return true;
-        }
-
-        if (value == "info" or value == "notice") {
-            result = Log::LOG_NOTICE;
-            return true;
-        }
-
-        if (value == "debug" or value == "all") {
-            result = Log::LOG_DEBUG;
-            return true;
-        }
-
-        return false;
+    if (value == "info" or value == "notice") {
+        result = Log::LOG_NOTICE;
+        return true;
     }
 
-    std::string SerializeCvarValue(Log::Level value) {
-        switch(value) {
-            case Log::LOG_WARNING:
-                return "warning";
-            case Log::LOG_NOTICE:
-                return "notice";
-            case Log::LOG_DEBUG:
-                return "debug";
-            default:
-                return "";
-        }
+    if (value == "debug" or value == "all") {
+        result = Log::LOG_DEBUG;
+        return true;
     }
 
-	//TODO add the time (broken for now because it is journaled) use Sys_Milliseconds instead (Utils::Milliseconds ?)
-    static const int warnTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE) | (1 << CRASHLOG) | (1 << LOGFILE);
-    void CodeSourceWarn(std::string message) {
-        Log::Dispatch({"^3Warn: " + message}, warnTargets);
-    }
+    return false;
+}
 
-    static const int noticeTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE) | (1 << CRASHLOG) | (1 << LOGFILE);
-    void CodeSourceNotice(std::string message) {
-        Log::Dispatch({message}, noticeTargets);
-    }
-
-    static const int debugTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE);
-    void CodeSourceDebug(std::string message) {
-        Log::Dispatch({"^5Debug: " + message}, debugTargets);
+std::string SerializeCvarValue(Log::Level value) {
+    switch (value) {
+        case Log::LOG_WARNING:
+            return "warning";
+        case Log::LOG_NOTICE:
+            return "notice";
+        case Log::LOG_DEBUG:
+            return "debug";
+        default:
+            return "";
     }
 }
 
+// TODO add the time (broken for now because it is journaled) use
+// Sys_Milliseconds instead (Utils::Milliseconds ?)
+static const int warnTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE) |
+                               (1 << CRASHLOG) | (1 << LOGFILE);
+void CodeSourceWarn(std::string message) {
+    Log::Dispatch({"^3Warn: " + message}, warnTargets);
+}
+
+static const int noticeTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE) |
+                                 (1 << CRASHLOG) | (1 << LOGFILE);
+void CodeSourceNotice(std::string message) {
+    Log::Dispatch({message}, noticeTargets);
+}
+
+static const int debugTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE);
+void CodeSourceDebug(std::string message) {
+    Log::Dispatch({"^5Debug: " + message}, debugTargets);
+}
+}
+
 namespace Cvar {
-    template<>
-    std::string GetCvarTypeName<Log::Level>() {
-        return "log level";
-    }
+template <>
+std::string GetCvarTypeName<Log::Level>() {
+    return "log level";
+}
 }

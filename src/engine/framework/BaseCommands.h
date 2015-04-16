@@ -40,11 +40,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Cmd {
 
-    // Executes delayed commands that are ready.
-    void DelayFrame();
+// Executes delayed commands that are ready.
+void DelayFrame();
 
-    //Saves the aliases in a configuration file
-    void WriteAliases(fileHandle_t f);
+// Saves the aliases in a configuration file
+void WriteAliases(fileHandle_t f);
 }
 
 #endif // FRAMEWORK_BASE_COMMANDS_H_

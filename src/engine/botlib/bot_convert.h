@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -37,104 +42,77 @@ Maryland 20850 USA.
 
 #include "bot_types.h"
 
-//coordinate conversion
-static inline void quake2recast( float vec[ 3 ] )
-{
-	float temp = vec[1];
-	vec[1] = vec[2];
-	vec[2] = temp;
+// coordinate conversion
+static inline void quake2recast(float vec[3]) {
+    float temp = vec[1];
+    vec[1] = vec[2];
+    vec[2] = temp;
 }
 
-static inline void recast2quake( float vec[ 3 ] )
-{
-	float temp = vec[1];
-	vec[1] = vec[2];
-	vec[2] = temp;
+static inline void recast2quake(float vec[3]) {
+    float temp = vec[1];
+    vec[1] = vec[2];
+    vec[2] = temp;
 }
 
 class rVec;
-class qVec
-{
-	float v[ 3 ];
+class qVec {
+    float v[3];
 
 public:
-	qVec( ) { }
-	qVec( float x, float y, float z );
-	qVec( const float vec[ 3 ] );
-	qVec( rVec vec );
+    qVec() {}
+    qVec(float x, float y, float z);
+    qVec(const float vec[3]);
+    qVec(rVec vec);
 
-	inline float &operator[]( int i )
-	{
-		return v[ i ];
-	}
+    inline float& operator[](int i) { return v[i]; }
 
-	inline operator const float*() const
-	{
-		return v;
-	}
+    inline operator const float*() const { return v; }
 
-	inline operator float*()
-	{
-		return v;
-	}
+    inline operator float*() { return v; }
 };
 
-class rVec
-{
-	float v[ 3 ];
+class rVec {
+    float v[3];
+
 public:
-	rVec() { }
-	rVec( float x, float y, float z );
-	rVec( const float vec[ 3 ] );
-	rVec( qVec vec );
+    rVec() {}
+    rVec(float x, float y, float z);
+    rVec(const float vec[3]);
+    rVec(qVec vec);
 
-	inline float &operator[]( int i )
-	{
-		return v[ i ];
-	}
-	
-	inline operator const float*() const
-	{
-		return v;
-	}
+    inline float& operator[](int i) { return v[i]; }
 
-	inline operator float*()
-	{
-		return v;
-	}
+    inline operator const float*() const { return v; }
+
+    inline operator float*() { return v; }
 };
 
-class rBounds
-{
+class rBounds {
 public:
-	rVec mins, maxs;
+    rVec mins, maxs;
 
-	rBounds()
-	{
-		clear();
-	}
+    rBounds() { clear(); }
 
-	rBounds( const rBounds &b )
-	{
-		mins = b.mins;
-		maxs = b.maxs;
-	}
+    rBounds(const rBounds& b) {
+        mins = b.mins;
+        maxs = b.maxs;
+    }
 
-	rBounds( qVec min, qVec max );
-	rBounds( const float min[ 3 ], const float max[ 3 ] );
+    rBounds(qVec min, qVec max);
+    rBounds(const float min[3], const float max[3]);
 
-	void addPoint( rVec p );
-	void clear();
+    void addPoint(rVec p);
+    void clear();
 };
 
-struct botRouteTargetInternal
-{
-	botRouteTargetType_t type;
-	rVec pos;
-	rVec polyExtents;
+struct botRouteTargetInternal {
+    botRouteTargetType_t type;
+    rVec pos;
+    rVec polyExtents;
 
-	botRouteTargetInternal() { }
-	botRouteTargetInternal( const botRouteTarget_t &target );
+    botRouteTargetInternal() {}
+    botRouteTargetInternal(const botRouteTarget_t& target);
 };
 
 #endif

@@ -37,45 +37,48 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace IPC {
 
+class CommandBufferClient {
+public:
+    CommandBufferClient(std::string name);
 
-    class CommandBufferClient {
-        public:
-            CommandBufferClient(std::string name);
+    void Init();
 
-            void Init();
+    template <typename Message, typename... Args>
+    void SendMsg(Args&&... args) {
+        SendMsgImpl(Message(), std::forward<Args>(args)...);
+    }
 
-            template<typename Message, typename... Args> void SendMsg(Args&&... args) {
-                SendMsgImpl(Message(), std::forward<Args>(args)...);
-            }
+    template <typename Message, typename... Args>
+    void SendMsgImpl(Message, Args&&... args) {
+        static_assert(
+                sizeof...(Args) == std::tuple_size<typename Message::Inputs>::value,
+                "Incorrect number of arguments for CommandBufferClient::SendMsg");
 
-            template<typename Message, typename... Args> void SendMsgImpl(Message, Args&&... args) {
-                static_assert(sizeof...(Args) == std::tuple_size<typename Message::Inputs>::value, "Incorrect number of arguments for CommandBufferClient::SendMsg");
+        Util::Writer writer;
+        writer.Write<uint32_t>(Message::id);
+        writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(),
+                         std::forward<Args>(args)...);
 
-                Util::Writer writer;
-                writer.Write<uint32_t>(Message::id);
-                writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args)...);
+        Write(writer);
+    }
 
-                Write(writer);
-            }
+    void TryFlush();
 
-            void TryFlush();
+private:
+    std::string name;
+    Cvar::Range<Cvar::Cvar<int>> bufferSize;
+    Log::Logger logs;
+    IPC::CommandBuffer buffer;
+    IPC::SharedMemory shm;
+    bool initialized;
 
-        private:
-            std::string name;
-            Cvar::Range<Cvar::Cvar<int>> bufferSize;
-            Log::Logger logs;
-            IPC::CommandBuffer buffer;
-            IPC::SharedMemory shm;
-            bool initialized;
+    void Write(Util::Writer& writer);
 
-            void Write(Util::Writer& writer);
+    bool CanWrite(size_t length);
+    size_t RemainingSize();
 
-            bool CanWrite(size_t length);
-            size_t RemainingSize();
-
-            void Flush();
-    };
-
+    void Flush();
+};
 }
 
 #endif // SHARED_COMMAND_BUFFER_CLIENT_H_

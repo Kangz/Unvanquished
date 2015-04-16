@@ -32,84 +32,75 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Audio {
 
-    bool Init() {
-        return true;
-    }
+bool Init() {
+    return true;
+}
 
-    void Shutdown() {
-    }
+void Shutdown() {
+}
 
-    void Update() {
-    }
+void Update() {
+}
 
+void BeginRegistration() {
+}
 
-    void BeginRegistration() {
-    }
+sfxHandle_t RegisterSFX(Str::StringRef filename) {
+    return 0;
+}
 
-    sfxHandle_t RegisterSFX(Str::StringRef filename) {
-        return 0;
-    }
+void EndRegistration() {
+}
 
-    void EndRegistration() {
-    }
+void StartSound(int entityNum, const vec3_t origin, sfxHandle_t sfx) {
+}
 
+void StartLocalSound(int entityNum) {
+}
 
-    void StartSound(int entityNum, const vec3_t origin, sfxHandle_t sfx) {
-    }
+void AddEntityLoopingSound(int entityNum, sfxHandle_t sfx) {
+}
 
-    void StartLocalSound(int entityNum) {
-    }
+void ClearAllLoopingSounds() {
+}
 
+void ClearLoopingSoundsForEntity(int entityNum) {
+}
 
-    void AddEntityLoopingSound(int entityNum, sfxHandle_t sfx) {
-    }
+void StartMusic(Str::StringRef leadingSound, Str::StringRef loopSound) {
+}
 
-    void ClearAllLoopingSounds() {
-    }
+void StopMusic() {
+}
 
-    void ClearLoopingSoundsForEntity(int entityNum) {
-    }
+void StopAllSounds() {
+}
 
+void StreamData(int streamNum, const void* data, int numSamples, int rate, int width, int channels, float volume, int entityNum) {
+}
 
-    void StartMusic(Str::StringRef leadingSound, Str::StringRef loopSound) {
-    }
+void UpdateListener(int entityNum, const vec3_t orientation[3]) {
+}
 
-    void StopMusic() {
-    }
+void UpdateEntityPosition(int entityNum, const vec3_t position) {
+}
 
+void UpdateEntityVelocity(int entityNum, const vec3_t velocity) {
+}
 
-    void StopAllSounds() {
-    }
+void SetReverb(int slotNum, std::string name, float ratio) {
+}
 
+void StartCapture(int rate) {
+}
 
-    void StreamData(int streamNum, const void* data, int numSamples, int rate, int width, int channels, float volume, int entityNum) {
-    }
+int AvailableCaptureSamples() {
+    return 0;
+}
 
+void GetCapturedData(int numSamples, void* buffer) {
+}
 
-    void UpdateListener(int entityNum, const vec3_t orientation[3]) {
-    }
-
-    void UpdateEntityPosition(int entityNum, const vec3_t position) {
-    }
-
-    void UpdateEntityVelocity(int entityNum, const vec3_t velocity) {
-    }
-
-
-    void SetReverb(int slotNum, std::string name, float ratio) {
-    }
-
-
-    void StartCapture(int rate) {
-    }
-
-    int AvailableCaptureSamples() {
-        return 0;
-    }
-
-    void GetCapturedData(int numSamples, void* buffer) {
-    }
-
-    void StopCapture() {
-    }
+void StopCapture() {
+}
 }

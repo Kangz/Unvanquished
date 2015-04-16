@@ -31,45 +31,39 @@ LoadWEBP
 =========================================================
 */
 
-void LoadWEBP( const char *filename, unsigned char **pic, int *width, int *height,
-	       int *numLayers, int *numMips, int *bits, byte alphaByte )
-{
-	byte *out;
-	int  len;
-	int  stride;
-	int  size;
-	union
-	{
-		byte *b;
-		void *v;
-	} fbuffer;
+void LoadWEBP(const char* filename, unsigned char** pic, int* width, int* height, int* numLayers, int* numMips, int* bits, byte alphaByte) {
+    byte* out;
+    int len;
+    int stride;
+    int size;
+    union {
+        byte* b;
+        void* v;
+    } fbuffer;
 
-	/* read compressed data */
-	len = ri.FS_ReadFile( ( char * ) filename, &fbuffer.v );
+    /* read compressed data */
+    len = ri.FS_ReadFile((char*) filename, &fbuffer.v);
 
-	if ( !fbuffer.b || len < 0 )
-	{
-		return;
-	}
+    if (!fbuffer.b || len < 0) {
+        return;
+    }
 
-	/* validate data and query image size */
-	if ( !WebPGetInfo( fbuffer.b, len, width, height ) )
-	{
-		ri.FS_FreeFile( fbuffer.v );
-		return;
-	}
+    /* validate data and query image size */
+    if (!WebPGetInfo(fbuffer.b, len, width, height)) {
+        ri.FS_FreeFile(fbuffer.v);
+        return;
+    }
 
-	stride = *width * sizeof( u8vec4_t );
-	size = *height * stride;
+    stride = *width * sizeof(u8vec4_t);
+    size = *height * stride;
 
-	out = (byte*) ri.Z_Malloc( size );
+    out = (byte*) ri.Z_Malloc(size);
 
-	if ( !WebPDecodeRGBAInto( fbuffer.b, len, out, size, stride ) )
-	{
-		ri.Free( out );
-		return;
-	}
+    if (!WebPDecodeRGBAInto(fbuffer.b, len, out, size, stride)) {
+        ri.Free(out);
+        return;
+    }
 
-	ri.FS_FreeFile( fbuffer.v );
-	*pic = out;
+    ri.FS_FreeFile(fbuffer.v);
+    *pic = out;
 }

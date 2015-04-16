@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -42,39 +47,33 @@ target_print
 
 =================================================================================
 */
-void target_print_act( gentity_t *self, gentity_t *other, gentity_t *activator )
-{
-	if ( self->spawnflags & 4 )
-	{
-		if ( activator && activator->client )
-		{
-			trap_SendServerCommand( activator - g_entities, va( "cp %s", Quote( self->message ) ) );
-		}
+void target_print_act(gentity_t* self, gentity_t* other, gentity_t* activator) {
+    if (self->spawnflags & 4) {
+        if (activator && activator->client) {
+            trap_SendServerCommand(activator - g_entities,
+                                   va("cp %s", Quote(self->message)));
+        }
 
-		return;
-	}
+        return;
+    }
 
-	if ( self->spawnflags & 3 )
-	{
-		if ( self->spawnflags & 1 )
-		{
-			G_TeamCommand( TEAM_HUMANS, va( "cp %s", Quote( self->message ) ) );
-		}
+    if (self->spawnflags & 3) {
+        if (self->spawnflags & 1) {
+            G_TeamCommand(TEAM_HUMANS, va("cp %s", Quote(self->message)));
+        }
 
-		if ( self->spawnflags & 2 )
-		{
-			G_TeamCommand( TEAM_ALIENS, va( "cp %s", Quote( self->message ) ) );
-		}
+        if (self->spawnflags & 2) {
+            G_TeamCommand(TEAM_ALIENS, va("cp %s", Quote(self->message)));
+        }
 
-		return;
-	}
+        return;
+    }
 
-	trap_SendServerCommand( -1, va( "cp %s", Quote( self->message ) ) );
+    trap_SendServerCommand(-1, va("cp %s", Quote(self->message)));
 }
 
-void SP_target_print( gentity_t *self )
-{
-	self->act = target_print_act;
+void SP_target_print(gentity_t* self) {
+    self->act = target_print_act;
 }
 
 /*
@@ -85,35 +84,30 @@ target_push
 =================================================================================
 */
 
-void target_push_act( gentity_t *self, gentity_t *other, gentity_t *activator )
-{
-	if ( !activator || !activator->client )
-	{
-		return;
-	}
+void target_push_act(gentity_t* self, gentity_t* other, gentity_t* activator) {
+    if (!activator || !activator->client) {
+        return;
+    }
 
-	if ( activator->client->ps.pm_type != PM_NORMAL )
-	{
-		return;
-	}
+    if (activator->client->ps.pm_type != PM_NORMAL) {
+        return;
+    }
 
-	VectorCopy( self->s.origin2, activator->client->ps.velocity );
+    VectorCopy(self->s.origin2, activator->client->ps.velocity);
 }
 
-void SP_target_push( gentity_t *self )
-{
-	if ( !self->config.speed)
-	{
-		self->config.speed = 1000;
-	}
+void SP_target_push(gentity_t* self) {
+    if (!self->config.speed) {
+        self->config.speed = 1000;
+    }
 
-	G_SetMovedir( self->s.angles, self->s.origin2 );
-	VectorScale( self->s.origin2, self->config.speed, self->s.origin2 );
-	VectorCopy( self->s.origin, self->r.absmin );
-	VectorCopy( self->s.origin, self->r.absmax );
-	self->think = think_aimAtTarget;
-	self->nextthink = level.time + FRAMETIME;
-	self->act = target_push_act;
+    G_SetMovedir(self->s.angles, self->s.origin2);
+    VectorScale(self->s.origin2, self->config.speed, self->s.origin2);
+    VectorCopy(self->s.origin, self->r.absmin);
+    VectorCopy(self->s.origin, self->r.absmax);
+    self->think = think_aimAtTarget;
+    self->nextthink = level.time + FRAMETIME;
+    self->act = target_push_act;
 }
 
 /*
@@ -123,29 +117,26 @@ target_teleporter
 
 =================================================================================
 */
-void target_teleporter_act( gentity_t *self, gentity_t *other, gentity_t *activator )
-{
-	gentity_t *dest;
+void target_teleporter_act(gentity_t* self, gentity_t* other, gentity_t* activator) {
+    gentity_t* dest;
 
-	if ( !activator || !activator->client )
-	{
-		return;
-	}
+    if (!activator || !activator->client) {
+        return;
+    }
 
-	dest = G_PickRandomTargetFor( self );
+    dest = G_PickRandomTargetFor(self);
 
-	if ( !dest )
-		return;
+    if (!dest)
+        return;
 
-	G_TeleportPlayer( activator, dest->s.origin, dest->s.angles, self->config.speed );
+    G_TeleportPlayer(activator, dest->s.origin, dest->s.angles, self->config.speed);
 }
 
-void SP_target_teleporter( gentity_t *self )
-{
-	if( !self->config.speed )
-		self->config.speed = 400;
+void SP_target_teleporter(gentity_t* self) {
+    if (!self->config.speed)
+        self->config.speed = 400;
 
-	self->act = target_teleporter_act;
+    self->act = target_teleporter_act;
 }
 
 /*
@@ -155,20 +146,16 @@ target_hurt
 
 =================================================================================
 */
-void target_hurt_act( gentity_t *self, gentity_t *other, gentity_t *activator )
-{
-	// hurt the activator
-	if ( !activator || !activator->takedamage )
-	{
-		return;
-	}
+void target_hurt_act(gentity_t* self, gentity_t* other, gentity_t* activator) {
+    // hurt the activator
+    if (!activator || !activator->takedamage) {
+        return;
+    }
 
-	G_Damage( activator, self, self, nullptr, nullptr, self->damage, 0, MOD_TRIGGER_HURT );
+    G_Damage(activator, self, self, nullptr, nullptr, self->damage, 0, MOD_TRIGGER_HURT);
 }
 
-void SP_target_hurt( gentity_t *self )
-{
-	G_ResetIntField(&self->damage, true, self->config.damage, self->eclass->config.damage, 5);
-	self->act = target_hurt_act;
+void SP_target_hurt(gentity_t* self) {
+    G_ResetIntField(&self->damage, true, self->config.damage, self->eclass->config.damage, 5);
+    self->act = target_hurt_act;
 }
-

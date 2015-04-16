@@ -20,18 +20,22 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
 */
-
 
 #ifndef ROCKETMISCTEXT_H
 #define ROCKETMISCTEXT_H
@@ -39,50 +43,47 @@ Maryland 20850 USA.
 #include <Rocket/Core.h>
 #include "client.h"
 
-struct TextAndRect
-{
-	TextAndRect( const char *_text, const char *_class, float _x, float _y ) : text( _text ), text_class( _class ), x( _x ), y( _y ) { }
-	Rocket::Core::String text;
-	Rocket::Core::String text_class;
-	float x;
-	float y;
+struct TextAndRect {
+    TextAndRect(const char* _text, const char* _class, float _x, float _y)
+            : text(_text), text_class(_class), x(_x), y(_y) {}
+    Rocket::Core::String text;
+    Rocket::Core::String text_class;
+    float x;
+    float y;
 };
 
-// A libRocket element to hold other misc text on the screen. It is assumed that it will change every frame
+// A libRocket element to hold other misc text on the screen. It is assumed that
+// it will change every frame
 
-class RocketMiscText : public Rocket::Core::Element
-{
+class RocketMiscText : public Rocket::Core::Element {
 public:
-	RocketMiscText( const Rocket::Core::String &tag ) : Rocket::Core::Element( tag )
-	{
-	}
+    RocketMiscText(const Rocket::Core::String& tag)
+            : Rocket::Core::Element(tag) {}
 
-	static void ClearText()
-	{
-		strings.clear();
-	}
+    static void ClearText() { strings.clear(); }
 
-	static void AddText( const char *text, const char *text_class, float x, float y )
-	{
-		strings.push_back( TextAndRect( text, text_class, x, y ) );
-	}
+    static void AddText(const char* text, const char* text_class, float x, float y) {
+        strings.push_back(TextAndRect(text, text_class, x, y));
+    }
 
-	void OnUpdate()
-	{
-		while ( HasChildNodes() )
-		{
+    void OnUpdate() {
+        while (HasChildNodes()) {
+            RemoveChild(GetFirstChild());
+        }
 
-			RemoveChild( GetFirstChild() );
-		}
-
-		for ( size_t i = 0; i < strings.size(); ++i )
-		{
-			Rocket::Core::Factory::InstanceElementText( this, va( "<div style='position: fixed; left: %.2f%%; top: %.2f%%;' class='%s'>%s</div>", strings[ i ].x * 100.0f, strings[ i ].y * 100.0f, strings[ i ].text_class.CString(), strings[ i ].text.CString() ) );
-		}
-	}
+        for (size_t i = 0; i < strings.size(); ++i) {
+            Rocket::Core::Factory::InstanceElementText(
+                    this, va("<div style='position: fixed; left: %.2f%%; top: %.2f%%;' "
+                             "class='%s'>%s</div>",
+                             strings[i].x * 100.0f,
+                             strings[i].y * 100.0f,
+                             strings[i].text_class.CString(),
+                             strings[i].text.CString()));
+        }
+    }
 
 private:
-	static std::vector<TextAndRect> strings;
-	Rocket::Core::Element *base_element;
+    static std::vector<TextAndRect> strings;
+    Rocket::Core::Element* base_element;
 };
 #endif

@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -41,56 +46,50 @@ Maryland 20850 USA.
 #include <Rocket/Controls/DataSource.h>
 #include <Rocket/Core/Types.h>
 
-class RocketDataGrid : public Rocket::Controls::DataSource
-{
+class RocketDataGrid : public Rocket::Controls::DataSource {
 public:
-	RocketDataGrid( const char *name ) : Rocket::Controls::DataSource( name ) { }
-	~RocketDataGrid() { }
-	void GetRow( Rocket::Core::StringList& row, const Rocket::Core::String& table, int row_index, const Rocket::Core::StringList& columns )
-	{
-		if ( data.find( table ) == data.end() || data[table].size() <= row_index )
-		{
-			return;
-		}
+    RocketDataGrid(const char* name)
+            : Rocket::Controls::DataSource(name) {}
+    ~RocketDataGrid() {}
+    void GetRow(Rocket::Core::StringList& row, const Rocket::Core::String& table, int row_index, const Rocket::Core::StringList& columns) {
+        if (data.find(table) == data.end() || data[table].size() <= row_index) {
+            return;
+        }
 
-		for ( size_t i = 0; i < columns.size(); ++i )
-		{
-			row.push_back( Rocket_QuakeToRML( Info_ValueForKey( data[ table ][ row_index ].CString(), columns[ i ].CString() ), RP_EMOTICONS ) );
-		}
-	}
+        for (size_t i = 0; i < columns.size(); ++i) {
+            row.push_back(
+                    Rocket_QuakeToRML(Info_ValueForKey(data[table][row_index].CString(),
+                                                       columns[i].CString()),
+                                      RP_EMOTICONS));
+        }
+    }
 
-	int GetNumRows( const Rocket::Core::String& table )
-	{
-		return data[ table ].size();
-	}
+    int GetNumRows(const Rocket::Core::String& table) {
+        return data[table].size();
+    }
 
-	void AddRow( const char *table, const char *dataIn )
-	{
-		data[ table ].push_back( dataIn );
-		NotifyRowAdd( table, data[ table ].size() - 1, 1 );
-	}
+    void AddRow(const char* table, const char* dataIn) {
+        data[table].push_back(dataIn);
+        NotifyRowAdd(table, data[table].size() - 1, 1);
+    }
 
-	void ChangeRow( const char *table, const int row, const char *dataIn )
-	{
-		data[ table ][ row ] = dataIn;
-		NotifyRowChange( table, row, 1 );
-	}
+    void ChangeRow(const char* table, const int row, const char* dataIn) {
+        data[table][row] = dataIn;
+        NotifyRowChange(table, row, 1);
+    }
 
-	void RemoveRow( const char *table, const int row )
-	{
-		data[ table ].erase( data[ table ].begin() + row - 1 );
-		NotifyRowRemove( table, row, 1 );
-	}
+    void RemoveRow(const char* table, const int row) {
+        data[table].erase(data[table].begin() + row - 1);
+        NotifyRowRemove(table, row, 1);
+    }
 
-	void ClearTable( const char *table )
-	{
-		data.erase( table );
-		NotifyRowChange( table );
-	}
-
+    void ClearTable(const char* table) {
+        data.erase(table);
+        NotifyRowChange(table);
+    }
 
 private:
-	std::map<Rocket::Core::String, std::vector<Rocket::Core::String> > data;
+    std::map<Rocket::Core::String, std::vector<Rocket::Core::String>> data;
 };
 
 #endif

@@ -1,0 +1,28 @@
+# https://github.com/llvm-mirror/clang/blob/master/lib/Format/Format.cpp
+BasedOnStyle: LLVM
+
+AlignEscapedNewlinesLeft: true
+PointerAlignment: Left
+
+AlwaysBreakTemplateDeclarations: true
+
+BinPackArguments: false
+BinPackParameters: false
+
+SpaceAfterCStyleCast: true
+
+
+ColumnLimit: 0
+
+# Indentation
+AccessModifierOffset: -4
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 8
+IndentCaseLabels: true
+IndentWidth: 4
+NamespaceIndentation: None
+UseTab: Never
+
+AllowShortBlocksOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+

@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -34,17 +39,17 @@ Maryland 20850 USA.
 
 #include "bot_types.h"
 
-bool     BotSetupNav( const botClass_t *botClass, qhandle_t *navHandle );
-void         BotShutdownNav();
+bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle);
+void BotShutdownNav();
 
-void         BotDisableArea( const vec3_t origin, const vec3_t mins, const vec3_t maxs );
-void         BotEnableArea( const vec3_t origin, const vec3_t mins, const vec3_t maxs );
-void         BotSetNavMesh( int botClientNum, qhandle_t nav );
-bool     BotFindRouteExt( int botClientNum, const botRouteTarget_t *target, bool allowPartial );
-void         BotUpdateCorridor( int botClientNum, const botRouteTarget_t *target, botNavCmd_t *cmd );
-void         BotFindRandomPoint( int botClientNum, vec3_t point );
-bool     BotFindRandomPointInRadius( int botClientNum, const vec3_t origin, vec3_t point, float radius );
-bool     BotNavTrace( int botClientNum, botTrace_t *trace, const vec3_t start, const vec3_t end );
-void         BotAddObstacle( const vec3_t mins, const vec3_t maxs, qhandle_t *obstacleHandle );
-void         BotRemoveObstacle( qhandle_t obstacleHandle );
-void         BotUpdateObstacles();
+void BotDisableArea(const vec3_t origin, const vec3_t mins, const vec3_t maxs);
+void BotEnableArea(const vec3_t origin, const vec3_t mins, const vec3_t maxs);
+void BotSetNavMesh(int botClientNum, qhandle_t nav);
+bool BotFindRouteExt(int botClientNum, const botRouteTarget_t* target, bool allowPartial);
+void BotUpdateCorridor(int botClientNum, const botRouteTarget_t* target, botNavCmd_t* cmd);
+void BotFindRandomPoint(int botClientNum, vec3_t point);
+bool BotFindRandomPointInRadius(int botClientNum, const vec3_t origin, vec3_t point, float radius);
+bool BotNavTrace(int botClientNum, botTrace_t* trace, const vec3_t start, const vec3_t end);
+void BotAddObstacle(const vec3_t mins, const vec3_t maxs, qhandle_t* obstacleHandle);
+void BotRemoveObstacle(qhandle_t obstacleHandle);
+void BotUpdateObstacles();

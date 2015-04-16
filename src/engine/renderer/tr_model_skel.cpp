@@ -23,177 +23,171 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // tr_models.c -- model loading and caching
 #include "tr_local.h"
 
-bool AddTriangleToVBOTriangleList( growList_t *vboTriangles, skelTriangle_t *tri, int *numBoneReferences, int boneReferences[ MAX_BONES ] )
-{
-	int         i, j, k;
-	md5Vertex_t *v;
-	int         boneIndex;
-	int         numNewReferences;
-	int         newReferences[ MAX_WEIGHTS * 3 ]; // a single triangle can have up to 12 new bone references !
-	bool    hasWeights;
+bool AddTriangleToVBOTriangleList(growList_t* vboTriangles, skelTriangle_t* tri, int* numBoneReferences, int boneReferences[MAX_BONES]) {
+    int i, j, k;
+    md5Vertex_t* v;
+    int boneIndex;
+    int numNewReferences;
+    int newReferences[MAX_WEIGHTS * 3]; // a single triangle can have up to 12
+                                        // new bone references !
+    bool hasWeights;
 
-	hasWeights = false;
+    hasWeights = false;
 
-	numNewReferences = 0;
-	Com_Memset( newReferences, -1, sizeof( newReferences ) );
+    numNewReferences = 0;
+    Com_Memset(newReferences, -1, sizeof(newReferences));
 
-	for ( i = 0; i < 3; i++ )
-	{
-		v = tri->vertexes[ i ];
+    for (i = 0; i < 3; i++) {
+        v = tri->vertexes[i];
 
-		// can the bones be referenced?
-		for ( j = 0; j < MAX_WEIGHTS; j++ )
-		{
-			if ( j < v->numWeights )
-			{
-				boneIndex = v->boneIndexes[ j ];
-				hasWeights = true;
+        // can the bones be referenced?
+        for (j = 0; j < MAX_WEIGHTS; j++) {
+            if (j < v->numWeights) {
+                boneIndex = v->boneIndexes[j];
+                hasWeights = true;
 
-				// is the bone already referenced?
-				if ( !boneReferences[ boneIndex ] )
-				{
-					// the bone isn't yet and we have to test if we can give the mesh this bone at all
-					if ( ( *numBoneReferences + numNewReferences ) >= glConfig2.maxVertexSkinningBones )
-					{
-						return false;
-					}
-					else
-					{
-						for ( k = 0; k < ( MAX_WEIGHTS * 3 ); k++ )
-						{
-							if ( newReferences[ k ] == boneIndex )
-							{
-								break;
-							}
-						}
+                // is the bone already referenced?
+                if (!boneReferences[boneIndex]) {
+                    // the bone isn't yet and we have to test if we can give the mesh this
+                    // bone at all
+                    if ((*numBoneReferences + numNewReferences) >=
+                        glConfig2.maxVertexSkinningBones) {
+                        return false;
+                    } else {
+                        for (k = 0; k < (MAX_WEIGHTS * 3); k++) {
+                            if (newReferences[k] == boneIndex) {
+                                break;
+                            }
+                        }
 
-						if ( k == ( MAX_WEIGHTS * 3 ) )
-						{
-							newReferences[ numNewReferences ] = boneIndex;
-							numNewReferences++;
-						}
-					}
-				}
-			}
-		}
-	}
+                        if (k == (MAX_WEIGHTS * 3)) {
+                            newReferences[numNewReferences] = boneIndex;
+                            numNewReferences++;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	// reference them!
-	for ( j = 0; j < numNewReferences; j++ )
-	{
-		boneIndex = newReferences[ j ];
+    // reference them!
+    for (j = 0; j < numNewReferences; j++) {
+        boneIndex = newReferences[j];
 
-		boneReferences[ boneIndex ]++;
+        boneReferences[boneIndex]++;
 
-		*numBoneReferences = *numBoneReferences + 1;
-	}
+        *numBoneReferences = *numBoneReferences + 1;
+    }
 
-	if ( hasWeights )
-	{
-		Com_AddToGrowList( vboTriangles, tri );
-		return true;
-	}
+    if (hasWeights) {
+        Com_AddToGrowList(vboTriangles, tri);
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
-void AddSurfaceToVBOSurfacesList( growList_t *vboSurfaces, growList_t *vboTriangles, md5Model_t *md5, md5Surface_t *surf, int skinIndex, int numBoneReferences, int boneReferences[ MAX_BONES ] )
-{
-	int             j, k;
+void AddSurfaceToVBOSurfacesList(growList_t* vboSurfaces,
+                                 growList_t* vboTriangles,
+                                 md5Model_t* md5,
+                                 md5Surface_t* surf,
+                                 int skinIndex,
+                                 int numBoneReferences,
+                                 int boneReferences[MAX_BONES]) {
+    int j, k;
 
-	int             vertexesNum;
-	vboData_t       data;
+    int vertexesNum;
+    vboData_t data;
 
-	int             indexesNum;
-	glIndex_t       *indexes;
+    int indexesNum;
+    glIndex_t* indexes;
 
-	skelTriangle_t  *tri;
+    skelTriangle_t* tri;
 
-	srfVBOMD5Mesh_t *vboSurf;
+    srfVBOMD5Mesh_t* vboSurf;
 
-	vertexesNum = surf->numVerts;
-	indexesNum = vboTriangles->currentElements * 3;
+    vertexesNum = surf->numVerts;
+    indexesNum = vboTriangles->currentElements * 3;
 
-	// create surface
-	vboSurf = (srfVBOMD5Mesh_t*) ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
-	Com_AddToGrowList( vboSurfaces, vboSurf );
+    // create surface
+    vboSurf = (srfVBOMD5Mesh_t*) ri.Hunk_Alloc(sizeof(*vboSurf), h_low);
+    Com_AddToGrowList(vboSurfaces, vboSurf);
 
-	vboSurf->surfaceType = SF_VBO_MD5MESH;
-	vboSurf->md5Model = md5;
-	vboSurf->shader = R_GetShaderByHandle( surf->shaderIndex );
-	vboSurf->skinIndex = skinIndex;
-	vboSurf->numIndexes = indexesNum;
-	vboSurf->numVerts = vertexesNum;
+    vboSurf->surfaceType = SF_VBO_MD5MESH;
+    vboSurf->md5Model = md5;
+    vboSurf->shader = R_GetShaderByHandle(surf->shaderIndex);
+    vboSurf->skinIndex = skinIndex;
+    vboSurf->numIndexes = indexesNum;
+    vboSurf->numVerts = vertexesNum;
 
-	memset( &data, 0, sizeof( data ) );
+    memset(&data, 0, sizeof(data));
 
-	data.xyz = ( vec3_t * ) ri.Hunk_AllocateTempMemory( sizeof( *data.xyz ) * vertexesNum );
-	data.qtangent = ( i16vec4_t * ) ri.Hunk_AllocateTempMemory( sizeof( i16vec4_t ) * vertexesNum );
-	data.boneIndexes = ( int (*)[ 4 ] ) ri.Hunk_AllocateTempMemory( sizeof( *data.boneIndexes ) * vertexesNum );
-	data.boneWeights = ( vec4_t * ) ri.Hunk_AllocateTempMemory( sizeof( *data.boneWeights ) * vertexesNum );
-	data.st = ( i16vec2_t * ) ri.Hunk_AllocateTempMemory( sizeof( i16vec2_t ) * vertexesNum );
-	data.noLightCoords = true;
-	data.numVerts = vertexesNum;
+    data.xyz =
+            (vec3_t*) ri.Hunk_AllocateTempMemory(sizeof(*data.xyz) * vertexesNum);
+    data.qtangent =
+            (i16vec4_t*) ri.Hunk_AllocateTempMemory(sizeof(i16vec4_t) * vertexesNum);
+    data.boneIndexes = (int(*) [4]) ri.Hunk_AllocateTempMemory(
+            sizeof(*data.boneIndexes) * vertexesNum);
+    data.boneWeights = (vec4_t*) ri.Hunk_AllocateTempMemory(
+            sizeof(*data.boneWeights) * vertexesNum);
+    data.st =
+            (i16vec2_t*) ri.Hunk_AllocateTempMemory(sizeof(i16vec2_t) * vertexesNum);
+    data.noLightCoords = true;
+    data.numVerts = vertexesNum;
 
-	indexes = ( glIndex_t * ) ri.Hunk_AllocateTempMemory( indexesNum * sizeof( glIndex_t ) );
+    indexes =
+            (glIndex_t*) ri.Hunk_AllocateTempMemory(indexesNum * sizeof(glIndex_t));
 
-	vboSurf->numBoneRemap = 0;
-	Com_Memset( vboSurf->boneRemap, 0, sizeof( vboSurf->boneRemap ) );
-	Com_Memset( vboSurf->boneRemapInverse, 0, sizeof( vboSurf->boneRemapInverse ) );
+    vboSurf->numBoneRemap = 0;
+    Com_Memset(vboSurf->boneRemap, 0, sizeof(vboSurf->boneRemap));
+    Com_Memset(vboSurf->boneRemapInverse, 0, sizeof(vboSurf->boneRemapInverse));
 
-	for ( j = 0; j < MAX_BONES; j++ )
-	{
-		if ( boneReferences[ j ] > 0 )
-		{
-			vboSurf->boneRemap[ j ] = vboSurf->numBoneRemap;
-			vboSurf->boneRemapInverse[ vboSurf->numBoneRemap ] = j;
+    for (j = 0; j < MAX_BONES; j++) {
+        if (boneReferences[j] > 0) {
+            vboSurf->boneRemap[j] = vboSurf->numBoneRemap;
+            vboSurf->boneRemapInverse[vboSurf->numBoneRemap] = j;
 
-			vboSurf->numBoneRemap++;
-		}
-	}
+            vboSurf->numBoneRemap++;
+        }
+    }
 
-	for ( j = 0; j < vboTriangles->currentElements; j++ )
-	{
-		tri = ( skelTriangle_t * ) Com_GrowListElement( vboTriangles, j );
+    for (j = 0; j < vboTriangles->currentElements; j++) {
+        tri = (skelTriangle_t*) Com_GrowListElement(vboTriangles, j);
 
-		for ( k = 0; k < 3; k++ )
-		{
-			indexes[ j * 3 + k ] = tri->indexes[ k ];
-		}
-	}
+        for (k = 0; k < 3; k++) {
+            indexes[j * 3 + k] = tri->indexes[k];
+        }
+    }
 
-	for ( j = 0; j < vertexesNum; j++ )
-	{
-		VectorCopy( surf->verts[ j ].position, data.xyz[ j ] );
-		R_TBNtoQtangents( surf->verts[ j ].tangent, surf->verts[ j ].binormal,
-				  surf->verts[ j ].normal, data.qtangent[ j ] );
-		
-		data.st[ j ][ 0 ] = floatToHalf( surf->verts[ j ].texCoords[ 0 ] );
-		data.st[ j ][ 1 ] = floatToHalf( surf->verts[ j ].texCoords[ 1 ] );
+    for (j = 0; j < vertexesNum; j++) {
+        VectorCopy(surf->verts[j].position, data.xyz[j]);
+        R_TBNtoQtangents(surf->verts[j].tangent, surf->verts[j].binormal, surf->verts[j].normal, data.qtangent[j]);
 
-		for ( k = 0; k < MAX_WEIGHTS; k++ )
-		{
-			if ( k < surf->verts[ j ].numWeights )
-			{
-				data.boneIndexes[ j ][ k ] = vboSurf->boneRemap[ surf->verts[ j ].boneIndexes[ k ] ];
-				data.boneWeights[ j ][ k ] = surf->verts[ j ].boneWeights[ k ];
-			}
-			else
-			{
-				data.boneWeights[ j ][ k ] = 0;
-				data.boneIndexes[ j ][ k ] = 0;
-			}
-		}
-	}
+        data.st[j][0] = floatToHalf(surf->verts[j].texCoords[0]);
+        data.st[j][1] = floatToHalf(surf->verts[j].texCoords[1]);
 
-	vboSurf->vbo = R_CreateStaticVBO( va( "staticMD5Mesh_VBO %i", vboSurfaces->currentElements ), data, VBO_LAYOUT_SKELETAL );
+        for (k = 0; k < MAX_WEIGHTS; k++) {
+            if (k < surf->verts[j].numWeights) {
+                data.boneIndexes[j][k] =
+                        vboSurf->boneRemap[surf->verts[j].boneIndexes[k]];
+                data.boneWeights[j][k] = surf->verts[j].boneWeights[k];
+            } else {
+                data.boneWeights[j][k] = 0;
+                data.boneIndexes[j][k] = 0;
+            }
+        }
+    }
 
-	vboSurf->ibo = R_CreateStaticIBO( va( "staticMD5Mesh_IBO %i", vboSurfaces->currentElements ), indexes, indexesNum );
+    vboSurf->vbo = R_CreateStaticVBO(
+            va("staticMD5Mesh_VBO %i", vboSurfaces->currentElements), data, VBO_LAYOUT_SKELETAL);
 
-	ri.Hunk_FreeTempMemory( indexes );
-	ri.Hunk_FreeTempMemory( data.st );
-	ri.Hunk_FreeTempMemory( data.boneWeights );
-	ri.Hunk_FreeTempMemory( data.boneIndexes );
-	ri.Hunk_FreeTempMemory( data.qtangent );
-	ri.Hunk_FreeTempMemory( data.xyz );
+    vboSurf->ibo = R_CreateStaticIBO(
+            va("staticMD5Mesh_IBO %i", vboSurfaces->currentElements), indexes, indexesNum);
+
+    ri.Hunk_FreeTempMemory(indexes);
+    ri.Hunk_FreeTempMemory(data.st);
+    ri.Hunk_FreeTempMemory(data.boneWeights);
+    ri.Hunk_FreeTempMemory(data.boneIndexes);
+    ri.Hunk_FreeTempMemory(data.qtangent);
+    ri.Hunk_FreeTempMemory(data.xyz);
 }

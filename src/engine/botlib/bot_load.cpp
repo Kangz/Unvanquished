@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -36,391 +41,362 @@ Maryland 20850 USA.
 #include "nav.h"
 
 int numNavData = 0;
-NavData_t BotNavData[ MAX_NAV_DATA ];
+NavData_t BotNavData[MAX_NAV_DATA];
 
-LinearAllocator alloc( 1024 * 1024 * 16 );
+LinearAllocator alloc(1024 * 1024 * 16);
 FastLZCompressor comp;
 
-void BotSaveOffMeshConnections( NavData_t *nav )
-{
-	char mapname[ MAX_QPATH ];
-	char filePath[ MAX_QPATH ];
-	fileHandle_t f = 0;
+void BotSaveOffMeshConnections(NavData_t* nav) {
+    char mapname[MAX_QPATH];
+    char filePath[MAX_QPATH];
+    fileHandle_t f = 0;
 
-	Cvar_VariableStringBuffer( "mapname", mapname, sizeof( mapname ) );
-	Com_sprintf( filePath, sizeof( filePath ), "maps/%s-%s.navcon", mapname, nav->name );
-	f = FS_FOpenFileWrite( filePath );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
+    Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navcon", mapname, nav->name);
+    f = FS_FOpenFileWrite(filePath);
 
-	if ( !f )
-	{
-		return;
-	}
+    if (!f) {
+        return;
+    }
 
-	int conCount = nav->process.con.offMeshConCount;
-	OffMeshConnectionHeader header;
-	header.version = LittleLong( NAVMESHCON_VERSION );
-	header.numConnections = LittleLong( conCount );
-	FS_Write( &header, sizeof( header ), f );
+    int conCount = nav->process.con.offMeshConCount;
+    OffMeshConnectionHeader header;
+    header.version = LittleLong(NAVMESHCON_VERSION);
+    header.numConnections = LittleLong(conCount);
+    FS_Write(&header, sizeof(header), f);
 
-	size_t size = sizeof( float ) * 6 * conCount;
-	float *verts = ( float * ) dtAlloc( size, DT_ALLOC_TEMP );
-	memcpy( verts, nav->process.con.verts, size );
-	SwapArray( verts, conCount * 6 );
-	FS_Write( verts, size, f );
-	dtFree( verts );
+    size_t size = sizeof(float) * 6 * conCount;
+    float* verts = (float*) dtAlloc(size, DT_ALLOC_TEMP);
+    memcpy(verts, nav->process.con.verts, size);
+    SwapArray(verts, conCount * 6);
+    FS_Write(verts, size, f);
+    dtFree(verts);
 
-	size = sizeof( float ) * conCount;
-	float *rad = ( float * ) dtAlloc( size, DT_ALLOC_TEMP );
-	memcpy( rad, nav->process.con.rad, size );
-	SwapArray( rad, conCount );
-	FS_Write( rad, size, f );
-	dtFree( rad );
+    size = sizeof(float) * conCount;
+    float* rad = (float*) dtAlloc(size, DT_ALLOC_TEMP);
+    memcpy(rad, nav->process.con.rad, size);
+    SwapArray(rad, conCount);
+    FS_Write(rad, size, f);
+    dtFree(rad);
 
-	size = sizeof( unsigned short ) * conCount;
-	unsigned short *flags = ( unsigned short * ) dtAlloc( size, DT_ALLOC_TEMP );
-	memcpy( flags, nav->process.con.flags, size );
-	SwapArray( flags, conCount );
-	FS_Write( flags, size, f );
-	dtFree( flags );
+    size = sizeof(unsigned short) * conCount;
+    unsigned short* flags = (unsigned short*) dtAlloc(size, DT_ALLOC_TEMP);
+    memcpy(flags, nav->process.con.flags, size);
+    SwapArray(flags, conCount);
+    FS_Write(flags, size, f);
+    dtFree(flags);
 
-	FS_Write( nav->process.con.areas, sizeof( unsigned char ) * conCount, f );
-	FS_Write( nav->process.con.dirs, sizeof( unsigned char ) * conCount, f );
+    FS_Write(nav->process.con.areas, sizeof(unsigned char) * conCount, f);
+    FS_Write(nav->process.con.dirs, sizeof(unsigned char) * conCount, f);
 
-	size = sizeof( unsigned int ) * conCount;
-	unsigned int *userids = ( unsigned int * ) dtAlloc( size, DT_ALLOC_TEMP );
-	memcpy( userids, nav->process.con.userids, size );
-	SwapArray( userids, conCount );
-	FS_Write( userids, size, f );
-	dtFree( userids );
+    size = sizeof(unsigned int) * conCount;
+    unsigned int* userids = (unsigned int*) dtAlloc(size, DT_ALLOC_TEMP);
+    memcpy(userids, nav->process.con.userids, size);
+    SwapArray(userids, conCount);
+    FS_Write(userids, size, f);
+    dtFree(userids);
 
-	FS_FCloseFile( f );
+    FS_FCloseFile(f);
 }
 
-void BotLoadOffMeshConnections( const char *filename, NavData_t *nav )
-{
-	char mapname[ MAX_QPATH ];
-	char filePath[ MAX_QPATH ];
-	fileHandle_t f = 0;
+void BotLoadOffMeshConnections(const char* filename, NavData_t* nav) {
+    char mapname[MAX_QPATH];
+    char filePath[MAX_QPATH];
+    fileHandle_t f = 0;
 
-	Cvar_VariableStringBuffer( "mapname", mapname, sizeof( mapname ) );
-	Com_sprintf( filePath, sizeof( filePath ), "maps/%s-%s.navcon", mapname, filename );
-	FS_FOpenFileRead( filePath, &f, true );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
+    Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navcon", mapname, filename);
+    FS_FOpenFileRead(filePath, &f, true);
 
-	if ( !f )
-	{
-		return;
-	}
+    if (!f) {
+        return;
+    }
 
-	OffMeshConnectionHeader header;
-	FS_Read( &header, sizeof( header ), f );
+    OffMeshConnectionHeader header;
+    FS_Read(&header, sizeof(header), f);
 
-	header.version = LittleLong( header.version );
-	header.numConnections = LittleLong( header.numConnections );
+    header.version = LittleLong(header.version);
+    header.numConnections = LittleLong(header.numConnections);
 
-	if ( header.version != NAVMESHCON_VERSION )
-	{
-		FS_FCloseFile( f );
-		return;
-	}
+    if (header.version != NAVMESHCON_VERSION) {
+        FS_FCloseFile(f);
+        return;
+    }
 
-	int conCount = header.numConnections;
+    int conCount = header.numConnections;
 
-	if ( conCount > nav->process.con.MAX_CON )
-	{
-		FS_FCloseFile( f );
-		return;
-	}
+    if (conCount > nav->process.con.MAX_CON) {
+        FS_FCloseFile(f);
+        return;
+    }
 
-	nav->process.con.offMeshConCount = conCount;
+    nav->process.con.offMeshConCount = conCount;
 
-	FS_Read( nav->process.con.verts, sizeof( float ) * 6 * conCount, f );
-	SwapArray( nav->process.con.verts, conCount * 6 );
+    FS_Read(nav->process.con.verts, sizeof(float) * 6 * conCount, f);
+    SwapArray(nav->process.con.verts, conCount * 6);
 
-	FS_Read( nav->process.con.rad, sizeof( float ) * conCount, f );
-	SwapArray( nav->process.con.rad, conCount );
+    FS_Read(nav->process.con.rad, sizeof(float) * conCount, f);
+    SwapArray(nav->process.con.rad, conCount);
 
-	FS_Read( nav->process.con.flags, sizeof( unsigned short ) * conCount, f );
-	SwapArray( nav->process.con.flags, conCount );
+    FS_Read(nav->process.con.flags, sizeof(unsigned short) * conCount, f);
+    SwapArray(nav->process.con.flags, conCount);
 
-	FS_Read( nav->process.con.areas, sizeof( unsigned char ) * conCount, f );
-	FS_Read( nav->process.con.dirs, sizeof( unsigned char ) * conCount, f );
+    FS_Read(nav->process.con.areas, sizeof(unsigned char) * conCount, f);
+    FS_Read(nav->process.con.dirs, sizeof(unsigned char) * conCount, f);
 
-	FS_Read( nav->process.con.userids, sizeof( unsigned int ) * conCount, f );
-	SwapArray( nav->process.con.userids, conCount );
+    FS_Read(nav->process.con.userids, sizeof(unsigned int) * conCount, f);
+    SwapArray(nav->process.con.userids, conCount);
 
-	FS_FCloseFile( f );
+    FS_FCloseFile(f);
 }
 
-bool BotLoadNavMesh( const char *filename, NavData_t &nav )
-{
-	char mapname[ MAX_QPATH ];
-	char filePath[ MAX_QPATH ];
-	char gameName[ MAX_STRING_CHARS ];
-	fileHandle_t f = 0;
+bool BotLoadNavMesh(const char* filename, NavData_t& nav) {
+    char mapname[MAX_QPATH];
+    char filePath[MAX_QPATH];
+    char gameName[MAX_STRING_CHARS];
+    fileHandle_t f = 0;
 
-	BotLoadOffMeshConnections( filename, &nav );
+    BotLoadOffMeshConnections(filename, &nav);
 
-	Cvar_VariableStringBuffer( "mapname", mapname, sizeof( mapname ) );
-	Cvar_VariableStringBuffer( "fs_game", gameName, sizeof( gameName ) );
-	Com_sprintf( filePath, sizeof( filePath ), "maps/%s-%s.navMesh", mapname, filename );
-	Com_Printf( " loading navigation mesh file '%s'...\n", filePath );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
+    Cvar_VariableStringBuffer("fs_game", gameName, sizeof(gameName));
+    Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navMesh", mapname, filename);
+    Com_Printf(" loading navigation mesh file '%s'...\n", filePath);
 
-	int len = FS_FOpenFileRead( filePath, &f, true );
+    int len = FS_FOpenFileRead(filePath, &f, true);
 
-	if ( !f )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Cannot open Navigaton Mesh file\n" );
-		return false;
-	}
+    if (!f) {
+        Com_Printf(S_COLOR_RED "ERROR: Cannot open Navigaton Mesh file\n");
+        return false;
+    }
 
-	if ( len < 0 )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Negative Length for Navigation Mesh file\n" );
-		return false;
-	}
+    if (len < 0) {
+        Com_Printf(S_COLOR_RED "ERROR: Negative Length for Navigation Mesh file\n");
+        return false;
+    }
 
-	NavMeshSetHeader header;
-	
-	FS_Read( &header, sizeof( header ), f );
+    NavMeshSetHeader header;
 
-	SwapNavMeshSetHeader( header );
+    FS_Read(&header, sizeof(header), f);
 
-	if ( header.magic != NAVMESHSET_MAGIC )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: File is wrong magic\n" );
-		FS_FCloseFile( f );
-		return false;
-	}
+    SwapNavMeshSetHeader(header);
 
-	if ( header.version != NAVMESHSET_VERSION )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: File is wrong version found: %d want: %d\n", header.version, NAVMESHSET_VERSION );
-		FS_FCloseFile( f );
-		return false;
-	}
+    if (header.magic != NAVMESHSET_MAGIC) {
+        Com_Printf(S_COLOR_RED "ERROR: File is wrong magic\n");
+        FS_FCloseFile(f);
+        return false;
+    }
 
-	nav.mesh = dtAllocNavMesh();
+    if (header.version != NAVMESHSET_VERSION) {
+        Com_Printf(S_COLOR_RED "ERROR: File is wrong version found: %d want: %d\n",
+                   header.version,
+                   NAVMESHSET_VERSION);
+        FS_FCloseFile(f);
+        return false;
+    }
 
-	if ( !nav.mesh )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Unable to allocate nav mesh\n" );
-		FS_FCloseFile( f );
-		return false;
-	}
+    nav.mesh = dtAllocNavMesh();
 
-	dtStatus status = nav.mesh->init( &header.params );
+    if (!nav.mesh) {
+        Com_Printf(S_COLOR_RED "ERROR: Unable to allocate nav mesh\n");
+        FS_FCloseFile(f);
+        return false;
+    }
 
-	if ( dtStatusFailed( status ) )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Could not init navmesh\n" );
-		dtFreeNavMesh( nav.mesh );
-		nav.mesh = nullptr;
-		FS_FCloseFile( f );
-		return false;
-	}
+    dtStatus status = nav.mesh->init(&header.params);
 
-	nav.cache = dtAllocTileCache();
+    if (dtStatusFailed(status)) {
+        Com_Printf(S_COLOR_RED "ERROR: Could not init navmesh\n");
+        dtFreeNavMesh(nav.mesh);
+        nav.mesh = nullptr;
+        FS_FCloseFile(f);
+        return false;
+    }
 
-	if ( !nav.cache )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Could not allocate tile cache\n" );
-		dtFreeNavMesh( nav.mesh );
-		nav.mesh = nullptr;
-		FS_FCloseFile( f );
-		return false;
-	}
+    nav.cache = dtAllocTileCache();
 
-	status = nav.cache->init( &header.cacheParams, &alloc, &comp, &nav.process );
+    if (!nav.cache) {
+        Com_Printf(S_COLOR_RED "ERROR: Could not allocate tile cache\n");
+        dtFreeNavMesh(nav.mesh);
+        nav.mesh = nullptr;
+        FS_FCloseFile(f);
+        return false;
+    }
 
-	if ( dtStatusFailed( status ) )
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Could not init tile cache\n" );
-		dtFreeNavMesh( nav.mesh );
-		dtFreeTileCache( nav.cache );
-		nav.mesh = nullptr;
-		nav.cache = nullptr;
-		FS_FCloseFile( f );
-		return false;
-	}
+    status = nav.cache->init(&header.cacheParams, &alloc, &comp, &nav.process);
 
-	for ( int i = 0; i < header.numTiles; i++ )
-	{
-		NavMeshTileHeader tileHeader;
+    if (dtStatusFailed(status)) {
+        Com_Printf(S_COLOR_RED "ERROR: Could not init tile cache\n");
+        dtFreeNavMesh(nav.mesh);
+        dtFreeTileCache(nav.cache);
+        nav.mesh = nullptr;
+        nav.cache = nullptr;
+        FS_FCloseFile(f);
+        return false;
+    }
 
-		FS_Read( &tileHeader, sizeof( tileHeader ), f );
+    for (int i = 0; i < header.numTiles; i++) {
+        NavMeshTileHeader tileHeader;
 
-		SwapNavMeshTileHeader( tileHeader );
+        FS_Read(&tileHeader, sizeof(tileHeader), f);
 
-		if ( !tileHeader.tileRef || !tileHeader.dataSize )
-		{
-			Com_Printf( S_COLOR_RED "ERROR: NUll Tile in navmesh\n" );
-			dtFreeNavMesh( nav.mesh );
-			dtFreeTileCache( nav.cache );
-			nav.cache = nullptr;
-			nav.mesh = nullptr;
-			FS_FCloseFile( f );
-			return false;
-		}
+        SwapNavMeshTileHeader(tileHeader);
 
-		unsigned char *data = ( unsigned char * ) dtAlloc( tileHeader.dataSize, DT_ALLOC_PERM );
+        if (!tileHeader.tileRef || !tileHeader.dataSize) {
+            Com_Printf(S_COLOR_RED "ERROR: NUll Tile in navmesh\n");
+            dtFreeNavMesh(nav.mesh);
+            dtFreeTileCache(nav.cache);
+            nav.cache = nullptr;
+            nav.mesh = nullptr;
+            FS_FCloseFile(f);
+            return false;
+        }
 
-		if ( !data )
-		{
-			Com_Printf( S_COLOR_RED "ERROR: Failed to allocate memory for tile data\n" );
-			dtFreeNavMesh( nav.mesh );
-			dtFreeTileCache( nav.cache );
-			nav.cache = nullptr;
-			nav.mesh = nullptr;
-			FS_FCloseFile( f );
-			return false;
-		}
+        unsigned char* data =
+                (unsigned char*) dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
 
-		memset( data, 0, tileHeader.dataSize );
+        if (!data) {
+            Com_Printf(S_COLOR_RED
+                       "ERROR: Failed to allocate memory for tile data\n");
+            dtFreeNavMesh(nav.mesh);
+            dtFreeTileCache(nav.cache);
+            nav.cache = nullptr;
+            nav.mesh = nullptr;
+            FS_FCloseFile(f);
+            return false;
+        }
 
-		FS_Read( data, tileHeader.dataSize, f );
+        memset(data, 0, tileHeader.dataSize);
 
-		if ( LittleLong( 1 ) != 1 )
-		{
-			dtTileCacheHeaderSwapEndian( data, tileHeader.dataSize );
-		}
+        FS_Read(data, tileHeader.dataSize, f);
 
-		dtCompressedTileRef tile = 0;
-		dtStatus status = nav.cache->addTile( data, tileHeader.dataSize, DT_TILE_FREE_DATA, &tile );
+        if (LittleLong(1) != 1) {
+            dtTileCacheHeaderSwapEndian(data, tileHeader.dataSize);
+        }
 
-		if ( dtStatusFailed( status ) )
-		{
-			Com_Printf( S_COLOR_RED "ERROR: Failed to add tile to navmesh\n" );
-			dtFree( data );
-			dtFreeTileCache( nav.cache );
-			dtFreeNavMesh( nav.mesh );
-			nav.cache = nullptr;
-			nav.mesh = nullptr;
-			FS_FCloseFile( f );
-			return false;
-		}
+        dtCompressedTileRef tile = 0;
+        dtStatus status =
+                nav.cache->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, &tile);
 
-		if ( tile )
-		{
-			nav.cache->buildNavMeshTile( tile, nav.mesh );
-		}
-	}
+        if (dtStatusFailed(status)) {
+            Com_Printf(S_COLOR_RED "ERROR: Failed to add tile to navmesh\n");
+            dtFree(data);
+            dtFreeTileCache(nav.cache);
+            dtFreeNavMesh(nav.mesh);
+            nav.cache = nullptr;
+            nav.mesh = nullptr;
+            FS_FCloseFile(f);
+            return false;
+        }
 
-	FS_FCloseFile( f );
-	return true;
+        if (tile) {
+            nav.cache->buildNavMeshTile(tile, nav.mesh);
+        }
+    }
+
+    FS_FCloseFile(f);
+    return true;
 }
 
-inline void *dtAllocCustom( int size, dtAllocHint hint )
-{
-	return Z_TagMalloc( size, TAG_BOTLIB );
+inline void* dtAllocCustom(int size, dtAllocHint hint) {
+    return Z_TagMalloc(size, TAG_BOTLIB);
 }
 
-inline void dtFreeCustom( void *ptr )
-{
-	Z_Free( ptr );
+inline void dtFreeCustom(void* ptr) {
+    Z_Free(ptr);
 }
 
-void BotShutdownNav()
-{
-	for ( int i = 0; i < numNavData; i++ )
-	{
-		NavData_t *nav = &BotNavData[ i ];
+void BotShutdownNav() {
+    for (int i = 0; i < numNavData; i++) {
+        NavData_t* nav = &BotNavData[i];
 
-		if ( nav->cache )
-		{
-			dtFreeTileCache( nav->cache );
-			nav->cache = 0;
-		}
+        if (nav->cache) {
+            dtFreeTileCache(nav->cache);
+            nav->cache = 0;
+        }
 
-		if ( nav->mesh )
-		{
-			dtFreeNavMesh( nav->mesh );
-			nav->mesh = 0;
-		}
+        if (nav->mesh) {
+            dtFreeNavMesh(nav->mesh);
+            nav->mesh = 0;
+        }
 
-		if ( nav->query )
-		{
-			dtFreeNavMeshQuery( nav->query );
-			nav->query = 0;
-		}
+        if (nav->query) {
+            dtFreeNavMeshQuery(nav->query);
+            nav->query = 0;
+        }
 
-		nav->process.con.reset();
-		memset( nav->name, 0, sizeof( nav->name ) );
-	}
+        nav->process.con.reset();
+        memset(nav->name, 0, sizeof(nav->name));
+    }
 
 #ifndef BUILD_SERVER
-	NavEditShutdown();
+    NavEditShutdown();
 #endif
-	numNavData = 0;
+    numNavData = 0;
 }
 
-bool BotSetupNav( const botClass_t *botClass, qhandle_t *navHandle )
-{
-	cvar_t *maxNavNodes = Cvar_Get( "bot_maxNavNodes", "4096",  CVAR_LATCH );
+bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle) {
+    cvar_t* maxNavNodes = Cvar_Get("bot_maxNavNodes", "4096", CVAR_LATCH);
 
-	if ( !numNavData )
-	{
-		vec3_t clearVec = { 0, 0, 0 };
+    if (!numNavData) {
+        vec3_t clearVec = {0, 0, 0};
 
-		dtAllocSetCustom( dtAllocCustom, dtFreeCustom );
+        dtAllocSetCustom(dtAllocCustom, dtFreeCustom);
 
-		for ( int i = 0; i < MAX_CLIENTS; i++ )
-		{
-			// should only init the corridor once
-			if ( !agents[ i ].corridor.getPath() )
-			{
-				if ( !agents[ i ].corridor.init( MAX_BOT_PATH ) )
-				{
-					return false;
-				}
-			}
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            // should only init the corridor once
+            if (!agents[i].corridor.getPath()) {
+                if (!agents[i].corridor.init(MAX_BOT_PATH)) {
+                    return false;
+                }
+            }
 
-			agents[ i ].corridor.reset( 0, clearVec );
-			agents[ i ].clientNum = i;
-			agents[ i ].needReplan = true;
-			agents[ i ].nav = nullptr;
-			agents[ i ].offMesh = false;
-			memset( agents[ i ].routeResults, 0, sizeof( agents[ i ].routeResults ) );
-		}
+            agents[i].corridor.reset(0, clearVec);
+            agents[i].clientNum = i;
+            agents[i].needReplan = true;
+            agents[i].nav = nullptr;
+            agents[i].offMesh = false;
+            memset(agents[i].routeResults, 0, sizeof(agents[i].routeResults));
+        }
 #ifndef BUILD_SERVER
-		NavEditInit();
+        NavEditInit();
 #endif
-	}
+    }
 
-	if ( numNavData == MAX_NAV_DATA )
-	{
-		Com_Printf( "^3ERROR: maximum number of navigation meshes exceeded\n" );
-		return false;
-	}
+    if (numNavData == MAX_NAV_DATA) {
+        Com_Printf("^3ERROR: maximum number of navigation meshes exceeded\n");
+        return false;
+    }
 
-	NavData_t *nav = &BotNavData[ numNavData ];
-	const char *filename = botClass->name;
+    NavData_t* nav = &BotNavData[numNavData];
+    const char* filename = botClass->name;
 
-	if ( !BotLoadNavMesh( filename, *nav ) )
-	{
-		BotShutdownNav();
-		return false;
-	}
+    if (!BotLoadNavMesh(filename, *nav)) {
+        BotShutdownNav();
+        return false;
+    }
 
-	Q_strncpyz( nav->name, botClass->name, sizeof( nav->name ) );
-	nav->query = dtAllocNavMeshQuery();
+    Q_strncpyz(nav->name, botClass->name, sizeof(nav->name));
+    nav->query = dtAllocNavMeshQuery();
 
-	if ( !nav->query )
-	{
-		Com_Printf( "Could not allocate Detour Navigation Mesh Query for navmesh %s\n", filename );
-		BotShutdownNav();
-		return false;
-	}
+    if (!nav->query) {
+        Com_Printf(
+                "Could not allocate Detour Navigation Mesh Query for navmesh %s\n",
+                filename);
+        BotShutdownNav();
+        return false;
+    }
 
-	if ( dtStatusFailed( nav->query->init( nav->mesh, maxNavNodes->integer ) ) )
-	{
-		Com_Printf( "Could not init Detour Navigation Mesh Query for navmesh %s\n", filename );
-		BotShutdownNav();
-		return false;
-	}
+    if (dtStatusFailed(nav->query->init(nav->mesh, maxNavNodes->integer))) {
+        Com_Printf("Could not init Detour Navigation Mesh Query for navmesh %s\n",
+                   filename);
+        BotShutdownNav();
+        return false;
+    }
 
-	nav->filter.setIncludeFlags( botClass->polyFlagsInclude );
-	nav->filter.setExcludeFlags( botClass->polyFlagsExclude );
-	*navHandle = numNavData;
-	numNavData++;
-	return true;
+    nav->filter.setIncludeFlags(botClass->polyFlagsInclude);
+    nav->filter.setExcludeFlags(botClass->polyFlagsExclude);
+    *navHandle = numNavData;
+    numNavData++;
+    return true;
 }

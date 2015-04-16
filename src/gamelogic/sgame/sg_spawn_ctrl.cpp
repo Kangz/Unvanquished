@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -43,86 +48,73 @@ ctrl_relay
 =================================================================================
 */
 
-void target_relay_act( gentity_t *self, gentity_t *caller, gentity_t *activator )
-{
-	if (!self->enabled)
-		return;
+void target_relay_act(gentity_t* self, gentity_t* caller, gentity_t* activator) {
+    if (!self->enabled)
+        return;
 
-	if ( ( self->spawnflags & 1 ) && activator && activator->client &&
-	     activator->client->pers.team != TEAM_HUMANS )
-	{
-		return;
-	}
+    if ((self->spawnflags & 1) && activator && activator->client &&
+        activator->client->pers.team != TEAM_HUMANS) {
+        return;
+    }
 
-	if ( ( self->spawnflags & 2 ) && activator && activator->client &&
-	     activator->client->pers.team != TEAM_ALIENS )
-	{
-		return;
-	}
+    if ((self->spawnflags & 2) && activator && activator->client &&
+        activator->client->pers.team != TEAM_ALIENS) {
+        return;
+    }
 
-	if ( self->spawnflags & 4 )
-	{
-		G_FireEntityRandomly( self, activator );
-		return;
-	}
+    if (self->spawnflags & 4) {
+        G_FireEntityRandomly(self, activator);
+        return;
+    }
 
-	if ( !self->config.wait.time )
-	{
-		G_FireEntity( self, activator );
-	}
-	else
-	{
-		self->nextthink = VariatedLevelTime( self->config.wait );
-		self->think = think_fireDelayed;
-		self->activator = activator;
-	}
+    if (!self->config.wait.time) {
+        G_FireEntity(self, activator);
+    } else {
+        self->nextthink = VariatedLevelTime(self->config.wait);
+        self->think = think_fireDelayed;
+        self->activator = activator;
+    }
 }
 
-void ctrl_relay_reset( gentity_t *self )
-{
-	self->enabled = !(self->spawnflags & SPF_SPAWN_DISABLED);
+void ctrl_relay_reset(gentity_t* self) {
+    self->enabled = !(self->spawnflags & SPF_SPAWN_DISABLED);
 }
 
-void ctrl_relay_act( gentity_t *self, gentity_t *caller, gentity_t *activator )
-{
-	if (!self->enabled)
-		return;
+void ctrl_relay_act(gentity_t* self, gentity_t* caller, gentity_t* activator) {
+    if (!self->enabled)
+        return;
 
-	if ( !self->config.wait.time )
-	{
-		G_EventFireEntity( self, activator, ON_ACT );
-	}
-	else
-	{
-		self->nextthink = VariatedLevelTime( self->config.wait );
-		self->think = think_fireOnActDelayed;
-		self->activator = activator;
-	}
+    if (!self->config.wait.time) {
+        G_EventFireEntity(self, activator, ON_ACT);
+    } else {
+        self->nextthink = VariatedLevelTime(self->config.wait);
+        self->think = think_fireOnActDelayed;
+        self->activator = activator;
+    }
 }
 
-void SP_ctrl_relay( gentity_t *self )
-{
-	if( Q_stricmp(self->classname, S_CTRL_RELAY ) ) //if anything but ctrl_relay
-	{
-		if ( !self->config.wait.time ) {
-			// check delay for backwards compatibility
-			G_SpawnFloat( "delay", "0", &self->config.wait.time );
+void SP_ctrl_relay(gentity_t* self) {
+    if (Q_stricmp(self->classname, S_CTRL_RELAY)) // if anything but ctrl_relay
+    {
+        if (!self->config.wait.time) {
+            // check delay for backwards compatibility
+            G_SpawnFloat("delay", "0", &self->config.wait.time);
 
-			//target delay had previously a default of 1 instead of 0
-			if ( !self->config.wait.time && !Q_stricmp(self->classname, "target_delay") )
-			{
-				self->config.wait.time = 1;
-			}
-		}
-		SP_WaitFields(self, 0, 0 );
+            // target delay had previously a default of 1 instead of 0
+            if (!self->config.wait.time &&
+                !Q_stricmp(self->classname, "target_delay")) {
+                self->config.wait.time = 1;
+            }
+        }
+        SP_WaitFields(self, 0, 0);
 
-		self->act = target_relay_act;
-		return;
-	}
+        self->act = target_relay_act;
+        return;
+    }
 
-	SP_WaitFields(self, 0, 0 );
-	self->act = ctrl_relay_act;
-	self->reset = ctrl_relay_reset;
+    SP_WaitFields(self, 0, 0);
+    self->act = ctrl_relay_act;
+    self->reset = ctrl_relay_reset;
 }
 
 /*
@@ -133,29 +125,25 @@ ctrl_limited
 =================================================================================
 */
 
-void ctrl_limited_act(gentity_t *self, gentity_t *other, gentity_t *activator)
-{
-	if (!self->enabled)
-		return;
+void ctrl_limited_act(gentity_t* self, gentity_t* other, gentity_t* activator) {
+    if (!self->enabled)
+        return;
 
-	G_FireEntity( self, activator );
-	if ( self->count <= 1 )
-	{
-		G_FreeEntity( self );
-		return;
-	}
-	self->count--;
+    G_FireEntity(self, activator);
+    if (self->count <= 1) {
+        G_FreeEntity(self);
+        return;
+    }
+    self->count--;
 }
 
-void ctrl_limited_reset( gentity_t *self )
-{
-	self->enabled = !(self->spawnflags & SPF_SPAWN_DISABLED);
+void ctrl_limited_reset(gentity_t* self) {
+    self->enabled = !(self->spawnflags & SPF_SPAWN_DISABLED);
 
-	G_ResetIntField(&self->count, true, self->config.amount, self->eclass->config.amount, 1);
+    G_ResetIntField(&self->count, true, self->config.amount, self->eclass->config.amount, 1);
 }
 
-void SP_ctrl_limited( gentity_t *self )
-{
-	self->act = ctrl_limited_act;
-	self->reset = ctrl_limited_reset;
+void SP_ctrl_limited(gentity_t* self) {
+    self->act = ctrl_limited_act;
+    self->reset = ctrl_limited_reset;
 }

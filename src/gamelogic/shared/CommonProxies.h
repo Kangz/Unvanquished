@@ -35,16 +35,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Cmd {
 
-    void PushArgs(Str::StringRef args);
-    void PopArgs();
-
+void PushArgs(Str::StringRef args);
+void PopArgs();
 }
 
 namespace VM {
 
-    void InitializeProxies(int milliseconds);
-    void HandleCommonSyscall(int major, int minor, Util::Reader reader, IPC::Channel& channel);
-
+void InitializeProxies(int milliseconds);
+void HandleCommonSyscall(int major, int minor, Util::Reader reader, IPC::Channel& channel);
 }
 
 #endif // SHARED_COMMON_PROXIES_H_

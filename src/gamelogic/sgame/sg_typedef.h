@@ -35,71 +35,66 @@ typedef signed int unnamed_t;
 // struct types
 // ------------
 
-typedef struct variatingTime_s     variatingTime_t;
+typedef struct variatingTime_s variatingTime_t;
 typedef struct gentityConditions_s gentityConditions_t;
-typedef struct gentityConfig_s     gentityConfig_t;
-typedef struct entityClass_s       entityClass_t;
-typedef struct gentity_s           gentity_t;
-typedef struct clientSession_s     clientSession_t;
-typedef struct namelog_s           namelog_t;
-typedef struct clientPersistant_s  clientPersistant_t;
-typedef struct unlagged_s          unlagged_t;
-typedef struct gclient_s           gclient_t;
-typedef struct damageRegion_s      damageRegion_t;
-typedef struct spawnQueue_s        spawnQueue_t;
-typedef struct buildLog_s          buildLog_t;
-typedef struct level_locals_s      level_locals_t;
-typedef struct commands_s          commands_t;
-typedef struct zap_s               zap_t;
+typedef struct gentityConfig_s gentityConfig_t;
+typedef struct entityClass_s entityClass_t;
+typedef struct gentity_s gentity_t;
+typedef struct clientSession_s clientSession_t;
+typedef struct namelog_s namelog_t;
+typedef struct clientPersistant_s clientPersistant_t;
+typedef struct unlagged_s unlagged_t;
+typedef struct gclient_s gclient_t;
+typedef struct damageRegion_s damageRegion_t;
+typedef struct spawnQueue_s spawnQueue_t;
+typedef struct buildLog_s buildLog_t;
+typedef struct level_locals_s level_locals_t;
+typedef struct commands_s commands_t;
+typedef struct zap_s zap_t;
 
 // ----------
 // enum types
 // ----------
 
-typedef enum
-{
-	CON_DISCONNECTED,
-	CON_CONNECTING,
-	CON_CONNECTED
+typedef enum {
+    CON_DISCONNECTED,
+    CON_CONNECTING,
+    CON_CONNECTED
 } clientConnected_t;
 
-//status of the warning of certain events
-typedef enum
-{
-	TW_NOT = 0,
-	TW_IMMINENT,
-	TW_PASSED
-} timeWarning_t;
+// status of the warning of certain events
+typedef enum { TW_NOT = 0,
+               TW_IMMINENT,
+               TW_PASSED } timeWarning_t;
 
 // fate of a buildable
-typedef enum
-{
-	BF_CONSTRUCT,
-	BF_DECONSTRUCT,
-	BF_REPLACE,
-	BF_DESTROY,
-	BF_TEAMKILL,
-	BF_UNPOWER,
-	BF_AUTO
+typedef enum {
+    BF_CONSTRUCT,
+    BF_DECONSTRUCT,
+    BF_REPLACE,
+    BF_DESTROY,
+    BF_TEAMKILL,
+    BF_UNPOWER,
+    BF_AUTO
 } buildFate_t;
 
 typedef enum {
-	VOTE_KICK,
-	VOTE_SPECTATE,
-	VOTE_MUTE,
-	VOTE_UNMUTE,
-	VOTE_DENYBUILD,
-	VOTE_ALLOWBUILD,
-	VOTE_EXTEND,
-	VOTE_ADMIT_DEFEAT,
-	VOTE_DRAW,
-	VOTE_MAP_RESTART,
-	VOTE_MAP,
-	VOTE_LAYOUT,
-	VOTE_NEXT_MAP,
-	VOTE_POLL,
-	VOTE_BOT_KICK,
-	VOTE_BOT_SPECTATE
+    VOTE_KICK,
+    VOTE_SPECTATE,
+    VOTE_MUTE,
+    VOTE_UNMUTE,
+    VOTE_DENYBUILD,
+    VOTE_ALLOWBUILD,
+    VOTE_EXTEND,
+    VOTE_ADMIT_DEFEAT,
+    VOTE_DRAW,
+    VOTE_MAP_RESTART,
+    VOTE_MAP,
+    VOTE_LAYOUT,
+    VOTE_NEXT_MAP,
+    VOTE_POLL,
+    VOTE_BOT_KICK,
+    VOTE_BOT_SPECTATE
 } voteType_t;
 
 #endif // SG_TYPEDEF_H_

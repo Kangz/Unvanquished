@@ -58,7 +58,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #undef __i386__
 #define __i386__ 1
 #define ARCH_STRING "x86"
-#elif defined(__amd64) || defined(__amd64__) || defined(_M_AMD64) || defined(__x86_64__) || defined(_M_X64)
+#elif defined(__amd64) || defined(__amd64__) || defined(_M_AMD64) || \
+        defined(__x86_64__) || defined(_M_X64)
 #undef __x86_64__
 #define __x86_64__ 1
 #define ARCH_STRING "x86_64"

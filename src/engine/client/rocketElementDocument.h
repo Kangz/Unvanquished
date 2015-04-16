@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -39,26 +44,24 @@ Maryland 20850 USA.
 #include <Rocket/Core/Element.h>
 #include <Rocket/Core/ElementDocument.h>
 
-
-class RocketElementDocument : public Rocket::Core::ElementDocument
-{
+class RocketElementDocument : public Rocket::Core::ElementDocument {
 public:
-	RocketElementDocument( const Rocket::Core::String &tag ) : Rocket::Core::ElementDocument( tag ) { }
+    RocketElementDocument(const Rocket::Core::String& tag)
+            : Rocket::Core::ElementDocument(tag) {}
 
-	void ProcessEvent( Rocket::Core::Event &event )
-	{
-		Rocket::Core::ElementDocument::ProcessEvent( event );
+    void ProcessEvent(Rocket::Core::Event& event) {
+        Rocket::Core::ElementDocument::ProcessEvent(event);
 
-		if ( event == "keydown" )
-		{
-			Rocket::Core::Input::KeyIdentifier key = (Rocket::Core::Input::KeyIdentifier) event.GetParameter<int>( "key_identifier", 0 );
+        if (event == "keydown") {
+            Rocket::Core::Input::KeyIdentifier key =
+                    (Rocket::Core::Input::KeyIdentifier) event.GetParameter<int>(
+                            "key_identifier", 0);
 
-			if ( key == Rocket::Core::Input::KI_ESCAPE && !HasAttribute( "nohide" ) )
-			{
-				this->Hide();
-			}
-		}
-	}
+            if (key == Rocket::Core::Input::KI_ESCAPE && !HasAttribute("nohide")) {
+                this->Hide();
+            }
+        }
+    }
 };
 
 #endif

@@ -30,84 +30,75 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 // arena and bot info
 //
-static int  cg_numArenas;
-static char *cg_arenaInfos[ MAX_ARENAS ];
+static int cg_numArenas;
+static char* cg_arenaInfos[MAX_ARENAS];
 
 /*
 ===============
 CG_ParseInfos
 ===============
 */
-int CG_ParseInfos( const char *buf, int max, char *infos[] )
-{
-	char *token;
-	int  count;
-	char key[ MAX_TOKEN_CHARS ];
-	char info[ MAX_INFO_STRING ];
+int CG_ParseInfos(const char* buf, int max, char* infos[]) {
+    char* token;
+    int count;
+    char key[MAX_TOKEN_CHARS];
+    char info[MAX_INFO_STRING];
 
-	count = 0;
+    count = 0;
 
-	while ( 1 )
-	{
-		token = COM_Parse( &buf );
+    while (1) {
+        token = COM_Parse(&buf);
 
-		if ( !token[ 0 ] )
-		{
-			break;
-		}
+        if (!token[0]) {
+            break;
+        }
 
-		if ( strcmp( token, "{" ) )
-		{
-			Com_Printf( "Missing { in info file\n" );
-			break;
-		}
+        if (strcmp(token, "{")) {
+            Com_Printf("Missing { in info file\n");
+            break;
+        }
 
-		if ( count == max )
-		{
-			Com_Printf( "Max infos exceeded\n" );
-			break;
-		}
+        if (count == max) {
+            Com_Printf("Max infos exceeded\n");
+            break;
+        }
 
-		info[ 0 ] = '\0';
+        info[0] = '\0';
 
-		while ( 1 )
-		{
-			token = COM_ParseExt( &buf, true );
+        while (1) {
+            token = COM_ParseExt(&buf, true);
 
-			if ( !token[ 0 ] )
-			{
-				Com_Printf( "Unexpected end of info file\n" );
-				break;
-			}
+            if (!token[0]) {
+                Com_Printf("Unexpected end of info file\n");
+                break;
+            }
 
-			if ( !strcmp( token, "}" ) )
-			{
-				break;
-			}
+            if (!strcmp(token, "}")) {
+                break;
+            }
 
-			Q_strncpyz( key, token, sizeof( key ) );
+            Q_strncpyz(key, token, sizeof(key));
 
-			token = COM_ParseExt( &buf, false );
+            token = COM_ParseExt(&buf, false);
 
-			if ( !token[ 0 ] )
-			{
-				strcpy( token, "<NULL>" );
-			}
+            if (!token[0]) {
+                strcpy(token, "<NULL>");
+            }
 
-			Info_SetValueForKey( info, key, token, false );
-		}
+            Info_SetValueForKey(info, key, token, false);
+        }
 
-		//NOTE: extra space for arena number
-		infos[ count ] = (char*) BG_Alloc( strlen( info ) + strlen( "\\num\\" ) + strlen( va( "%d", MAX_ARENAS ) ) + 1 );
+        // NOTE: extra space for arena number
+        infos[count] = (char*) BG_Alloc(strlen(info) + strlen("\\num\\") +
+                                        strlen(va("%d", MAX_ARENAS)) + 1);
 
-		if ( infos[ count ] )
-		{
-			strcpy( infos[ count ], info );
-			count++;
-		}
-	}
+        if (infos[count]) {
+            strcpy(infos[count], info);
+            count++;
+        }
+    }
 
-	return count;
+    return count;
 }
 
 /*
@@ -115,32 +106,32 @@ int CG_ParseInfos( const char *buf, int max, char *infos[] )
 CG_LoadArenasFromFile
 ===============
 */
-static void CG_LoadArenasFromFile( char *filename )
-{
-	int          len;
-	fileHandle_t f;
-	char         buf[ MAX_ARENAS_TEXT ];
+static void CG_LoadArenasFromFile(char* filename) {
+    int len;
+    fileHandle_t f;
+    char buf[MAX_ARENAS_TEXT];
 
-	len = trap_FS_FOpenFile( filename, &f, FS_READ );
+    len = trap_FS_FOpenFile(filename, &f, FS_READ);
 
-	if ( !f )
-	{
-		trap_Print( va( S_COLOR_RED "file not found: %s\n", filename ) );
-		return;
-	}
+    if (!f) {
+        trap_Print(va(S_COLOR_RED "file not found: %s\n", filename));
+        return;
+    }
 
-	if ( len >= MAX_ARENAS_TEXT )
-	{
-		trap_Print( va( S_COLOR_RED "file too large: %s is %i, max allowed is %i\n", filename, len, MAX_ARENAS_TEXT ) );
-		trap_FS_FCloseFile( f );
-		return;
-	}
+    if (len >= MAX_ARENAS_TEXT) {
+        trap_Print(va(S_COLOR_RED "file too large: %s is %i, max allowed is %i\n",
+                      filename,
+                      len,
+                      MAX_ARENAS_TEXT));
+        trap_FS_FCloseFile(f);
+        return;
+    }
 
-	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
-	trap_FS_FCloseFile( f );
+    trap_FS_Read(buf, len, f);
+    buf[len] = 0;
+    trap_FS_FCloseFile(f);
 
-	cg_numArenas += CG_ParseInfos( buf, MAX_ARENAS - cg_numArenas, &cg_arenaInfos[ cg_numArenas ] );
+    cg_numArenas += CG_ParseInfos(buf, MAX_ARENAS - cg_numArenas, &cg_arenaInfos[cg_numArenas]);
 }
 
 /*
@@ -148,12 +139,11 @@ static void CG_LoadArenasFromFile( char *filename )
 CG_MapLoadNameCompare
 ===============
 */
-static int CG_MapLoadNameCompare( const void *a, const void *b )
-{
-	mapInfo_t *A = ( mapInfo_t * ) a;
-	mapInfo_t *B = ( mapInfo_t * ) b;
+static int CG_MapLoadNameCompare(const void* a, const void* b) {
+    mapInfo_t* A = (mapInfo_t*) a;
+    mapInfo_t* B = (mapInfo_t*) b;
 
-	return Q_stricmp( A->mapLoadName, B->mapLoadName );
+    return Q_stricmp(A->mapLoadName, B->mapLoadName);
 }
 
 /*
@@ -161,43 +151,42 @@ static int CG_MapLoadNameCompare( const void *a, const void *b )
 CG_LoadArenas
 ===============
 */
-void CG_LoadArenas()
-{
-	int  numdirs;
-	char filename[ 128 ];
-	char dirlist[ 4096 ];
-	char *dirptr;
-	int  i, n;
-	int  dirlen;
+void CG_LoadArenas() {
+    int numdirs;
+    char filename[128];
+    char dirlist[4096];
+    char* dirptr;
+    int i, n;
+    int dirlen;
 
-	cg_numArenas = 0;
-	rocketInfo.data.mapCount = 0;
+    cg_numArenas = 0;
+    rocketInfo.data.mapCount = 0;
 
-	// get all directories from meta
-	numdirs = trap_FS_GetFileListRecursive( "meta", ".arena", dirlist, sizeof( dirlist ) );
-	dirptr = dirlist;
+    // get all directories from meta
+    numdirs =
+            trap_FS_GetFileListRecursive("meta", ".arena", dirlist, sizeof(dirlist));
+    dirptr = dirlist;
 
-	for ( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
-	{
-		dirlen = strlen( dirptr );
-		strcpy( filename, "meta/" );
-		strcat( filename, dirptr );
-		CG_LoadArenasFromFile( filename );
-	}
+    for (i = 0; i < numdirs; i++, dirptr += dirlen + 1) {
+        dirlen = strlen(dirptr);
+        strcpy(filename, "meta/");
+        strcat(filename, dirptr);
+        CG_LoadArenasFromFile(filename);
+    }
 
-	trap_Print( va( "[skipnotify]%i arenas parsed\n", cg_numArenas ) );
+    trap_Print(va("[skipnotify]%i arenas parsed\n", cg_numArenas));
 
-	for ( n = 0; n < cg_numArenas; n++ )
-	{
-		rocketInfo.data.mapList[ rocketInfo.data.mapCount ].mapLoadName = BG_strdup( Info_ValueForKey( cg_arenaInfos[ n ], "map" ) );
-		rocketInfo.data.mapList[ rocketInfo.data.mapCount ].mapName = BG_strdup( Info_ValueForKey( cg_arenaInfos[ n ], "longname" ) );
-		rocketInfo.data.mapCount++;
+    for (n = 0; n < cg_numArenas; n++) {
+        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapLoadName =
+                BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "map"));
+        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapName =
+                BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "longname"));
+        rocketInfo.data.mapCount++;
 
-		if ( rocketInfo.data.mapCount >= MAX_MAPS )
-		{
-			break;
-		}
-	}
+        if (rocketInfo.data.mapCount >= MAX_MAPS) {
+            break;
+        }
+    }
 
-	qsort( rocketInfo.data.mapList, rocketInfo.data.mapCount, sizeof( mapInfo_t ), CG_MapLoadNameCompare );
+    qsort(rocketInfo.data.mapList, rocketInfo.data.mapCount, sizeof(mapInfo_t), CG_MapLoadNameCompare);
 }

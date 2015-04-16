@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -43,12 +48,12 @@ void G_CM_ClearWorld();
 
 // called after the world model has been loaded, before linking any entities
 
-void G_CM_UnlinkEntity( gentity_t *ent );
+void G_CM_UnlinkEntity(gentity_t* ent);
 
 // call before removing an entity, and before trying to move one,
 // so it doesn't clip against itself
 
-void G_CM_LinkEntity( gentity_t *ent );
+void G_CM_LinkEntity(gentity_t* ent);
 
 // Needs to be called any time an entity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
@@ -56,11 +61,11 @@ void G_CM_LinkEntity( gentity_t *ent );
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-clipHandle_t G_CM_ClipHandleForEntity( const sharedEntity_t *ent );
+clipHandle_t G_CM_ClipHandleForEntity(const sharedEntity_t* ent);
 
-void         G_CM_SectorList_f();
+void G_CM_SectorList_f();
 
-int          G_CM_AreaEntities( const vec3_t mins, const vec3_t maxs, int *entityList, int maxcount );
+int G_CM_AreaEntities(const vec3_t mins, const vec3_t maxs, int* entityList, int maxcount);
 
 // fills in a table of entity numbers with entities that have bounding boxes
 // that intersect the given area.  It is possible for a non-axial bmodel
@@ -69,13 +74,12 @@ int          G_CM_AreaEntities( const vec3_t mins, const vec3_t maxs, int *entit
 // returns the number of pointers filled in
 // The world entity is never returned in this list.
 
-int G_CM_PointContents( const vec3_t p, int passEntityNum );
+int G_CM_PointContents(const vec3_t p, int passEntityNum);
 
-// returns the CONTENTS_* value from the world and all entities at the given point.
+// returns the CONTENTS_* value from the world and all entities at the given
+// point.
 
-void G_CM_Trace( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs,
-                 const vec3_t end, int passEntityNum, int contentmask, int skipmask,
-                 traceType_t type );
+void G_CM_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask, int skipmask, traceType_t type);
 
 // mins and maxs are relative
 
@@ -85,18 +89,19 @@ void G_CM_Trace( trace_t *results, const vec3_t start, const vec3_t mins, const 
 // if the starting point is in a solid, it will be allowed to move out
 // to an open area
 
-// passEntityNum, if isn't ENTITYNUM_NONE, will be explicitly excluded from clipping checks
+// passEntityNum, if isn't ENTITYNUM_NONE, will be explicitly excluded from
+// clipping checks
 
-void G_CM_ClipToEntity( trace_t *trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int entityNum, int contentmask, traceType_t type );
+void G_CM_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int entityNum, int contentmask, traceType_t type);
 
-bool G_CM_inPVS( const vec3_t p1, const vec3_t p2 );
+bool G_CM_inPVS(const vec3_t p1, const vec3_t p2);
 
-bool G_CM_inPVSIgnorePortals( const vec3_t p1, const vec3_t p2 );
+bool G_CM_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2);
 
-void G_CM_AdjustAreaPortalState( gentity_t *ent, bool open );
+void G_CM_AdjustAreaPortalState(gentity_t* ent, bool open);
 
-bool G_CM_EntityContact( const vec3_t mins, const vec3_t maxs, const gentity_t *gEnt, traceType_t type );
+bool G_CM_EntityContact(const vec3_t mins, const vec3_t maxs, const gentity_t* gEnt, traceType_t type);
 
-void G_CM_SetBrushModel( gentity_t *ent, const char *name );
+void G_CM_SetBrushModel(gentity_t* ent, const char* name);
 
 #endif // SG_CM_WORLD_H_

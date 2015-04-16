@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -41,18 +46,16 @@ Maryland 20850 USA.
 SV_Netchan_FreeQueue
 =================
 */
-void SV_Netchan_FreeQueue( client_t *client )
-{
-	netchan_buffer_t *netbuf, *next;
+void SV_Netchan_FreeQueue(client_t* client) {
+    netchan_buffer_t* netbuf, *next;
 
-	for ( netbuf = client->netchan_start_queue; netbuf; netbuf = next )
-	{
-		next = netbuf->next;
-		Z_Free( netbuf );
-	}
+    for (netbuf = client->netchan_start_queue; netbuf; netbuf = next) {
+        next = netbuf->next;
+        Z_Free(netbuf);
+    }
 
-	client->netchan_start_queue = nullptr;
-	client->netchan_end_queue = client->netchan_start_queue;
+    client->netchan_start_queue = nullptr;
+    client->netchan_end_queue = client->netchan_start_queue;
 }
 
 /*
@@ -60,31 +63,30 @@ void SV_Netchan_FreeQueue( client_t *client )
 SV_Netchan_TransmitNextFragment
 =================
 */
-void SV_Netchan_TransmitNextFragment( client_t *client )
-{
-	Netchan_TransmitNextFragment( &client->netchan );
+void SV_Netchan_TransmitNextFragment(client_t* client) {
+    Netchan_TransmitNextFragment(&client->netchan);
 
-	while ( !client->netchan.unsentFragments && client->netchan_start_queue )
-	{
-		// make sure the netchan queue has been properly initialized (you never know)
-		//% if (!client->netchan_end_queue) {
-		//%     Com_Error(ERR_DROP, "netchan queue is not properly initialized in SV_Netchan_TransmitNextFragment");
-		//% }
-		// the last fragment was transmitted, check whether we have queued messages
-		netchan_buffer_t *netbuf = client->netchan_start_queue;
+    while (!client->netchan.unsentFragments && client->netchan_start_queue) {
+        // make sure the netchan queue has been properly initialized (you never
+        // know)
+        //% if (!client->netchan_end_queue) {
+        //%     Com_Error(ERR_DROP, "netchan queue is not properly initialized in
+        // SV_Netchan_TransmitNextFragment");
+        //% }
+        // the last fragment was transmitted, check whether we have queued messages
+        netchan_buffer_t* netbuf = client->netchan_start_queue;
 
-		// pop from queue
-		client->netchan_start_queue = netbuf->next;
+        // pop from queue
+        client->netchan_start_queue = netbuf->next;
 
-		if ( !client->netchan_start_queue )
-		{
-			client->netchan_end_queue = nullptr;
-		}
+        if (!client->netchan_start_queue) {
+            client->netchan_end_queue = nullptr;
+        }
 
-		Netchan_Transmit( &client->netchan, netbuf->msg.cursize, netbuf->msg.data );
+        Netchan_Transmit(&client->netchan, netbuf->msg.cursize, netbuf->msg.data);
 
-		Z_Free( netbuf );
-	}
+        Z_Free(netbuf);
+    }
 }
 
 /*
@@ -92,24 +94,21 @@ void SV_Netchan_TransmitNextFragment( client_t *client )
 SV_WriteBinaryMessage
 ===============
 */
-static void SV_WriteBinaryMessage( msg_t *msg, client_t *cl )
-{
-	if ( !cl->binaryMessageLength )
-	{
-		return;
-	}
+static void SV_WriteBinaryMessage(msg_t* msg, client_t* cl) {
+    if (!cl->binaryMessageLength) {
+        return;
+    }
 
-	MSG_Uncompressed( msg );
+    MSG_Uncompressed(msg);
 
-	if ( ( msg->cursize + cl->binaryMessageLength ) >= msg->maxsize )
-	{
-		cl->binaryMessageOverflowed = true;
-		return;
-	}
+    if ((msg->cursize + cl->binaryMessageLength) >= msg->maxsize) {
+        cl->binaryMessageOverflowed = true;
+        return;
+    }
 
-	MSG_WriteData( msg, cl->binaryMessage, cl->binaryMessageLength );
-	cl->binaryMessageLength = 0;
-	cl->binaryMessageOverflowed = false;
+    MSG_WriteData(msg, cl->binaryMessage, cl->binaryMessageLength);
+    cl->binaryMessageLength = 0;
+    cl->binaryMessageOverflowed = false;
 }
 
 /*
@@ -123,45 +122,38 @@ and the gamestate are fragmenting, and collide on send for instance)
 then buffer them and make sure they get sent in correct order
 ================
 */
-void SV_Netchan_Transmit( client_t *client, msg_t *msg )
-{
-	//int length, const byte *data ) {
-	MSG_WriteByte( msg, svc_EOF );
-	SV_WriteBinaryMessage( msg, client );
+void SV_Netchan_Transmit(client_t* client, msg_t* msg) {
+    // int length, const byte *data ) {
+    MSG_WriteByte(msg, svc_EOF);
+    SV_WriteBinaryMessage(msg, client);
 
-	if ( client->netchan.unsentFragments )
-	{
-		netchan_buffer_t *netbuf;
+    if (client->netchan.unsentFragments) {
+        netchan_buffer_t* netbuf;
 
-		//Com_DPrintf("SV_Netchan_Transmit: there are unsent fragments remaining\n");
-		netbuf = ( netchan_buffer_t * ) Z_Malloc( sizeof( netchan_buffer_t ) );
+        // Com_DPrintf("SV_Netchan_Transmit: there are unsent fragments
+        // remaining\n");
+        netbuf = (netchan_buffer_t*) Z_Malloc(sizeof(netchan_buffer_t));
 
-		MSG_Copy( &netbuf->msg, netbuf->msgBuffer, sizeof( netbuf->msgBuffer ), msg );
+        MSG_Copy(&netbuf->msg, netbuf->msgBuffer, sizeof(netbuf->msgBuffer), msg);
 
-		// copy the command, since the command number used for encryption is
-		// already compressed in the buffer, and receiving a new command would
-		// otherwise lose the proper encryption key
-		strcpy( netbuf->lastClientCommandString, client->lastClientCommandString );
+        // copy the command, since the command number used for encryption is
+        // already compressed in the buffer, and receiving a new command would
+        // otherwise lose the proper encryption key
+        strcpy(netbuf->lastClientCommandString, client->lastClientCommandString);
 
-		netbuf->next = nullptr;
+        netbuf->next = nullptr;
 
-		if ( !client->netchan_start_queue )
-		{
-			client->netchan_start_queue = netbuf;
-		}
-		else
-		{
-			client->netchan_end_queue->next = netbuf;
-		}
+        if (!client->netchan_start_queue) {
+            client->netchan_start_queue = netbuf;
+        } else {
+            client->netchan_end_queue->next = netbuf;
+        }
 
-		client->netchan_end_queue = netbuf;
+        client->netchan_end_queue = netbuf;
 
-		// emit the next fragment of the current message for now
-		Netchan_TransmitNextFragment( &client->netchan );
-	}
-	else
-	{
-		Netchan_Transmit( &client->netchan, msg->cursize, msg->data );
-	}
+        // emit the next fragment of the current message for now
+        Netchan_TransmitNextFragment(&client->netchan);
+    } else {
+        Netchan_Transmit(&client->netchan, msg->cursize, msg->data);
+    }
 }
-

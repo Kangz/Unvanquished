@@ -32,78 +32,78 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace IPC {
 
-    CommandBufferHost::CommandBufferHost(std::string name): name(name), logs(name + ".commandBufferHost") {
-    }
+CommandBufferHost::CommandBufferHost(std::string name)
+        : name(name), logs(name + ".commandBufferHost") {
+}
 
-    void CommandBufferHost::Syscall(int index, Util::Reader& reader, IPC::Channel& channel) {
-        switch (index) {
-            case IPC::COMMAND_BUFFER_LOCATE:
-                IPC::HandleMsg<IPC::CommandBufferLocateMsg>(channel, std::move(reader), [this] (IPC::SharedMemory mem) {
-                    this->Init(std::move(mem));
-                });
-                break;
+void CommandBufferHost::Syscall(int index, Util::Reader& reader, IPC::Channel& channel) {
+    switch (index) {
+        case IPC::COMMAND_BUFFER_LOCATE:
+            IPC::HandleMsg<IPC::CommandBufferLocateMsg>(
+                    channel, std::move(reader), [this](IPC::SharedMemory mem) { this->Init(std::move(mem)); });
+            break;
 
-            case IPC::COMMAND_BUFFER_CONSUME:
-                IPC::HandleMsg<IPC::CommandBufferConsumeMsg>(channel, std::move(reader), [this] () {
-                    this->Consume();
-                });
-                break;
+        case IPC::COMMAND_BUFFER_CONSUME:
+            IPC::HandleMsg<IPC::CommandBufferConsumeMsg>(channel, std::move(reader), [this]() { this->Consume(); });
+            break;
         default:
             Sys::Drop("Bad CGame Command Buffer syscall minor number: %d", index);
+    }
+}
+
+void CommandBufferHost::Init(IPC::SharedMemory mem) {
+    shm = std::move(mem);
+    buffer.Init(shm.GetBase(), shm.GetSize());
+
+    logs.Debug("Received buffers of size %i for %s", buffer.GetSize(), name);
+}
+
+void CommandBufferHost::Consume() {
+    buffer.LoadWriterData();
+    logs.Debug("Consuming up to %i data from buffer for %s",
+               buffer.GetMaxReadLength(),
+               name);
+    bool consuming = true;
+    // TODO set fixed bound too
+
+    while (consuming) {
+        Util::Reader reader;
+        consuming = ConsumeOne(reader);
+
+        if (consuming) {
+            uint32_t id = reader.Read<uint32_t>();
+            int major = id >> 16;
+            int minor = id & 0xffff;
+            this->HandleCommandBufferSyscall(major, minor, reader);
         }
+        // TODO add more logic to stop consuming (e.g. when the socket is ready)
     }
+}
 
-    void CommandBufferHost::Init(IPC::SharedMemory mem) {
-        shm = std::move(mem);
-        buffer.Init(shm.GetBase(), shm.GetSize());
-
-        logs.Debug("Received buffers of size %i for %s", buffer.GetSize(), name);
-    }
-
-    void CommandBufferHost::Consume() {
+bool CommandBufferHost::ConsumeOne(Util::Reader& reader) {
+    if (!buffer.CanRead(sizeof(uint32_t))) {
         buffer.LoadWriterData();
-        logs.Debug("Consuming up to %i data from buffer for %s", buffer.GetMaxReadLength(), name);
-        bool consuming = true;
-        //TODO set fixed bound too
-
-        while(consuming) {
-            Util::Reader reader;
-            consuming = ConsumeOne(reader);
-
-            if (consuming) {
-                uint32_t id = reader.Read<uint32_t>();
-                int major = id >> 16;
-                int minor = id & 0xffff;
-                this->HandleCommandBufferSyscall(major, minor, reader);
-            }
-            //TODO add more logic to stop consuming (e.g. when the socket is ready)
-        }
-    }
-
-    bool CommandBufferHost::ConsumeOne(Util::Reader& reader) {
         if (!buffer.CanRead(sizeof(uint32_t))) {
-            buffer.LoadWriterData();
-            if (!buffer.CanRead(sizeof(uint32_t))) {
-                if (buffer.GetMaxReadLength() != 0) {
-                    Sys::Drop("Command buffer for %s had an incomplete length write", name);
-                }
-                return false;
+            if (buffer.GetMaxReadLength() != 0) {
+                Sys::Drop("Command buffer for %s had an incomplete length write", name);
             }
-        }
-        uint32_t size;
-        buffer.Read((char*)&size, sizeof(uint32_t));
-
-        if (!buffer.CanRead(size + sizeof(uint32_t))) {
-            Sys::Drop("Command buffer for %s had an incomplete message write", name);
             return false;
         }
-        std::vector<char>& readerData = reader.GetData();
-        readerData.resize(size);
-        buffer.Read(readerData.data(), size, sizeof(uint32_t));
-
-        buffer.AdvanceReadPointer(size + sizeof(uint32_t));
-
-        return true;
     }
+    uint32_t size;
+    buffer.Read((char*) &size, sizeof(uint32_t));
+
+    if (!buffer.CanRead(size + sizeof(uint32_t))) {
+        Sys::Drop("Command buffer for %s had an incomplete message write", name);
+        return false;
+    }
+    std::vector<char>& readerData = reader.GetData();
+    readerData.resize(size);
+    buffer.Read(readerData.data(), size, sizeof(uint32_t));
+
+    buffer.AdvanceReadPointer(size + sizeof(uint32_t));
+
+    return true;
+}
 
 } // namespace IPC

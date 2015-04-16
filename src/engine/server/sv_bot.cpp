@@ -20,13 +20,18 @@ You should have received a copy of the GNU General Public License
 along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the Daemon Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the
-terms and conditions of the GNU General Public License which accompanied the Daemon
-Source Code.  If not, please request a copy in writing from id Software at the address
+You should have received a copy of these additional terms immediately following
+the
+terms and conditions of the GNU General Public License which accompanied the
+Daemon
+Source Code.  If not, please request a copy in writing from id Software at the
+address
 below.
 
-If you have questions concerning this license or the applicable additional terms, you
-may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville,
+If you have questions concerning this license or the applicable additional
+terms, you
+may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120,
+Rockville,
 Maryland 20850 USA.
 
 ===========================================================================
@@ -41,28 +46,28 @@ Maryland 20850 USA.
 SV_BotAllocateClient
 ==================
 */
-int SV_BotAllocateClient()
-{
-	int i;
-	for (i = std::max(1, sv_privateClients->integer); i < sv_maxclients->integer; i++) {
-		if (svs.clients[i].state == CS_FREE) {
-			break;
-		}
-	}
+int SV_BotAllocateClient() {
+    int i;
+    for (i = std::max(1, sv_privateClients->integer); i < sv_maxclients->integer;
+         i++) {
+        if (svs.clients[i].state == CS_FREE) {
+            break;
+        }
+    }
 
-	if (i >= sv_maxclients->integer) {
-		return -1;
-	}
+    if (i >= sv_maxclients->integer) {
+        return -1;
+    }
 
-	client_t* cl = svs.clients + i;
-	cl->gentity = SV_GentityNum(i);
-	cl->gentity->s.number = i;
-	cl->state = CS_ACTIVE;
-	cl->lastPacketTime = svs.time;
-	cl->netchan.remoteAddress.type = NA_BOT;
-	cl->rate = 16384;
+    client_t* cl = svs.clients + i;
+    cl->gentity = SV_GentityNum(i);
+    cl->gentity->s.number = i;
+    cl->state = CS_ACTIVE;
+    cl->lastPacketTime = svs.time;
+    cl->netchan.remoteAddress.type = NA_BOT;
+    cl->rate = 16384;
 
-	return i;
+    return i;
 }
 
 /*
@@ -70,18 +75,16 @@ int SV_BotAllocateClient()
 SV_BotFreeClient
 ==================
 */
-void SV_BotFreeClient( int clientNum )
-{
-	client_t *cl;
+void SV_BotFreeClient(int clientNum) {
+    client_t* cl;
 
-	if ( clientNum < 0 || clientNum >= sv_maxclients->integer )
-	{
-		Com_Error( ERR_DROP, "SV_BotFreeClient: bad clientNum: %i", clientNum );
-	}
+    if (clientNum < 0 || clientNum >= sv_maxclients->integer) {
+        Com_Error(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i", clientNum);
+    }
 
-	cl = &svs.clients[ clientNum ];
-	cl->state = CS_FREE;
-	cl->name[ 0 ] = 0;
+    cl = &svs.clients[clientNum];
+    cl->state = CS_FREE;
+    cl->name[0] = 0;
 }
 
 /*
@@ -89,9 +92,9 @@ void SV_BotFreeClient( int clientNum )
 SV_IsBot
 ==================
 */
-bool SV_IsBot( const client_t* client )
-{
-	return client->netchan.remoteAddress.type == NA_BOT && client->state == CS_ACTIVE;
+bool SV_IsBot(const client_t* client) {
+    return client->netchan.remoteAddress.type == NA_BOT &&
+           client->state == CS_ACTIVE;
 }
 
 //
@@ -103,28 +106,24 @@ bool SV_IsBot( const client_t* client )
 SV_BotGetConsoleMessage
 ==================
 */
-int SV_BotGetConsoleMessage( int client, char *buf, int size )
-{
-	client_t *cl;
-	int      index;
+int SV_BotGetConsoleMessage(int client, char* buf, int size) {
+    client_t* cl;
+    int index;
 
-	cl = &svs.clients[ client ];
-	cl->lastPacketTime = svs.time;
+    cl = &svs.clients[client];
+    cl->lastPacketTime = svs.time;
 
-	if ( cl->reliableAcknowledge == cl->reliableSequence )
-	{
-		return false;
-	}
+    if (cl->reliableAcknowledge == cl->reliableSequence) {
+        return false;
+    }
 
-	cl->reliableAcknowledge++;
-	index = cl->reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 );
+    cl->reliableAcknowledge++;
+    index = cl->reliableAcknowledge & (MAX_RELIABLE_COMMANDS - 1);
 
-	if ( !cl->reliableCommands[ index ][ 0 ] )
-	{
-		return false;
-	}
+    if (!cl->reliableCommands[index][0]) {
+        return false;
+    }
 
-	//Q_strncpyz( buf, cl->reliableCommands[index], size );
-	return true;
+    // Q_strncpyz( buf, cl->reliableCommands[index], size );
+    return true;
 }
-

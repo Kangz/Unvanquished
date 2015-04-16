@@ -43,31 +43,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Log {
 
-    // Dispatches the event to all the targets specified by targetControl (flags)
+// Dispatches the event to all the targets specified by targetControl (flags)
+// Can be called by any thread.
+void Dispatch(Log::Event event, int targetControl);
+
+// Open the log file and start writing to it
+void OpenLogFile();
+
+class Target {
+public:
+    Target();
+
+    // Should process all the logs in the batch given or none at all
+    // return true iff the logs were processed (on false the log system
+    // retains them for later).
     // Can be called by any thread.
-    void Dispatch(Log::Event event, int targetControl);
+    virtual bool Process(const std::vector<Log::Event>& events) = 0;
 
-    // Open the log file and start writing to it
-    void OpenLogFile();
+protected:
+    // Register itself as the target with this id
+    void Register(TargetId id);
+};
 
-    class Target {
-        public:
-            Target();
+// Internal
 
-            // Should process all the logs in the batch given or none at all
-            // return true iff the logs were processed (on false the log system
-            // retains them for later).
-            // Can be called by any thread.
-            virtual bool Process(const std::vector<Log::Event>& events) = 0;
-
-        protected:
-            // Register itself as the target with this id
-            void Register(TargetId id);
-    };
-
-    // Internal
-
-    void RegisterTarget(TargetId id, Target* target);
+void RegisterTarget(TargetId id, Target* target);
 }
 
-#endif //FRAMEWORK_LOG_SYSTEM_H_
+#endif // FRAMEWORK_LOG_SYSTEM_H_

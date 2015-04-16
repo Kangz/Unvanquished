@@ -24,20 +24,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "engine/qcommon/q_shared.h"
 #include "bg_public.h"
 
-void *BG_Alloc( int size )
-{
-	void *ptr = malloc( size );
+void* BG_Alloc(int size) {
+    void* ptr = malloc(size);
 
-	if ( ptr )
-	{
-		memset( ptr, 0, size );
-	}
+    if (ptr) {
+        memset(ptr, 0, size);
+    }
 
-	return ptr;
+    return ptr;
 }
 
-void BG_Free( void *ptr )
-{
-	free( ptr );
+void BG_Free(void* ptr) {
+    free(ptr);
 }
-
