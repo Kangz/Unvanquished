@@ -76,8 +76,7 @@ namespace Cmd {
         return res;
     }
 
-    static bool SkipSpaces(const char*& in, const char* end)
-    {
+    static bool SkipSpaces(const char*& in, const char* end) {
         bool foundSpace = false;
         while (in != end) {
             // Handle spaces
@@ -120,20 +119,20 @@ namespace Cmd {
         bool inInlineComment = false;
 
         while (start != end) {
-            //End of comment
+            // End of comment
             if (inInlineComment && start + 1 != end && start[0] == '*' && start[1] == '/') {
                 inInlineComment = false;
                 start += 2;
                 continue;
             }
 
-            //Ignore everything else in an inline comment
+            // Ignore everything else in an inline comment
             if (inInlineComment) {
                 start++;
                 continue;
             }
 
-            //Start of comment
+            // Start of comment
             if (not inQuote && not inComment && start + 1 != end && start[0] == '/' && start[1] == '*') {
                 inInlineComment = true;
                 start += 2;
@@ -145,30 +144,30 @@ namespace Cmd {
                 continue;
             }
 
-            //Escaped character
+            // Escaped character
             if (start + 1 != end && start[0] == '\\') {
                 start += 2;
                 continue;
             }
 
-            //Quote
+            // Quote
             if (start[0] == '"') {
                 inQuote = !inQuote;
                 start++;
                 continue;
             }
 
-            //Semicolon
+            // Semicolon
             if (start[0] == ';' && !inQuote && !inComment) {
                 return start + 1;
             }
 
-            //Newline
+            // Newline
             if (start[0] == '\n') {
                 return start + 1;
             }
 
-            //Normal character
+            // Normal character
             start++;
         }
 
@@ -178,16 +177,17 @@ namespace Cmd {
     // Special escape function for cvar values
     static void EscapeCvarValue(std::string& text, bool inQuote) {
         for (auto it = text.begin(); it != text.end(); ++it) {
-            if (*it == '\\')
+            if (*it == '\\') {
                 it = text.insert(it, '\\') + 1;
-            else if (*it == '\"')
+            } else if (*it == '\"') {
                 it = text.insert(it, '\\') + 1;
-            else if (*it == '$')
+            } else if (*it == '$') {
                 it = text.insert(it, '\\') + 1;
-            else if (!inQuote && *it == '/')
+            } else if (!inQuote && *it == '/') {
                 it = text.insert(it, '\\') + 1;
-            else if (!inQuote && *it == ';')
+            } else if (!inQuote && *it == ';') {
                 it = text.insert(it, '\\') + 1;
+            }
         }
     }
 
@@ -199,33 +199,33 @@ namespace Cmd {
         bool inInlineComment = false;
 
         while (in != end) {
-            //End of comment
+            // End of comment
             if (inInlineComment && in + 1 != end && in[0] == '*' && in[1] == '/') {
                 inInlineComment = false;
                 in += 2;
                 continue;
             }
 
-            //Ignore everything else in an inline comment
+            // Ignore everything else in an inline comment
             if (inInlineComment) {
                 in++;
                 continue;
             }
 
-            //Start of comment
+            // Start of comment
             if (not inQuote && in + 1 != end && in[0] == '/' && in[1] == '*') {
                 inInlineComment = true;
                 in += 2;
                 continue;
             }
 
-            //Escaped character
+            // Escaped character
             if (in + 1 != end && in[0] == '\\') {
                 in += 2;
                 continue;
             }
 
-            //Quote
+            // Quote
             if (in[0] == '"') {
                 inQuote = !inQuote;
                 in++;
@@ -258,31 +258,33 @@ namespace Cmd {
                 continue;
             }
 
-            //Normal character
+            // Normal character
             in++;
         }
 
         return out;
     }
 
-    bool IsValidCvarName(Str::StringRef text)
-    {
+    bool IsValidCvarName(Str::StringRef text) {
         for (char c: text) {
-            if (c >= 'a' && c <= 'z')
+            if (c >= 'a' && c <= 'z') {
                 continue;
-            if (c >= 'A' && c <= 'Z')
+            }
+            if (c >= 'A' && c <= 'Z') {
                 continue;
-            if (c >= '0' && c <= '9')
+            }
+            if (c >= '0' && c <= '9') {
                 continue;
-            if (c == '_' || c == '.')
+            }
+            if (c == '_' || c == '.') {
                 continue;
+            }
             return false;
         }
         return true;
     }
 
-    bool IsValidCmdName(Str::StringRef text)
-    {
+    bool IsValidCmdName(Str::StringRef text) {
         bool firstChar = true;
         for (char c: text) {
             // Allow command names starting with +/-
@@ -291,21 +293,24 @@ namespace Cmd {
                 continue;
             }
             firstChar = false;
-            if (c >= 'a' && c <= 'z')
+            if (c >= 'a' && c <= 'z') {
                 continue;
-            if (c >= 'A' && c <= 'Z')
+            }
+            if (c >= 'A' && c <= 'Z') {
                 continue;
-            if (c >= '0' && c <= '9')
+            }
+            if (c >= '0' && c <= '9') {
                 continue;
-            if (c == '_' || c == '.')
+            }
+            if (c == '_' || c == '.') {
                 continue;
+            }
             return false;
         }
         return true;
     }
 
-    bool IsSwitch(Str::StringRef arg, const char *name)
-    {
+    bool IsSwitch(Str::StringRef arg, const char* name) {
         return Str::LongestPrefixSize(ToLower(arg), name) > 1;
     }
 
@@ -327,28 +332,30 @@ namespace Cmd {
     Args::Args(Str::StringRef cmd) {
         const char* in = cmd.begin();
 
-        //Skip leading whitespace
+        // Skip leading whitespace
         SkipSpaces(in, cmd.end());
 
-        //Return if the cmd is empty
-        if (in == cmd.end())
+        // Return if the cmd is empty
+        if (in == cmd.end()) {
             return;
+        }
 
-        //Build arg tokens
+        // Build arg tokens
         std::string currentToken;
         while (true) {
-            //Check for end of current token
+            // Check for end of current token
             if (SkipSpaces(in, cmd.end())) {
-                 args.push_back(std::move(currentToken));
-                 if (in == cmd.end())
+                args.push_back(std::move(currentToken));
+                if (in == cmd.end()) {
                     return;
-                 currentToken.clear();
+                }
+                currentToken.clear();
             }
 
-            //Handle quoted strings
+            // Handle quoted strings
             if (in[0] == '\"') {
                 in++;
-                //Read all characters until quote end
+                // Read all characters until quote end
                 while (in != cmd.end()) {
                     if (in[0] == '\"') {
                         in++;
@@ -423,7 +430,7 @@ namespace Cmd {
         return Argc();
     }
 
-    const std::string& Args::operator[] (int argNum) const {
+    const std::string& Args::operator[](int argNum) const {
         return Argv(argNum);
     }
 
@@ -443,7 +450,7 @@ namespace Cmd {
     ===============================================================================
     */
 
-    CmdBase::CmdBase(const int flags): flags(flags) {
+    CmdBase::CmdBase(const int flags) : flags(flags) {
     }
 
     CompletionResult CmdBase::Complete(int argNum, const Args& args, Str::StringRef prefix) const {
@@ -454,7 +461,7 @@ namespace Cmd {
     }
 
     void CmdBase::PrintUsage(const Args& args, Str::StringRef syntax, Str::StringRef description) const {
-        if(description.empty()) {
+        if (description.empty()) {
             Print("%s: %s %s", "usage", args.Argv(0).c_str(), syntax.c_str());
         } else {
             Print("%s: %s %s — %s", "usage", args.Argv(0).c_str(), syntax.c_str(), description.c_str());
@@ -488,14 +495,14 @@ namespace Cmd {
     }
 
     StaticCmd::StaticCmd(std::string name, std::string description)
-    :CmdBase(0){
-        //Register this command statically
+        : CmdBase(0) {
+        // Register this command statically
         AddCommand(std::move(name), *this, std::move(description));
     }
 
     StaticCmd::StaticCmd(std::string name, const int flags, std::string description)
-    :CmdBase(flags){
-        //Register this command statically
+        : CmdBase(flags) {
+        // Register this command statically
         AddCommand(std::move(name), *this, std::move(description));
     }
 
@@ -504,10 +511,10 @@ namespace Cmd {
     }
 
     LambdaCmd::LambdaCmd(std::string name, std::string description, RunFn run, CompleteFn complete)
-    :StaticCmd(std::move(name), std::move(description)), run(run), complete(complete) {
+        : StaticCmd(std::move(name), std::move(description)), run(run), complete(complete) {
     }
     LambdaCmd::LambdaCmd(std::string name, int flags, std::string description, RunFn run, CompleteFn complete)
-    :StaticCmd(std::move(name), flags, std::move(description)), run(run), complete(complete) {
+        : StaticCmd(std::move(name), flags, std::move(description)), run(run), complete(complete) {
     }
 
     void LambdaCmd::Run(const Args& args) const {

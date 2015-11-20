@@ -35,12 +35,12 @@ namespace Audio {
 
     Log::Logger audioLogs("audio");
 
-    static Cvar::Range<Cvar::Cvar<float>> masterVolume("audio.volume.master", "the global audio volume", Cvar::ARCHIVE, 0.8f, 0.0f, 1.0f);
+    static Cvar::Range<Cvar::Cvar<float> > masterVolume("audio.volume.master", "the global audio volume", Cvar::ARCHIVE, 0.8f, 0.0f, 1.0f);
 
     static Cvar::Cvar<bool> muteWhenMinimized("audio.muteWhenMinimized", "should the game be muted when minimized", Cvar::NONE, false);
     static Cvar::Cvar<bool> muteWhenUnfocused("audio.muteWhenUnfocused", "should the game be muted when not focused", Cvar::NONE, false);
 
-    //TODO make them the equivalent of LATCH and ROM for available*
+    // TODO make them the equivalent of LATCH and ROM for available*
     static Cvar::Cvar<std::string> deviceString("audio.al.device", "the OpenAL device to use", Cvar::ARCHIVE, "");
     static Cvar::Cvar<std::string> availableDevices("audio.al.availableDevices", "the available OpenAL devices", Cvar::NONE, "");
 
@@ -251,7 +251,7 @@ namespace Audio {
         if (IsValidEntity(entityNum)) {
             emitter = GetEmitterForEntity(entityNum);
 
-        } else if(IsValidVector(origin)){
+        } else if (IsValidVector(origin)) {
             emitter = GetEmitterForPosition(origin);
 
         } else {
@@ -344,7 +344,7 @@ namespace Audio {
     }
 
     void StreamData(int streamNum, const void* data, int numSamples, int rate, int width, int channels, float volume, int entityNum) {
-        if (not initialized or (streamNum < 0 or streamNum >= N_STREAMS)) {
+        if (not initialized or(streamNum < 0 or streamNum >= N_STREAMS)) {
             return;
         }
 
@@ -359,11 +359,11 @@ namespace Audio {
 
         streams[streamNum]->SetGain(volume);
 
-	    AudioData audioData(rate, width, channels, (width * numSamples * channels),
-	                        reinterpret_cast<const char*>(data));
-	    AL::Buffer buffer;
+        AudioData audioData(rate, width, channels, (width * numSamples * channels),
+                            reinterpret_cast<const char*>(data));
+        AL::Buffer buffer;
 
-	    int feedError = buffer.Feed(audioData);
+        int feedError = buffer.Feed(audioData);
 
         if (not feedError) {
             streams[streamNum]->AppendBuffer(std::move(buffer));
@@ -384,7 +384,7 @@ namespace Audio {
     }
 
     void UpdateListenerGain() {
-        if ((muteWhenMinimized.Get() and com_minimized->integer) or (muteWhenUnfocused.Get() and com_unfocused->integer)) {
+        if ((muteWhenMinimized.Get() and com_minimized->integer)or(muteWhenUnfocused.Get() and com_unfocused->integer)) {
             AL::SetListenerGain(0.0f);
         } else {
             AL::SetListenerGain(SliderToAmplitude(masterVolume.Get()));
@@ -498,7 +498,7 @@ namespace Audio {
 
     class ALInfoCmd : public Cmd::StaticCmd {
         public:
-            ALInfoCmd(): StaticCmd("printALInfo", Cmd::AUDIO, "Prints information about OpenAL") {
+            ALInfoCmd() : StaticCmd("printALInfo", Cmd::AUDIO, "Prints information about OpenAL") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -509,7 +509,7 @@ namespace Audio {
 
     class ListSamplesCmd : public Cmd::StaticCmd {
         public:
-            ListSamplesCmd(): StaticCmd("listAudioSamples", Cmd::AUDIO, "Lists all the loaded sound samples") {
+            ListSamplesCmd() : StaticCmd("listAudioSamples", Cmd::AUDIO, "Lists all the loaded sound samples") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -527,7 +527,7 @@ namespace Audio {
 
     class StopSoundsCmd : public Cmd::StaticCmd {
         public:
-            StopSoundsCmd(): StaticCmd("stopSounds", Cmd::AUDIO, "Stops the music and the looping sounds") {
+            StopSoundsCmd() : StaticCmd("stopSounds", Cmd::AUDIO, "Stops the music and the looping sounds") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -539,7 +539,7 @@ namespace Audio {
 
     class StartCaptureTestCmd : public Cmd::StaticCmd {
         public:
-            StartCaptureTestCmd(): StaticCmd("startSoundCaptureTest", Cmd::AUDIO, "Starts testing the sound capture") {
+            StartCaptureTestCmd() : StaticCmd("startSoundCaptureTest", Cmd::AUDIO, "Starts testing the sound capture") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -550,7 +550,7 @@ namespace Audio {
 
     class StopCaptureTestCmd : public Cmd::StaticCmd {
         public:
-            StopCaptureTestCmd(): StaticCmd("stopSoundCaptureTest", Cmd::AUDIO, "Stops the testing of the sound capture") {
+            StopCaptureTestCmd() : StaticCmd("stopSoundCaptureTest", Cmd::AUDIO, "Stops the testing of the sound capture") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -562,7 +562,7 @@ namespace Audio {
     // Play the sounds from the filenames specified as arguments of the command
     class PlaySoundCmd : public Cmd::StaticCmd {
         public:
-            PlaySoundCmd(): StaticCmd("playSound", Cmd::AUDIO, "Plays the given sound effects") {
+            PlaySoundCmd() : StaticCmd("playSound", Cmd::AUDIO, "Plays the given sound effects") {
             }
 
             virtual void Run(const Cmd::Args& args) const OVERRIDE {
@@ -579,7 +579,7 @@ namespace Audio {
 
             virtual Cmd::CompletionResult Complete(int argNum, const Cmd::Args&, Str::StringRef prefix) const OVERRIDE {
                 if (argNum >= 1) {
-                    //TODO have a list of supported extensions somewhere and use that?
+                    // TODO have a list of supported extensions somewhere and use that?
                     return FS::PakPath::CompleteFilename(prefix, "", "", true, false);
                 }
 
@@ -591,12 +591,12 @@ namespace Audio {
     // Play the music from the filename specified as argument of the command
     class PlayMusicCmd : public Cmd::StaticCmd {
         public:
-            PlayMusicCmd(): StaticCmd("playMusic", Cmd::AUDIO, "Plays a music") {
+            PlayMusicCmd() : StaticCmd("playMusic", Cmd::AUDIO, "Plays a music") {
             }
 
             virtual void Run(const Cmd::Args& args) const OVERRIDE {
                 if (args.Argc() == 2) {
-                    StartMusic( args.Argv(1) , "");
+                    StartMusic(args.Argv(1), "");
                 } else {
                     PrintUsage(args, "/playMusic <file>", "play a music file");
                 }
@@ -604,7 +604,7 @@ namespace Audio {
 
             virtual Cmd::CompletionResult Complete(int argNum, const Cmd::Args&, Str::StringRef prefix) const OVERRIDE {
                 if (argNum == 1) {
-                    //TODO have a list of supported extensions somewhere and use that?
+                    // TODO have a list of supported extensions somewhere and use that?
                     return FS::PakPath::CompleteFilename(prefix, "", "", true, false);
                 }
 
@@ -616,7 +616,7 @@ namespace Audio {
     // Stop the current music
     class StopMusicCmd : public Cmd::StaticCmd {
         public:
-            StopMusicCmd(): StaticCmd("stopMusic", Cmd::AUDIO, "Stops the currently playing music") {
+            StopMusicCmd() : StaticCmd("stopMusic", Cmd::AUDIO, "Stops the currently playing music") {
             }
 
             virtual void Run(const Cmd::Args&) const OVERRIDE {
@@ -632,12 +632,12 @@ namespace Audio {
     static float PerceptualToAmplitude(float perceptual) {
         // Conversion from a perceptual audio scale on [0, 1] to an amplitude scale on [0, 1]
         // Assuming the decibel scale is perceptual, naming A the amplitude and B the perceived volume:
-        //     B = 3log_10(A + c) + d and A = 10^((B - d)/3) - c
+        // B = 3log_10(A + c) + d and A = 10^((B - d)/3) - c
         // With c and d two constants such that the equation holds for A = B = 0 and A = B = 1.
         // Solving gives us:
-        //     c = 10^(-d/3) and 10^((1-d)/3) - 10^(-d/3) = 1
+        // c = 10^(-d/3) and 10^((1-d)/3) - 10^(-d/3) = 1
         // With Wofram Alpha we get:
-        //     d = 3log_10(10^(1/3) - 1) and c = 1 / (10^(1/3) - 1)
+        // d = 3log_10(10^(1/3) - 1) and c = 1 / (10^(1/3) - 1)
         const float PERCEPTUAL_C = 0.866224835960518f;
         const float PERCEPTUAL_D = 0.187108105667604f;
 

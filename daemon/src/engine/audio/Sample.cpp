@@ -37,7 +37,7 @@ namespace Audio {
 
     // Implementation of Sample
 
-    Sample::Sample(std::string filename): Resource(filename) {
+    Sample::Sample(std::string filename) : Resource(filename) {
     }
 
     Sample::~Sample() {
@@ -46,17 +46,17 @@ namespace Audio {
 
     bool Sample::Load() {
         audioLogs.Debug("Loading Sample '%s'", GetName());
-	    auto audioData = LoadSoundCodec(GetName());
+        auto audioData = LoadSoundCodec(GetName());
 
-	    if (audioData.size == 0) {
-		    audioLogs.Warn("Couldn't load sound %s, it's empty!", GetName());
+        if (audioData.size == 0) {
+            audioLogs.Warn("Couldn't load sound %s, it's empty!", GetName());
             return false;
         }
 
-        //TODO handle errors, especially out of memory errors
+        // TODO handle errors, especially out of memory errors
         buffer.Feed(audioData);
 
-	    return true;
+        return true;
     }
 
     void Sample::Cleanup() {
@@ -101,19 +101,19 @@ namespace Audio {
         initialized = false;
     }
 
-	std::vector<std::string> ListSamples() {
-		if (not initialized) {
-			return {};
-		}
+    std::vector<std::string> ListSamples() {
+        if (not initialized) {
+            return {};
+        }
 
-		std::vector<std::string> res;
+        std::vector<std::string> res;
 
-		for (auto& it : *sampleManager) {
-			res.push_back(it.first);
-		}
+        for (auto& it : * sampleManager) {
+            res.push_back(it.first);
+        }
 
-		return res;
-	}
+        return res;
+    }
 
     void BeginSampleRegistration() {
         sampleManager->BeginRegistration();

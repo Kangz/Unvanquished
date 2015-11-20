@@ -38,13 +38,13 @@ Maryland 20850 USA.
 
 namespace Color {
 
-/*
- * Returns a 4 bit integer with the bits following this pattern:
- *  1 red
- *  2 green
- *  4 blue
- *  8 bright
- */
-int To4bit( const Color& color ) NOEXCEPT;
+    /*
+     * Returns a 4 bit integer with the bits following this pattern:
+     *  1 red
+     *  2 green
+     *  4 blue
+     *  8 bright
+     */
+    int To4bit(const Color& color) NOEXCEPT;
 
 } // namespace Color

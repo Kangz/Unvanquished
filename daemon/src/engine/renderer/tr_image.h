@@ -36,13 +36,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if JPEG_LIB_VERSION < 80
 // jpeg-6 deals with 4 byte / pixel, in RGBA order
-#define JPEG_PIXEL_SIZE 4
-#define JPEG_HAS_ALPHA
+    #define JPEG_PIXEL_SIZE 4
+    #define JPEG_HAS_ALPHA
 // ugly, if it's not jpeg-8, we need the internal stuff too
-#include <jpegint.h>
+    #include <jpegint.h>
 #else
 // jpeg-8 uses 3 byte/pixel, in RGB order
-#define JPEG_PIXEL_SIZE 3
+    #define JPEG_PIXEL_SIZE 3
 #endif
 
 #endif

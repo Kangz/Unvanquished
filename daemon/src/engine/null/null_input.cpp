@@ -29,39 +29,30 @@ If you have questions concerning this license or the applicable additional terms
 #include "qcommon/q_shared.h"
 #include "qcommon/qcommon.h"
 
-void IN_Init( void* )
-{
+void IN_Init(void*) {
 }
 
-void IN_Frame()
-{
+void IN_Frame() {
 }
 
-void IN_FrameEnd()
-{
+void IN_FrameEnd() {
 }
 
-void IN_Restart()
-{
+void IN_Restart() {
 }
 
-void IN_Shutdown()
-{
+void IN_Shutdown() {
 }
 
-void IN_CenterMouse()
-{
+void IN_CenterMouse() {
 }
 
-void IN_DropInputsForFrame()
-{
+void IN_DropInputsForFrame() {
 }
 
-bool IN_IsNumLockDown()
-{
+bool IN_IsNumLockDown() {
     return false;
 }
 
-void IN_SetCursorActive( bool )
-{
+void IN_SetCursorActive(bool) {
 }

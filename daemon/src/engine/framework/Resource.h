@@ -46,7 +46,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Resource {
 
-    template<typename T> class Manager;
+    template<typename T>
+    class Manager;
 
     /*
      * Handles are opaque types used to give pointers to resources outside of the
@@ -60,7 +61,7 @@ namespace Resource {
     template<typename T>
     class Handle {
         public:
-            Handle(std::shared_ptr<T> value, const Manager<T>* manager): value(value), manager(manager) {
+            Handle(std::shared_ptr<T> value, const Manager<T>* manager) : value(value), manager(manager) {
             }
 
             // Returns a pointer to the resource, or to the default value if the
@@ -131,14 +132,16 @@ namespace Resource {
             bool loaded;
             bool failed;
 
-            //TODO remove .keep once we have VM handles
+            // TODO remove .keep once we have VM handles
             // It is needed for now because the VM cannot ask for a shared_ptr so it
             // doesn't add a refcount. .keep is a hack to avoid deleting resources
             // added during the registration.
             bool keep;
 
-            template<typename T> friend class Manager;
-            template<typename T> friend class Handle;
+            template<typename T>
+            friend class Manager;
+            template<typename T>
+            friend class Handle;
     };
 
     /*
@@ -154,7 +157,7 @@ namespace Resource {
     template<typename T>
     class Manager {
         private:
-            typedef typename std::unordered_map<Str::StringRef, std::shared_ptr<T>>::iterator iterator;
+            typedef typename std::unordered_map<Str::StringRef, std::shared_ptr<T> >::iterator iterator;
 
         public:
             Manager(Str::StringRef name = "", std::shared_ptr<T> defaultResource = nullptr);
@@ -198,13 +201,13 @@ namespace Resource {
             std::shared_ptr<T> defaultValue;
             // We store a StringRef to the resource's name as we know that the lifetime
             // of the resource will be longer than the one of the hashmap entry.
-            std::unordered_map<Str::StringRef, std::shared_ptr<T>> resources;
+            std::unordered_map<Str::StringRef, std::shared_ptr<T> > resources;
     };
 
     // Implementation of the templates
 
     template<typename T>
-    Manager<T>::Manager(Str::StringRef defaultName, std::shared_ptr<T> _defaultValue): inRegistration(false), immediate(false) {
+    Manager<T>::Manager(Str::StringRef defaultName, std::shared_ptr<T> _defaultValue) : inRegistration(false), immediate(false) {
         if (defaultName == "") {
             defaultValue = nullptr;
         } else {
@@ -217,7 +220,7 @@ namespace Resource {
 
     template<typename T>
     Manager<T>::~Manager() {
-        //TODO assert that we have the ownership of all the resources?
+        // TODO assert that we have the ownership of all the resources?
     }
 
     template<typename T>
@@ -236,7 +239,7 @@ namespace Resource {
         Prune();
 
         // And then load the new ones, so as to reduce peak memory usage.
-        for (auto it = resources.begin(); it != resources.end(); it ++) {
+        for (auto it = resources.begin(); it != resources.end(); it++) {
             if (not it->second->loaded) {
                 if (not it->second->TryLoad()) {
                     it->second->Cleanup();
@@ -286,7 +289,7 @@ namespace Resource {
                 it->second->Cleanup();
                 it = resources.erase(it);
             } else {
-                it ++;
+                it++;
             }
         }
     }
@@ -318,4 +321,4 @@ namespace Resource {
     }
 }
 
-#endif //FRAMEWORK_RESOURCE_H_
+#endif // FRAMEWORK_RESOURCE_H_

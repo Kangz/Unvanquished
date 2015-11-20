@@ -24,42 +24,41 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef BG_LOCAL_H_
 #define BG_LOCAL_H_
 // bg_local.h -- local definitions for the bg (both games) files
-//==================================================================
+// ==================================================================
 
 #define MIN_WALK_NORMAL   0.7f // can't walk on very steep slopes
 
 #define STEPSIZE          18
 
 #define TIMER_LAND        130
-#define TIMER_GESTURE     ( 34 * 66 + 50 )
-#define TIMER_ATTACK      500 //nonsegmented models
+#define TIMER_GESTURE     (34 * 66 + 50)
+#define TIMER_ATTACK      500 // nonsegmented models
 
-#define FALLING_THRESHOLD -900.0f //what vertical speed to start falling sound at
+#define FALLING_THRESHOLD -900.0f // what vertical speed to start falling sound at
 
 // all of the locals will be zeroed before each
 // pmove, just to make damn sure we don't have
 // any differences when running on client or server
-typedef struct
-{
-	vec3_t   forward, right, up;
-	float    frametime;
+typedef struct {
+    vec3_t forward, right, up;
+    float frametime;
 
-	int      msec;
+    int msec;
 
-	bool walking;
-	bool groundPlane;
-	bool ladder;
-	trace_t  groundTrace;
+    bool walking;
+    bool groundPlane;
+    bool ladder;
+    trace_t groundTrace;
 
-	float    impactSpeed;
+    float impactSpeed;
 
-	vec3_t   previous_origin;
-	vec3_t   previous_velocity;
-	int      previous_waterlevel;
+    vec3_t previous_origin;
+    vec3_t previous_velocity;
+    int previous_waterlevel;
 } pml_t;
 
-extern  pmove_t *pm;
-extern  pml_t   pml;
+extern pmove_t* pm;
+extern pml_t pml;
 
 // movement parameters
 #define pm_stopspeed         (100.0f)
@@ -75,16 +74,16 @@ extern  pml_t   pml;
 #define pm_flightfriction    (6.0f)
 #define pm_spectatorfriction (5.0f)
 
-extern  int     c_pmove;
+extern int c_pmove;
 
-void            PM_ClipVelocity( const vec3_t in, const vec3_t normal, vec3_t out );
-void            PM_AddTouchEnt( int entityNum );
-void            PM_AddEvent( int newEvent );
+void            PM_ClipVelocity(const vec3_t in, const vec3_t normal, vec3_t out);
+void            PM_AddTouchEnt(int entityNum);
+void            PM_AddEvent(int newEvent);
 
-bool        PM_SlideMove( bool gravity );
-void            PM_StepEvent( const vec3_t from, const vec3_t to, const vec3_t normal );
-bool        PM_StepSlideMove( bool gravity, bool predictive );
+bool        PM_SlideMove(bool gravity);
+void            PM_StepEvent(const vec3_t from, const vec3_t to, const vec3_t normal);
+bool        PM_StepSlideMove(bool gravity, bool predictive);
 bool        PM_PredictStepMove();
 
-//==================================================================
+// ==================================================================
 #endif /* BG_LOCAL_H_ */

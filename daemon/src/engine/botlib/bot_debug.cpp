@@ -42,54 +42,46 @@ Maryland 20850 USA.
 #include "bot_debug.h"
 #include "bot_navdraw.h"
 
-void DebugDrawQuake::init(BotDebugInterface_t *ref)
-{
-	re = ref;
+void DebugDrawQuake::init(BotDebugInterface_t* ref) {
+    re = ref;
 }
 
-void DebugDrawQuake::depthMask(bool state)
-{
-	re->DebugDrawDepthMask( ( bool ) ( int ) state );
+void DebugDrawQuake::depthMask(bool state) {
+    re->DebugDrawDepthMask( (bool) (int) state);
 }
 
-void DebugDrawQuake::begin(duDebugDrawPrimitives prim, float s)
-{
-	re->DebugDrawBegin( ( debugDrawMode_t ) prim, s );
+void DebugDrawQuake::begin(duDebugDrawPrimitives prim, float s) {
+    re->DebugDrawBegin( (debugDrawMode_t) prim, s);
 }
 
-void DebugDrawQuake::vertex(const float* pos, unsigned int c)
-{
-	vertex( pos, c, nullptr );
+void DebugDrawQuake::vertex(const float* pos, unsigned int c) {
+    vertex(pos, c, nullptr);
 }
 
-void DebugDrawQuake::vertex(const float x, const float y, const float z, unsigned int color)
-{
-	vec3_t vert;
-	VectorSet( vert, x, y, z );
-	recast2quake( vert );
-	re->DebugDrawVertex( vert, color, nullptr );
+void DebugDrawQuake::vertex(const float x, const float y, const float z, unsigned int color) {
+    vec3_t vert;
+    VectorSet(vert, x, y, z);
+    recast2quake(vert);
+    re->DebugDrawVertex(vert, color, nullptr);
 }
 
-void DebugDrawQuake::vertex(const float *pos, unsigned int color, const float* uv)
-{
-	vec3_t vert;
-	VectorCopy( pos, vert );
-	recast2quake( vert );
-	re->DebugDrawVertex( vert, color, uv );
+void DebugDrawQuake::vertex(const float* pos, unsigned int color, const float* uv) {
+    vec3_t vert;
+    VectorCopy(pos, vert);
+    recast2quake(vert);
+    re->DebugDrawVertex(vert, color, uv);
 }
 
-void DebugDrawQuake::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
-{
-	vec3_t vert;
-	vec2_t uv;
-	uv[0] = u;
-	uv[1] = v;
-	VectorSet( vert, x, y, z );
-	recast2quake( vert );
-	re->DebugDrawVertex( vert, color, uv );
+void DebugDrawQuake::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v) {
+    vec3_t vert;
+    vec2_t uv;
+    uv[0] = u;
+    uv[1] = v;
+    VectorSet(vert, x, y, z);
+    recast2quake(vert);
+    re->DebugDrawVertex(vert, color, uv);
 }
 
-void DebugDrawQuake::end()
-{
-	re->DebugDrawEnd();
+void DebugDrawQuake::end() {
+    re->DebugDrawEnd();
 }

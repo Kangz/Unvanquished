@@ -36,9 +36,9 @@ namespace IPC {
     static const int MINIMUM_SIZE = CommandBuffer::DATA_OFFSET + 128;
 
     CommandBufferClient::CommandBufferClient(std::string name)
-    : name(name),
-    bufferSize("vm." + name + "commandBuffer.size", "The size of the shared memory command buffer used by " + name, Cvar::NONE, DEFAULT_SIZE, MINIMUM_SIZE, 16 * 1024 * 1024),
-    logs(name + ".commandBufferClient"), initialized(false) {
+        : name(name),
+        bufferSize("vm." + name + "commandBuffer.size", "The size of the shared memory command buffer used by " + name, Cvar::NONE, DEFAULT_SIZE, MINIMUM_SIZE, 16 * 1024 * 1024),
+        logs(name + ".commandBufferClient"), initialized(false) {
     }
 
     void CommandBufferClient::Init() {
@@ -96,7 +96,7 @@ namespace IPC {
         buffer.AdvanceWritePointer(totalSize);
     }
 
-    void CommandBufferClient::Flush() {//TODO prevent recursion
+    void CommandBufferClient::Flush() { // TODO prevent recursion
         logs.Debug("Flushing %s command buffer with up to %i bytes", name, buffer.GetMaxReadLength());
 
         VM::SendMsg<CommandBufferConsumeMsg>();

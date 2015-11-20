@@ -20,12 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
-typedef struct
-{
-	float x; // horiz position
-	float y; // vert position
-	float w; // width
-	float h; // height;
+typedef struct {
+    float x; // horiz position
+    float y; // vert position
+    float w; // width
+    float h; // height;
 }
 
 rectDef_t;
@@ -36,31 +35,31 @@ typedef rectDef_t Rectangle;
 // Translation
 //
 
-#define _( text )              Gettext( text )
-#define N_( text )             text
-#define C_( ctxt, text )       Pgettext( ctxt, text )
-#define G_( text )             Pgettext( Trans_GenderContext( gender ), text )
-#define P_( one, many, count ) GettextPlural( (one), (many), (count) )
+#define _(text)              Gettext(text)
+#define N_(text)             text
+#define C_(ctxt, text)       Pgettext(ctxt, text)
+#define G_(text)             Pgettext(Trans_GenderContext(gender), text)
+#define P_(one, many, count) GettextPlural( (one), (many), (count) )
 
-const char *Gettext( const char *msgid ) PRINTF_TRANSLATE_ARG(1);
-const char *Pgettext( const char *ctxt, const char *msgid ) PRINTF_TRANSLATE_ARG(2);
-const char *GettextPlural( const char *msgid, const char *msgid2, int number ) PRINTF_TRANSLATE_ARG(1) PRINTF_TRANSLATE_ARG(1);
+const char* Gettext(const char* msgid) PRINTF_TRANSLATE_ARG(1);
+const char* Pgettext(const char* ctxt, const char* msgid) PRINTF_TRANSLATE_ARG(2);
+const char* GettextPlural(const char* msgid, const char* msgid2, int number) PRINTF_TRANSLATE_ARG(1) PRINTF_TRANSLATE_ARG(1);
 
 //
 // Parsing
 //
 
-bool            String_Parse( char **p, const char **out );
-bool            Script_Parse( char **p, const char **out );
-bool            PC_Float_Parse( int handle, float *f );
-bool            PC_Color_Parse( int handle, Color::Color *c );
-bool            PC_Int_Parse( int handle, int *i );
-bool            PC_Rect_Parse( int handle, rectDef_t *r );
-bool            PC_String_Parse( int handle, const char **out );
-bool            PC_Script_Parse( int handle, const char **out );
+bool            String_Parse(char** p, const char** out);
+bool            Script_Parse(char** p, const char** out);
+bool            PC_Float_Parse(int handle, float* f);
+bool            PC_Color_Parse(int handle, Color::Color* c);
+bool            PC_Int_Parse(int handle, int* i);
+bool            PC_Rect_Parse(int handle, rectDef_t* r);
+bool            PC_String_Parse(int handle, const char** out);
+bool            PC_Script_Parse(int handle, const char** out);
 
 //
 // Chat
 //
 
-Color::Color UI_GetChatColour( int which, int team );
+Color::Color UI_GetChatColour(int which, int team);

@@ -115,7 +115,7 @@ namespace IPC {
         if (offset >= size) {
             offset -= size;
         }
-        //TODO assert < size
+        // TODO assert < size
         return offset;
     }
 

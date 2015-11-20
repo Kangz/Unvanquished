@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "common/Common.h"
 
 #ifndef COMMON_IPC_PRIMITIVES_H_
-#define COMMON_IPC_PRIMITIVES_H_
+    #define COMMON_IPC_PRIMITIVES_H_
 
 namespace IPC {
 
@@ -41,201 +41,203 @@ namespace IPC {
      * are file descriptor-backed OS resources.
      */
 
-	enum FileOpenMode {
-		MODE_READ,
-		MODE_WRITE,
-		MODE_RW,
-		MODE_WRITE_APPEND,
-		MODE_RW_APPEND
-	};
+    enum FileOpenMode {
+        MODE_READ,
+        MODE_WRITE,
+        MODE_RW,
+        MODE_WRITE_APPEND,
+        MODE_RW_APPEND
+    };
 
-	// Simple file handle wrapper, does *not* close handle on destruction
-	class FileHandle {
-	public:
-		FileHandle() : handle(-1) {}
-		FileHandle(int handle, FileOpenMode mode) : handle(handle), mode(mode) {}
-		explicit operator bool() const {
-			return handle != -1;
-		}
+    // Simple file handle wrapper, does *not* close handle on destruction
+    class FileHandle {
+        public:
+            FileHandle() : handle(-1) {
+            }
+            FileHandle(int handle, FileOpenMode mode) : handle(handle), mode(mode) {
+            }
+            explicit operator bool() const {
+                return handle != -1;
+            }
 
-		FileDesc GetDesc() const;
-		static FileHandle FromDesc(const FileDesc& desc);
+            FileDesc GetDesc() const;
+            static FileHandle FromDesc(const FileDesc& desc);
 
-		int GetHandle() const {
-			return handle;
-		}
+            int GetHandle() const {
+                return handle;
+            }
 
-	private:
-		int handle;
-		FileOpenMode mode;
-	};
+        private:
+            int handle;
+            FileOpenMode mode;
+    };
 
-	// Same as FileHandle except the fd is closed on destruction
-	class OwnedFileHandle {
-	public:
-		OwnedFileHandle() {}
-		OwnedFileHandle(int fd, FileOpenMode mode) : handle(fd, mode) {}
-		OwnedFileHandle(OwnedFileHandle&& other) : handle(other.handle) {
-			other.handle = FileHandle();
-		}
-		OwnedFileHandle& operator=(OwnedFileHandle&& other) {
-			std::swap(handle, other.handle);
-			return *this;
-		}
-		~OwnedFileHandle();
-		explicit operator bool() const {
-			return bool(handle);
-		}
+    // Same as FileHandle except the fd is closed on destruction
+    class OwnedFileHandle {
+        public:
+            OwnedFileHandle() {
+            }
+            OwnedFileHandle(int fd, FileOpenMode mode) : handle(fd, mode) {
+            }
+            OwnedFileHandle(OwnedFileHandle&& other) : handle(other.handle) {
+                other.handle = FileHandle();
+            }
+            OwnedFileHandle& operator=(OwnedFileHandle&& other) {
+                std::swap(handle, other.handle);
+                return *this;
+            }
+            ~OwnedFileHandle();
+            explicit operator bool() const {
+                return bool(handle);
+            }
 
-		FileDesc GetDesc() const {
-			return handle.GetDesc();
-		}
-		static OwnedFileHandle FromDesc(const FileDesc& desc) {
-			OwnedFileHandle out;
-			out.handle = FileHandle::FromDesc(desc);
-			return out;
-		}
+            FileDesc GetDesc() const {
+                return handle.GetDesc();
+            }
+            static OwnedFileHandle FromDesc(const FileDesc& desc) {
+                OwnedFileHandle out;
+                out.handle = FileHandle::FromDesc(desc);
+                return out;
+            }
 
-		int GetHandle() {
-			int fd = handle.GetHandle();
-			handle = FileHandle();
-			return fd;
-		}
+            int GetHandle() {
+                int fd = handle.GetHandle();
+                handle = FileHandle();
+                return fd;
+            }
 
-	private:
-		FileHandle handle;
-	};
+        private:
+            FileHandle handle;
+    };
 
-	// Message-based socket through which data and handles can be passed.
-	class Socket {
-	public:
-		Socket() : handle(Sys::INVALID_HANDLE) {}
-		Socket(Socket&& other) NOEXCEPT : handle(other.handle) {
-			other.handle = Sys::INVALID_HANDLE;
-		}
-		Socket& operator=(Socket&& other) NOEXCEPT {
-			std::swap(handle, other.handle);
-			return *this;
-		}
-		~Socket() {
-			Close();
-		}
-		explicit operator bool() const {
-			return Sys::IsValidHandle(handle);
-		}
+    // Message-based socket through which data and handles can be passed.
+    class Socket {
+        public:
+            Socket() : handle(Sys::INVALID_HANDLE) {
+            }
+            Socket(Socket&& other) NOEXCEPT : handle(other.handle) {
+                other.handle = Sys::INVALID_HANDLE;
+            }
+            Socket& operator=(Socket&& other) NOEXCEPT {
+                std::swap(handle, other.handle);
+                return *this;
+            }
+            ~Socket() {
+                Close();
+            }
+            explicit operator bool() const {
+                return Sys::IsValidHandle(handle);
+            }
 
-		void Close();
+            void Close();
 
-		Sys::OSHandle GetHandle() const {
-			return handle;
-		}
-		Sys::OSHandle ReleaseHandle() {
-			Sys::OSHandle out = handle;
-			handle = Sys::INVALID_HANDLE;
-			return out;
-		}
+            Sys::OSHandle GetHandle() const {
+                return handle;
+            }
+            Sys::OSHandle ReleaseHandle() {
+                Sys::OSHandle out = handle;
+                handle = Sys::INVALID_HANDLE;
+                return out;
+            }
 
-		FileDesc GetDesc() const;
-		static Socket FromDesc(const FileDesc& desc);
-		static Socket FromHandle(Sys::OSHandle handle);
+            FileDesc GetDesc() const;
+            static Socket FromDesc(const FileDesc& desc);
+            static Socket FromHandle(Sys::OSHandle handle);
 
-		void SendMsg(const Util::Writer& writer) const;
-		Util::Reader RecvMsg() const;
+            void SendMsg(const Util::Writer& writer) const;
+            Util::Reader RecvMsg() const;
 
-		void SetRecvTimeout(std::chrono::nanoseconds timeout);
+            void SetRecvTimeout(std::chrono::nanoseconds timeout);
 
-		static std::pair<Socket, Socket> CreatePair();
+            static std::pair<Socket, Socket> CreatePair();
 
-	private:
-		Sys::OSHandle handle;
-	};
+        private:
+            Sys::OSHandle handle;
+    };
 
-	// Shared memory area, can be sent over a socket. Can be initialized in the VM
+    // Shared memory area, can be sent over a socket. Can be initialized in the VM
     // safely as the engine will ask the OS for the size of the Shared memory region.
-	class SharedMemory {
-	public:
-		SharedMemory() : handle(Sys::INVALID_HANDLE) {}
-		SharedMemory(SharedMemory&& other) NOEXCEPT : handle(other.handle), base(other.base), size(other.size) {
-			other.handle = Sys::INVALID_HANDLE;
-		}
-		SharedMemory& operator=(SharedMemory&& other) NOEXCEPT {
-			std::swap(handle, other.handle);
-			std::swap(base, other.base);
-			std::swap(size, other.size);
-			return *this;
-		}
-		~SharedMemory() {
-			Close();
-		}
-		explicit operator bool() const {
-			return Sys::IsValidHandle(handle);
-		}
+    class SharedMemory {
+        public:
+            SharedMemory() : handle(Sys::INVALID_HANDLE) {
+            }
+            SharedMemory(SharedMemory&& other) NOEXCEPT : handle(other.handle), base(other.base), size(other.size) {
+                other.handle = Sys::INVALID_HANDLE;
+            }
+            SharedMemory& operator=(SharedMemory&& other) NOEXCEPT {
+                std::swap(handle, other.handle);
+                std::swap(base, other.base);
+                std::swap(size, other.size);
+                return *this;
+            }
+            ~SharedMemory() {
+                Close();
+            }
+            explicit operator bool() const {
+                return Sys::IsValidHandle(handle);
+            }
 
-		void Close();
+            void Close();
 
-		FileDesc GetDesc() const;
-		static SharedMemory FromDesc(const FileDesc& desc);
+            FileDesc GetDesc() const;
+            static SharedMemory FromDesc(const FileDesc& desc);
 
-		static SharedMemory Create(size_t size);
+            static SharedMemory Create(size_t size);
 
-		void* GetBase() const {
-			return base;
-		}
-		size_t GetSize() const {
-			return size;
-		}
+            void* GetBase() const {
+                return base;
+            }
+            size_t GetSize() const {
+                return size;
+            }
 
-	private:
-		Sys::OSHandle handle;
-		void* base;
-		size_t size;
-	};
+        private:
+            Sys::OSHandle handle;
+            void* base;
+            size_t size;
+    };
 
 } // namespace IPC
 
 namespace Util {
 
-	// Socket, file handle and shared memory
-	template<> struct SerializeTraits<IPC::Socket> {
-		static void Write(Writer& stream, const IPC::Socket& value)
-		{
-			stream.WriteHandle(value.GetDesc());
-		}
-		static IPC::Socket Read(Reader& stream)
-		{
-			return IPC::Socket::FromDesc(stream.ReadHandle());
-		}
-	};
-	template<> struct SerializeTraits<IPC::FileHandle> {
-		static void Write(Writer& stream, const IPC::FileHandle& value)
-		{
-			stream.WriteHandle(value.GetDesc());
-		}
-		static IPC::FileHandle Read(Reader& stream)
-		{
-			return IPC::FileHandle::FromDesc(stream.ReadHandle());
-		}
-	};
-	template<> struct SerializeTraits<IPC::OwnedFileHandle> {
-		static void Write(Writer& stream, const IPC::OwnedFileHandle& value)
-		{
-			stream.WriteHandle(value.GetDesc());
-		}
-		static IPC::OwnedFileHandle Read(Reader& stream)
-		{
-			return IPC::OwnedFileHandle::FromDesc(stream.ReadHandle());
-		}
-	};
-	template<> struct SerializeTraits<IPC::SharedMemory> {
-		static void Write(Writer& stream, const IPC::SharedMemory& value)
-		{
-			stream.WriteHandle(value.GetDesc());
-		}
-		static IPC::SharedMemory Read(Reader& stream)
-		{
-			return IPC::SharedMemory::FromDesc(stream.ReadHandle());
-		}
-	};
+    // Socket, file handle and shared memory
+    template<>
+    struct SerializeTraits<IPC::Socket> {
+        static void Write(Writer& stream, const IPC::Socket& value) {
+            stream.WriteHandle(value.GetDesc());
+        }
+        static IPC::Socket Read(Reader& stream) {
+            return IPC::Socket::FromDesc(stream.ReadHandle());
+        }
+    };
+    template<>
+    struct SerializeTraits<IPC::FileHandle> {
+        static void Write(Writer& stream, const IPC::FileHandle& value) {
+            stream.WriteHandle(value.GetDesc());
+        }
+        static IPC::FileHandle Read(Reader& stream) {
+            return IPC::FileHandle::FromDesc(stream.ReadHandle());
+        }
+    };
+    template<>
+    struct SerializeTraits<IPC::OwnedFileHandle> {
+        static void Write(Writer& stream, const IPC::OwnedFileHandle& value) {
+            stream.WriteHandle(value.GetDesc());
+        }
+        static IPC::OwnedFileHandle Read(Reader& stream) {
+            return IPC::OwnedFileHandle::FromDesc(stream.ReadHandle());
+        }
+    };
+    template<>
+    struct SerializeTraits<IPC::SharedMemory> {
+        static void Write(Writer& stream, const IPC::SharedMemory& value) {
+            stream.WriteHandle(value.GetDesc());
+        }
+        static IPC::SharedMemory Read(Reader& stream) {
+            return IPC::SharedMemory::FromDesc(stream.ReadHandle());
+        }
+    };
 
 } // namespace Util
 

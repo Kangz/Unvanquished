@@ -41,19 +41,16 @@ Maryland 20850 USA.
 
 std::vector<RocketDataFormatter*> dataFormatterList;
 
-void Rocket_RegisterDataFormatter( const char *name )
-{
-	dataFormatterList.push_back( new RocketDataFormatter( name, dataFormatterList.size() ) );
+void Rocket_RegisterDataFormatter(const char* name) {
+    dataFormatterList.push_back(new RocketDataFormatter(name, dataFormatterList.size() ) );
 }
 
-void Rocket_DataFormatterRawData( int handle, char *name, int nameLength, char *data, int dataLength )
-{
-	Q_strncpyz( name, dataFormatterList[ handle ]->name.CString(), nameLength );
-	Q_strncpyz( data, dataFormatterList[ handle ]->data, dataLength );
+void Rocket_DataFormatterRawData(int handle, char* name, int nameLength, char* data, int dataLength) {
+    Q_strncpyz(name, dataFormatterList[handle]->name.CString(), nameLength);
+    Q_strncpyz(data, dataFormatterList[handle]->data, dataLength);
 }
 
-void Rocket_DataFormatterFormattedData( int handle, const char *data, bool parseQuake )
-{
-	dataFormatterList[ handle ]->out = parseQuake ? Rocket_QuakeToRML( data, RP_EMOTICONS ) :
-		Rocket::Core::String( data );
+void Rocket_DataFormatterFormattedData(int handle, const char* data, bool parseQuake) {
+    dataFormatterList[handle]->out = parseQuake ? Rocket_QuakeToRML(data, RP_EMOTICONS) :
+                                     Rocket::Core::String(data);
 }

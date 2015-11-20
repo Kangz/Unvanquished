@@ -32,7 +32,7 @@ Maryland 20850 USA.
 ===========================================================================
 */
 
-//#define   CULL_BBOX
+// #define   CULL_BBOX
 
 /*
 
@@ -73,13 +73,12 @@ properly.
 
 #define MAX_GRID_SIZE    129
 
-typedef struct
-{
-	int      width;
-	int      height;
-	bool wrapWidth;
-	bool wrapHeight;
-	vec3_t   points[ MAX_GRID_SIZE ][ MAX_GRID_SIZE ]; // [width][height]
+typedef struct {
+    int width;
+    int height;
+    bool wrapWidth;
+    bool wrapHeight;
+    vec3_t points[MAX_GRID_SIZE][MAX_GRID_SIZE]; // [width][height]
 } cGrid_t;
 
-//struct patchCollide_s *CM_GeneratePatchCollide(int width, int height, vec3_t * points, bool addBevels);
+// struct patchCollide_s *CM_GeneratePatchCollide(int width, int height, vec3_t * points, bool addBevels);

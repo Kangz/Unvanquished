@@ -54,17 +54,17 @@ namespace IPC {
      * IPC descriptor which can be sent over a socket. You should treat this as an
      * opaque type and not access any of the fields directly.
      */
-	struct FileDesc {
-		Sys::OSHandle handle;
-		#ifndef __native_client__
-		int type;
-		union {
-			uint64_t size;
-			int32_t flags;
-		};
-		#endif
+    struct FileDesc {
+        Sys::OSHandle handle;
+        #ifndef __native_client__
+        int type;
+        union {
+            uint64_t size;
+            int32_t flags;
+        };
+        #endif
         void Close() const;
-	};
+    };
 
     /*
      * The messages sent between the VM and the engine are defined by a numerical
@@ -73,18 +73,19 @@ namespace IPC {
      * services level) and 16 bits for fine dispatch (function level).
      */
 
-	// Special message ID used to indicate an RPC return and VM exit
-	const uint32_t ID_RETURN = 0xffffffff;
-	const uint32_t ID_EXIT = 0xfffffffe;
+    // Special message ID used to indicate an RPC return and VM exit
+    const uint32_t ID_RETURN = 0xffffffff;
+    const uint32_t ID_EXIT = 0xfffffffe;
 
     // Combine a major and minor ID into a single number.
     // TODO we use a template, because we need the ID to be part of template
     // arguments and some compilers do not support constexpr yet.
-	template<uint16_t Major, uint16_t Minor> struct Id {
-		enum {
-			value = (Major << 16) + Minor
-		};
-	};
+    template<uint16_t Major, uint16_t Minor>
+    struct Id {
+        enum {
+            value = (Major << 16) + Minor
+        };
+    };
 
     /*
      * Asynchronous message which does not wait for a reply, the argument types
@@ -92,17 +93,19 @@ namespace IPC {
      *
      *     typedef IPC::Message<IPC::Id<MY_MODULE, MY_METHOD>, std::string, int, bool> MyMethodMsg;
      */
-	template<typename Id, typename... T> struct Message {
-		enum {
-			id = Id::value
-		};
-		typedef std::tuple<T...> Inputs;
-	};
+    template<typename Id, typename ... T>
+    struct Message {
+        enum {
+            id = Id::value
+        };
+        typedef std::tuple<T ...> Inputs;
+    };
 
-	// Reply class which should only be used for the second parameter of SyncMessage
-	template<typename... T> struct Reply {
-		typedef std::tuple<T...> Outputs;
-	};
+    // Reply class which should only be used for the second parameter of SyncMessage
+    template<typename ... T>
+    struct Reply {
+        typedef std::tuple<T ...> Outputs;
+    };
 
     /*
      * Synchronous message which waits for a reply. The reply can contain data. Both
@@ -118,13 +121,14 @@ namespace IPC {
      * messages whose invocation will contain other sync messages, such as most
      * Engine -> VM messages.
      */
-	template<typename Msg, typename Reply = Reply<>> struct SyncMessage {
-		enum {
-			id = Msg::id
-		};
-		typedef typename Msg::Inputs Inputs;
-		typedef typename Reply::Outputs Outputs;
-	};
+    template<typename Msg, typename Reply = Reply<> >
+    struct SyncMessage {
+        enum {
+            id = Msg::id
+        };
+        typedef typename Msg::Inputs Inputs;
+        typedef typename Reply::Outputs Outputs;
+    };
 
 } // namespace IPC
 

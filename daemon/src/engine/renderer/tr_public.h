@@ -34,12 +34,12 @@ Maryland 20850 USA.
 */
 
 #ifndef __TR_PUBLIC_H
-#define __TR_PUBLIC_H
+    #define __TR_PUBLIC_H
 
-#include "tr_types.h"
-#include "engine/botlib/bot_debug.h"
+    #include "tr_types.h"
+    #include "engine/botlib/bot_debug.h"
 
-#define REF_API_VERSION 10
+    #define REF_API_VERSION 10
 
 // *INDENT-OFF*
 

@@ -34,98 +34,86 @@ Maryland 20850 USA.
 #include "Events.h"
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
+    namespace Core {
+        namespace Lua {
 
-template<> void ExtraInit<Lua::Events>(lua_State* L, int metatable_index)
-{
-	//due to they way that LuaType::Register is made, we know that the method table is at the index
-	//directly below the metatable
-	int method_index = metatable_index - 1;
+            template<>
+            void ExtraInit<Lua::Events>(lua_State* L, int metatable_index) {
+                // due to they way that LuaType::Register is made, we know that the method table is at the index
+                // directly below the metatable
+                int method_index = metatable_index - 1;
 
-	lua_pushcfunction(L, Eventspushcmd);
-	lua_setfield(L, method_index, "pushcmd");
+                lua_pushcfunction(L, Eventspushcmd);
+                lua_setfield(L, method_index, "pushcmd");
 
-	lua_pushcfunction(L, Eventspushelement);
-	lua_setfield(L, method_index, "pushelement");
+                lua_pushcfunction(L, Eventspushelement);
+                lua_setfield(L, method_index, "pushelement");
 
-	lua_pushcfunction(L, Eventspushevent);
-	lua_setfield(L, method_index, "pushevent");
+                lua_pushcfunction(L, Eventspushevent);
+                lua_setfield(L, method_index, "pushevent");
 
-	return;
-}
+            }
 
-int Eventspushcmd(lua_State* L)
-{
-	Rocket::Core::StringList list;
-	const char *cmds = luaL_checkstring(L, 1);
+            int Eventspushcmd(lua_State* L) {
+                Rocket::Core::StringList list;
+                const char* cmds = luaL_checkstring(L, 1);
 
-	Rocket::Core::StringUtilities::ExpandString( list, cmds, ';' );
-	for ( size_t i = 0; i < list.size(); ++i )
-	{
-		Rocket_AddEvent( new RocketEvent_t( list[ i ] ) );
-	}
+                Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
+                for (size_t i = 0; i < list.size(); ++i) {
+                    Rocket_AddEvent(new RocketEvent_t(list[i]) );
+                }
 
-	return 0;
-}
+                return 0;
+            }
 
-int Eventspushevent(lua_State* L)
-{
-	Rocket::Core::StringList list;
-	const char *cmds = luaL_checkstring(L, 1);
-	Rocket::Core::Event *event = LuaType<Rocket::Core::Event>::check(L, 2);
+            int Eventspushevent(lua_State* L) {
+                Rocket::Core::StringList list;
+                const char* cmds = luaL_checkstring(L, 1);
+                Rocket::Core::Event* event = LuaType<Rocket::Core::Event>::check(L, 2);
 
-	if (event == NULL)
-	{
-		return 0;
-	}
+                if (event == NULL) {
+                    return 0;
+                }
 
-	Rocket::Core::StringUtilities::ExpandString( list, cmds, ';' );
-	for ( size_t i = 0; i < list.size(); ++i )
-	{
-		Rocket_AddEvent( new RocketEvent_t( *event, list[ i ] ) );
-	}
+                Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
+                for (size_t i = 0; i < list.size(); ++i) {
+                    Rocket_AddEvent(new RocketEvent_t(*event, list[i]) );
+                }
 
-	return 0;
-}
+                return 0;
+            }
 
-int Eventspushelement(lua_State* L)
-{
-	Rocket::Core::StringList list;
-	const char *cmds = luaL_checkstring(L, 1);
-	Rocket::Core::Element *element = LuaType<Rocket::Core::Element>::check(L, 2);
+            int Eventspushelement(lua_State* L) {
+                Rocket::Core::StringList list;
+                const char* cmds = luaL_checkstring(L, 1);
+                Rocket::Core::Element* element = LuaType<Rocket::Core::Element>::check(L, 2);
 
-	if (element == NULL)
-	{
-		return 0;
-	}
+                if (element == NULL) {
+                    return 0;
+                }
 
-	Rocket::Core::StringUtilities::ExpandString( list, cmds, ';' );
-	for ( size_t i = 0; i < list.size(); ++i )
-	{
-		Rocket_AddEvent( new RocketEvent_t( element, list[ i ] ) );
-	}
+                Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
+                for (size_t i = 0; i < list.size(); ++i) {
+                    Rocket_AddEvent(new RocketEvent_t(element, list[i]) );
+                }
 
-	return 0;
-}
+                return 0;
+            }
 
-RegType<Events> EventsMethods[] =
-{
-	{ NULL, NULL },
-};
+            RegType<Events> EventsMethods[] ={
+                { NULL, NULL },
+            };
 
-luaL_Reg EventsGetters[] =
-{
-	{ NULL, NULL },
-};
+            luaL_Reg EventsGetters[] ={
+                { NULL, NULL },
+            };
 
-luaL_Reg EventsSetters[] =
-{
-	{ NULL, NULL },
-};
+            luaL_Reg EventsSetters[] ={
+                { NULL, NULL },
+            };
 
-LUACORETYPEDEFINE(Events,false)
+            LUACORETYPEDEFINE(Events, false)
 
-}
-}
+        }
+    }
 }

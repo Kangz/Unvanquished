@@ -40,57 +40,48 @@ Maryland 20850 USA.
 #include "../cg_local.h"
 
 std::queue< RocketEvent_t* > eventQueue;
-extern Rocket::Core::Element *activeElement;
+extern Rocket::Core::Element* activeElement;
 
-void Rocket_ProcessEvent( Rocket::Core::Event& event, Rocket::Core::String& value )
-{
-	Rocket::Core::StringList list;
+void Rocket_ProcessEvent(Rocket::Core::Event& event, Rocket::Core::String& value) {
+    Rocket::Core::StringList list;
 
-	Rocket::Core::StringUtilities::ExpandString( list, value, ';' );
-	for ( size_t i = 0; i < list.size(); ++i )
-	{
-		eventQueue.push( new RocketEvent_t( event, list[ i ] ) );
-	}
+    Rocket::Core::StringUtilities::ExpandString(list, value, ';');
+    for (size_t i = 0; i < list.size(); ++i) {
+        eventQueue.push(new RocketEvent_t(event, list[i]) );
+    }
 }
 
-bool Rocket_GetEvent(std::string& cmdText)
-{
-	if ( !eventQueue.empty() )
-	{
-		cmdText = eventQueue.front()->cmd.CString();
-		activeElement = eventQueue.front()->targetElement;
-		return true;
-	}
+bool Rocket_GetEvent(std::string& cmdText) {
+    if (!eventQueue.empty() ) {
+        cmdText = eventQueue.front()->cmd.CString();
+        activeElement = eventQueue.front()->targetElement;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
-void Rocket_DeleteEvent()
-{
-	RocketEvent_t *event = eventQueue.front();
-	eventQueue.pop();
-	activeElement = nullptr;
-	delete event;
+void Rocket_DeleteEvent() {
+    RocketEvent_t* event = eventQueue.front();
+    eventQueue.pop();
+    activeElement = nullptr;
+    delete event;
 }
 
-void Rocket_GetEventParameters( char *params, int /*length*/ )
-{
-	RocketEvent_t *event = eventQueue.front();
-	*params = '\0';
-	if ( !eventQueue.empty() )
-	{
-		int index = 0;
-		Rocket::Core::String key;
-		Rocket::Core::String value;
+void Rocket_GetEventParameters(char* params, int /*length*/) {
+    RocketEvent_t* event = eventQueue.front();
+    *params = '\0';
+    if (!eventQueue.empty() ) {
+        int index = 0;
+        Rocket::Core::String key;
+        Rocket::Core::String value;
 
-		while ( event->Parameters.Iterate( index, key, value ) )
-		{
-			Info_SetValueForKeyRocket( params, key.CString(), value.CString(), true );
-		}
-	}
+        while (event->Parameters.Iterate(index, key, value) ) {
+            Info_SetValueForKeyRocket(params, key.CString(), value.CString(), true);
+        }
+    }
 }
 
-void Rocket_AddEvent( RocketEvent_t *event )
-{
-	eventQueue.push( event );
+void Rocket_AddEvent(RocketEvent_t* event) {
+    eventQueue.push(event);
 }

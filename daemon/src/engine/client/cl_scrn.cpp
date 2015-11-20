@@ -46,34 +46,29 @@ SCR_AdjustFrom640
 Adjusted for resolution and screen aspect ratio
 ================
 */
-void SCR_AdjustFrom640( float *x, float *y, float *w, float *h )
-{
-	float xscale;
-	float yscale;
+void SCR_AdjustFrom640(float* x, float* y, float* w, float* h) {
+    float xscale;
+    float yscale;
 
-	// scale for screen sizes
-	xscale = cls.glconfig.vidWidth / 640.0;
-	yscale = cls.glconfig.vidHeight / 480.0;
+    // scale for screen sizes
+    xscale = cls.glconfig.vidWidth / 640.0;
+    yscale = cls.glconfig.vidHeight / 480.0;
 
-	if ( x )
-	{
-		*x *= xscale;
-	}
+    if (x) {
+        *x *= xscale;
+    }
 
-	if ( y )
-	{
-		*y *= yscale;
-	}
+    if (y) {
+        *y *= yscale;
+    }
 
-	if ( w )
-	{
-		*w *= xscale;
-	}
+    if (w) {
+        *w *= xscale;
+    }
 
-	if ( h )
-	{
-		*h *= yscale;
-	}
+    if (h) {
+        *h *= yscale;
+    }
 }
 
 /*
@@ -83,90 +78,85 @@ SCR_FillRect
 Coordinates are the current screen resolution
 =================
 */
-void SCR_FillRect( float x, float y, float width, float height, const Color::Color& color )
-{
-	re.SetColor( color );
-	re.DrawStretchPic( x, y, width, height, 0, 0, 0, 0, cls.whiteShader );
-	re.SetColor( Color::White );
+void SCR_FillRect(float x, float y, float width, float height, const Color::Color& color) {
+    re.SetColor(color);
+    re.DrawStretchPic(x, y, width, height, 0, 0, 0, 0, cls.whiteShader);
+    re.SetColor(Color::White);
 }
 
-static glyphInfo_t *Glyph( int ch )
-{
-	static glyphInfo_t glyphs[8];
-	static int index = 0;
-	glyphInfo_t *glyph = &glyphs[ index++ & 7 ];
+static glyphInfo_t* Glyph(int ch) {
+    static glyphInfo_t glyphs[8];
+    static int index = 0;
+    glyphInfo_t* glyph = &glyphs[index++ & 7];
 
-	re.GlyphChar( cls.consoleFont, ch, glyph );
+    re.GlyphChar(cls.consoleFont, ch, glyph);
 
-	return glyph;
+    return glyph;
 }
 
-void SCR_DrawConsoleFontUnichar( float x, float y, int ch )
-{
-	if ( cls.useLegacyConsoleFont )
-	{
-		SCR_DrawSmallUnichar( ( int ) x, ( int ) y, ch );
-		return;
-	}
+void SCR_DrawConsoleFontUnichar(float x, float y, int ch) {
+    if (cls.useLegacyConsoleFont) {
+        SCR_DrawSmallUnichar( (int) x, (int) y, ch);
+        return;
+    }
 
-	if ( ch != ' ' )
-	{
-		glyphInfo_t *glyph = Glyph( ch );
-		float       yadj = glyph->top;
-		float       xadj = ( SCR_ConsoleFontUnicharWidth( ch ) - glyph->xSkip ) / 2.0;
+    if (ch != ' ') {
+        glyphInfo_t* glyph = Glyph(ch);
+        float yadj = glyph->top;
+        float xadj = (SCR_ConsoleFontUnicharWidth(ch) - glyph->xSkip) / 2.0;
 
-		re.DrawStretchPic( x + xadj, y - yadj, glyph->imageWidth, glyph->imageHeight,
-		                   glyph->s, glyph->t,
-		                   glyph->s2, glyph->t2,
-		                   glyph->glyph );
-	}
+        re.DrawStretchPic(x + xadj, y - yadj, glyph->imageWidth, glyph->imageHeight,
+                          glyph->s, glyph->t,
+                          glyph->s2, glyph->t2,
+                          glyph->glyph);
+    }
 }
 
 /*
 ** SCR_DrawSmallUnichar
 ** small chars are drawn at native screen resolution
 */
-void SCR_DrawSmallUnichar( int x, int y, int ch )
-{
-	int   row, col;
-	float frow, fcol;
-	float size;
+void SCR_DrawSmallUnichar(int x, int y, int ch) {
+    int row, col;
+    float frow, fcol;
+    float size;
 
-	if ( ch < 0x100 || cls.useLegacyConsoleFont )
-	{
-		if ( ch == ' ' ) {
-			return;
-		}
+    if (ch < 0x100 || cls.useLegacyConsoleFont) {
+        if (ch == ' ') {
+            return;
+        }
 
-		if ( y < -SMALLCHAR_HEIGHT ) {
-			return;
-		}
+        if (y < -SMALLCHAR_HEIGHT) {
+            return;
+        }
 
-		if ( ch >= 0x100 ) { ch = 0; }
+        if (ch >= 0x100) {
+            ch = 0;
+        }
 
-		row = ch>>4;
-		col = ch&15;
+        row = ch>>4;
+        col = ch&15;
 
-		frow = row*0.0625;
-		fcol = col*0.0625;
-		size = 0.0625;
+        frow = row*0.0625;
+        fcol = col*0.0625;
+        size = 0.0625;
 
-		// adjust for baseline
-		re.DrawStretchPic( x, y - (int)( SMALLCHAR_HEIGHT / ( CONSOLE_FONT_VPADDING + 1 ) ),
-		                SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT,
-				fcol, frow,
-				fcol + size, frow + size,
-				cls.charSetShader );
-	} else {
-		glyphInfo_t *glyph = Glyph( ch );
+        // adjust for baseline
+        re.DrawStretchPic(x, y - (int)(SMALLCHAR_HEIGHT / (CONSOLE_FONT_VPADDING + 1) ),
+                          SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT,
+                          fcol, frow,
+                          fcol + size, frow + size,
+                          cls.charSetShader);
+    } else {
+        glyphInfo_t* glyph = Glyph(ch);
 
-		re.DrawStretchPic( x, y, SMALLCHAR_WIDTH, glyph->imageHeight,
-				glyph->s,
-				glyph->t,
-				glyph->s2,
-				glyph->t2,
-				glyph->glyph );
-	}
+        re.DrawStretchPic(x, y, SMALLCHAR_WIDTH, glyph->imageHeight,
+                          glyph->s,
+                          glyph->t,
+                          glyph->s2,
+                          glyph->t2,
+                          glyph->glyph);
+    }
 }
 
 /*
@@ -179,155 +169,135 @@ to a fixed color.
 Coordinates are at 640 by 480 virtual resolution
 ==================
 */
-void SCR_DrawSmallStringExt( int x, int y, const char *string,
-							 const Color::Color &setColor, bool forceColor, bool noColorEscape )
-{
-	float      xx;
+void SCR_DrawSmallStringExt(int x, int y, const char* string,
+                            const Color::Color &setColor, bool forceColor, bool noColorEscape) {
+    float xx;
 
-	// draw the colored text
-	xx = x;
-	re.SetColor( setColor );
+    // draw the colored text
+    xx = x;
+    re.SetColor(setColor);
 
-	for ( const auto& token : Color::Parser( string, setColor ) )
-	{
-		if ( token.Type() == Color::Token::COLOR )
-		{
-			if ( !forceColor )
-			{
-				Color::Color color = token.Color();
-				color.SetAlpha( setColor.Alpha() );
-				re.SetColor( color );
-			}
+    for (const auto& token : Color::Parser(string, setColor) ) {
+        if (token.Type() == Color::Token::COLOR) {
+            if (!forceColor) {
+                Color::Color color = token.Color();
+                color.SetAlpha(setColor.Alpha() );
+                re.SetColor(color);
+            }
 
-			if ( noColorEscape )
-			{
-				for ( const char *c = token.Begin(); c != token.End(); c++ )
-				{
-					SCR_DrawConsoleFontUnichar( xx, y, *c );
-					xx += SCR_ConsoleFontUnicharWidth( *c );
-				}
-			}
-		}
-		else if ( token.Type() == Color::Token::ESCAPE )
-		{
-			SCR_DrawConsoleFontUnichar( xx, y, Color::Constants::ESCAPE );
-			xx += SCR_ConsoleFontUnicharWidth( Color::Constants::ESCAPE );
+            if (noColorEscape) {
+                for (const char* c = token.Begin(); c != token.End(); c++) {
+                    SCR_DrawConsoleFontUnichar(xx, y, *c);
+                    xx += SCR_ConsoleFontUnicharWidth(*c);
+                }
+            }
+        } else if (token.Type() == Color::Token::ESCAPE) {
+            SCR_DrawConsoleFontUnichar(xx, y, Color::Constants::ESCAPE);
+            xx += SCR_ConsoleFontUnicharWidth(Color::Constants::ESCAPE);
 
-			if ( noColorEscape )
-			{
-				SCR_DrawConsoleFontUnichar( xx, y, Color::Constants::ESCAPE );
-				xx += SCR_ConsoleFontUnicharWidth( Color::Constants::ESCAPE );
-			}
-		}
-		else
-		{
-			int ch = Q_UTF8_CodePoint( token.Begin() );
-			SCR_DrawConsoleFontUnichar( xx, y, ch );
-			xx += SCR_ConsoleFontUnicharWidth( ch );
-		}
-	}
+            if (noColorEscape) {
+                SCR_DrawConsoleFontUnichar(xx, y, Color::Constants::ESCAPE);
+                xx += SCR_ConsoleFontUnicharWidth(Color::Constants::ESCAPE);
+            }
+        } else {
+            int ch = Q_UTF8_CodePoint(token.Begin() );
+            SCR_DrawConsoleFontUnichar(xx, y, ch);
+            xx += SCR_ConsoleFontUnicharWidth(ch);
+        }
+    }
 
-	re.SetColor( Color::White );
+    re.SetColor(Color::White);
 }
 
-//===============================================================================
+// ===============================================================================
 
 /*
 =================
 SCR_DrawDemoRecording
 =================
 */
-void SCR_DrawDemoRecording()
-{
-	if ( !clc.demorecording )
-	{
-		return;
-	}
+void SCR_DrawDemoRecording() {
+    if (!clc.demorecording) {
+        return;
+    }
 
-	//bani
-	Cvar_Set( "cl_demooffset", va( "%d", FS_FTell( clc.demofile ) ) );
+    // bani
+    Cvar_Set("cl_demooffset", va("%d", FS_FTell(clc.demofile) ) );
 }
 
-//=============================================================================
+// =============================================================================
 
 /*
 ==================
 SCR_Init
 ==================
 */
-void SCR_Init()
-{
-	scr_initialized = true;
+void SCR_Init() {
+    scr_initialized = true;
 }
 
-//=======================================================
+// =======================================================
 
 /*
 ==================
 SCR_DrawScreenField
 ==================
 */
-void SCR_DrawScreenField()
-{
-	re.BeginFrame();
+void SCR_DrawScreenField() {
+    re.BeginFrame();
 
-	// wide aspect ratio screens need to have the sides cleared
-	// unless they are displaying game renderings
-	if ( cls.state != CA_ACTIVE )
-	{
-		if ( cls.glconfig.vidWidth * 480 > cls.glconfig.vidHeight * 640 )
-		{
-			re.SetColor( Color::Black );
-			re.DrawStretchPic( 0, 0, cls.glconfig.vidWidth, cls.glconfig.vidHeight, 0, 0, 0, 0, cls.whiteShader );
-			re.SetColor( Color::White );
-		}
-	}
+    // wide aspect ratio screens need to have the sides cleared
+    // unless they are displaying game renderings
+    if (cls.state != CA_ACTIVE) {
+        if (cls.glconfig.vidWidth * 480 > cls.glconfig.vidHeight * 640) {
+            re.SetColor(Color::Black);
+            re.DrawStretchPic(0, 0, cls.glconfig.vidWidth, cls.glconfig.vidHeight, 0, 0, 0, 0, cls.whiteShader);
+            re.SetColor(Color::White);
+        }
+    }
 
-	if ( cgvm.IsActive() )
-	{
-		switch ( cls.state )
-		{
-			default:
-				Com_Error( ERR_FATAL, "SCR_DrawScreenField: bad cls.state" );
+    if (cgvm.IsActive() ) {
+        switch (cls.state) {
+        default:
+            Com_Error(ERR_FATAL, "SCR_DrawScreenField: bad cls.state");
 
-			case CA_CINEMATIC:
-				SCR_DrawCinematic();
-				break;
+        case CA_CINEMATIC:
+            SCR_DrawCinematic();
+            break;
 
-			case CA_DISCONNECTED:
-				break;
+        case CA_DISCONNECTED:
+            break;
 
-			case CA_CONNECTING:
-			case CA_CHALLENGING:
-			case CA_CONNECTED:
-			case CA_DOWNLOADING:
-				// connecting clients will only show the connection dialog
-				// refresh to update the time
-				break;
+        case CA_CONNECTING:
+        case CA_CHALLENGING:
+        case CA_CONNECTED:
+        case CA_DOWNLOADING:
+            // connecting clients will only show the connection dialog
+            // refresh to update the time
+            break;
 
-			case CA_LOADING:
-			case CA_PRIMED:
-				// draw the game information screen and loading progress
-				CL_CGameRendering();
+        case CA_LOADING:
+        case CA_PRIMED:
+            // draw the game information screen and loading progress
+            CL_CGameRendering();
 
-				// also draw the connection information, so it doesn't
-				// flash away too briefly on local or LAN games
-				//if (!com_sv_running->value || Cvar_VariableIntegerValue("sv_cheats")) // Ridah, don't draw useless text if not in dev mode
-				break;
+            // also draw the connection information, so it doesn't
+            // flash away too briefly on local or LAN games
+            // if (!com_sv_running->value || Cvar_VariableIntegerValue("sv_cheats")) // Ridah, don't draw useless text if not in dev mode
+            break;
 
-			case CA_ACTIVE:
-				CL_CGameRendering();
-				SCR_DrawDemoRecording();
-				break;
-		}
-	}
-	cgvm.CGameRocketFrame();
+        case CA_ACTIVE:
+            CL_CGameRendering();
+            SCR_DrawDemoRecording();
+            break;
+        }
+    }
+    cgvm.CGameRocketFrame();
 }
 
-void SCR_DrawConsoleAndPointer()
-{
-	// console draws next
-	Con_DrawConsole();
+void SCR_DrawConsoleAndPointer() {
+    // console draws next
+    Con_DrawConsole();
 }
 
 /*
@@ -338,104 +308,86 @@ This is called every frame, and can also be called explicitly to flush
 text to the screen.
 ==================
 */
-void SCR_UpdateScreen()
-{
-	static int recursive = 0;
+void SCR_UpdateScreen() {
+    static int recursive = 0;
 
-	if ( !scr_initialized )
-	{
-		return; // not initialized yet
-	}
+    if (!scr_initialized) {
+        return; // not initialized yet
+    }
 
-	if ( ++recursive >= 2 )
-	{
-		recursive = 0;
-		// Gordon: i'm breaking this again, because we've removed most of our cases but still have one which will not fix easily
-		return;
-//      Com_Error( ERR_FATAL, "SCR_UpdateScreen: recursively called" );
-	}
+    if (++recursive >= 2) {
+        recursive = 0;
+        // Gordon: i'm breaking this again, because we've removed most of our cases but still have one which will not fix easily
+        return;
+        // Com_Error( ERR_FATAL, "SCR_UpdateScreen: recursively called" );
+    }
 
-	recursive = 1;
+    recursive = 1;
 
-	// If there is no VM, there are also no rendering commands issued. Stop the renderer in
-	// that case.
-	if ( cgvm.IsActive() )
-	{
-		SCR_DrawScreenField();
-		SCR_DrawConsoleAndPointer();
+    // If there is no VM, there are also no rendering commands issued. Stop the renderer in
+    // that case.
+    if (cgvm.IsActive() ) {
+        SCR_DrawScreenField();
+        SCR_DrawConsoleAndPointer();
 
-		if ( com_speeds->integer )
-		{
-			re.EndFrame( &time_frontend, &time_backend );
-		}
-		else
-		{
-			re.EndFrame( nullptr, nullptr );
-		}
-	}
+        if (com_speeds->integer) {
+            re.EndFrame(&time_frontend, &time_backend);
+        } else {
+            re.EndFrame(nullptr, nullptr);
+        }
+    }
 
-	recursive = 0;
+    recursive = 0;
 }
 
-float SCR_ConsoleFontUnicharWidth( int ch )
-{
-	return cls.useLegacyConsoleFont
-	       ? SMALLCHAR_WIDTH
-	       : Glyph( ch )->xSkip + cl_consoleFontKerning->value;
+float SCR_ConsoleFontUnicharWidth(int ch) {
+    return cls.useLegacyConsoleFont
+           ? SMALLCHAR_WIDTH
+           : Glyph(ch)->xSkip + cl_consoleFontKerning->value;
 }
 
-float SCR_ConsoleFontCharWidth( const char *s )
-{
-	return SCR_ConsoleFontUnicharWidth( Q_UTF8_CodePoint( s ) );
+float SCR_ConsoleFontCharWidth(const char* s) {
+    return SCR_ConsoleFontUnicharWidth(Q_UTF8_CodePoint(s) );
 }
 
-float SCR_ConsoleFontCharHeight()
-{
-	return cls.useLegacyConsoleFont
-	       ? SMALLCHAR_HEIGHT
-	       : cls.consoleFont->glyphBlock[0][(unsigned)'I'].imageHeight + CONSOLE_FONT_VPADDING * cl_consoleFontSize->value;
+float SCR_ConsoleFontCharHeight() {
+    return cls.useLegacyConsoleFont
+           ? SMALLCHAR_HEIGHT
+           : cls.consoleFont->glyphBlock[0][(unsigned)'I'].imageHeight + CONSOLE_FONT_VPADDING * cl_consoleFontSize->value;
 }
 
-float SCR_ConsoleFontCharVPadding()
-{
-	return cls.useLegacyConsoleFont
-	       ? 0
-	       : std::max( 0, -cls.consoleFont->glyphBlock[0][(unsigned)'g'].bottom >> 6);
+float SCR_ConsoleFontCharVPadding() {
+    return cls.useLegacyConsoleFont
+           ? 0
+           : std::max(0, -cls.consoleFont->glyphBlock[0][(unsigned)'g'].bottom >> 6);
 }
 
-float SCR_ConsoleFontStringWidth( const char* s, int len )
-{
-	float width = 0;
+float SCR_ConsoleFontStringWidth(const char* s, int len) {
+    float width = 0;
 
-	if( cls.useLegacyConsoleFont )
-	{
-		if( cls.useLegacyConsoleFace )
-		{
-			return len * SMALLCHAR_WIDTH;
-		}
-		else
-		{
-			int l = 0;
-			const char *str = s;
+    if (cls.useLegacyConsoleFont) {
+        if (cls.useLegacyConsoleFace) {
+            return len * SMALLCHAR_WIDTH;
+        } else {
+            int l = 0;
+            const char* str = s;
 
-			while( *str && len > 0 )
-			{
-				l++;
-				str += Q_UTF8_Width( str );
-				len--;
-			}
+            while (*str && len > 0) {
+                l++;
+                str += Q_UTF8_Width(str);
+                len--;
+            }
 
-			return l * SMALLCHAR_WIDTH;
-		}
-	}
+            return l * SMALLCHAR_WIDTH;
+        }
+    }
 
-	while( *s && len > 0 )
-	{
-		width += SCR_ConsoleFontCharWidth( s );
+    while (*s && len > 0) {
+        width += SCR_ConsoleFontCharWidth(s);
 
-		s += Q_UTF8_Width( s );
-		len--;
-	}
+        s += Q_UTF8_Width(s);
+        len--;
+    }
 
-	return (width);
+    return (width);
 }

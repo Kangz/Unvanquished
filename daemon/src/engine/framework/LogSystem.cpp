@@ -37,8 +37,8 @@ namespace Log {
     static Target* targets[MAX_TARGET_ID];
 
 
-    //TODO make me reentrant // or check it is actually reentrant when using for (Event e : events) do stuff
-    //TODO think way more about thread safety
+    // TODO make me reentrant // or check it is actually reentrant when using for (Event e : events) do stuff
+    // TODO think way more about thread safety
     void Dispatch(Log::Event event, int targetControl) {
         static std::vector<Log::Event> buffers[MAX_TARGET_ID];
         static std::recursive_mutex bufferLocks[MAX_TARGET_ID];
@@ -77,9 +77,9 @@ namespace Log {
         Log::RegisterTarget(id, this);
     }
 
-    //Log Targets
-    //TODO: move them in their respective modules
-    //TODO this one isn't mutlithreaded at all, need a rewrite of the consoles
+    // Log Targets
+    // TODO: move them in their respective modules
+    // TODO this one isn't mutlithreaded at all, need a rewrite of the consoles
     class TTYTarget : public Target {
         public:
             TTYTarget() {
@@ -87,7 +87,7 @@ namespace Log {
             }
 
             virtual bool Process(const std::vector<Log::Event>& events) OVERRIDE {
-                for (auto& event : events)  {
+                for (auto& event : events) {
                     CON_LogWrite(event.text.c_str());
                     CON_Print(event.text.c_str());
                     CON_LogWrite("\n");
@@ -99,21 +99,21 @@ namespace Log {
 
     static TTYTarget tty;
 
-    //TODO for now these change nothing because the file is opened before the cvars are read.
-    //TODO add a Callback on these that will make the logFile open a new file or something
-    //Or maybe have Com_Init start it ?
+    // TODO for now these change nothing because the file is opened before the cvars are read.
+    // TODO add a Callback on these that will make the logFile open a new file or something
+    // Or maybe have Com_Init start it ?
     Cvar::Cvar<bool> useLogFile("logs.logFile.active", "are the logs sent in the logfile", Cvar::NONE, true);
     Cvar::Cvar<std::string> logFileName("logs.logFile.filename", "the name of the logfile", Cvar::NONE, "daemon.log");
     Cvar::Cvar<bool> overwrite("logs.logFile.overwrite", "if true the logfile is deleted at each run else the logs are just appended", Cvar::NONE, true);
     Cvar::Cvar<bool> forceFlush("logs.logFile.forceFlush", "are all the logs flushed immediately (more accurate but slower)", Cvar::NONE, false);
-    class LogFileTarget: public Target {
+    class LogFileTarget : public Target {
         public:
             LogFileTarget() {
                 this->Register(LOGFILE);
             }
 
             virtual bool Process(const std::vector<Log::Event>& events) OVERRIDE {
-                //If we have no log file drop the events
+                // If we have no log file drop the events
                 if (not useLogFile.Get()) {
                     return true;
                 }
@@ -134,7 +134,7 @@ namespace Log {
     static LogFileTarget logfile;
 
     void OpenLogFile() {
-        //If we have no log file do nothing here
+        // If we have no log file do nothing here
         if (not useLogFile.Get()) {
             return;
         }

@@ -39,23 +39,23 @@ Maryland 20850 USA.
 #include <Rocket/Core/Lua/LuaType.h>
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
-// Dummy class for Events
-class Events
-{
+    namespace Core {
+        namespace Lua {
+            // Dummy class for Events
+            class Events {
 
-};
+            };
 
-template<> void ExtraInit<Events>(lua_State* L, int metatable_index);
-int Eventspushcmd(lua_State* L);
-int Eventspushevent(lua_State* L);
-int Eventspushelement(lua_State* L);
+            template<>
+            void ExtraInit<Events>(lua_State* L, int metatable_index);
+            int Eventspushcmd(lua_State* L);
+            int Eventspushevent(lua_State* L);
+            int Eventspushelement(lua_State* L);
 
-extern RegType<Events> EventsMethods[];
-extern luaL_Reg EventsGetters[];
-extern luaL_Reg EventsSetters[];
-}
-}
+            extern RegType<Events> EventsMethods[];
+            extern luaL_Reg EventsGetters[];
+            extern luaL_Reg EventsSetters[];
+        }
+    }
 }
 #endif

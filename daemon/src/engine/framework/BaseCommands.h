@@ -40,7 +40,7 @@ namespace Cmd {
     // Executes delayed commands that are ready.
     void DelayFrame();
 
-    //Saves the aliases in a configuration file
+    // Saves the aliases in a configuration file
     std::string GetAliasConfigText();
 }
 

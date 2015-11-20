@@ -76,90 +76,89 @@ namespace IPC {
      */
 
     #ifdef BUILD_ENGINE
-        static const bool TOPLEVEL_MSG_ALLOWED = true;
+    static const bool TOPLEVEL_MSG_ALLOWED = true;
     #else
-        static const bool TOPLEVEL_MSG_ALLOWED = false;
+    static const bool TOPLEVEL_MSG_ALLOWED = false;
     #endif
 
     class Channel {
-    public:
-        Channel()
-            : canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {}
-        Channel(Socket socket)
-            : socket(std::move(socket)), canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {}
-        Channel(Channel&& other)
-            : socket(std::move(other.socket)), canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {}
-        Channel& operator=(Channel&& other)
-        {
-            std::swap(socket, other.socket);
-            canSendSyncMsg = other.canSendSyncMsg;
-            canSendAsyncMsg = other.canSendAsyncMsg;
-            return *this;
-        }
-        explicit operator bool() const
-        {
-            return bool(socket);
-        }
+        public:
+            Channel()
+                : canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {
+            }
+            Channel(Socket socket)
+                : socket(std::move(socket)), canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {
+            }
+            Channel(Channel&& other)
+                : socket(std::move(other.socket)), canSendSyncMsg(TOPLEVEL_MSG_ALLOWED), canSendAsyncMsg(TOPLEVEL_MSG_ALLOWED) {
+            }
+            Channel& operator=(Channel&& other) {
+                std::swap(socket, other.socket);
+                canSendSyncMsg = other.canSendSyncMsg;
+                canSendAsyncMsg = other.canSendAsyncMsg;
+                return *this;
+            }
+            explicit operator bool() const {
+                return bool(socket);
+            }
 
-        // Wrappers around socket functions
-        void SendMsg(const Util::Writer& writer) const
-        {
-            socket.SendMsg(writer);
-        }
-        Util::Reader RecvMsg() const
-        {
-            return socket.RecvMsg();
-        }
-        void SetRecvTimeout(std::chrono::nanoseconds timeout)
-        {
-            socket.SetRecvTimeout(timeout);
-        }
+            // Wrappers around socket functions
+            void SendMsg(const Util::Writer& writer) const {
+                socket.SendMsg(writer);
+            }
+            Util::Reader RecvMsg() const {
+                return socket.RecvMsg();
+            }
+            void SetRecvTimeout(std::chrono::nanoseconds timeout) {
+                socket.SetRecvTimeout(timeout);
+            }
 
-        // Wait for a synchronous message reply, returns the message ID and contents
-        std::pair<uint32_t, Util::Reader> RecvReplyMsg()
-        {
-            Util::Reader reader = RecvMsg();
+            // Wait for a synchronous message reply, returns the message ID and contents
+            std::pair<uint32_t, Util::Reader> RecvReplyMsg() {
+                Util::Reader reader = RecvMsg();
 
-            uint32_t id = reader.Read<uint32_t>();
-            return {id, std::move(reader)};
-        }
+                uint32_t id = reader.Read<uint32_t>();
+                return {id, std::move(reader)};
+            }
 
-    private:
-        Socket socket;
-        std::unordered_map<uint32_t, Util::Reader> replies;
+        private:
+            Socket socket;
+            std::unordered_map<uint32_t, Util::Reader> replies;
 
-    public:
-        bool canSendSyncMsg;
-        bool canSendAsyncMsg;
+        public:
+            bool canSendSyncMsg;
+            bool canSendAsyncMsg;
     };
 
     namespace detail {
 
         // Implementations of SendMsg for Message and SyncMessage
-        template<typename Func, typename Id, typename... MsgArgs, typename... Args> void SendMsg(Channel& channel, Func&&, Message<Id, MsgArgs...>, Args&&... args)
-        {
-            typedef Message<Id, MsgArgs...> Message;
-            static_assert(sizeof...(Args) == std::tuple_size<typename Message::Inputs>::value, "Incorrect number of arguments for IPC::SendMsg");
+        template<typename Func, typename Id, typename ... MsgArgs, typename ... Args>
+        void SendMsg(Channel& channel, Func&&, Message<Id, MsgArgs ...>, Args&& ... args) {
+            typedef Message<Id, MsgArgs ...> Message;
+            static_assert(sizeof ... (Args) == std::tuple_size<typename Message::Inputs>::value, "Incorrect number of arguments for IPC::SendMsg");
 
-            if (!channel.canSendAsyncMsg)
+            if (!channel.canSendAsyncMsg) {
                 Sys::Drop("Attempting to send a Message in VM toplevel with id: 0x%x", Message::id);
+            }
 
             Util::Writer writer;
             writer.Write<uint32_t>(Message::id);
-            writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args)...);
+            writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args) ...);
             channel.SendMsg(writer);
         }
-        template<typename Func, typename Msg, typename Reply, typename... Args> void SendMsg(Channel& channel, Func&& messageHandler, SyncMessage<Msg, Reply>, Args&&... args)
-        {
+        template<typename Func, typename Msg, typename Reply, typename ... Args>
+        void SendMsg(Channel& channel, Func&& messageHandler, SyncMessage<Msg, Reply>, Args&& ... args) {
             typedef SyncMessage<Msg, Reply> Message;
-            static_assert(sizeof...(Args) == std::tuple_size<typename Message::Inputs>::value + std::tuple_size<typename Message::Outputs>::value, "Incorrect number of arguments for IPC::SendMsg");
+            static_assert(sizeof ... (Args) == std::tuple_size<typename Message::Inputs>::value + std::tuple_size<typename Message::Outputs>::value, "Incorrect number of arguments for IPC::SendMsg");
 
-            if (!channel.canSendSyncMsg)
+            if (!channel.canSendSyncMsg) {
                 Sys::Drop("Attempting to send a SyncMessage while handling a Message or in VM toplevel with id: 0x%x", Message::id);
+            }
 
             Util::Writer writer;
             writer.Write<uint32_t>(Message::id);
-            writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args)...);
+            writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args) ...);
             channel.SendMsg(writer);
 
             while (true) {
@@ -167,7 +166,7 @@ namespace IPC {
                 uint32_t id;
                 std::tie(id, reader) = channel.RecvReplyMsg();
                 if (id == ID_RETURN) {
-                    auto out = std::forward_as_tuple(std::forward<Args>(args)...);
+                    auto out = std::forward_as_tuple(std::forward<Args>(args) ...);
                     reader.FillTuple<std::tuple_size<typename Message::Inputs>::value>(Util::TypeListFromTuple<typename Message::Outputs>(), out);
                     return;
                 }
@@ -176,18 +175,21 @@ namespace IPC {
         }
 
         // Map a tuple to get the actual types returned by SerializeTraits::Read instead of the declared types
-        template<typename T> struct MapTupleHelper {
-            typedef decltype(Util::SerializeTraits<T>::Read(std::declval<Util::Reader&>())) type;
+        template<typename T>
+        struct MapTupleHelper {
+            typedef decltype (Util::SerializeTraits<T>::Read (std::declval<Util::Reader&>())) type;
         };
-        template<typename T> struct MapTuple {};
-        template<typename... T> struct MapTuple<std::tuple<T...>> {
-            typedef std::tuple<typename MapTupleHelper<T>::type...> type;
+        template<typename T>
+        struct MapTuple {};
+        template<typename ... T>
+        struct MapTuple<std::tuple<T ...> > {
+            typedef std::tuple<typename MapTupleHelper<T>::type ...> type;
         };
 
         // Implementations of HandleMsg for Message and SyncMessage
-        template<typename Func, typename Id, typename... MsgArgs> void HandleMsg(Channel& channel, Message<Id, MsgArgs...>, Util::Reader reader, Func&& func)
-        {
-            typedef Message<Id, MsgArgs...> Message;
+        template<typename Func, typename Id, typename ... MsgArgs>
+        void HandleMsg(Channel& channel, Message<Id, MsgArgs ...>, Util::Reader reader, Func&& func) {
+            typedef Message<Id, MsgArgs ...> Message;
 
             typename MapTuple<typename Message::Inputs>::type inputs;
             reader.FillTuple<0>(Util::TypeListFromTuple<typename Message::Inputs>(), inputs);
@@ -201,8 +203,8 @@ namespace IPC {
             channel.canSendSyncMsg = oldSync;
             channel.canSendAsyncMsg = oldAsync;
         }
-        template<typename Func, typename Msg, typename Reply> void HandleMsg(Channel& channel, SyncMessage<Msg, Reply>, Util::Reader reader, Func&& func)
-        {
+        template<typename Func, typename Msg, typename Reply>
+        void HandleMsg(Channel& channel, SyncMessage<Msg, Reply>, Util::Reader reader, Func&& func) {
             typedef SyncMessage<Msg, Reply> Message;
 
             typename MapTuple<typename Message::Inputs>::type inputs;
@@ -229,15 +231,15 @@ namespace IPC {
     // Send a message to the given channel. If the message is synchronous then messageHandler is invoked for all
     // message that are recieved until ID_RETURN is recieved. Values returned by a synchronous message are
     // returned through reference parameters.
-    template<typename Msg, typename Func, typename... Args> void SendMsg(Channel& channel, Func&& messageHandler, Args&&... args)
-    {
-        detail::SendMsg(channel, messageHandler, Msg(), std::forward<Args>(args)...);
+    template<typename Msg, typename Func, typename ... Args>
+    void SendMsg(Channel& channel, Func&& messageHandler, Args&& ... args) {
+        detail::SendMsg(channel, messageHandler, Msg(), std::forward<Args>(args) ...);
     }
 
     // Handle an incoming message using a callback function (which can just be a lambda). If the message is
     // synchronous then outputs values are written to using reference parameters.
-    template<typename Msg, typename Func> void HandleMsg(Channel& channel, Util::Reader reader, Func&& func)
-    {
+    template<typename Msg, typename Func>
+    void HandleMsg(Channel& channel, Util::Reader reader, Func&& func) {
         detail::HandleMsg(channel, Msg(), std::move(reader), std::forward<Func>(func));
     }
 

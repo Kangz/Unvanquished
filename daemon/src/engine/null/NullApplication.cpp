@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ===========================================================================
 */
 
-//TODO(kangz)
+// TODO(kangz)
 #include "common/Common.h"
 #include "common/System.h"
 #include "framework/Application.h"
@@ -38,32 +38,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Application {
 
-class NullApplication : public Application {
-    public:
-        NullApplication() {
-        }
-
-        void Frame() override {
-            while (true) {
-                const char* command = CON_Input();
-                if (command == nullptr) {
-                    break;
-                }
-
-                if (command[0] == '/' || command[0] == '\\') {
-                    Cmd::BufferCommandTextAfter(command + 1, true);
-                } else {
-                    Cmd::BufferCommandTextAfter(command, true);
-                }
+    class NullApplication : public Application {
+        public:
+            NullApplication() {
             }
 
-            Cmd::DelayFrame();
-            Cmd::ExecuteCommandBuffer();
+            void Frame() override {
+                while (true) {
+                    const char* command = CON_Input();
+                    if (command == nullptr) {
+                        break;
+                    }
 
-            Sys::SleepFor(std::chrono::milliseconds(60));
-        }
-};
+                    if (command[0] == '/' || command[0] == '\\') {
+                        Cmd::BufferCommandTextAfter(command + 1, true);
+                    } else {
+                        Cmd::BufferCommandTextAfter(command, true);
+                    }
+                }
 
-INSTANTIATE_APPLICATION(NullApplication);
+                Cmd::DelayFrame();
+                Cmd::ExecuteCommandBuffer();
+
+                Sys::SleepFor(std::chrono::milliseconds(60));
+            }
+    };
+
+    INSTANTIATE_APPLICATION(NullApplication);
 
 }

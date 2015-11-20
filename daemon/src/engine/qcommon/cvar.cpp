@@ -40,7 +40,7 @@ Maryland 20850 USA.
 #include "framework/CommandSystem.h"
 #include "framework/CvarSystem.h"
 
-cvar_t        *cvar_vars;
+cvar_t* cvar_vars;
 
 /*
 ============
@@ -66,7 +66,7 @@ float Cvar_VariableValue(const char* name) {
 Cvar_VariableIntegerValue
 ============
 */
-int Cvar_VariableIntegerValue( const char* name ) {
+int Cvar_VariableIntegerValue(const char* name) {
     cvar_t* var = Cvar_FindVar(name);
     return var ? var->integer : 0;
 }
@@ -104,7 +104,7 @@ If the variable already exists, the value will not be set unless CVAR_ROM
 The flags will be or'ed in if the variable exists.
 ============
 */
-cvar_t *Cvar_Get(const char* name, const char* value, int flags) {
+cvar_t* Cvar_Get(const char* name, const char* value, int flags) {
     Cvar::Register(nullptr, name, "--", flags, value);
     return Cvar_FindVar(name);
 }
@@ -128,11 +128,11 @@ Cvar_SetValue
 ============
 */
 void Cvar_SetValue(const char* name, float value) {
-	if (value == (int) value) {
+    if (value == (int) value) {
         Cvar_Set(name, va("%i", (int) value));
-	} else {
+    } else {
         Cvar_Set(name, va("%f", value));
-	}
+    }
 }
 
 /*
@@ -155,8 +155,7 @@ Appends lines containing "set variable value" for all variables
 with the archive flag set that are not in a transient state.
 ============
 */
-void Cvar_WriteVariables( fileHandle_t f )
-{
+void Cvar_WriteVariables(fileHandle_t f) {
     std::string text = Cvar::GetCvarConfigText();
     FS_Write(text.c_str(), text.size(), f);
 }

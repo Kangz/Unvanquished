@@ -36,7 +36,7 @@ Maryland 20850 USA.
 #include "sg_entities.h"
 #include "CBSE.h"
 
-static EmptyEntity emptyEntity(EmptyEntity::Params{nullptr});
+static EmptyEntity emptyEntity(EmptyEntity::Params {nullptr});
 
 /*
 =================================================================================
@@ -49,20 +49,18 @@ basic gentity lifecycle handling
 /**
  * @brief Every entity slot is initialized like this, including the world and none
  */
-void G_InitGentityMinimal( gentity_t *entity )
-{
-	entity->entity = &emptyEntity;
+void G_InitGentityMinimal(gentity_t* entity) {
+    entity->entity = &emptyEntity;
 }
 
-void G_InitGentity( gentity_t *entity )
-{
-	G_InitGentityMinimal( entity );
-	entity->inuse = true;
-	entity->enabled = true;
-	entity->classname = "noclass";
-	entity->s.number = entity - g_entities;
-	entity->r.ownerNum = ENTITYNUM_NONE;
-	entity->creationTime = level.time;
+void G_InitGentity(gentity_t* entity) {
+    G_InitGentityMinimal(entity);
+    entity->inuse = true;
+    entity->enabled = true;
+    entity->classname = "noclass";
+    entity->s.number = entity - g_entities;
+    entity->r.ownerNum = ENTITYNUM_NONE;
+    entity->creationTime = level.time;
 }
 
 /*
@@ -80,64 +78,56 @@ instead of being removed and recreated, which can cause interpolated
 angles and bad trails.
 =================
 */
-gentity_t *G_NewEntity()
-{
-	int       i, force;
-	gentity_t *newEntity;
+gentity_t* G_NewEntity() {
+    int i, force;
+    gentity_t* newEntity;
 
-	newEntity = nullptr; // shut up warning
-	i = 0; // shut up warning
+    newEntity = nullptr; // shut up warning
+    i = 0; // shut up warning
 
-	for ( force = 0; force < 2; force++ )
-	{
-		// if we go through all entities first and can't find a free one,
-		// then try again a second time, this time ignoring times
-		newEntity = &g_entities[ MAX_CLIENTS ];
+    for (force = 0; force < 2; force++) {
+        // if we go through all entities first and can't find a free one,
+        // then try again a second time, this time ignoring times
+        newEntity = &g_entities[MAX_CLIENTS];
 
-		for ( i = MAX_CLIENTS; i < level.num_entities; i++, newEntity++ )
-		{
-			if ( newEntity->inuse )
-			{
-				continue;
-			}
+        for (i = MAX_CLIENTS; i < level.num_entities; i++, newEntity++) {
+            if (newEntity->inuse) {
+                continue;
+            }
 
-			// the first couple seconds of server time can involve a lot of
-			// freeing and allocating, so relax the replacement policy
-			if ( !force && newEntity->freetime > level.startTime + 2000 && level.time - newEntity->freetime < 1000 )
-			{
-				continue;
-			}
+            // the first couple seconds of server time can involve a lot of
+            // freeing and allocating, so relax the replacement policy
+            if (!force && newEntity->freetime > level.startTime + 2000 && level.time - newEntity->freetime < 1000) {
+                continue;
+            }
 
-			// reuse this slot
-			G_InitGentity( newEntity );
-			return newEntity;
-		}
+            // reuse this slot
+            G_InitGentity(newEntity);
+            return newEntity;
+        }
 
-		if ( i != MAX_GENTITIES )
-		{
-			break;
-		}
-	}
+        if (i != MAX_GENTITIES) {
+            break;
+        }
+    }
 
-	if ( i == ENTITYNUM_MAX_NORMAL )
-	{
-		for ( i = 0; i < MAX_GENTITIES; i++ )
-		{
-			G_Printf( "%4i: %s\n", i, g_entities[ i ].classname );
-		}
+    if (i == ENTITYNUM_MAX_NORMAL) {
+        for (i = 0; i < MAX_GENTITIES; i++) {
+            G_Printf("%4i: %s\n", i, g_entities[i].classname);
+        }
 
-		G_Error( "G_Spawn: no free entities" );
-	}
+        G_Error("G_Spawn: no free entities");
+    }
 
-	// open up a new slot
-	level.num_entities++;
+    // open up a new slot
+    level.num_entities++;
 
-	// let the server system know that there are more entities
-	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ),
-	                     &level.clients[ 0 ].ps, sizeof( level.clients[ 0 ] ) );
+    // let the server system know that there are more entities
+    trap_LocateGameData(level.gentities, level.num_entities, sizeof(gentity_t),
+                        &level.clients[0].ps, sizeof(level.clients[0]) );
 
-	G_InitGentity( newEntity );
-	return newEntity;
+    G_InitGentity(newEntity);
+    return newEntity;
 }
 
 /*
@@ -147,46 +137,39 @@ G_FreeEntity
 Marks the entity as free
 =================
 */
-void G_FreeEntity( gentity_t *entity )
-{
-	trap_UnlinkEntity( entity );  // unlink from world
+void G_FreeEntity(gentity_t* entity) {
+    trap_UnlinkEntity(entity); // unlink from world
 
-	if ( entity->neverFree )
-	{
-		return;
-	}
+    if (entity->neverFree) {
+        return;
+    }
 
-	if ( g_debugEntities.integer > 2 )
-	{
-		G_Printf(S_DEBUG "Freeing Entity %s\n", etos(entity));
-	}
+    if (g_debugEntities.integer > 2) {
+        G_Printf(S_DEBUG "Freeing Entity %s\n", etos(entity));
+    }
 
-	if ( entity->obstacleHandle )
-	{
-		trap_BotRemoveObstacle( entity->obstacleHandle );
-	}
+    if (entity->obstacleHandle) {
+        trap_BotRemoveObstacle(entity->obstacleHandle);
+    }
 
-	if( entity->eclass && entity->eclass->instanceCounter > 0 )
-	{
-		entity->eclass->instanceCounter--;
-	}
+    if (entity->eclass && entity->eclass->instanceCounter > 0) {
+        entity->eclass->instanceCounter--;
+    }
 
-	if ( entity->s.eType == ET_BEACON && entity->s.modelindex == BCT_TAG )
-	{
-		// It's possible that this happened before, but we need to be sure.
-		BaseClustering::Remove(entity);
-	}
+    if (entity->s.eType == ET_BEACON && entity->s.modelindex == BCT_TAG) {
+        // It's possible that this happened before, but we need to be sure.
+        BaseClustering::Remove(entity);
+    }
 
-	if (entity->entity != &emptyEntity)
-	{
-		delete entity->entity;
-	}
+    if (entity->entity != &emptyEntity) {
+        delete entity->entity;
+    }
 
-	memset( entity, 0, sizeof( *entity ) );
-	entity->entity = &emptyEntity;
-	entity->classname = "freent";
-	entity->freetime = level.time;
-	entity->inuse = false;
+    memset(entity, 0, sizeof(*entity) );
+    entity->entity = &emptyEntity;
+    entity->classname = "freent";
+    entity->freetime = level.time;
+    entity->inuse = false;
 }
 
 
@@ -199,26 +182,25 @@ The origin will be snapped to save net bandwidth, so care
 must be taken if the origin is right on a surface (snap towards start vector first)
 =================
 */
-gentity_t *G_NewTempEntity( const vec3_t origin, int event )
-{
-	gentity_t *newEntity;
-	vec3_t    snapped;
+gentity_t* G_NewTempEntity(const vec3_t origin, int event) {
+    gentity_t* newEntity;
+    vec3_t snapped;
 
-	newEntity = G_NewEntity();
-	newEntity->s.eType = (entityType_t) ( ET_EVENTS + event );
+    newEntity = G_NewEntity();
+    newEntity->s.eType = (entityType_t) (ET_EVENTS + event);
 
-	newEntity->classname = "tempEntity";
-	newEntity->eventTime = level.time;
-	newEntity->freeAfterEvent = true;
+    newEntity->classname = "tempEntity";
+    newEntity->eventTime = level.time;
+    newEntity->freeAfterEvent = true;
 
-	VectorCopy( origin, snapped );
-	SnapVector( snapped );  // save network bandwidth
-	G_SetOrigin( newEntity, snapped );
+    VectorCopy(origin, snapped);
+    SnapVector(snapped); // save network bandwidth
+    G_SetOrigin(newEntity, snapped);
 
-	// find cluster for PVS
-	trap_LinkEntity( newEntity );
+    // find cluster for PVS
+    trap_LinkEntity(newEntity);
 
-	return newEntity;
+    return newEntity;
 }
 
 /*
@@ -236,52 +218,48 @@ EntityToString
 Convenience function for printing entities
 =============
 */
-//assuming MAX_GENTITIES to be 5 digits or less
-#define MAX_ETOS_LENGTH MAX_NAME_LENGTH + 5 * 2 + 4 + 1 + 5
-const char *etos( const gentity_t *entity )
-{
-	static  int  index;
-	static  char str[ 4 ][ MAX_ETOS_LENGTH ];
-	char         *resultString;
+// assuming MAX_GENTITIES to be 5 digits or less
+#define MAX_ETOS_LENGTH MAX_NAME_LENGTH + 5* 2 + 4 + 1 + 5
+const char* etos(const gentity_t* entity) {
+    static int index;
+    static char str[4][MAX_ETOS_LENGTH];
+    char* resultString;
 
-	if(!entity)
-		return "<NULL>";
+    if (!entity) {
+        return "<NULL>";
+    }
 
-	// use an array so that multiple etos have smaller chance of colliding
-	resultString = str[ index ];
-	index = ( index + 1 ) & 3;
+    // use an array so that multiple etos have smaller chance of colliding
+    resultString = str[index];
+    index = (index + 1) & 3;
 
-	Com_sprintf( resultString, MAX_ETOS_LENGTH,
-			"%s%s^7(^5%s^7|^5#%i^7)",
-			entity->names[0] ? entity->names[0] : "", entity->names[0] ? " " : "", entity->classname, entity->s.number
-			);
+    Com_sprintf(resultString, MAX_ETOS_LENGTH,
+                "%s%s^7(^5%s^7|^5#%i^7)",
+                entity->names[0] ? entity->names[0] : "", entity->names[0] ? " " : "", entity->classname, entity->s.number
+                );
 
-	return resultString;
+    return resultString;
 }
 
-void G_PrintEntityNameList(gentity_t *entity)
-{
-	int i;
-	char string[ MAX_STRING_CHARS ];
+void G_PrintEntityNameList(gentity_t* entity) {
+    int i;
+    char string[MAX_STRING_CHARS];
 
-	if(!entity)
-	{
-		G_Printf("<NULL>");
-		return;
-	}
-	if(!entity->names[0])
-	{
-		return;
-	}
+    if (!entity) {
+        G_Printf("<NULL>");
+        return;
+    }
+    if (!entity->names[0]) {
+        return;
+    }
 
-	Q_strncpyz( string, entity->names[0], sizeof(string) );
+    Q_strncpyz(string, entity->names[0], sizeof(string) );
 
-	for (i = 1; i < MAX_ENTITY_ALIASES && entity->names[i]; i++)
-	{
-		Q_strcat(string, sizeof(string), ", ");
-		Q_strcat(string, sizeof(string), entity->names[i]);
-	}
-	G_Printf("{ %s }\n", string);
+    for (i = 1; i < MAX_ENTITY_ALIASES && entity->names[i]; i++) {
+        Q_strcat(string, sizeof(string), ", ");
+        Q_strcat(string, sizeof(string), entity->names[i]);
+    }
+    G_Printf("{ %s }\n", string);
 }
 
 /*
@@ -305,55 +283,52 @@ or nullptr if there are no further matching gentities.
 Set nullptr as previous gentity to start the iteration from the beginning
 =============
 */
-gentity_t *G_IterateEntities( gentity_t *entity, const char *classname, bool skipdisabled, size_t fieldofs, const char *match )
-{
-	char *fieldString;
+gentity_t* G_IterateEntities(gentity_t* entity, const char* classname, bool skipdisabled, size_t fieldofs, const char* match) {
+    char* fieldString;
 
-	if ( !entity )
-	{
-		entity = g_entities;
-		//start after the reserved player slots, if we are not searching for a player
-		if ( classname && !strcmp(classname, S_PLAYER_CLASSNAME) )
-			entity += MAX_CLIENTS;
-	}
-	else
-	{
-		entity++;
-	}
+    if (!entity) {
+        entity = g_entities;
+        // start after the reserved player slots, if we are not searching for a player
+        if (classname && !strcmp(classname, S_PLAYER_CLASSNAME) ) {
+            entity += MAX_CLIENTS;
+        }
+    } else {
+        entity++;
+    }
 
-	for ( ; entity < &g_entities[ level.num_entities ]; entity++ )
-	{
-		if ( !entity->inuse )
-			continue;
+    for (; entity < &g_entities[level.num_entities]; entity++) {
+        if (!entity->inuse) {
+            continue;
+        }
 
-		if( skipdisabled && !entity->enabled)
-			continue;
+        if (skipdisabled && !entity->enabled) {
+            continue;
+        }
 
 
-		if ( classname && Q_stricmp( entity->classname, classname ) )
-			continue;
+        if (classname && Q_stricmp(entity->classname, classname) ) {
+            continue;
+        }
 
-		if ( fieldofs && match )
-		{
-			fieldString = * ( char ** )( ( byte * ) entity + fieldofs );
-			if ( Q_stricmp( fieldString, match ) )
-				continue;
-		}
+        if (fieldofs && match) {
+            fieldString = *(char**)( (byte*) entity + fieldofs);
+            if (Q_stricmp(fieldString, match) ) {
+                continue;
+            }
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
-gentity_t *G_IterateEntities( gentity_t *entity )
-{
-	return G_IterateEntities( entity, nullptr, true, 0, nullptr );
+gentity_t* G_IterateEntities(gentity_t* entity) {
+    return G_IterateEntities(entity, nullptr, true, 0, nullptr);
 }
 
-gentity_t *G_IterateEntitiesOfClass( gentity_t *entity, const char *classname )
-{
-	return G_IterateEntities( entity, classname, true, 0, nullptr );
+gentity_t* G_IterateEntitiesOfClass(gentity_t* entity, const char* classname) {
+    return G_IterateEntities(entity, classname, true, 0, nullptr);
 }
 
 /*
@@ -370,49 +345,40 @@ if we are not searching for player entities it is recommended to start searching
 
 =============
 */
-gentity_t *G_IterateEntitiesWithField( gentity_t *entity, size_t fieldofs, const char *match )
-{
-	return G_IterateEntities( entity, nullptr, true, fieldofs, match );
+gentity_t* G_IterateEntitiesWithField(gentity_t* entity, size_t fieldofs, const char* match) {
+    return G_IterateEntities(entity, nullptr, true, fieldofs, match);
 }
 
 // from quakestyle.telefragged.com
 // (NOBODY): Code helper function
 //
-gentity_t *G_IterateEntitiesWithinRadius( gentity_t *entity, vec3_t origin, float radius )
-{
-	vec3_t eorg;
-	int    j;
+gentity_t* G_IterateEntitiesWithinRadius(gentity_t* entity, vec3_t origin, float radius) {
+    vec3_t eorg;
+    int j;
 
-	if ( !entity )
-	{
-		entity = g_entities;
-	}
-	else
-	{
-		entity++;
-	}
+    if (!entity) {
+        entity = g_entities;
+    } else {
+        entity++;
+    }
 
-	for ( ; entity < &g_entities[ level.num_entities ]; entity++ )
-	{
-		if ( !entity->inuse )
-		{
-			continue;
-		}
+    for (; entity < &g_entities[level.num_entities]; entity++) {
+        if (!entity->inuse) {
+            continue;
+        }
 
-		for ( j = 0; j < 3; j++ )
-		{
-			eorg[ j ] = origin[ j ] - ( entity->r.currentOrigin[ j ] + ( entity->r.mins[ j ] + entity->r.maxs[ j ] ) * 0.5 );
-		}
+        for (j = 0; j < 3; j++) {
+            eorg[j] = origin[j] - (entity->r.currentOrigin[j] + (entity->r.mins[j] + entity->r.maxs[j]) * 0.5);
+        }
 
-		if ( VectorLength( eorg ) > radius )
-		{
-			continue;
-		}
+        if (VectorLength(eorg) > radius) {
+            continue;
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 /*
@@ -422,71 +388,65 @@ G_ClosestEnt
 Test a list of entities for the closest to a particular point
 ===============
 */
-gentity_t *G_FindClosestEntity( vec3_t origin, gentity_t **entities, int numEntities )
-{
-	int       i;
-	float     nd, d;
-	gentity_t *closestEnt;
+gentity_t* G_FindClosestEntity(vec3_t origin, gentity_t** entities, int numEntities) {
+    int i;
+    float nd, d;
+    gentity_t* closestEnt;
 
-	if ( numEntities <= 0 )
-	{
-		return nullptr;
-	}
+    if (numEntities <= 0) {
+        return nullptr;
+    }
 
-	closestEnt = entities[ 0 ];
-	d = DistanceSquared( origin, closestEnt->s.origin );
+    closestEnt = entities[0];
+    d = DistanceSquared(origin, closestEnt->s.origin);
 
-	for ( i = 1; i < numEntities; i++ )
-	{
-		gentity_t *ent = entities[ i ];
+    for (i = 1; i < numEntities; i++) {
+        gentity_t* ent = entities[i];
 
-		nd = DistanceSquared( origin, ent->s.origin );
+        nd = DistanceSquared(origin, ent->s.origin);
 
-		if ( nd < d )
-		{
-			d = nd;
-			closestEnt = ent;
-		}
-	}
+        if (nd < d) {
+            d = nd;
+            closestEnt = ent;
+        }
+    }
 
-	return closestEnt;
+    return closestEnt;
 }
 
-gentity_t *G_PickRandomEntity( const char *classname, size_t fieldofs, const char *match )
-{
-	gentity_t *foundEntity = nullptr;
-	int       totalChoiceCount = 0;
-	gentity_t *choices[ MAX_GENTITIES - 2 - MAX_CLIENTS ];
+gentity_t* G_PickRandomEntity(const char* classname, size_t fieldofs, const char* match) {
+    gentity_t* foundEntity = nullptr;
+    int totalChoiceCount = 0;
+    gentity_t* choices[MAX_GENTITIES - 2 - MAX_CLIENTS];
 
-	//collects the targets
-	while( ( foundEntity = G_IterateEntities( foundEntity, classname, true, fieldofs, match ) ) != nullptr )
-		choices[ totalChoiceCount++ ] = foundEntity;
+    // collects the targets
+    while ( (foundEntity = G_IterateEntities(foundEntity, classname, true, fieldofs, match) ) != nullptr) {
+        choices[totalChoiceCount++] = foundEntity;
+    }
 
-	if ( !totalChoiceCount )
-	{
+    if (!totalChoiceCount) {
 
-		if ( g_debugEntities.integer > -1 )
-			G_Printf( S_WARNING "Could not find any entity matching \"^5%s%s%s^7\"\n",
-					classname ? classname : "",
-					classname && match ? "^7 and ^5" :  "",
-					match ? match : ""
-					);
+        if (g_debugEntities.integer > -1) {
+            G_Printf(S_WARNING "Could not find any entity matching \"^5%s%s%s^7\"\n",
+                     classname ? classname : "",
+                     classname && match ? "^7 and ^5" : "",
+                     match ? match : ""
+                     );
+        }
 
-		return nullptr;
-	}
+        return nullptr;
+    }
 
-	//return a random one from among the choices
-	return choices[ rand() / ( RAND_MAX / totalChoiceCount + 1 ) ];
+    // return a random one from among the choices
+    return choices[rand() / (RAND_MAX / totalChoiceCount + 1)];
 }
 
-gentity_t *G_PickRandomEntityOfClass( const char *classname )
-{
-	return G_PickRandomEntity(classname, 0, nullptr);
+gentity_t* G_PickRandomEntityOfClass(const char* classname) {
+    return G_PickRandomEntity(classname, 0, nullptr);
 }
 
-gentity_t *G_PickRandomEntityWithField( size_t fieldofs, const char *match )
-{
-	return G_PickRandomEntity(nullptr, fieldofs, match);
+gentity_t* G_PickRandomEntityWithField(size_t fieldofs, const char* match) {
+    return G_PickRandomEntity(nullptr, fieldofs, match);
 }
 
 /*
@@ -500,223 +460,219 @@ gentity chain handling
 /**
  * a call made by the world, mostly by hard coded calls due to world-events
  */
-#define WORLD_CALL gentityCall_t{ nullptr, &g_entities[ ENTITYNUM_WORLD ], &g_entities[ ENTITYNUM_WORLD ] }
+#define WORLD_CALL gentityCall_t { nullptr, &g_entities[ENTITYNUM_WORLD], &g_entities[ENTITYNUM_WORLD] }
 /**
  * a non made call
  */
-#define NULL_CALL gentityCall_t{ nullptr, &g_entities[ ENTITYNUM_NONE ], &g_entities[ ENTITYNUM_NONE ] }
+#define NULL_CALL gentityCall_t { nullptr, &g_entities[ENTITYNUM_NONE], &g_entities[ENTITYNUM_NONE] }
 
-typedef struct
-{
-	const char *key;
-	gentityCallEvent_t eventType;
+typedef struct {
+    const char* key;
+    gentityCallEvent_t eventType;
 } entityCallEventDescription_t;
 
-static const entityCallEventDescription_t gentityEventDescriptions[] =
-{
-		{ "onAct",       ON_ACT       },
-		{ "onDie",       ON_DIE       },
-		{ "onDisable",   ON_DISABLE   },
-		{ "onEnable",    ON_ENABLE    },
-		{ "onFree",      ON_FREE      },
-		{ "onReach",     ON_REACH     },
-		{ "onReset",     ON_RESET     },
-		{ "onSpawn",     ON_SPAWN     },
-		{ "onTouch",     ON_TOUCH     },
-		{ "onUse",       ON_USE       },
-		{ "target",      ON_DEFAULT   },
+static const entityCallEventDescription_t gentityEventDescriptions[] ={
+    { "onAct", ON_ACT       },
+    { "onDie", ON_DIE       },
+    { "onDisable", ON_DISABLE   },
+    { "onEnable", ON_ENABLE    },
+    { "onFree", ON_FREE      },
+    { "onReach", ON_REACH     },
+    { "onReset", ON_RESET     },
+    { "onSpawn", ON_SPAWN     },
+    { "onTouch", ON_TOUCH     },
+    { "onUse", ON_USE       },
+    { "target", ON_DEFAULT   },
 };
 
-gentityCallEvent_t G_GetCallEventTypeFor( const char* event )
-{
-	entityCallEventDescription_t *foundDescription;
+gentityCallEvent_t G_GetCallEventTypeFor(const char* event) {
+    entityCallEventDescription_t* foundDescription;
 
-	if(!event)
-		return ON_DEFAULT;
+    if (!event) {
+        return ON_DEFAULT;
+    }
 
-	foundDescription = (entityCallEventDescription_t*) bsearch(event, gentityEventDescriptions, ARRAY_LEN( gentityEventDescriptions ),
-		             sizeof( entityCallEventDescription_t ), cmdcmp );
+    foundDescription = (entityCallEventDescription_t*) bsearch(event, gentityEventDescriptions, ARRAY_LEN(gentityEventDescriptions),
+                                                               sizeof(entityCallEventDescription_t), cmdcmp);
 
-	if(foundDescription && foundDescription->key)
-		return foundDescription->eventType;
+    if (foundDescription && foundDescription->key) {
+        return foundDescription->eventType;
+    }
 
-	return ON_CUSTOM;
+    return ON_CUSTOM;
 }
 
-typedef struct
-{
-	const char *alias;
-	gentityCallActionType_t action;
+typedef struct {
+    const char* alias;
+    gentityCallActionType_t action;
 } entityActionDescription_t;
 
-static const entityActionDescription_t actionDescriptions[] =
-{
-		{ "act",       ECA_ACT       },
-		{ "disable",   ECA_DISABLE   },
-		{ "enable",    ECA_ENABLE    },
-		{ "free",      ECA_FREE      },
-		{ "nop",       ECA_NOP       },
-		{ "propagate", ECA_PROPAGATE },
-		{ "reset",     ECA_RESET     },
-		{ "toggle",    ECA_TOGGLE    },
-		{ "use",       ECA_USE       },
+static const entityActionDescription_t actionDescriptions[] ={
+    { "act", ECA_ACT       },
+    { "disable", ECA_DISABLE   },
+    { "enable", ECA_ENABLE    },
+    { "free", ECA_FREE      },
+    { "nop", ECA_NOP       },
+    { "propagate", ECA_PROPAGATE },
+    { "reset", ECA_RESET     },
+    { "toggle", ECA_TOGGLE    },
+    { "use", ECA_USE       },
 };
 
-gentityCallActionType_t G_GetCallActionTypeFor( const char* action )
-{
-	entityActionDescription_t *foundDescription;
+gentityCallActionType_t G_GetCallActionTypeFor(const char* action) {
+    entityActionDescription_t* foundDescription;
 
-	if(!action)
-		return ECA_DEFAULT;
+    if (!action) {
+        return ECA_DEFAULT;
+    }
 
-	foundDescription = (entityActionDescription_t*) bsearch(action, actionDescriptions, ARRAY_LEN( actionDescriptions ),
-		             sizeof( entityActionDescription_t ), cmdcmp );
+    foundDescription = (entityActionDescription_t*) bsearch(action, actionDescriptions, ARRAY_LEN(actionDescriptions),
+                                                            sizeof(entityActionDescription_t), cmdcmp);
 
-	if(foundDescription && foundDescription->alias)
-		return foundDescription->action;
+    if (foundDescription && foundDescription->alias) {
+        return foundDescription->action;
+    }
 
-	return ECA_CUSTOM;
+    return ECA_CUSTOM;
 }
 
-gentity_t *G_ResolveEntityKeyword( gentity_t *self, char *keyword )
-{
-	gentity_t *resolution = nullptr;
+gentity_t* G_ResolveEntityKeyword(gentity_t* self, char* keyword) {
+    gentity_t* resolution = nullptr;
 
-	if (!Q_stricmp(keyword, "$activator"))
-		resolution = self->activator;
-	else if (!Q_stricmp(keyword, "$self"))
-		resolution = self;
-	else if (!Q_stricmp(keyword, "$parent"))
-		resolution = self->parent;
-	else if (!Q_stricmp(keyword, "$target"))
-		resolution = self->target;
-	else if (!Q_stricmp(keyword, "$tracker"))
-		resolution = self->tracker;
+    if (!Q_stricmp(keyword, "$activator")) {
+        resolution = self->activator;
+    } else if (!Q_stricmp(keyword, "$self")) {
+        resolution = self;
+    } else if (!Q_stricmp(keyword, "$parent")) {
+        resolution = self->parent;
+    } else if (!Q_stricmp(keyword, "$target")) {
+        resolution = self->target;
+    } else if (!Q_stricmp(keyword, "$tracker")) {
+        resolution = self->tracker;
+    }
 
-	if(!resolution || !resolution->inuse)
-		return nullptr;
+    if (!resolution || !resolution->inuse) {
+        return nullptr;
+    }
 
-	return resolution;
+    return resolution;
 }
 
-gentity_t *G_IterateTargets(gentity_t *entity, int *targetIndex, gentity_t *self)
-{
-	gentity_t *possibleTarget = nullptr;
+gentity_t* G_IterateTargets(gentity_t* entity, int* targetIndex, gentity_t* self) {
+    gentity_t* possibleTarget = nullptr;
 
-	if (entity)
-		goto cont;
+    if (entity) {
+        goto cont;
+    }
 
-	for (*targetIndex = 0; self->targets[*targetIndex]; ++(*targetIndex))
-	{
-		if(self->targets[*targetIndex][0] == '$')
-		{
-			possibleTarget = G_ResolveEntityKeyword( self, self->targets[*targetIndex] );
-			if(possibleTarget && possibleTarget->enabled)
-				return possibleTarget;
-			return nullptr;
-		}
+    for (*targetIndex = 0; self->targets[*targetIndex]; ++(*targetIndex)) {
+        if (self->targets[*targetIndex][0] == '$') {
+            possibleTarget = G_ResolveEntityKeyword(self, self->targets[*targetIndex]);
+            if (possibleTarget && possibleTarget->enabled) {
+                return possibleTarget;
+            }
+            return nullptr;
+        }
 
-		for( entity = &g_entities[ MAX_CLIENTS ]; entity < &g_entities[ level.num_entities ]; entity++ )
-		{
-			if ( !entity->inuse || !entity->enabled)
-				continue;
+        for (entity = &g_entities[MAX_CLIENTS]; entity < &g_entities[level.num_entities]; entity++) {
+            if (!entity->inuse || !entity->enabled) {
+                continue;
+            }
 
-			if( G_MatchesName(entity, self->targets[*targetIndex]) )
-				return entity;
+            if (G_MatchesName(entity, self->targets[*targetIndex]) ) {
+                return entity;
+            }
 
-			cont: ;
-		}
-	}
-	return nullptr;
+cont:;
+        }
+    }
+    return nullptr;
 }
 
-gentity_t *G_IterateCallEndpoints(gentity_t *entity, int *calltargetIndex, gentity_t *self)
-{
-	if (entity)
-		goto cont;
+gentity_t* G_IterateCallEndpoints(gentity_t* entity, int* calltargetIndex, gentity_t* self) {
+    if (entity) {
+        goto cont;
+    }
 
-	for (*calltargetIndex = 0; self->calltargets[*calltargetIndex].name; ++(*calltargetIndex))
-	{
-		if(self->calltargets[*calltargetIndex].name[0] == '$')
-			return G_ResolveEntityKeyword( self, self->calltargets[*calltargetIndex].name );
+    for (*calltargetIndex = 0; self->calltargets[*calltargetIndex].name; ++(*calltargetIndex)) {
+        if (self->calltargets[*calltargetIndex].name[0] == '$') {
+            return G_ResolveEntityKeyword(self, self->calltargets[*calltargetIndex].name);
+        }
 
-		for( entity = &g_entities[ MAX_CLIENTS ]; entity < &g_entities[ level.num_entities ]; entity++ )
-		{
-			if ( !entity->inuse )
-				continue;
+        for (entity = &g_entities[MAX_CLIENTS]; entity < &g_entities[level.num_entities]; entity++) {
+            if (!entity->inuse) {
+                continue;
+            }
 
-			if( G_MatchesName(entity, self->calltargets[*calltargetIndex].name) )
-				return entity;
+            if (G_MatchesName(entity, self->calltargets[*calltargetIndex].name) ) {
+                return entity;
+            }
 
-			cont: ;
-		}
-	}
-	return nullptr;
+cont:;
+        }
+    }
+    return nullptr;
 }
 
 /**
  * G_PickRandomTargetFor
  * Selects a random entity from among the targets
  */
-gentity_t *G_PickRandomTargetFor( gentity_t *self )
-{
-	int       targetIndex;
-	gentity_t *foundTarget = nullptr;
-	int       totalChoiceCount = 0;
-	gentity_t *choices[ MAX_GENTITIES ];
+gentity_t* G_PickRandomTargetFor(gentity_t* self) {
+    int targetIndex;
+    gentity_t* foundTarget = nullptr;
+    int totalChoiceCount = 0;
+    gentity_t* choices[MAX_GENTITIES];
 
-	//collects the targets
-	while( ( foundTarget = G_IterateTargets( foundTarget, &targetIndex, self ) ) != nullptr )
-		choices[ totalChoiceCount++ ] = foundTarget;
+    // collects the targets
+    while ( (foundTarget = G_IterateTargets(foundTarget, &targetIndex, self) ) != nullptr) {
+        choices[totalChoiceCount++] = foundTarget;
+    }
 
-	if ( !totalChoiceCount )
-	{
-		if ( g_debugEntities.integer > -1 )
-		{
-			G_Printf( S_WARNING "none of the following targets could be resolved for Entity %s:", etos(self));
-			G_PrintEntityNameList( self );
-		}
-		return nullptr;
-	}
+    if (!totalChoiceCount) {
+        if (g_debugEntities.integer > -1) {
+            G_Printf(S_WARNING "none of the following targets could be resolved for Entity %s:", etos(self));
+            G_PrintEntityNameList(self);
+        }
+        return nullptr;
+    }
 
-	//return a random one from among the choices
-	return choices[ rand() / ( RAND_MAX / totalChoiceCount + 1 ) ];
+    // return a random one from among the choices
+    return choices[rand() / (RAND_MAX / totalChoiceCount + 1)];
 }
 
-typedef struct
-{
-	gentityCallDefinition_t *callDefinition;
-	gentity_t *recipient;
+typedef struct {
+    gentityCallDefinition_t* callDefinition;
+    gentity_t* recipient;
 } gentityTargetChoice_t;
 
-void G_FireEntityRandomly( gentity_t *entity, gentity_t *activator )
-{
-	int       targetIndex;
-	gentity_t *possibleTarget = nullptr;
-	int       totalChoiceCount = 0;
-	gentityCall_t call;
-	gentityTargetChoice_t choices[ MAX_GENTITIES ];
-	gentityTargetChoice_t *selectedChoice;
+void G_FireEntityRandomly(gentity_t* entity, gentity_t* activator) {
+    int targetIndex;
+    gentity_t* possibleTarget = nullptr;
+    int totalChoiceCount = 0;
+    gentityCall_t call;
+    gentityTargetChoice_t choices[MAX_GENTITIES];
+    gentityTargetChoice_t* selectedChoice;
 
-	//collects the targets
-	while( ( possibleTarget = G_IterateCallEndpoints( possibleTarget, &targetIndex, entity ) ) != nullptr )
-	{
-		choices[ totalChoiceCount ].recipient = possibleTarget;
-		choices[ totalChoiceCount ].callDefinition = &entity->calltargets[targetIndex];
-		totalChoiceCount++;
-	}
+    // collects the targets
+    while ( (possibleTarget = G_IterateCallEndpoints(possibleTarget, &targetIndex, entity) ) != nullptr) {
+        choices[totalChoiceCount].recipient = possibleTarget;
+        choices[totalChoiceCount].callDefinition = &entity->calltargets[targetIndex];
+        totalChoiceCount++;
+    }
 
-	if ( totalChoiceCount == 0 )
-		return;
+    if (totalChoiceCount == 0) {
+        return;
+    }
 
-	//return a random one from among the choices
-	selectedChoice = &choices[ rand() / ( RAND_MAX / totalChoiceCount + 1 ) ];
+    // return a random one from among the choices
+    selectedChoice = &choices[rand() / (RAND_MAX / totalChoiceCount + 1)];
 
-	call.definition = selectedChoice->callDefinition;
-	call.caller = entity;
-	call.activator = activator;
+    call.definition = selectedChoice->callDefinition;
+    call.caller = entity;
+    call.activator = activator;
 
-	G_CallEntity( selectedChoice->recipient, &call );
+    G_CallEntity(selectedChoice->recipient, &call);
 }
 
 /*
@@ -729,36 +685,31 @@ For all t in the entities, where t.targetnames[i] matches
 ent.targets[j] for any (i,j) pairs, call the t.use function.
 ==============================
 */
-void G_EventFireEntity( gentity_t *self, gentity_t *activator, gentityCallEvent_t eventType )
-{
-	gentity_t *currentTarget = nullptr;
-	int targetIndex;
-	gentityCall_t call;
-	call.activator = activator;
+void G_EventFireEntity(gentity_t* self, gentity_t* activator, gentityCallEvent_t eventType) {
+    gentity_t* currentTarget = nullptr;
+    int targetIndex;
+    gentityCall_t call;
+    call.activator = activator;
 
-	while( ( currentTarget = G_IterateCallEndpoints( currentTarget, &targetIndex, self ) ) != nullptr )
-	{
-		if( eventType && self->calltargets[ targetIndex ].eventType != eventType )
-		{
-			continue;
-		}
+    while ( (currentTarget = G_IterateCallEndpoints(currentTarget, &targetIndex, self) ) != nullptr) {
+        if (eventType && self->calltargets[targetIndex].eventType != eventType) {
+            continue;
+        }
 
-		call.caller = self; //reset the caller in case there have been nested calls
-		call.definition = &self->calltargets[ targetIndex ];
+        call.caller = self; // reset the caller in case there have been nested calls
+        call.definition = &self->calltargets[targetIndex];
 
-		G_CallEntity(currentTarget, &call);
+        G_CallEntity(currentTarget, &call);
 
-		if ( !self->inuse )
-		{
-			G_Printf( S_WARNING "entity was removed while using targets\n" );
-			return;
-		}
-	}
+        if (!self->inuse) {
+            G_Printf(S_WARNING "entity was removed while using targets\n");
+            return;
+        }
+    }
 }
 
-void G_FireEntity( gentity_t *self, gentity_t *activator )
-{
-	G_EventFireEntity( self, activator, ON_DEFAULT );
+void G_FireEntity(gentity_t* self, gentity_t* activator) {
+    G_EventFireEntity(self, activator, ON_DEFAULT);
 }
 
 /**
@@ -767,145 +718,137 @@ void G_FireEntity( gentity_t *self, gentity_t *activator )
  * neither paramater may be nullptr, and the entity is required to have an act function to execute
  * or this function will fail
  */
-void G_ExecuteAct( gentity_t *entity, gentityCall_t *call )
-{
-	/**
-	 * assertions against programmatic errors
-	 */
-	assert( entity->act != nullptr );
-	assert( call != nullptr );
+void G_ExecuteAct(gentity_t* entity, gentityCall_t* call) {
+    /**
+     * assertions against programmatic errors
+     */
+    assert(entity->act != nullptr);
+    assert(call != nullptr);
 
-	//assert( entity->callIn->activator != nullptr );
+    // assert( entity->callIn->activator != nullptr );
 
-	if( entity->active )
-	{
-		//TODO
-	}
+    if (entity->active) {
+        // TODO
+    }
 
-	entity->nextAct = 0;
-	entity->active = true;
-	/*
-	 * for now we use the callIn activator if its set or fallback to the old solution, but we should
-	 * //TODO remove the old solution of activator setting from this
-	 */
-	entity->act(entity, call->caller, call->caller->activator ? call->caller->activator : entity->activator );
-	entity->active = false;
+    entity->nextAct = 0;
+    entity->active = true;
+    /*
+     * for now we use the callIn activator if its set or fallback to the old solution, but we should
+     * //TODO remove the old solution of activator setting from this
+     */
+    entity->act(entity, call->caller, call->caller->activator ? call->caller->activator : entity->activator);
+    entity->active = false;
 }
 
 /**
  * check delayed variable and either call an entity act() directly or delay its execution
  */
-void G_HandleActCall( gentity_t *entity, gentityCall_t *call )
-{
-	variatingTime_t delay = {0, 0};
+void G_HandleActCall(gentity_t* entity, gentityCall_t* call) {
+    variatingTime_t delay = {0, 0};
 
-	assert( call != nullptr );
-	entity->callIn = *call;
+    assert(call != nullptr);
+    entity->callIn = *call;
 
-	G_ResetTimeField(&delay, entity->config.delay, entity->eclass->config.delay, delay );
+    G_ResetTimeField(&delay, entity->config.delay, entity->eclass->config.delay, delay);
 
-	if(delay.time)
-	{
-		entity->nextAct = VariatedLevelTime( delay );
-	}
-	else /* no time and variance set means, we can call it directly instead of waiting for the next frame */
-	{
-		G_ExecuteAct( entity, call );
-	}
+    if (delay.time) {
+        entity->nextAct = VariatedLevelTime(delay);
+    } else { /* no time and variance set means, we can call it directly instead of waiting for the next frame */
+        G_ExecuteAct(entity, call);
+    }
 }
 
-void G_CallEntity(gentity_t *targetedEntity, gentityCall_t *call)
-{
-	if ( g_debugEntities.integer > 1 )
-	{
-		G_Printf(S_DEBUG "[%s] %s calling %s %s:%s\n",
-				etos( call->activator ),
-				etos( call->caller ),
-				call->definition ? call->definition->event : "onUnknown",
-				etos( targetedEntity ),
-				call->definition && call->definition->action ? call->definition->action : "default");
-	}
+void G_CallEntity(gentity_t* targetedEntity, gentityCall_t* call) {
+    if (g_debugEntities.integer > 1) {
+        G_Printf(S_DEBUG "[%s] %s calling %s %s:%s\n",
+                 etos(call->activator),
+                 etos(call->caller),
+                 call->definition ? call->definition->event : "onUnknown",
+                 etos(targetedEntity),
+                 call->definition && call->definition->action ? call->definition->action : "default");
+    }
 
-	targetedEntity->callIn = *call;
+    targetedEntity->callIn = *call;
 
-	if((!targetedEntity->handleCall || !targetedEntity->handleCall(targetedEntity, call)) && call->definition)
-	{
-		switch (call->definition->actionType)
-		{
-		case ECA_NOP:
-			break;
+    if ((!targetedEntity->handleCall || !targetedEntity->handleCall(targetedEntity, call)) && call->definition) {
+        switch (call->definition->actionType) {
+        case ECA_NOP:
+            break;
 
-		case ECA_CUSTOM:
-			if ( g_debugEntities.integer > -1 )
-			{
-				G_Printf(S_WARNING "Unknown action \"%s\" for %s\n",
-						call->definition->action, etos(targetedEntity));
-			}
-			break;
+        case ECA_CUSTOM:
+            if (g_debugEntities.integer > -1) {
+                G_Printf(S_WARNING "Unknown action \"%s\" for %s\n",
+                         call->definition->action, etos(targetedEntity));
+            }
+            break;
 
-		case ECA_FREE:
-			G_FreeEntity(targetedEntity);
-			return; //we have to handle notification differently in the free-case
+        case ECA_FREE:
+            G_FreeEntity(targetedEntity);
+            return; // we have to handle notification differently in the free-case
 
-		case ECA_PROPAGATE:
-			G_FireEntity( targetedEntity, call->activator);
-			break;
+        case ECA_PROPAGATE:
+            G_FireEntity(targetedEntity, call->activator);
+            break;
 
-		case ECA_ENABLE:
-			if(!targetedEntity->enabled) //only fire an event if we weren't already enabled
-			{
-				targetedEntity->enabled = true;
-				G_EventFireEntity( targetedEntity, call->activator, ON_ENABLE );
-			}
-			break;
-		case ECA_DISABLE:
-			if(targetedEntity->enabled) //only fire an event if we weren't already disabled
-			{
-				targetedEntity->enabled = false;
-				G_EventFireEntity( targetedEntity, call->activator, ON_DISABLE );
-			}
-			break;
-		case ECA_TOGGLE:
-			targetedEntity->enabled = !targetedEntity->enabled;
-			G_EventFireEntity( targetedEntity, call->activator, targetedEntity->enabled ? ON_ENABLE : ON_DISABLE );
-			break;
+        case ECA_ENABLE:
+            if (!targetedEntity->enabled) { // only fire an event if we weren't already enabled
+                targetedEntity->enabled = true;
+                G_EventFireEntity(targetedEntity, call->activator, ON_ENABLE);
+            }
+            break;
 
-		case ECA_USE:
-			if (!targetedEntity->use)
-			{
-				if(g_debugEntities.integer >= 0)
-					G_Printf(S_WARNING "calling :use on %s, which has no use function!\n", etos(targetedEntity));
-				break;
-			}
-			if(!call->activator || !call->activator->client)
-			{
-				if(g_debugEntities.integer >= 0)
-					G_Printf(S_WARNING "calling %s:use, without a client as activator.\n", etos(targetedEntity));
-				break;
-			}
-			targetedEntity->use(targetedEntity, call->caller, call->activator);
-			break;
-		case ECA_RESET:
-			if (targetedEntity->reset)
-			{
-				targetedEntity->reset(targetedEntity);
-				G_EventFireEntity( targetedEntity, call->activator, ON_RESET );
-			}
-			break;
-		case ECA_ACT:
-			G_HandleActCall( targetedEntity, call );
-			break;
+        case ECA_DISABLE:
+            if (targetedEntity->enabled) { // only fire an event if we weren't already disabled
+                targetedEntity->enabled = false;
+                G_EventFireEntity(targetedEntity, call->activator, ON_DISABLE);
+            }
+            break;
 
-		default:
-			if (targetedEntity->act)
-				targetedEntity->act(targetedEntity, call->caller, call->activator);
-			break;
-		}
-	}
-	if(targetedEntity->notifyHandler)
-		targetedEntity->notifyHandler( targetedEntity, call );
+        case ECA_TOGGLE:
+            targetedEntity->enabled = !targetedEntity->enabled;
+            G_EventFireEntity(targetedEntity, call->activator, targetedEntity->enabled ? ON_ENABLE : ON_DISABLE);
+            break;
 
-	targetedEntity->callIn = NULL_CALL; /**< not called anymore */
+        case ECA_USE:
+            if (!targetedEntity->use) {
+                if (g_debugEntities.integer >= 0) {
+                    G_Printf(S_WARNING "calling :use on %s, which has no use function!\n", etos(targetedEntity));
+                }
+                break;
+            }
+            if (!call->activator || !call->activator->client) {
+                if (g_debugEntities.integer >= 0) {
+                    G_Printf(S_WARNING "calling %s:use, without a client as activator.\n", etos(targetedEntity));
+                }
+                break;
+            }
+            targetedEntity->use(targetedEntity, call->caller, call->activator);
+            break;
+
+        case ECA_RESET:
+            if (targetedEntity->reset) {
+                targetedEntity->reset(targetedEntity);
+                G_EventFireEntity(targetedEntity, call->activator, ON_RESET);
+            }
+            break;
+
+        case ECA_ACT:
+            G_HandleActCall(targetedEntity, call);
+            break;
+
+        default:
+            if (targetedEntity->act) {
+                targetedEntity->act(targetedEntity, call->caller, call->activator);
+            }
+            break;
+        }
+    }
+    if (targetedEntity->notifyHandler) {
+        targetedEntity->notifyHandler(targetedEntity, call);
+    }
+
+    targetedEntity->callIn = NULL_CALL; /**< not called anymore */
 }
 
 /*
@@ -916,16 +859,15 @@ gentity testing/querying
 =================================================================================
 */
 
-bool G_MatchesName( gentity_t *entity, const char* name )
-{
-	int nameIndex;
+bool G_MatchesName(gentity_t* entity, const char* name) {
+    int nameIndex;
 
-	for (nameIndex = 0; entity->names[nameIndex]; ++nameIndex)
-	{
-		if (!Q_stricmp(name, entity->names[nameIndex]))
-			return true;
-	}
-	return false;
+    for (nameIndex = 0; entity->names[nameIndex]; ++nameIndex) {
+        if (!Q_stricmp(name, entity->names[nameIndex])) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /*
@@ -935,14 +877,13 @@ G_Visible
 Test for a LOS between two entities
 ===============
 */
-bool G_IsVisible( gentity_t *start, gentity_t *end, int contents )
-{
-	trace_t trace;
+bool G_IsVisible(gentity_t* start, gentity_t* end, int contents) {
+    trace_t trace;
 
-	trap_Trace( &trace, start->s.pos.trBase, nullptr, nullptr, end->s.pos.trBase,
-	            start->s.number, contents, 0 );
+    trap_Trace(&trace, start->s.pos.trBase, nullptr, nullptr, end->s.pos.trBase,
+               start->s.number, contents, 0);
 
-	return trace.fraction >= 1.0f || trace.entityNum == end - g_entities;
+    return trace.fraction >= 1.0f || trace.entityNum == end - g_entities;
 }
 
 /*
@@ -963,27 +904,21 @@ Angles will be cleared, because it is being used to represent a direction
 instead of an orientation.
 ===============
 */
-void G_SetMovedir( vec3_t angles, vec3_t movedir )
-{
-	static vec3_t VEC_UP = { 0, -1, 0 };
-	static vec3_t MOVEDIR_UP = { 0, 0, 1 };
-	static vec3_t VEC_DOWN = { 0, -2, 0 };
-	static vec3_t MOVEDIR_DOWN = { 0, 0, -1 };
+void G_SetMovedir(vec3_t angles, vec3_t movedir) {
+    static vec3_t VEC_UP = { 0, -1, 0 };
+    static vec3_t MOVEDIR_UP = { 0, 0, 1 };
+    static vec3_t VEC_DOWN = { 0, -2, 0 };
+    static vec3_t MOVEDIR_DOWN = { 0, 0, -1 };
 
-	if ( VectorCompare( angles, VEC_UP ) )
-	{
-		VectorCopy( MOVEDIR_UP, movedir );
-	}
-	else if ( VectorCompare( angles, VEC_DOWN ) )
-	{
-		VectorCopy( MOVEDIR_DOWN, movedir );
-	}
-	else
-	{
-		AngleVectors( angles, movedir, nullptr, nullptr );
-	}
+    if (VectorCompare(angles, VEC_UP) ) {
+        VectorCopy(MOVEDIR_UP, movedir);
+    } else if (VectorCompare(angles, VEC_DOWN) ) {
+        VectorCopy(MOVEDIR_DOWN, movedir);
+    } else {
+        AngleVectors(angles, movedir, nullptr, nullptr);
+    }
 
-	VectorClear( angles );
+    VectorClear(angles);
 }
 
 /*
@@ -993,14 +928,13 @@ G_SetOrigin
 Sets the pos trajectory for a fixed position
 ================
 */
-void G_SetOrigin( gentity_t *self, const vec3_t origin )
-{
-	VectorCopy( origin, self->s.pos.trBase );
-	self->s.pos.trType = TR_STATIONARY;
-	self->s.pos.trTime = 0;
-	self->s.pos.trDuration = 0;
-	VectorClear( self->s.pos.trDelta );
+void G_SetOrigin(gentity_t* self, const vec3_t origin) {
+    VectorCopy(origin, self->s.pos.trBase);
+    self->s.pos.trType = TR_STATIONARY;
+    self->s.pos.trTime = 0;
+    self->s.pos.trDuration = 0;
+    VectorClear(self->s.pos.trDelta);
 
-	VectorCopy( origin, self->r.currentOrigin );
-	VectorCopy( origin, self->s.origin );
+    VectorCopy(origin, self->r.currentOrigin);
+    VectorCopy(origin, self->s.origin);
 }

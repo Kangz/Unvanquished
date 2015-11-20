@@ -37,191 +37,204 @@ Maryland 20850 USA.
 #include "renderer/tr_public.h"
 
 
-void RE_Shutdown( bool ) { }
-qhandle_t RE_RegisterModel( const char *name )
-{
-	return FS_FOpenFileRead( name, nullptr, false );
+void RE_Shutdown(bool) {
 }
-qhandle_t RE_RegisterSkin( const char *name )
-{
-	return FS_FOpenFileRead( name, nullptr, false );
+qhandle_t RE_RegisterModel(const char* name) {
+    return FS_FOpenFileRead(name, nullptr, false);
 }
-qhandle_t RE_RegisterShader( const char *, RegisterShaderFlags_t )
-{
-	return 1;
+qhandle_t RE_RegisterSkin(const char* name) {
+    return FS_FOpenFileRead(name, nullptr, false);
 }
-void RE_RegisterFont( const char *, const char *, int pointSize, fontInfo_t **font )
-{
-	if (!*font)
-		return;
-	(*font)->pointSize = pointSize;
-	(*font)->height = 1;
-	(*font)->glyphScale = 1.0f;
-	(*font)->name[0] = '\0';
+qhandle_t RE_RegisterShader(const char*, RegisterShaderFlags_t) {
+    return 1;
 }
-void RE_Glyph( fontInfo_t *, const char *, glyphInfo_t *glyph )
-{
-	glyph->height = 1;
-	glyph->top = 1;
-	glyph->bottom = 0;
-	glyph->pitch = 1;
-	glyph->xSkip = 1;
-	glyph->imageWidth = 1;
-	glyph->imageHeight = 1;
-	glyph->s = 0.0f;
-	glyph->t = 0.0f;
-	glyph->s2 = 1.0f;
-	glyph->t2 = 1.0f;
-	glyph->glyph = 1;
-	glyph->shaderName[0] = '\0';
+void RE_RegisterFont(const char*, const char*, int pointSize, fontInfo_t** font) {
+    if (!*font) {
+        return;
+    }
+    (*font)->pointSize = pointSize;
+    (*font)->height = 1;
+    (*font)->glyphScale = 1.0f;
+    (*font)->name[0] = '\0';
 }
-void RE_GlyphChar( fontInfo_t *font, int, glyphInfo_t *glyph )
-{
-	RE_Glyph( font, nullptr, glyph );
+void RE_Glyph(fontInfo_t*, const char*, glyphInfo_t* glyph) {
+    glyph->height = 1;
+    glyph->top = 1;
+    glyph->bottom = 0;
+    glyph->pitch = 1;
+    glyph->xSkip = 1;
+    glyph->imageWidth = 1;
+    glyph->imageHeight = 1;
+    glyph->s = 0.0f;
+    glyph->t = 0.0f;
+    glyph->s2 = 1.0f;
+    glyph->t2 = 1.0f;
+    glyph->glyph = 1;
+    glyph->shaderName[0] = '\0';
 }
-void RE_UnregisterFont( fontInfo_t* ) { }
-void RE_RegisterFontVM( const char *, const char *, int pointSize, fontMetrics_t *font )
-{
-	font->handle = 1;
-	font->isBitmap = true;
-	font->pointSize = pointSize;
-	font->height = 1;
-	font->glyphScale = 1.0f;
+void RE_GlyphChar(fontInfo_t* font, int, glyphInfo_t* glyph) {
+    RE_Glyph(font, nullptr, glyph);
 }
-void RE_GlyphVM( fontHandle_t, const char *, glyphInfo_t * ) { }
-void RE_GlyphCharVM( fontHandle_t, int, glyphInfo_t * ) { }
-void RE_UnregisterFontVM( fontHandle_t ) { }
-void RE_LoadWorldMap( const char * ) { }
-void RE_SetWorldVisData( const byte * ) { }
-void RE_EndRegistration() { }
-void RE_ClearScene() { }
-void RE_AddRefEntityToScene( const refEntity_t * ) { }
-int R_LightForPoint( vec3_t, vec3_t, vec3_t, vec3_t )
-{
-	return 0;
+void RE_UnregisterFont(fontInfo_t*) {
 }
-void RE_AddPolyToScene( qhandle_t, int, const polyVert_t* ) { }
-void RE_AddPolysToScene( qhandle_t, int, const polyVert_t*, int ) { }
-void RE_AddLightToScene( const vec3_t, float, float, float, float, float, qhandle_t, int ) { }
-void RE_AddLightToSceneQ3A( const vec3_t, float, float, float, float ) { }
-void RE_RenderScene( const refdef_t* ) { }
-void RE_SetColor( const Color::Color& ) { }
-void RE_SetClipRegion( const float* ) { }
-void RE_StretchPic( float, float, float, float, float, float, float, float, qhandle_t ) { }
-void RE_RotatedPic( float, float, float, float, float, float, float, float, qhandle_t, float ) { }
-void RE_StretchPicGradient( float, float, float, float, float, float, float, float, qhandle_t, const Color::Color&, int ) { }
-void RE_2DPolyies( polyVert_t*, int, qhandle_t ) { }
-void RE_StretchRaw( int, int, int, int, int, int, const byte*, int, bool ) { }
-void RE_UploadCinematic( int, int, const byte*, int, bool ) { }
-void RE_BeginFrame() { }
-void RE_EndFrame( int*, int* ) { }
-int R_MarkFragments( int, const vec3_t*, const vec3_t, int, vec3_t, int, markFragment_t* )
-{
-	return 0;
+void RE_RegisterFontVM(const char*, const char*, int pointSize, fontMetrics_t* font) {
+    font->handle = 1;
+    font->isBitmap = true;
+    font->pointSize = pointSize;
+    font->height = 1;
+    font->glyphScale = 1.0f;
 }
-void RE_ProjectDecal( qhandle_t, int, vec3_t*, vec4_t, const Color::Color&, int, int ) { }
-void RE_ClearDecals() { }
-int R_LerpTag( orientation_t*, const refEntity_t*, const char*, int )
-{
-	return 0;
+void RE_GlyphVM(fontHandle_t, const char*, glyphInfo_t*) {
 }
-void R_ModelBounds( qhandle_t, vec3_t, vec3_t ) { }
-void R_RemapShader( const char*, const char*, const char* ) { }
-bool R_GetEntityToken( char*, int )
-{
-	return true;
+void RE_GlyphCharVM(fontHandle_t, int, glyphInfo_t*) {
 }
-void RE_AddPolyBufferToScene( polyBuffer_t* ) { }
-bool R_inPVS( const vec3_t, const vec3_t )
-{
-	return false;
+void RE_UnregisterFontVM(fontHandle_t) {
 }
-bool R_inPVVS( const vec3_t, const vec3_t )
-{
-	return false;
+void RE_LoadWorldMap(const char*) {
 }
-bool RE_LoadDynamicShader( const char*, const char* )
-{
-	return true;
+void RE_SetWorldVisData(const byte*) {
 }
-void RE_Finish() { }
-void RE_TakeVideoFrame( int, int, byte*, byte*, bool ) { }
-void RE_AddRefLightToScene( const refLight_t* ) { }
-int RE_RegisterAnimation( const char* )
-{
-	return 1;
+void RE_EndRegistration() {
 }
-int RE_CheckSkeleton( refSkeleton_t*, qhandle_t, qhandle_t )
-{
-	return 1;
+void RE_ClearScene() {
 }
-int RE_BuildSkeleton( refSkeleton_t *skel, qhandle_t, int, int, float, bool )
-{
-	skel->numBones = 0;
-	return 1;
+void RE_AddRefEntityToScene(const refEntity_t*) {
 }
-int RE_BlendSkeleton( refSkeleton_t*, const refSkeleton_t*, float )
-{
-	return 1;
+int R_LightForPoint(vec3_t, vec3_t, vec3_t, vec3_t) {
+    return 0;
 }
-int RE_BoneIndex( qhandle_t, const char* )
-{
-	return 0;
+void RE_AddPolyToScene(qhandle_t, int, const polyVert_t*) {
 }
-int RE_AnimNumFrames( qhandle_t )
-{
-	return 1;
+void RE_AddPolysToScene(qhandle_t, int, const polyVert_t*, int) {
 }
-int RE_AnimFrameRate( qhandle_t )
-{
-	return 1;
+void RE_AddLightToScene(const vec3_t, float, float, float, float, float, qhandle_t, int) {
 }
-qhandle_t RE_RegisterVisTest()
-{
-	return 1;
+void RE_AddLightToSceneQ3A(const vec3_t, float, float, float, float) {
 }
-void RE_AddVisTestToScene( qhandle_t, const vec3_t, float, float ) { }
-float RE_CheckVisibility( qhandle_t )
-{
-	return 0.0f;
+void RE_RenderScene(const refdef_t*) {
 }
-void RE_UnregisterVisTest( qhandle_t ) { }
-void     RE_SetColorGrading( int, qhandle_t ) { }
-void                                RE_ScissorEnable( bool ) { }
-void                                RE_ScissorSet( int, int, int, int ) { }
-void     R_SetAltShaderTokens( const char* ) { }
+void RE_SetColor(const Color::Color&) {
+}
+void RE_SetClipRegion(const float*) {
+}
+void RE_StretchPic(float, float, float, float, float, float, float, float, qhandle_t) {
+}
+void RE_RotatedPic(float, float, float, float, float, float, float, float, qhandle_t, float) {
+}
+void RE_StretchPicGradient(float, float, float, float, float, float, float, float, qhandle_t, const Color::Color&, int) {
+}
+void RE_2DPolyies(polyVert_t*, int, qhandle_t) {
+}
+void RE_StretchRaw(int, int, int, int, int, int, const byte*, int, bool) {
+}
+void RE_UploadCinematic(int, int, const byte*, int, bool) {
+}
+void RE_BeginFrame() {
+}
+void RE_EndFrame(int*, int*) {
+}
+int R_MarkFragments(int, const vec3_t*, const vec3_t, int, vec3_t, int, markFragment_t*) {
+    return 0;
+}
+void RE_ProjectDecal(qhandle_t, int, vec3_t*, vec4_t, const Color::Color&, int, int) {
+}
+void RE_ClearDecals() {
+}
+int R_LerpTag(orientation_t*, const refEntity_t*, const char*, int) {
+    return 0;
+}
+void R_ModelBounds(qhandle_t, vec3_t, vec3_t) {
+}
+void R_RemapShader(const char*, const char*, const char*) {
+}
+bool R_GetEntityToken(char*, int) {
+    return true;
+}
+void RE_AddPolyBufferToScene(polyBuffer_t*) {
+}
+bool R_inPVS(const vec3_t, const vec3_t) {
+    return false;
+}
+bool R_inPVVS(const vec3_t, const vec3_t) {
+    return false;
+}
+bool RE_LoadDynamicShader(const char*, const char*) {
+    return true;
+}
+void RE_Finish() {
+}
+void RE_TakeVideoFrame(int, int, byte*, byte*, bool) {
+}
+void RE_AddRefLightToScene(const refLight_t*) {
+}
+int RE_RegisterAnimation(const char*) {
+    return 1;
+}
+int RE_CheckSkeleton(refSkeleton_t*, qhandle_t, qhandle_t) {
+    return 1;
+}
+int RE_BuildSkeleton(refSkeleton_t* skel, qhandle_t, int, int, float, bool) {
+    skel->numBones = 0;
+    return 1;
+}
+int RE_BlendSkeleton(refSkeleton_t*, const refSkeleton_t*, float) {
+    return 1;
+}
+int RE_BoneIndex(qhandle_t, const char*) {
+    return 0;
+}
+int RE_AnimNumFrames(qhandle_t) {
+    return 1;
+}
+int RE_AnimFrameRate(qhandle_t) {
+    return 1;
+}
+qhandle_t RE_RegisterVisTest() {
+    return 1;
+}
+void RE_AddVisTestToScene(qhandle_t, const vec3_t, float, float) {
+}
+float RE_CheckVisibility(qhandle_t) {
+    return 0.0f;
+}
+void RE_UnregisterVisTest(qhandle_t) {
+}
+void     RE_SetColorGrading(int, qhandle_t) {
+}
+void                                RE_ScissorEnable(bool) {
+}
+void                                RE_ScissorSet(int, int, int, int) {
+}
+void     R_SetAltShaderTokens(const char*) {
+}
 
-void RE_GetTextureSize( int, int *width, int *height )
-{
+void RE_GetTextureSize(int, int* width, int* height) {
     *width = 1;
     *height = 1;
 }
-void RE_Add2dPolysIndexed( polyVert_t*, int, int*, int, int, int, qhandle_t ) { }
-qhandle_t RE_GenerateTexture( const byte*, int, int )
-{
+void RE_Add2dPolysIndexed(polyVert_t*, int, int*, int, int, int, qhandle_t) {
+}
+qhandle_t RE_GenerateTexture(const byte*, int, int) {
     return 1;
 }
-const char *RE_ShaderNameFromHandle( qhandle_t )
-{
+const char* RE_ShaderNameFromHandle(qhandle_t) {
     return "";
 }
 
-bool RE_BeginRegistration( glconfig_t *config, glconfig2_t *glconfig2 )
-{
-	Com_Memset( config, 0, sizeof( glconfig_t ) );
-	config->vidWidth = 640;
-	config->vidHeight = 480;
-	config->windowAspect = 1.0f;
-	Com_Memset( glconfig2, 0, sizeof( glconfig2_t ) );
+bool RE_BeginRegistration(glconfig_t* config, glconfig2_t* glconfig2) {
+    Com_Memset(config, 0, sizeof(glconfig_t) );
+    config->vidWidth = 640;
+    config->vidHeight = 480;
+    config->windowAspect = 1.0f;
+    Com_Memset(glconfig2, 0, sizeof(glconfig2_t) );
 
-	return true;
+    return true;
 }
 
-refexport_t    *GetRefAPI( int, refimport_t* )
-{
+refexport_t* GetRefAPI(int, refimport_t*) {
     static refexport_t re;
 
-    memset( &re, 0, sizeof( re ) );
+    memset(&re, 0, sizeof(re) );
 
     re.Shutdown = RE_Shutdown;
 
@@ -281,9 +294,9 @@ refexport_t    *GetRefAPI( int, refimport_t* )
     re.inPVS = R_inPVS;
     re.inPVVS = R_inPVVS;
 
-    //bani
+    // bani
     re.LoadDynamicShader = RE_LoadDynamicShader;
-    //bani
+    // bani
     re.Finish = RE_Finish;
 
     re.TakeVideoFrame = RE_TakeVideoFrame;

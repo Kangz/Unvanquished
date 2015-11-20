@@ -58,7 +58,7 @@ namespace Cmd {
     bool IsValidCmdName(Str::StringRef text);
     bool IsValidCvarName(Str::StringRef text);
 
-    bool IsSwitch(Str::StringRef arg, const char *name);
+    bool IsSwitch(Str::StringRef arg, const char* name);
 
     /**
      * Cmd::Args represents the arguments given to an invoked command.
@@ -89,7 +89,7 @@ namespace Cmd {
 
             // Aliases
             int size() const; // same as Argc()
-            const std::string& operator[] (int argNum) const; // same as Argv(int)
+            const std::string& operator[](int argNum) const; // same as Argv(int)
 
             // Range-based for loop support
             std::vector<std::string>::const_iterator begin() const;
@@ -174,7 +174,7 @@ namespace Cmd {
 
     class LambdaCmd : public StaticCmd {
         public:
-            typedef std::function<void(const Args&)> RunFn;
+            typedef std::function<void (const Args&)> RunFn;
             typedef std::function<CompletionResult(int, const Args&, Str::StringRef)> CompleteFn;
             LambdaCmd(std::string name, std::string description, RunFn run, CompleteFn complete = NoopComplete);
             LambdaCmd(std::string name, int flags, std::string description, RunFn run, CompleteFn complete = NoopComplete);

@@ -39,21 +39,21 @@ Maryland 20850 USA.
 #include <Rocket/Core/Lua/LuaType.h>
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
-// Dummy class for Cmds
-class Cmd
-{
+    namespace Core {
+        namespace Lua {
+            // Dummy class for Cmds
+            class Cmd {
 
-};
+            };
 
-template<> void ExtraInit<Cmd>(lua_State* L, int metatable_index);
-int Cmdexec(lua_State* L);
+            template<>
+            void ExtraInit<Cmd>(lua_State* L, int metatable_index);
+            int Cmdexec(lua_State* L);
 
-extern RegType<Cmd> CmdMethods[];
-extern luaL_Reg CmdGetters[];
-extern luaL_Reg CmdSetters[];
-}
-}
+            extern RegType<Cmd> CmdMethods[];
+            extern luaL_Reg CmdGetters[];
+            extern luaL_Reg CmdSetters[];
+        }
+    }
 }
 #endif

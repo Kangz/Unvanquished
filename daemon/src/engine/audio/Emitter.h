@@ -102,7 +102,7 @@ namespace Audio {
     };
 
     // An Emitter for things that aren't spatialized (like menus, annoucements, ...)
-    class LocalEmitter: public Emitter {
+    class LocalEmitter : public Emitter {
         public:
             LocalEmitter();
             virtual ~LocalEmitter();
@@ -114,4 +114,4 @@ namespace Audio {
 
 }
 
-#endif //AUDIO_SAMPLE_H_
+#endif // AUDIO_SAMPLE_H_

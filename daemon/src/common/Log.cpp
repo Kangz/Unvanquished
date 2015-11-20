@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Log {
 
     Logger::Logger(Str::StringRef name, Level defaultLevel)
-    :filterLevel("logs.logLevel." + name, "Log::Level - logs from '" + name + "' below the level specified are filtered", 0, defaultLevel) {
+        : filterLevel("logs.logLevel." + name, "Log::Level - logs from '" + name + "' below the level specified are filtered", 0, defaultLevel) {
     }
 
     bool ParseCvarValue(std::string value, Log::Level& result) {
@@ -56,19 +56,22 @@ namespace Log {
     }
 
     std::string SerializeCvarValue(Log::Level value) {
-        switch(value) {
-            case Log::LOG_WARNING:
-                return "warning";
-            case Log::LOG_NOTICE:
-                return "notice";
-            case Log::LOG_DEBUG:
-                return "debug";
-            default:
-                return "";
+        switch (value) {
+        case Log::LOG_WARNING:
+            return "warning";
+
+        case Log::LOG_NOTICE:
+            return "notice";
+
+        case Log::LOG_DEBUG:
+            return "debug";
+
+        default:
+            return "";
         }
     }
 
-	//TODO add the time (broken for now because it is journaled) use Sys_Milliseconds instead (Utils::Milliseconds ?)
+    // TODO add the time (broken for now because it is journaled) use Sys_Milliseconds instead (Utils::Milliseconds ?)
     static const int warnTargets = (1 << GRAPHICAL_CONSOLE) | (1 << TTY_CONSOLE) | (1 << CRASHLOG) | (1 << LOGFILE);
     void CodeSourceWarn(std::string message) {
         Log::Dispatch({"^3Warn: " + message}, warnTargets);

@@ -134,116 +134,99 @@ vec3_t   bytedirs[ NUMVERTEXNORMALS ] =
 };
 // *INDENT-ON*
 
-//==============================================================
+// ==============================================================
 
-int Q_rand( int *seed )
-{
-	*seed = ( 69069 * *seed + 1 );
-	return *seed;
+int Q_rand(int* seed) {
+    *seed = (69069 * *seed + 1);
+    return *seed;
 }
 
 // Range of [0,1]
-float Q_random( int *seed )
-{
-	return ( Q_rand( seed ) & 0xffff ) / ( float ) 0x10000;
+float Q_random(int* seed) {
+    return (Q_rand(seed) & 0xffff) / (float) 0x10000;
 }
 
 // Range of [-1,1]
-float Q_crandom( int *seed )
-{
-	return 2.0 * ( Q_random( seed ) - 0.5 );
+float Q_crandom(int* seed) {
+    return 2.0 * (Q_random(seed) - 0.5);
 }
 
-//=======================================================
+// =======================================================
 
-byte ClampByte( int i )
-{
-	if ( i < 0 )
-	{
-		return 0;
-	}
+byte ClampByte(int i) {
+    if (i < 0) {
+        return 0;
+    }
 
-	if ( i > 255 )
-	{
-		return 255;
-	}
+    if (i > 255) {
+        return 255;
+    }
 
-	return i;
+    return i;
 }
 
-signed char ClampChar( int i )
-{
-	if ( i < -128 )
-	{
-		return -128;
-	}
+signed char ClampChar(int i) {
+    if (i < -128) {
+        return -128;
+    }
 
-	if ( i > 127 )
-	{
-		return 127;
-	}
+    if (i > 127) {
+        return 127;
+    }
 
-	return i;
+    return i;
 }
 
 // this isn't a real cheap function to call!
-int DirToByte( vec3_t dir )
-{
-	int   i, best;
-	float d, bestd;
+int DirToByte(vec3_t dir) {
+    int i, best;
+    float d, bestd;
 
-	if ( !dir )
-	{
-		return 0;
-	}
+    if (!dir) {
+        return 0;
+    }
 
-	bestd = 0;
-	best = 0;
+    bestd = 0;
+    best = 0;
 
-	for ( i = 0; i < NUMVERTEXNORMALS; i++ )
-	{
-		d = DotProduct( dir, bytedirs[ i ] );
+    for (i = 0; i < NUMVERTEXNORMALS; i++) {
+        d = DotProduct(dir, bytedirs[i]);
 
-		if ( d > bestd )
-		{
-			bestd = d;
-			best = i;
-		}
-	}
+        if (d > bestd) {
+            bestd = d;
+            best = i;
+        }
+    }
 
-	return best;
+    return best;
 }
 
-void ByteToDir( int b, vec3_t dir )
-{
-	if ( b < 0 || b >= NUMVERTEXNORMALS )
-	{
-		VectorCopy( vec3_origin, dir );
-		return;
-	}
+void ByteToDir(int b, vec3_t dir) {
+    if (b < 0 || b >= NUMVERTEXNORMALS) {
+        VectorCopy(vec3_origin, dir);
+        return;
+    }
 
-	VectorCopy( bytedirs[ b ], dir );
+    VectorCopy(bytedirs[b], dir);
 }
 
-vec_t PlaneNormalize( vec4_t plane )
-{
-	vec_t length2, ilength;
+vec_t PlaneNormalize(vec4_t plane) {
+    vec_t length2, ilength;
 
-	length2 = DotProduct( plane, plane );
+    length2 = DotProduct(plane, plane);
 
-	if ( length2 == 0.0f )
-	{
-		VectorClear( plane );
-		return 0.0f;
-	}
+    if (length2 == 0.0f) {
+        VectorClear(plane);
+        return 0.0f;
+    }
 
-	ilength = Q_rsqrt( length2 );
-	plane[ 0 ] = plane[ 0 ] * ilength;
-	plane[ 1 ] = plane[ 1 ] * ilength;
-	plane[ 2 ] = plane[ 2 ] * ilength;
-	plane[ 3 ] = plane[ 3 ] * ilength;
+    ilength = Q_rsqrt(length2);
+    plane[0] = plane[0] * ilength;
+    plane[1] = plane[1] * ilength;
+    plane[2] = plane[2] * ilength;
+    plane[3] = plane[3] * ilength;
 
-	return length2 * ilength;
+    return length2 * ilength;
 }
 
 /*
@@ -254,21 +237,19 @@ vec_t PlaneNormalize( vec4_t plane )
  * The normal will point out of the clock for clockwise ordered points
  * =====================
  */
-bool PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c )
-{
-	vec3_t d1, d2;
+bool PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c) {
+    vec3_t d1, d2;
 
-	VectorSubtract( b, a, d1 );
-	VectorSubtract( c, a, d2 );
-	CrossProduct( d2, d1, plane );
+    VectorSubtract(b, a, d1);
+    VectorSubtract(c, a, d2);
+    CrossProduct(d2, d1, plane);
 
-	if ( VectorNormalize( plane ) == 0 )
-	{
-		return false;
-	}
+    if (VectorNormalize(plane) == 0) {
+        return false;
+    }
 
-	plane[ 3 ] = DotProduct( a, plane );
-	return true;
+    plane[3] = DotProduct(a, plane);
+    return true;
 }
 /*
  * =====================
@@ -277,79 +258,70 @@ bool PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t
  * Returns false if the triangle is degenerate.
  * =====================
  */
-bool PlaneFromPointsOrder( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, bool cw )
-{
-	vec3_t d1, d2;
+bool PlaneFromPointsOrder(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, bool cw) {
+    vec3_t d1, d2;
 
-	VectorSubtract( b, a, d1 );
-	VectorSubtract( c, a, d2 );
+    VectorSubtract(b, a, d1);
+    VectorSubtract(c, a, d2);
 
-	if ( cw )
-	{
-		CrossProduct( d2, d1, plane );
-	}
+    if (cw) {
+        CrossProduct(d2, d1, plane);
+    } else {
+        CrossProduct(d1, d2, plane);
+    }
 
-	else
-	{
-		CrossProduct( d1, d2, plane );
-	}
+    if (VectorNormalize(plane) == 0) {
+        return false;
+    }
 
-	if ( VectorNormalize( plane ) == 0 )
-	{
-		return false;
-	}
-
-	plane[ 3 ] = DotProduct( a, plane );
-	return true;
+    plane[3] = DotProduct(a, plane);
+    return true;
 }
 
-bool PlanesGetIntersectionPoint( const vec4_t plane1, const vec4_t plane2, const vec4_t plane3, vec3_t out )
-{
-	// http://www.cgafaq.info/wiki/Intersection_of_three_planes
+bool PlanesGetIntersectionPoint(const vec4_t plane1, const vec4_t plane2, const vec4_t plane3, vec3_t out) {
+    // http://www.cgafaq.info/wiki/Intersection_of_three_planes
 
-	vec3_t n1, n2, n3;
-	vec3_t n1n2, n2n3, n3n1;
-	vec_t  denom;
+    vec3_t n1, n2, n3;
+    vec3_t n1n2, n2n3, n3n1;
+    vec_t denom;
 
-	VectorNormalize2( plane1, n1 );
-	VectorNormalize2( plane2, n2 );
-	VectorNormalize2( plane3, n3 );
+    VectorNormalize2(plane1, n1);
+    VectorNormalize2(plane2, n2);
+    VectorNormalize2(plane3, n3);
 
-	CrossProduct( n1, n2, n1n2 );
-	CrossProduct( n2, n3, n2n3 );
-	CrossProduct( n3, n1, n3n1 );
+    CrossProduct(n1, n2, n1n2);
+    CrossProduct(n2, n3, n2n3);
+    CrossProduct(n3, n1, n3n1);
 
-	denom = DotProduct( n1, n2n3 );
+    denom = DotProduct(n1, n2n3);
 
-	// check if the denominator is zero (which would mean that no intersection is to be found
-	if ( denom == 0 )
-	{
-		// no intersection could be found, return <0,0,0>
-		VectorClear( out );
-		return false;
-	}
+    // check if the denominator is zero (which would mean that no intersection is to be found
+    if (denom == 0) {
+        // no intersection could be found, return <0,0,0>
+        VectorClear(out);
+        return false;
+    }
 
-	VectorClear( out );
+    VectorClear(out);
 
-	VectorMA( out, plane1[ 3 ], n2n3, out );
-	VectorMA( out, plane2[ 3 ], n3n1, out );
-	VectorMA( out, plane3[ 3 ], n1n2, out );
+    VectorMA(out, plane1[3], n2n3, out);
+    VectorMA(out, plane2[3], n3n1, out);
+    VectorMA(out, plane3[3], n1n2, out);
 
-	VectorScale( out, 1.0f / denom, out );
+    VectorScale(out, 1.0f / denom, out);
 
-	return true;
+    return true;
 }
 
-void PlaneIntersectRay( const vec3_t rayPos, const vec3_t rayDir, const vec4_t plane, vec3_t res )
-{
-	vec3_t dir;
-	float  sect;
+void PlaneIntersectRay(const vec3_t rayPos, const vec3_t rayDir, const vec4_t plane, vec3_t res) {
+    vec3_t dir;
+    float sect;
 
-	VectorNormalize2( rayDir, dir );
+    VectorNormalize2(rayDir, dir);
 
-	sect = - ( DotProduct( plane, rayPos ) - plane[ 3 ] ) / DotProduct( plane, rayDir );
-	VectorScale( dir, sect, dir );
-	VectorAdd( rayPos, dir, res );
+    sect = -(DotProduct(plane, rayPos) - plane[3]) / DotProduct(plane, rayDir);
+    VectorScale(dir, sect, dir);
+    VectorAdd(rayPos, dir, res);
 }
 
 /*
@@ -357,20 +329,19 @@ void PlaneIntersectRay( const vec3_t rayPos, const vec3_t rayDir, const vec4_t p
  * RotatePointAroundVector
  * ===============
  */
-void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
-{
-	float sind, cosd, expr;
-	vec3_t dxp;
+void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point, float degrees) {
+    float sind, cosd, expr;
+    vec3_t dxp;
 
-	degrees = DEG2RAD( degrees );
-	sind = sin( degrees );
-	cosd = cos( degrees );
-	expr = ( 1 - cosd ) * DotProduct( dir, point );
-	CrossProduct( dir, point, dxp );
+    degrees = DEG2RAD(degrees);
+    sind = sin(degrees);
+    cosd = cos(degrees);
+    expr = (1 - cosd) * DotProduct(dir, point);
+    CrossProduct(dir, point, dxp);
 
-	dst[ 0 ] = expr * dir[ 0 ] + cosd * point[ 0 ] + sind * dxp[ 0 ];
-	dst[ 1 ] = expr * dir[ 1 ] + cosd * point[ 1 ] + sind * dxp[ 1 ];
-	dst[ 2 ] = expr * dir[ 2 ] + cosd * point[ 2 ] + sind * dxp[ 2 ];
+    dst[0] = expr * dir[0] + cosd * point[0] + sind * dxp[0];
+    dst[1] = expr * dir[1] + cosd * point[1] + sind * dxp[1];
+    dst[2] = expr * dir[2] + cosd * point[2] + sind * dxp[2];
 }
 
 /*
@@ -378,78 +349,58 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
  * RotateAroundDirection
  * ===============
  */
-void RotateAroundDirection( vec3_t axis[ 3 ], float yaw )
-{
-	// create an arbitrary axis[1]
-	PerpendicularVector( axis[ 1 ], axis[ 0 ] );
+void RotateAroundDirection(vec3_t axis[3], float yaw) {
+    // create an arbitrary axis[1]
+    PerpendicularVector(axis[1], axis[0]);
 
-	// rotate it around axis[0] by yaw
-	if ( yaw )
-	{
-		vec3_t temp;
+    // rotate it around axis[0] by yaw
+    if (yaw) {
+        vec3_t temp;
 
-		VectorCopy( axis[ 1 ], temp );
-		RotatePointAroundVector( axis[ 1 ], axis[ 0 ], temp, yaw );
-	}
+        VectorCopy(axis[1], temp);
+        RotatePointAroundVector(axis[1], axis[0], temp, yaw);
+    }
 
-	// cross to get axis[2]
-	CrossProduct( axis[ 0 ], axis[ 1 ], axis[ 2 ] );
+    // cross to get axis[2]
+    CrossProduct(axis[0], axis[1], axis[2]);
 }
 
-void vectoangles( const vec3_t value1, vec3_t angles )
-{
-	float forward;
-	float yaw, pitch;
+void vectoangles(const vec3_t value1, vec3_t angles) {
+    float forward;
+    float yaw, pitch;
 
-	if ( value1[ 1 ] == 0 && value1[ 0 ] == 0 )
-	{
-		yaw = 0;
+    if (value1[1] == 0 && value1[0] == 0) {
+        yaw = 0;
 
-		if ( value1[ 2 ] > 0 )
-		{
-			pitch = 90;
-		}
+        if (value1[2] > 0) {
+            pitch = 90;
+        } else {
+            pitch = 270;
+        }
+    } else {
+        if (value1[0]) {
+            yaw = (atan2(value1[1], value1[0]) * 180 / M_PI);
+        } else if (value1[1] > 0) {
+            yaw = 90;
+        } else {
+            yaw = 270;
+        }
 
-		else
-		{
-			pitch = 270;
-		}
-	}
+        if (yaw < 0) {
+            yaw += 360;
+        }
 
-	else
-	{
-		if ( value1[ 0 ] )
-		{
-			yaw = ( atan2( value1[ 1 ], value1[ 0 ] ) * 180 / M_PI );
-		}
+        forward = sqrt(value1[0] * value1[0] + value1[1] * value1[1]);
+        pitch = (atan2(value1[2], forward) * 180 / M_PI);
 
-		else if ( value1[ 1 ] > 0 )
-		{
-			yaw = 90;
-		}
+        if (pitch < 0) {
+            pitch += 360;
+        }
+    }
 
-		else
-		{
-			yaw = 270;
-		}
-
-		if ( yaw < 0 )
-		{
-			yaw += 360;
-		}
-
-		forward = sqrt( value1[ 0 ] * value1[ 0 ] + value1[ 1 ] * value1[ 1 ] );
-		pitch = ( atan2( value1[ 2 ], forward ) * 180 / M_PI );
-
-		if ( pitch < 0 )
-		{
-			pitch += 360;
-		}
-	}
-
-	angles[ PITCH ] = -pitch;
-	angles[ YAW ] = yaw;
-	angles[ ROLL ] = 0;
+    angles[PITCH] = -pitch;
+    angles[YAW] = yaw;
+    angles[ROLL] = 0;
 }
 
 /*
@@ -457,39 +408,35 @@ void vectoangles( const vec3_t value1, vec3_t angles )
  * AnglesToAxis
  * =================
  */
-void AnglesToAxis( const vec3_t angles, vec3_t axis[ 3 ] )
-{
-	vec3_t right;
+void AnglesToAxis(const vec3_t angles, vec3_t axis[3]) {
+    vec3_t right;
 
-	// angle vectors returns "right" instead of "y axis"
-	AngleVectors( angles, axis[ 0 ], right, axis[ 2 ] );
-	VectorSubtract( vec3_origin, right, axis[ 1 ] );
+    // angle vectors returns "right" instead of "y axis"
+    AngleVectors(angles, axis[0], right, axis[2]);
+    VectorSubtract(vec3_origin, right, axis[1]);
 }
 
-void AxisClear( vec3_t axis[ 3 ] )
-{
-	axis[ 0 ][ 0 ] = 1;
-	axis[ 0 ][ 1 ] = 0;
-	axis[ 0 ][ 2 ] = 0;
-	axis[ 1 ][ 0 ] = 0;
-	axis[ 1 ][ 1 ] = 1;
-	axis[ 1 ][ 2 ] = 0;
-	axis[ 2 ][ 0 ] = 0;
-	axis[ 2 ][ 1 ] = 0;
-	axis[ 2 ][ 2 ] = 1;
+void AxisClear(vec3_t axis[3]) {
+    axis[0][0] = 1;
+    axis[0][1] = 0;
+    axis[0][2] = 0;
+    axis[1][0] = 0;
+    axis[1][1] = 1;
+    axis[1][2] = 0;
+    axis[2][0] = 0;
+    axis[2][1] = 0;
+    axis[2][2] = 1;
 }
 
-void AxisCopy( vec3_t in[ 3 ], vec3_t out[ 3 ] )
-{
-	VectorCopy( in[ 0 ], out[ 0 ] );
-	VectorCopy( in[ 1 ], out[ 1 ] );
-	VectorCopy( in[ 2 ], out[ 2 ] );
+void AxisCopy(vec3_t in[3], vec3_t out[3]) {
+    VectorCopy(in[0], out[0]);
+    VectorCopy(in[1], out[1]);
+    VectorCopy(in[2], out[2]);
 }
 
-void ProjectPointOnPlane( vec3_t dst, const vec3_t point, const vec3_t normal )
-{
-	float d = -DotProduct( point, normal );
-	VectorMA( point, d, normal, dst );
+void ProjectPointOnPlane(vec3_t dst, const vec3_t point, const vec3_t normal) {
+    float d = -DotProduct(point, normal);
+    VectorMA(point, d, normal, dst);
 }
 
 /*
@@ -500,20 +447,19 @@ void ProjectPointOnPlane( vec3_t dst, const vec3_t point, const vec3_t normal )
  * other perpendicular vectors
  * ================
  */
-void MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up )
-{
-	float d;
+void MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up) {
+    float d;
 
-	// this rotate and negate guarantees a vector
-	// not colinear with the original
-	right[ 1 ] = -forward[ 0 ];
-	right[ 2 ] = forward[ 1 ];
-	right[ 0 ] = forward[ 2 ];
+    // this rotate and negate guarantees a vector
+    // not colinear with the original
+    right[1] = -forward[0];
+    right[2] = forward[1];
+    right[0] = forward[2];
 
-	d = DotProduct( right, forward );
-	VectorMA( right, -d, forward, right );
-	VectorNormalize( right );
-	CrossProduct( right, forward, up );
+    d = DotProduct(right, forward);
+    VectorMA(right, -d, forward, right);
+    VectorNormalize(right);
+    CrossProduct(right, forward, up);
 }
 
 /*
@@ -524,28 +470,28 @@ Traces a ray from inside a rectangle and returns the point of
 intersection with the rectangle
 ==================
 */
-float ProjectPointOntoRectangleOutwards( vec2_t out, const vec2_t point, const vec2_t dir, 
-                                         const vec2_t bounds[ 2 ] )
-{
-	float t, ty;
-	bool dsign[ 2 ];
+float ProjectPointOntoRectangleOutwards(vec2_t out, const vec2_t point, const vec2_t dir,
+                                        const vec2_t bounds[2]) {
+    float t, ty;
+    bool dsign[2];
 
-	dsign[ 0 ] = ( dir[ 0 ] < 0 );
-	dsign[ 1 ] = ( dir[ 1 ] < 0.0 );
+    dsign[0] = (dir[0] < 0);
+    dsign[1] = (dir[1] < 0.0);
 
-	t = ( bounds[ 1 - dsign[ 0 ] ][ 0 ] - point[ 0 ] ) / dir[ 0 ];
-	ty = ( bounds[ 1 - dsign[ 1 ] ][ 1 ] - point[ 1 ] ) / dir[ 1 ];
+    t = (bounds[1 - dsign[0]][0] - point[0]) / dir[0];
+    ty = (bounds[1 - dsign[1]][1] - point[1]) / dir[1];
 
-	if( ty < t )
-		t = ty;
+    if (ty < t) {
+        t = ty;
+    }
 
-	out[ 0 ] = point[ 0 ] + dir[ 0 ] * t;
-	out[ 1 ] = point[ 1 ] + dir[ 1 ] * t;
+    out[0] = point[0] + dir[0] * t;
+    out[1] = point[1] + dir[1] * t;
 
-	return t;
+    return t;
 }
 
-//============================================================
+// ============================================================
 
 /*
 =============
@@ -554,9 +500,8 @@ ExponentialFade
 Fades one value towards another exponentially
 =============
 */
-void ExponentialFade( float *value, float target, float lambda, float timedelta )
-{
-	*value = target + ( *value - target ) * exp( - lambda * timedelta );
+void ExponentialFade(float* value, float target, float lambda, float timedelta) {
+    *value = target + (*value - target) * exp(-lambda * timedelta);
 }
 
 /*
@@ -565,19 +510,16 @@ void ExponentialFade( float *value, float target, float lambda, float timedelta 
  *
  * ===============
  */
-float LerpAngle( float from, float to, float frac )
-{
-	if ( to - from > 180 )
-	{
-		to -= 360;
-	}
+float LerpAngle(float from, float to, float frac) {
+    if (to - from > 180) {
+        to -= 360;
+    }
 
-	if ( to - from < -180 )
-	{
-		to += 360;
-	}
+    if (to - from < -180) {
+        to += 360;
+    }
 
-	return ( from + frac * ( to - from ) );
+    return (from + frac * (to - from) );
 }
 
 /*
@@ -587,24 +529,21 @@ float LerpAngle( float from, float to, float frac )
  * Always returns a value from -180 to 180
  * =================
  */
-float AngleSubtract( float a1, float a2 )
-{
-	float a = a1 - a2;
+float AngleSubtract(float a1, float a2) {
+    float a = a1 - a2;
 
 
-	return a - 360.0f * floor( ( a + 180.0f ) / 360.0f );
+    return a - 360.0f * floor( (a + 180.0f) / 360.0f);
 }
 
-void AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 )
-{
-	v3[ 0 ] = AngleSubtract( v1[ 0 ], v2[ 0 ] );
-	v3[ 1 ] = AngleSubtract( v1[ 1 ], v2[ 1 ] );
-	v3[ 2 ] = AngleSubtract( v1[ 2 ], v2[ 2 ] );
+void AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3) {
+    v3[0] = AngleSubtract(v1[0], v2[0]);
+    v3[1] = AngleSubtract(v1[1], v2[1]);
+    v3[2] = AngleSubtract(v1[2], v2[2]);
 }
 
-float AngleMod( float a )
-{
-	return ( ( 360.0 / 65536 ) * ( ( int )( a * ( 65536 / 360.0 ) ) & 65535 ) );
+float AngleMod(float a) {
+    return ( (360.0 / 65536) * ( (int)(a * (65536 / 360.0) ) & 65535) );
 }
 
 /*
@@ -614,9 +553,8 @@ float AngleMod( float a )
  * returns angle normalized to the range [0 <= angle < 360]
  * =================
  */
-float AngleNormalize360( float angle )
-{
-	return ( 360.0 / 65536 ) * ( ( int )( angle * ( 65536 / 360.0 ) ) & 65535 );
+float AngleNormalize360(float angle) {
+    return (360.0 / 65536) * ( (int)(angle * (65536 / 360.0) ) & 65535);
 }
 
 /*
@@ -626,16 +564,14 @@ float AngleNormalize360( float angle )
  * returns angle normalized to the range [-180 < angle <= 180]
  * =================
  */
-float AngleNormalize180( float angle )
-{
-	angle = AngleNormalize360( angle );
+float AngleNormalize180(float angle) {
+    angle = AngleNormalize360(angle);
 
-	if ( angle > 180.0 )
-	{
-		angle -= 360.0;
-	}
+    if (angle > 180.0) {
+        angle -= 360.0;
+    }
 
-	return angle;
+    return angle;
 }
 
 /*
@@ -645,9 +581,8 @@ float AngleNormalize180( float angle )
  * returns the normalized delta from angle1 to angle2
  * =================
  */
-float AngleDelta( float angle1, float angle2 )
-{
-	return AngleNormalize180( angle1 - angle2 );
+float AngleDelta(float angle1, float angle2) {
+    return AngleNormalize180(angle1 - angle2);
 }
 
 /*
@@ -657,48 +592,43 @@ float AngleDelta( float angle1, float angle2 )
  * returns the angle between two vectors normalized to the range [0 <= angle <= 180]
  * =================
  */
-float AngleBetweenVectors( const vec3_t a, const vec3_t b )
-{
-	vec_t alen, blen;
+float AngleBetweenVectors(const vec3_t a, const vec3_t b) {
+    vec_t alen, blen;
 
-	alen = VectorLength( a );
-	blen = VectorLength( b );
+    alen = VectorLength(a);
+    blen = VectorLength(b);
 
-	if ( !alen || !blen )
-	{
-		return 0;
-	}
+    if (!alen || !blen) {
+        return 0;
+    }
 
-	// complete dot product of two vectors a, b is |a| * |b| * cos(angle)
-	// this results in:
-	//
-	// angle = acos( (a * b) / (|a| * |b|) )
-	return RAD2DEG( acos( DotProduct( a, b ) / ( alen * blen ) ) );
+    // complete dot product of two vectors a, b is |a| * |b| * cos(angle)
+    // this results in:
+    //
+    // angle = acos( (a * b) / (|a| * |b|) )
+    return RAD2DEG(acos(DotProduct(a, b) / (alen * blen) ) );
 }
 
-//============================================================
+// ============================================================
 
 /*
  * =================
  * SetPlaneSignbits
  * =================
  */
-void SetPlaneSignbits( cplane_t *out )
-{
-	int bits, j;
+void SetPlaneSignbits(cplane_t* out) {
+    int bits, j;
 
-	// for fast box on planeside test
-	bits = 0;
+    // for fast box on planeside test
+    bits = 0;
 
-	for ( j = 0; j < 3; j++ )
-	{
-		if ( out->normal[ j ] < 0 )
-		{
-			bits |= 1 << j;
-		}
-	}
+    for (j = 0; j < 3; j++) {
+        if (out->normal[j] < 0) {
+            bits |= 1 << j;
+        }
+    }
 
-	out->signbits = bits;
+    out->signbits = bits;
 }
 
 /*
@@ -709,53 +639,45 @@ void SetPlaneSignbits( cplane_t *out )
  * ==================
  */
 
-int BoxOnPlaneSide( const vec3_t emins, const vec3_t emaxs, const struct cplane_s *p )
-{
-	float dist[ 2 ];
-	int   sides, b, i;
+int BoxOnPlaneSide(const vec3_t emins, const vec3_t emaxs, const struct cplane_s* p) {
+    float dist[2];
+    int sides, b, i;
 
-	// fast axial cases
-	if ( p->type < 3 )
-	{
-		if ( p->dist <= emins[ p->type ] )
-		{
-			return 1;
-		}
+    // fast axial cases
+    if (p->type < 3) {
+        if (p->dist <= emins[p->type]) {
+            return 1;
+        }
 
-		if ( p->dist >= emaxs[ p->type ] )
-		{
-			return 2;
-		}
+        if (p->dist >= emaxs[p->type]) {
+            return 2;
+        }
 
-		return 3;
-	}
+        return 3;
+    }
 
-	// general case
-	dist[ 0 ] = dist[ 1 ] = 0;
+    // general case
+    dist[0] = dist[1] = 0;
 
-	if ( p->signbits < 8 ) // >= 8: default case is original code (dist[0]=dist[1]=0)
-	{
-		for ( i = 0; i < 3; i++ )
-		{
-			b = ( p->signbits >> i ) & 1;
-			dist[ b ] += p->normal[ i ] * emaxs[ i ];
-			dist[ !b ] += p->normal[ i ] * emins[ i ];
-		}
-	}
+    if (p->signbits < 8) { // >= 8: default case is original code (dist[0]=dist[1]=0)
+        for (i = 0; i < 3; i++) {
+            b = (p->signbits >> i) & 1;
+            dist[b] += p->normal[i] * emaxs[i];
+            dist[!b] += p->normal[i] * emins[i];
+        }
+    }
 
-	sides = 0;
+    sides = 0;
 
-	if ( dist[ 0 ] >= p->dist )
-	{
-		sides = 1;
-	}
+    if (dist[0] >= p->dist) {
+        sides = 1;
+    }
 
-	if ( dist[ 1 ] < p->dist )
-	{
-		sides |= 2;
-	}
+    if (dist[1] < p->dist) {
+        sides |= 2;
+    }
 
-	return sides;
+    return sides;
 }
 
 /*
@@ -763,298 +685,249 @@ int BoxOnPlaneSide( const vec3_t emins, const vec3_t emaxs, const struct cplane_
  * RadiusFromBounds
  * =================
  */
-float RadiusFromBounds( const vec3_t mins, const vec3_t maxs )
-{
-	int    i;
-	vec3_t corner;
-	float  a, b;
+float RadiusFromBounds(const vec3_t mins, const vec3_t maxs) {
+    int i;
+    vec3_t corner;
+    float a, b;
 
-	for ( i = 0; i < 3; i++ )
-	{
-		a = Q_fabs( mins[ i ] );
-		b = Q_fabs( maxs[ i ] );
-		corner[ i ] = a > b ? a : b;
-	}
+    for (i = 0; i < 3; i++) {
+        a = Q_fabs(mins[i]);
+        b = Q_fabs(maxs[i]);
+        corner[i] = a > b ? a : b;
+    }
 
-	return VectorLength( corner );
+    return VectorLength(corner);
 }
 
-void ZeroBounds( vec3_t mins, vec3_t maxs )
-{
-	mins[ 0 ] = mins[ 1 ] = mins[ 2 ] = 0;
-	maxs[ 0 ] = maxs[ 1 ] = maxs[ 2 ] = 0;
+void ZeroBounds(vec3_t mins, vec3_t maxs) {
+    mins[0] = mins[1] = mins[2] = 0;
+    maxs[0] = maxs[1] = maxs[2] = 0;
 }
 
-void ClearBounds( vec3_t mins, vec3_t maxs )
-{
-	mins[ 0 ] = mins[ 1 ] = mins[ 2 ] = 99999;
-	maxs[ 0 ] = maxs[ 1 ] = maxs[ 2 ] = -99999;
+void ClearBounds(vec3_t mins, vec3_t maxs) {
+    mins[0] = mins[1] = mins[2] = 99999;
+    maxs[0] = maxs[1] = maxs[2] = -99999;
 }
 
-void AddPointToBounds( const vec3_t v, vec3_t mins, vec3_t maxs )
-{
-	if ( v[ 0 ] < mins[ 0 ] )
-	{
-		mins[ 0 ] = v[ 0 ];
-	}
+void AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs) {
+    if (v[0] < mins[0]) {
+        mins[0] = v[0];
+    }
 
-	if ( v[ 0 ] > maxs[ 0 ] )
-	{
-		maxs[ 0 ] = v[ 0 ];
-	}
+    if (v[0] > maxs[0]) {
+        maxs[0] = v[0];
+    }
 
-	if ( v[ 1 ] < mins[ 1 ] )
-	{
-		mins[ 1 ] = v[ 1 ];
-	}
+    if (v[1] < mins[1]) {
+        mins[1] = v[1];
+    }
 
-	if ( v[ 1 ] > maxs[ 1 ] )
-	{
-		maxs[ 1 ] = v[ 1 ];
-	}
+    if (v[1] > maxs[1]) {
+        maxs[1] = v[1];
+    }
 
-	if ( v[ 2 ] < mins[ 2 ] )
-	{
-		mins[ 2 ] = v[ 2 ];
-	}
+    if (v[2] < mins[2]) {
+        mins[2] = v[2];
+    }
 
-	if ( v[ 2 ] > maxs[ 2 ] )
-	{
-		maxs[ 2 ] = v[ 2 ];
-	}
+    if (v[2] > maxs[2]) {
+        maxs[2] = v[2];
+    }
 }
 
-void BoundsAdd( vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 )
-{
-	if ( mins2[ 0 ] < mins[ 0 ] )
-	{
-		mins[ 0 ] = mins2[ 0 ];
-	}
+void BoundsAdd(vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2) {
+    if (mins2[0] < mins[0]) {
+        mins[0] = mins2[0];
+    }
 
-	if ( mins2[ 1 ] < mins[ 1 ] )
-	{
-		mins[ 1 ] = mins2[ 1 ];
-	}
+    if (mins2[1] < mins[1]) {
+        mins[1] = mins2[1];
+    }
 
-	if ( mins2[ 2 ] < mins[ 2 ] )
-	{
-		mins[ 2 ] = mins2[ 2 ];
-	}
+    if (mins2[2] < mins[2]) {
+        mins[2] = mins2[2];
+    }
 
-	if ( maxs2[ 0 ] > maxs[ 0 ] )
-	{
-		maxs[ 0 ] = maxs2[ 0 ];
-	}
+    if (maxs2[0] > maxs[0]) {
+        maxs[0] = maxs2[0];
+    }
 
-	if ( maxs2[ 1 ] > maxs[ 1 ] )
-	{
-		maxs[ 1 ] = maxs2[ 1 ];
-	}
+    if (maxs2[1] > maxs[1]) {
+        maxs[1] = maxs2[1];
+    }
 
-	if ( maxs2[ 2 ] > maxs[ 2 ] )
-	{
-		maxs[ 2 ] = maxs2[ 2 ];
-	}
+    if (maxs2[2] > maxs[2]) {
+        maxs[2] = maxs2[2];
+    }
 }
 
-bool BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 )
-{
-	if ( maxs[ 0 ] < mins2[ 0 ] ||
-	        maxs[ 1 ] < mins2[ 1 ] || maxs[ 2 ] < mins2[ 2 ] || mins[ 0 ] > maxs2[ 0 ] || mins[ 1 ] > maxs2[ 1 ] || mins[ 2 ] > maxs2[ 2 ] )
-	{
-		return false;
-	}
+bool BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2) {
+    if (maxs[0] < mins2[0] ||
+        maxs[1] < mins2[1] || maxs[2] < mins2[2] || mins[0] > maxs2[0] || mins[1] > maxs2[1] || mins[2] > maxs2[2]) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
-bool BoundsIntersectSphere( const vec3_t mins, const vec3_t maxs, const vec3_t origin, vec_t radius )
-{
-	if ( origin[ 0 ] - radius > maxs[ 0 ] ||
-	        origin[ 0 ] + radius < mins[ 0 ] ||
-	        origin[ 1 ] - radius > maxs[ 1 ] ||
-	        origin[ 1 ] + radius < mins[ 1 ] || origin[ 2 ] - radius > maxs[ 2 ] || origin[ 2 ] + radius < mins[ 2 ] )
-	{
-		return false;
-	}
+bool BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs, const vec3_t origin, vec_t radius) {
+    if (origin[0] - radius > maxs[0] ||
+        origin[0] + radius < mins[0] ||
+                             origin[1] - radius > maxs[1] ||
+        origin[1] + radius < mins[1] || origin[2] - radius > maxs[2] || origin[2] + radius < mins[2]) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
-bool BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const vec3_t origin )
-{
-	if ( origin[ 0 ] > maxs[ 0 ] ||
-	        origin[ 0 ] < mins[ 0 ] || origin[ 1 ] > maxs[ 1 ] || origin[ 1 ] < mins[ 1 ] || origin[ 2 ] > maxs[ 2 ] || origin[ 2 ] < mins[ 2 ] )
-	{
-		return false;
-	}
+bool BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t origin) {
+    if (origin[0] > maxs[0] ||
+        origin[0] < mins[0] || origin[1] > maxs[1] || origin[1] < mins[1] || origin[2] > maxs[2] || origin[2] < mins[2]) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
-float BoundsMaxExtent( const vec3_t mins, const vec3_t maxs ) {
-	float result = Q_fabs( mins[0] );
+float BoundsMaxExtent(const vec3_t mins, const vec3_t maxs) {
+    float result = Q_fabs(mins[0]);
 
-	result = std::max( result, Q_fabs( mins[ 1 ] ) );
-	result = std::max( result, Q_fabs( mins[ 2 ] ) );
-	result = std::max( result, Q_fabs( maxs[ 0 ] ) );
-	result = std::max( result, Q_fabs( maxs[ 1 ] ) );
-	result = std::max( result, Q_fabs( maxs[ 2 ] ) );
+    result = std::max(result, Q_fabs(mins[1]) );
+    result = std::max(result, Q_fabs(mins[2]) );
+    result = std::max(result, Q_fabs(maxs[0]) );
+    result = std::max(result, Q_fabs(maxs[1]) );
+    result = std::max(result, Q_fabs(maxs[2]) );
 
-	return result;
+    return result;
 }
 
-int VectorCompare( const vec3_t v1, const vec3_t v2 )
-{
-	if ( v1[ 0 ] != v2[ 0 ] || v1[ 1 ] != v2[ 1 ] || v1[ 2 ] != v2[ 2 ] )
-	{
-		return 0;
-	}
+int VectorCompare(const vec3_t v1, const vec3_t v2) {
+    if (v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2]) {
+        return 0;
+    }
 
-	return 1;
+    return 1;
 }
 
-vec_t VectorNormalize( vec3_t v )
-{
-	float length, ilength;
+vec_t VectorNormalize(vec3_t v) {
+    float length, ilength;
 
-	length = DotProduct( v, v );
+    length = DotProduct(v, v);
 
-	if ( length != 0.0f )
-	{
-		ilength = Q_rsqrt( length );
-		/* sqrt(length) = length * (1 / sqrt(length)) */
-		length *= ilength;
-		VectorScale( v, ilength, v );
-	}
+    if (length != 0.0f) {
+        ilength = Q_rsqrt(length);
+        /* sqrt(length) = length * (1 / sqrt(length)) */
+        length *= ilength;
+        VectorScale(v, ilength, v);
+    }
 
-	return length;
+    return length;
 }
 
 //
 // fast vector normalize routine that does not check to make sure
 // that length != 0, nor does it return length
 //
-void VectorNormalizeFast( vec3_t v )
-{
-	float ilength;
+void VectorNormalizeFast(vec3_t v) {
+    float ilength;
 
-	ilength = Q_rsqrt( DotProduct( v, v ) );
+    ilength = Q_rsqrt(DotProduct(v, v) );
 
-	VectorScale( v, ilength, v );
+    VectorScale(v, ilength, v);
 }
 
-vec_t VectorNormalize2( const vec3_t v, vec3_t out )
-{
-	float length, ilength;
+vec_t VectorNormalize2(const vec3_t v, vec3_t out) {
+    float length, ilength;
 
-	length = v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ];
+    length = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 
-	if ( length )
-	{
-		ilength = Q_rsqrt( length );
-		/* sqrt(length) = length * (1 / sqrt(length)) */
-		length *= ilength;
-		VectorScale( v, ilength, out );
-	}
+    if (length) {
+        ilength = Q_rsqrt(length);
+        /* sqrt(length) = length * (1 / sqrt(length)) */
+        length *= ilength;
+        VectorScale(v, ilength, out);
+    } else {
+        VectorClear(out);
+    }
 
-	else
-	{
-		VectorClear( out );
-	}
-
-	return length;
+    return length;
 }
 
-void _VectorMA( const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc )
-{
-	vecc[ 0 ] = veca[ 0 ] + scale * vecb[ 0 ];
-	vecc[ 1 ] = veca[ 1 ] + scale * vecb[ 1 ];
-	vecc[ 2 ] = veca[ 2 ] + scale * vecb[ 2 ];
+void _VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc) {
+    vecc[0] = veca[0] + scale * vecb[0];
+    vecc[1] = veca[1] + scale * vecb[1];
+    vecc[2] = veca[2] + scale * vecb[2];
 }
 
-vec_t _DotProduct( const vec3_t v1, const vec3_t v2 )
-{
-	return v1[ 0 ] * v2[ 0 ] + v1[ 1 ] * v2[ 1 ] + v1[ 2 ] * v2[ 2 ];
+vec_t _DotProduct(const vec3_t v1, const vec3_t v2) {
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 }
 
-void _VectorSubtract( const vec3_t veca, const vec3_t vecb, vec3_t out )
-{
-	out[ 0 ] = veca[ 0 ] - vecb[ 0 ];
-	out[ 1 ] = veca[ 1 ] - vecb[ 1 ];
-	out[ 2 ] = veca[ 2 ] - vecb[ 2 ];
+void _VectorSubtract(const vec3_t veca, const vec3_t vecb, vec3_t out) {
+    out[0] = veca[0] - vecb[0];
+    out[1] = veca[1] - vecb[1];
+    out[2] = veca[2] - vecb[2];
 }
 
-void _VectorAdd( const vec3_t veca, const vec3_t vecb, vec3_t out )
-{
-	out[ 0 ] = veca[ 0 ] + vecb[ 0 ];
-	out[ 1 ] = veca[ 1 ] + vecb[ 1 ];
-	out[ 2 ] = veca[ 2 ] + vecb[ 2 ];
+void _VectorAdd(const vec3_t veca, const vec3_t vecb, vec3_t out) {
+    out[0] = veca[0] + vecb[0];
+    out[1] = veca[1] + vecb[1];
+    out[2] = veca[2] + vecb[2];
 }
 
-void _VectorCopy( const vec3_t in, vec3_t out )
-{
-	out[ 0 ] = in[ 0 ];
-	out[ 1 ] = in[ 1 ];
-	out[ 2 ] = in[ 2 ];
+void _VectorCopy(const vec3_t in, vec3_t out) {
+    out[0] = in[0];
+    out[1] = in[1];
+    out[2] = in[2];
 }
 
-void _VectorScale( const vec3_t in, vec_t scale, vec3_t out )
-{
-	out[ 0 ] = in[ 0 ] * scale;
-	out[ 1 ] = in[ 1 ] * scale;
-	out[ 2 ] = in[ 2 ] * scale;
+void _VectorScale(const vec3_t in, vec_t scale, vec3_t out) {
+    out[0] = in[0] * scale;
+    out[1] = in[1] * scale;
+    out[2] = in[2] * scale;
 }
 
-void CrossProduct( const vec3_t v1, const vec3_t v2, vec3_t cross )
-{
-	cross[ 0 ] = v1[ 1 ] * v2[ 2 ] - v1[ 2 ] * v2[ 1 ];
-	cross[ 1 ] = v1[ 2 ] * v2[ 0 ] - v1[ 0 ] * v2[ 2 ];
-	cross[ 2 ] = v1[ 0 ] * v2[ 1 ] - v1[ 1 ] * v2[ 0 ];
+void CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross) {
+    cross[0] = v1[1] * v2[2] - v1[2] * v2[1];
+    cross[1] = v1[2] * v2[0] - v1[0] * v2[2];
+    cross[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
 
-vec_t VectorLength( const vec3_t v )
-{
-	return sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
+vec_t VectorLength(const vec3_t v) {
+    return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-vec_t VectorLengthSquared( const vec3_t v )
-{
-	return ( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
+vec_t VectorLengthSquared(const vec3_t v) {
+    return (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-vec_t Distance( const vec3_t p1, const vec3_t p2 )
-{
-	vec3_t v;
+vec_t Distance(const vec3_t p1, const vec3_t p2) {
+    vec3_t v;
 
-	VectorSubtract( p2, p1, v );
-	return VectorLength( v );
+    VectorSubtract(p2, p1, v);
+    return VectorLength(v);
 }
 
-vec_t DistanceSquared( const vec3_t p1, const vec3_t p2 )
-{
-	vec3_t v;
+vec_t DistanceSquared(const vec3_t p1, const vec3_t p2) {
+    vec3_t v;
 
-	VectorSubtract( p2, p1, v );
-	return v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ];
+    VectorSubtract(p2, p1, v);
+    return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
 
-void VectorInverse( vec3_t v )
-{
-	v[ 0 ] = -v[ 0 ];
-	v[ 1 ] = -v[ 1 ];
-	v[ 2 ] = -v[ 2 ];
+void VectorInverse(vec3_t v) {
+    v[0] = -v[0];
+    v[1] = -v[1];
+    v[2] = -v[2];
 }
 
-int NearestPowerOfTwo( int val )
-{
-	int answer;
+int NearestPowerOfTwo(int val) {
+    int answer;
 
-	for ( answer = 1; answer < val; answer <<= 1 )
-	{
-		;
-	}
+    for (answer = 1; answer < val; answer <<= 1) {
+    }
 
-	return answer;
+    return answer;
 }
 
 /*
@@ -1081,58 +954,53 @@ int NearestPowerOfTwo( int val )
  * AxisMultiply
  * ================
  */
-void AxisMultiply( float in1[ 3 ][ 3 ], float in2[ 3 ][ 3 ], float out[ 3 ][ 3 ] )
-{
-	out[ 0 ][ 0 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 0 ][ 1 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 0 ][ 2 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 2 ];
-	out[ 1 ][ 0 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 1 ][ 1 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 1 ][ 2 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 2 ];
-	out[ 2 ][ 0 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 2 ][ 1 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 2 ][ 2 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 2 ];
+void AxisMultiply(float in1[3][3], float in2[3][3], float out[3][3]) {
+    out[0][0] = in1[0][0] * in2[0][0] + in1[0][1] * in2[1][0] + in1[0][2] * in2[2][0];
+    out[0][1] = in1[0][0] * in2[0][1] + in1[0][1] * in2[1][1] + in1[0][2] * in2[2][1];
+    out[0][2] = in1[0][0] * in2[0][2] + in1[0][1] * in2[1][2] + in1[0][2] * in2[2][2];
+    out[1][0] = in1[1][0] * in2[0][0] + in1[1][1] * in2[1][0] + in1[1][2] * in2[2][0];
+    out[1][1] = in1[1][0] * in2[0][1] + in1[1][1] * in2[1][1] + in1[1][2] * in2[2][1];
+    out[1][2] = in1[1][0] * in2[0][2] + in1[1][1] * in2[1][2] + in1[1][2] * in2[2][2];
+    out[2][0] = in1[2][0] * in2[0][0] + in1[2][1] * in2[1][0] + in1[2][2] * in2[2][0];
+    out[2][1] = in1[2][0] * in2[0][1] + in1[2][1] * in2[1][1] + in1[2][2] * in2[2][1];
+    out[2][2] = in1[2][0] * in2[0][2] + in1[2][1] * in2[1][2] + in1[2][2] * in2[2][2];
 }
 
-void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up )
-{
-	float        angle;
-	static float sr, sp, sy, cr, cp, cy;
+void AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up) {
+    float angle;
+    static float sr, sp, sy, cr, cp, cy;
 
-	// static to help MS compiler fp bugs
+    // static to help MS compiler fp bugs
 
-	angle = angles[ YAW ] * ( M_PI * 2 / 360 );
-	sy = sin( angle );
-	cy = cos( angle );
+    angle = angles[YAW] * (M_PI * 2 / 360);
+    sy = sin(angle);
+    cy = cos(angle);
 
-	angle = angles[ PITCH ] * ( M_PI * 2 / 360 );
-	sp = sin( angle );
-	cp = cos( angle );
+    angle = angles[PITCH] * (M_PI * 2 / 360);
+    sp = sin(angle);
+    cp = cos(angle);
 
-	angle = angles[ ROLL ] * ( M_PI * 2 / 360 );
-	sr = sin( angle );
-	cr = cos( angle );
+    angle = angles[ROLL] * (M_PI * 2 / 360);
+    sr = sin(angle);
+    cr = cos(angle);
 
-	if ( forward )
-	{
-		forward[ 0 ] = cp * cy;
-		forward[ 1 ] = cp * sy;
-		forward[ 2 ] = -sp;
-	}
+    if (forward) {
+        forward[0] = cp * cy;
+        forward[1] = cp * sy;
+        forward[2] = -sp;
+    }
 
-	if ( right )
-	{
-		right[ 0 ] = ( -1 * sr * sp * cy + -1 * cr * -sy );
-		right[ 1 ] = ( -1 * sr * sp * sy + -1 * cr * cy );
-		right[ 2 ] = -1 * sr * cp;
-	}
+    if (right) {
+        right[0] = (-1 * sr * sp * cy + -1 * cr * -sy);
+        right[1] = (-1 * sr * sp * sy + -1 * cr * cy);
+        right[2] = -1 * sr * cp;
+    }
 
-	if ( up )
-	{
-		up[ 0 ] = ( cr * sp * cy + -sr * -sy );
-		up[ 1 ] = ( cr * sp * sy + -sr * cy );
-		up[ 2 ] = cr * cp;
-	}
+    if (up) {
+        up[0] = (cr * sp * cy + -sr * -sy);
+        up[1] = (cr * sp * sy + -sr * cy);
+        up[2] = cr * cp;
+    }
 }
 
 /*
@@ -1142,37 +1010,34 @@ void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up 
  * assumes "src" is normalized
  * =================
  */
-void PerpendicularVector( vec3_t dst, const vec3_t src )
-{
-	int    pos;
-	int    i;
-	float  minelem = 1.0F;
-	vec3_t tempvec;
+void PerpendicularVector(vec3_t dst, const vec3_t src) {
+    int pos;
+    int i;
+    float minelem = 1.0F;
+    vec3_t tempvec;
 
-	/*
-	 * * find the smallest magnitude axially aligned vector
-	 */
-	for ( pos = 0, i = 0; i < 3; i++ )
-	{
-		if ( Q_fabs( src[ i ] ) < minelem )
-		{
-			pos = i;
-			minelem = Q_fabs( src[ i ] );
-		}
-	}
+    /*
+     * * find the smallest magnitude axially aligned vector
+     */
+    for (pos = 0, i = 0; i < 3; i++) {
+        if (Q_fabs(src[i]) < minelem) {
+            pos = i;
+            minelem = Q_fabs(src[i]);
+        }
+    }
 
-	tempvec[ 0 ] = tempvec[ 1 ] = tempvec[ 2 ] = 0.0F;
-	tempvec[ pos ] = 1.0F;
+    tempvec[0] = tempvec[1] = tempvec[2] = 0.0F;
+    tempvec[pos] = 1.0F;
 
-	/*
-	 * * project the point onto the plane defined by src
-	 */
-	ProjectPointOnPlane( dst, tempvec, src );
+    /*
+     * * project the point onto the plane defined by src
+     */
+    ProjectPointOnPlane(dst, tempvec, src);
 
-	/*
-	 * * normalize the result
-	 */
-	VectorNormalize( dst );
+    /*
+     * * normalize the result
+     */
+    VectorNormalize(dst);
 }
 
 // Ridah
@@ -1184,18 +1049,17 @@ void PerpendicularVector( vec3_t dst, const vec3_t src )
  *  Used to find an "up" vector for drawing a sprite so that it always faces the view as best as possible
  * =================
  */
-void GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up )
-{
-	vec3_t v1, v2;
+void GetPerpendicularViewVector(const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up) {
+    vec3_t v1, v2;
 
-	VectorSubtract( point, p1, v1 );
-	VectorNormalize( v1 );
+    VectorSubtract(point, p1, v1);
+    VectorNormalize(v1);
 
-	VectorSubtract( point, p2, v2 );
-	VectorNormalize( v2 );
+    VectorSubtract(point, p2, v2);
+    VectorNormalize(v2);
 
-	CrossProduct( v1, v2, up );
-	VectorNormalize( up );
+    CrossProduct(v1, v2, up);
+    VectorNormalize(up);
 }
 
 /*
@@ -1203,15 +1067,14 @@ void GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3
  * ProjectPointOntoVector
  * ================
  */
-void ProjectPointOntoVector( vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj )
-{
-	vec3_t pVec, vec;
+void ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj) {
+    vec3_t pVec, vec;
 
-	VectorSubtract( point, vStart, pVec );
-	VectorSubtract( vEnd, vStart, vec );
-	VectorNormalize( vec );
-	// project onto the directional vector for this segment
-	VectorMA( vStart, DotProduct( pVec, vec ), vec, vProj );
+    VectorSubtract(point, vStart, pVec);
+    VectorSubtract(vEnd, vStart, vec);
+    VectorNormalize(vec);
+    // project onto the directional vector for this segment
+    VectorMA(vStart, DotProduct(pVec, vec), vec, vProj);
 }
 
 #define LINE_DISTANCE_EPSILON 1e-05f
@@ -1223,115 +1086,88 @@ void ProjectPointOntoVector( vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vP
  * ================
  */
 
-vec_t DistanceBetweenLineSegmentsSquared( const vec3_t sP0, const vec3_t sP1,
-        const vec3_t tP0, const vec3_t tP1, float *s, float *t )
-{
-	vec3_t sMag, tMag, diff;
-	float  a, b, c, d, e;
-	float  D;
-	float  sN, sD;
-	float  tN, tD;
-	vec3_t separation;
+vec_t DistanceBetweenLineSegmentsSquared(const vec3_t sP0, const vec3_t sP1,
+                                         const vec3_t tP0, const vec3_t tP1, float* s, float* t) {
+    vec3_t sMag, tMag, diff;
+    float a, b, c, d, e;
+    float D;
+    float sN, sD;
+    float tN, tD;
+    vec3_t separation;
 
-	VectorSubtract( sP1, sP0, sMag );
-	VectorSubtract( tP1, tP0, tMag );
-	VectorSubtract( sP0, tP0, diff );
-	a = DotProduct( sMag, sMag );
-	b = DotProduct( sMag, tMag );
-	c = DotProduct( tMag, tMag );
-	d = DotProduct( sMag, diff );
-	e = DotProduct( tMag, diff );
-	sD = tD = D = a * c - b * b;
+    VectorSubtract(sP1, sP0, sMag);
+    VectorSubtract(tP1, tP0, tMag);
+    VectorSubtract(sP0, tP0, diff);
+    a = DotProduct(sMag, sMag);
+    b = DotProduct(sMag, tMag);
+    c = DotProduct(tMag, tMag);
+    d = DotProduct(sMag, diff);
+    e = DotProduct(tMag, diff);
+    sD = tD = D = a * c - b * b;
 
-	if ( D < LINE_DISTANCE_EPSILON )
-	{
-		// the lines are almost parallel
-		sN = 0.0; // force using point P0 on segment S1
-		sD = 1.0; // to prevent possible division by 0.0 later
-		tN = e;
-		tD = c;
-	}
+    if (D < LINE_DISTANCE_EPSILON) {
+        // the lines are almost parallel
+        sN = 0.0; // force using point P0 on segment S1
+        sD = 1.0; // to prevent possible division by 0.0 later
+        tN = e;
+        tD = c;
+    } else {
+        // get the closest points on the infinite  lines
+        sN = (b * e - c * d);
+        tN = (a * e - b * d);
 
-	else
-	{
-		// get the closest points on the infinite  lines
-		sN = ( b * e - c * d );
-		tN = ( a * e - b * d );
+        if (sN < 0.0) {
+            // sN < 0 => the s=0 edge is visible
+            sN = 0.0;
+            tN = e;
+            tD = c;
+        } else if (sN > sD) {
+            // sN > sD => the s=1 edge is visible
+            sN = sD;
+            tN = e + b;
+            tD = c;
+        }
+    }
 
-		if ( sN < 0.0 )
-		{
-			// sN < 0 => the s=0 edge is visible
-			sN = 0.0;
-			tN = e;
-			tD = c;
-		}
+    if (tN < 0.0) {
+        // tN < 0 => the t=0 edge is visible
+        tN = 0.0;
 
-		else if ( sN > sD )
-		{
-			// sN > sD => the s=1 edge is visible
-			sN = sD;
-			tN = e + b;
-			tD = c;
-		}
-	}
+        // recompute sN for this edge
+        if (-d < 0.0) {
+            sN = 0.0;
+        } else if (-d > a) {
+            sN = sD;
+        } else {
+            sN = -d;
+            sD = a;
+        }
+    } else if (tN > tD) {
+        // tN > tD => the t=1 edge is visible
+        tN = tD;
 
-	if ( tN < 0.0 )
-	{
-		// tN < 0 => the t=0 edge is visible
-		tN = 0.0;
+        // recompute sN for this edge
+        if ( (-d + b) < 0.0) {
+            sN = 0;
+        } else if ( (-d + b) > a) {
+            sN = sD;
+        } else {
+            sN = (-d + b);
+            sD = a;
+        }
+    }
 
-		// recompute sN for this edge
-		if ( -d < 0.0 )
-		{
-			sN = 0.0;
-		}
+    // finally do the division to get *s and *t
+    *s = (fabs(sN) < LINE_DISTANCE_EPSILON ? 0.0 : sN / sD);
+    *t = (fabs(tN) < LINE_DISTANCE_EPSILON ? 0.0 : tN / tD);
 
-		else if ( -d > a )
-		{
-			sN = sD;
-		}
+    // get the difference of the two closest points
+    VectorScale(sMag, *s, sMag);
+    VectorScale(tMag, *t, tMag);
+    VectorAdd(diff, sMag, separation);
+    VectorSubtract(separation, tMag, separation);
 
-		else
-		{
-			sN = -d;
-			sD = a;
-		}
-	}
-
-	else if ( tN > tD )
-	{
-		// tN > tD => the t=1 edge is visible
-		tN = tD;
-
-		// recompute sN for this edge
-		if ( ( -d + b ) < 0.0 )
-		{
-			sN = 0;
-		}
-
-		else if ( ( -d + b ) > a )
-		{
-			sN = sD;
-		}
-
-		else
-		{
-			sN = ( -d + b );
-			sD = a;
-		}
-	}
-
-	// finally do the division to get *s and *t
-	*s = ( fabs( sN ) < LINE_DISTANCE_EPSILON ? 0.0 : sN / sD );
-	*t = ( fabs( tN ) < LINE_DISTANCE_EPSILON ? 0.0 : tN / tD );
-
-	// get the difference of the two closest points
-	VectorScale( sMag, *s, sMag );
-	VectorScale( tMag, *t, tMag );
-	VectorAdd( diff, sMag, separation );
-	VectorSubtract( separation, tMag, separation );
-
-	return VectorLengthSquared( separation );
+    return VectorLengthSquared(separation);
 }
 
 /*
@@ -1339,38 +1175,30 @@ vec_t DistanceBetweenLineSegmentsSquared( const vec3_t sP0, const vec3_t sP1,
  * ProjectPointOntoVectorBounded
  * ================
  */
-void ProjectPointOntoVectorBounded( vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj )
-{
-	vec3_t pVec, vec;
-	int    j;
+void ProjectPointOntoVectorBounded(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj) {
+    vec3_t pVec, vec;
+    int j;
 
-	VectorSubtract( point, vStart, pVec );
-	VectorSubtract( vEnd, vStart, vec );
-	VectorNormalize( vec );
-	// project onto the directional vector for this segment
-	VectorMA( vStart, DotProduct( pVec, vec ), vec, vProj );
+    VectorSubtract(point, vStart, pVec);
+    VectorSubtract(vEnd, vStart, vec);
+    VectorNormalize(vec);
+    // project onto the directional vector for this segment
+    VectorMA(vStart, DotProduct(pVec, vec), vec, vProj);
 
-	// check bounds
-	for ( j = 0; j < 3; j++ )
-	{
-		if ( ( vProj[ j ] > vStart[ j ] && vProj[ j ] > vEnd[ j ] ) || ( vProj[ j ] < vStart[ j ] && vProj[ j ] < vEnd[ j ] ) )
-		{
-			break;
-		}
-	}
+    // check bounds
+    for (j = 0; j < 3; j++) {
+        if ( (vProj[j] > vStart[j] && vProj[j] > vEnd[j]) || (vProj[j] < vStart[j] && vProj[j] < vEnd[j]) ) {
+            break;
+        }
+    }
 
-	if ( j < 3 )
-	{
-		if ( Q_fabs( vProj[ j ] - vStart[ j ] ) < Q_fabs( vProj[ j ] - vEnd[ j ] ) )
-		{
-			VectorCopy( vStart, vProj );
-		}
-
-		else
-		{
-			VectorCopy( vEnd, vProj );
-		}
-	}
+    if (j < 3) {
+        if (Q_fabs(vProj[j] - vStart[j]) < Q_fabs(vProj[j] - vEnd[j]) ) {
+            VectorCopy(vStart, vProj);
+        } else {
+            VectorCopy(vEnd, vProj);
+        }
+    }
 }
 
 /*
@@ -1378,38 +1206,30 @@ void ProjectPointOntoVectorBounded( vec3_t point, vec3_t vStart, vec3_t vEnd, ve
  * DistanceFromLineSquared
  * ================
  */
-float DistanceFromLineSquared( vec3_t p, vec3_t lp1, vec3_t lp2 )
-{
-	vec3_t proj, t;
-	int    j;
+float DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2) {
+    vec3_t proj, t;
+    int j;
 
-	ProjectPointOntoVector( p, lp1, lp2, proj );
+    ProjectPointOntoVector(p, lp1, lp2, proj);
 
-	for ( j = 0; j < 3; j++ )
-	{
-		if ( ( proj[ j ] > lp1[ j ] && proj[ j ] > lp2[ j ] ) || ( proj[ j ] < lp1[ j ] && proj[ j ] < lp2[ j ] ) )
-		{
-			break;
-		}
-	}
+    for (j = 0; j < 3; j++) {
+        if ( (proj[j] > lp1[j] && proj[j] > lp2[j]) || (proj[j] < lp1[j] && proj[j] < lp2[j]) ) {
+            break;
+        }
+    }
 
-	if ( j < 3 )
-	{
-		if ( Q_fabs( proj[ j ] - lp1[ j ] ) < Q_fabs( proj[ j ] - lp2[ j ] ) )
-		{
-			VectorSubtract( p, lp1, t );
-		}
+    if (j < 3) {
+        if (Q_fabs(proj[j] - lp1[j]) < Q_fabs(proj[j] - lp2[j]) ) {
+            VectorSubtract(p, lp1, t);
+        } else {
+            VectorSubtract(p, lp2, t);
+        }
 
-		else
-		{
-			VectorSubtract( p, lp2, t );
-		}
+        return VectorLengthSquared(t);
+    }
 
-		return VectorLengthSquared( t );
-	}
-
-	VectorSubtract( p, proj, t );
-	return VectorLengthSquared( t );
+    VectorSubtract(p, proj, t);
+    return VectorLengthSquared(t);
 }
 
 /*
@@ -1422,80 +1242,60 @@ float DistanceFromLineSquared( vec3_t p, vec3_t lp1, vec3_t lp2 )
  *  using this during gameplay
  * =================
  */
-void AxisToAngles( /*const*/ vec3_t axis[ 3 ], vec3_t angles )
-{
-	float length1;
-	float yaw, pitch, roll = 0.0f;
+void AxisToAngles( /*const*/ vec3_t axis[3], vec3_t angles) {
+    float length1;
+    float yaw, pitch, roll = 0.0f;
 
-	if ( axis[ 0 ][ 1 ] == 0 && axis[ 0 ][ 0 ] == 0 )
-	{
-		yaw = 0;
+    if (axis[0][1] == 0 && axis[0][0] == 0) {
+        yaw = 0;
 
-		if ( axis[ 0 ][ 2 ] > 0 )
-		{
-			pitch = 90;
-		}
+        if (axis[0][2] > 0) {
+            pitch = 90;
+        } else {
+            pitch = 270;
+        }
+    } else {
+        if (axis[0][0]) {
+            yaw = (atan2(axis[0][1], axis[0][0]) * 180 / M_PI);
+        } else if (axis[0][1] > 0) {
+            yaw = 90;
+        } else {
+            yaw = 270;
+        }
 
-		else
-		{
-			pitch = 270;
-		}
-	}
+        if (yaw < 0) {
+            yaw += 360;
+        }
 
-	else
-	{
-		if ( axis[ 0 ][ 0 ] )
-		{
-			yaw = ( atan2( axis[ 0 ][ 1 ], axis[ 0 ][ 0 ] ) * 180 / M_PI );
-		}
+        length1 = sqrt(axis[0][0] * axis[0][0] + axis[0][1] * axis[0][1]);
+        pitch = (atan2(axis[0][2], length1) * 180 / M_PI);
 
-		else if ( axis[ 0 ][ 1 ] > 0 )
-		{
-			yaw = 90;
-		}
+        if (pitch < 0) {
+            pitch += 360;
+        }
 
-		else
-		{
-			yaw = 270;
-		}
+        roll = (atan2(axis[1][2], axis[2][2]) * 180 / M_PI);
 
-		if ( yaw < 0 )
-		{
-			yaw += 360;
-		}
+        if (roll < 0) {
+            roll += 360;
+        }
+    }
 
-		length1 = sqrt( axis[ 0 ][ 0 ] * axis[ 0 ][ 0 ] + axis[ 0 ][ 1 ] * axis[ 0 ][ 1 ] );
-		pitch = ( atan2( axis[ 0 ][ 2 ], length1 ) * 180 / M_PI );
-
-		if ( pitch < 0 )
-		{
-			pitch += 360;
-		}
-
-		roll = ( atan2( axis[ 1 ][ 2 ], axis[ 2 ][ 2 ] ) * 180 / M_PI );
-
-		if ( roll < 0 )
-		{
-			roll += 360;
-		}
-	}
-
-	angles[ PITCH ] = -pitch;
-	angles[ YAW ] = yaw;
-	angles[ ROLL ] = roll;
+    angles[PITCH] = -pitch;
+    angles[YAW] = yaw;
+    angles[ROLL] = roll;
 }
 
-float VectorDistanceSquared( vec3_t v1, vec3_t v2 )
-{
-	vec3_t dir;
+float VectorDistanceSquared(vec3_t v1, vec3_t v2) {
+    vec3_t dir;
 
-	VectorSubtract( v2, v1, dir );
-	return VectorLengthSquared( dir );
+    VectorSubtract(v2, v1, dir);
+    return VectorLengthSquared(dir);
 }
 
 // done.
 
-//=============================================
+// =============================================
 
 // RB: XreaL matrix math functions
 
@@ -2880,567 +2680,488 @@ void MatrixCrop( matrix_t m, const vec3_t mins, const vec3_t maxs )
 
 // *INDENT-ON*
 
-vec_t QuatNormalize( quat_t q )
-{
-	float length, ilength;
+vec_t QuatNormalize(quat_t q) {
+    float length, ilength;
 
-	length = DotProduct4( q, q );
+    length = DotProduct4(q, q);
 
-	if ( length )
-	{
-		ilength = Q_rsqrt( length );
-		length *= ilength;
-		q[ 0 ] *= ilength;
-		q[ 1 ] *= ilength;
-		q[ 2 ] *= ilength;
-		q[ 3 ] *= ilength;
-	}
+    if (length) {
+        ilength = Q_rsqrt(length);
+        length *= ilength;
+        q[0] *= ilength;
+        q[1] *= ilength;
+        q[2] *= ilength;
+        q[3] *= ilength;
+    }
 
-	return length;
+    return length;
 }
 
-void QuatFromAngles( quat_t q, vec_t pitch, vec_t yaw, vec_t roll )
-{
-#if 1
-	matrix_t tmp;
+void QuatFromAngles(quat_t q, vec_t pitch, vec_t yaw, vec_t roll) {
+    #if 1
+    matrix_t tmp;
 
-	MatrixFromAngles( tmp, pitch, yaw, roll );
-	QuatFromMatrix( q, tmp );
-#else
-	static float sr, sp, sy, cr, cp, cy;
+    MatrixFromAngles(tmp, pitch, yaw, roll);
+    QuatFromMatrix(q, tmp);
+    #else
+    static float sr, sp, sy, cr, cp, cy;
 
-	// static to help MS compiler fp bugs
-	sp = sin( DEG2RAD( pitch ) );
-	cp = cos( DEG2RAD( pitch ) );
+    // static to help MS compiler fp bugs
+    sp = sin(DEG2RAD(pitch) );
+    cp = cos(DEG2RAD(pitch) );
 
-	sy = sin( DEG2RAD( yaw ) );
-	cy = cos( DEG2RAD( yaw ) );
+    sy = sin(DEG2RAD(yaw) );
+    cy = cos(DEG2RAD(yaw) );
 
-	sr = sin( DEG2RAD( roll ) );
-	cr = cos( DEG2RAD( roll ) );
+    sr = sin(DEG2RAD(roll) );
+    cr = cos(DEG2RAD(roll) );
 
-	q[ 0 ] = sr * cp * cy - cr * sp * sy; // x
-	q[ 1 ] = cr * sp * cy + sr * cp * sy; // y
-	q[ 2 ] = cr * cp * sy - sr * sp * cy; // z
-	q[ 3 ] = cr * cp * cy + sr * sp * sy; // w
-#endif
+    q[0] = sr * cp * cy - cr * sp * sy; // x
+    q[1] = cr * sp * cy + sr * cp * sy; // y
+    q[2] = cr * cp * sy - sr * sp * cy; // z
+    q[3] = cr * cp * cy + sr * sp * sy; // w
+    #endif
 }
 
-void QuatFromMatrix( quat_t q, const matrix_t m )
-{
-#if 1
+void QuatFromMatrix(quat_t q, const matrix_t m) {
+    #if 1
 
-	/*
-	 *	   From Quaternion to Matrix and Back
-	 *	   February 27th 2005
-	 *	   J.M.P. van Waveren
-	 *
-	 *	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm
-	 */
-	float t, s;
+    /*
+     *	   From Quaternion to Matrix and Back
+     *	   February 27th 2005
+     *	   J.M.P. van Waveren
+     *
+     *	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm
+     */
+    float t, s;
 
-	if ( m[ 0 ] + m[ 5 ] + m[ 10 ] > 0.0f )
-	{
-		t = m[ 0 ] + m[ 5 ] + m[ 10 ] + 1.0f;
-		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
+    if (m[0] + m[5] + m[10] > 0.0f) {
+        t = m[0] + m[5] + m[10] + 1.0f;
+        s = (1.0f / sqrtf(t) ) * 0.5f;
 
-		q[ 3 ] = s * t;
-		q[ 2 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 1 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 0 ] = ( m[ 6 ] - m[ 9 ] ) * s;
-	}
+        q[3] = s * t;
+        q[2] = (m[1] - m[4]) * s;
+        q[1] = (m[8] - m[2]) * s;
+        q[0] = (m[6] - m[9]) * s;
+    } else if (m[0] > m[5] && m[0] > m[10]) {
+        t = m[0] - m[5] - m[10] + 1.0f;
+        s = (1.0f / sqrtf(t) ) * 0.5f;
 
-	else if ( m[ 0 ] > m[ 5 ] && m[ 0 ] > m[ 10 ] )
-	{
-		t = m[ 0 ] - m[ 5 ] - m[ 10 ] + 1.0f;
-		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
+        q[0] = s * t;
+        q[1] = (m[1] + m[4]) * s;
+        q[2] = (m[8] + m[2]) * s;
+        q[3] = (m[6] - m[9]) * s;
+    } else if (m[5] > m[10]) {
+        t = -m[0] + m[5] - m[10] + 1.0f;
+        s = (1.0f / sqrtf(t) ) * 0.5f;
 
-		q[ 0 ] = s * t;
-		q[ 1 ] = ( m[ 1 ] + m[ 4 ] ) * s;
-		q[ 2 ] = ( m[ 8 ] + m[ 2 ] ) * s;
-		q[ 3 ] = ( m[ 6 ] - m[ 9 ] ) * s;
-	}
+        q[1] = s * t;
+        q[0] = (m[1] + m[4]) * s;
+        q[3] = (m[8] - m[2]) * s;
+        q[2] = (m[6] + m[9]) * s;
+    } else {
+        t = -m[0] - m[5] + m[10] + 1.0f;
+        s = (1.0f / sqrtf(t) ) * 0.5f;
 
-	else if ( m[ 5 ] > m[ 10 ] )
-	{
-		t = -m[ 0 ] + m[ 5 ] - m[ 10 ] + 1.0f;
-		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
+        q[2] = s * t;
+        q[3] = (m[1] - m[4]) * s;
+        q[0] = (m[8] + m[2]) * s;
+        q[1] = (m[6] + m[9]) * s;
+    }
 
-		q[ 1 ] = s * t;
-		q[ 0 ] = ( m[ 1 ] + m[ 4 ] ) * s;
-		q[ 3 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 2 ] = ( m[ 6 ] + m[ 9 ] ) * s;
-	}
+    #else
+    float trace;
 
-	else
-	{
-		t = -m[ 0 ] - m[ 5 ] + m[ 10 ] + 1.0f;
-		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 
-		q[ 2 ] = s * t;
-		q[ 3 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 0 ] = ( m[ 8 ] + m[ 2 ] ) * s;
-		q[ 1 ] = ( m[ 6 ] + m[ 9 ] ) * s;
-	}
+    trace = 1.0f + m[0] + m[5] + m[10];
 
-#else
-	float trace;
+    if (trace > 0.0f) {
+        vec_t s = 0.5f / sqrt(trace);
 
-	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+        q[0] = (m[6] - m[9]) * s;
+        q[1] = (m[8] - m[2]) * s;
+        q[2] = (m[1] - m[4]) * s;
+        q[3] = 0.25f / s;
+    } else {
+        if (m[0] > m[5] && m[0] > m[10]) {
+            // column 0
+            float s = sqrt(1.0f + m[0] - m[5] - m[10]) * 2.0f;
 
-	trace = 1.0f + m[ 0 ] + m[ 5 ] + m[ 10 ];
+            q[0] = 0.25f * s;
+            q[1] = (m[4] + m[1]) / s;
+            q[2] = (m[8] + m[2]) / s;
+            q[3] = (m[9] - m[6]) / s;
+        } else if (m[5] > m[10]) {
+            // column 1
+            float s = sqrt(1.0f + m[5] - m[0] - m[10]) * 2.0f;
 
-	if ( trace > 0.0f )
-	{
-		vec_t s = 0.5f / sqrt( trace );
+            q[0] = (m[4] + m[1]) / s;
+            q[1] = 0.25f * s;
+            q[2] = (m[9] + m[6]) / s;
+            q[3] = (m[8] - m[2]) / s;
+        } else {
+            // column 2
+            float s = sqrt(1.0f + m[10] - m[0] - m[5]) * 2.0f;
 
-		q[ 0 ] = ( m[ 6 ] - m[ 9 ] ) * s;
-		q[ 1 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 2 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 3 ] = 0.25f / s;
-	}
+            q[0] = (m[8] + m[2]) / s;
+            q[1] = (m[9] + m[6]) / s;
+            q[2] = 0.25f * s;
+            q[3] = (m[4] - m[1]) / s;
+        }
+    }
 
-	else
-	{
-		if ( m[ 0 ] > m[ 5 ] && m[ 0 ] > m[ 10 ] )
-		{
-			// column 0
-			float s = sqrt( 1.0f + m[ 0 ] - m[ 5 ] - m[ 10 ] ) * 2.0f;
-
-			q[ 0 ] = 0.25f * s;
-			q[ 1 ] = ( m[ 4 ] + m[ 1 ] ) / s;
-			q[ 2 ] = ( m[ 8 ] + m[ 2 ] ) / s;
-			q[ 3 ] = ( m[ 9 ] - m[ 6 ] ) / s;
-		}
-
-		else if ( m[ 5 ] > m[ 10 ] )
-		{
-			// column 1
-			float s = sqrt( 1.0f + m[ 5 ] - m[ 0 ] - m[ 10 ] ) * 2.0f;
-
-			q[ 0 ] = ( m[ 4 ] + m[ 1 ] ) / s;
-			q[ 1 ] = 0.25f * s;
-			q[ 2 ] = ( m[ 9 ] + m[ 6 ] ) / s;
-			q[ 3 ] = ( m[ 8 ] - m[ 2 ] ) / s;
-		}
-
-		else
-		{
-			// column 2
-			float s = sqrt( 1.0f + m[ 10 ] - m[ 0 ] - m[ 5 ] ) * 2.0f;
-
-			q[ 0 ] = ( m[ 8 ] + m[ 2 ] ) / s;
-			q[ 1 ] = ( m[ 9 ] + m[ 6 ] ) / s;
-			q[ 2 ] = 0.25f * s;
-			q[ 3 ] = ( m[ 4 ] - m[ 1 ] ) / s;
-		}
-	}
-
-	QuatNormalize( q );
-#endif
+    QuatNormalize(q);
+    #endif
 }
-void QuatToVectorsFLU( const quat_t q, vec3_t forward, vec3_t left, vec3_t up )
-{
-	matrix_t tmp;
+void QuatToVectorsFLU(const quat_t q, vec3_t forward, vec3_t left, vec3_t up) {
+    matrix_t tmp;
 
-	MatrixFromQuat( tmp, q );
-	MatrixToVectorsFRU( tmp, forward, left, up );
+    MatrixFromQuat(tmp, q);
+    MatrixToVectorsFRU(tmp, forward, left, up);
 }
 
-void QuatToVectorsFRU( const quat_t q, vec3_t forward, vec3_t right, vec3_t up )
-{
-	matrix_t tmp;
+void QuatToVectorsFRU(const quat_t q, vec3_t forward, vec3_t right, vec3_t up) {
+    matrix_t tmp;
 
-	MatrixFromQuat( tmp, q );
-	MatrixToVectorsFRU( tmp, forward, right, up );
+    MatrixFromQuat(tmp, q);
+    MatrixToVectorsFRU(tmp, forward, right, up);
 }
 
-void QuatToAxis( const quat_t q, vec3_t axis[ 3 ] )
-{
-	matrix_t tmp;
+void QuatToAxis(const quat_t q, vec3_t axis[3]) {
+    matrix_t tmp;
 
-	MatrixFromQuat( tmp, q );
-	MatrixToVectorsFLU( tmp, axis[ 0 ], axis[ 1 ], axis[ 2 ] );
+    MatrixFromQuat(tmp, q);
+    MatrixToVectorsFLU(tmp, axis[0], axis[1], axis[2]);
 }
-void QuatToAngles( const quat_t q, vec3_t angles )
-{
-	quat_t q2;
+void QuatToAngles(const quat_t q, vec3_t angles) {
+    quat_t q2;
 
-	q2[ 0 ] = q[ 0 ] * q[ 0 ];
-	q2[ 1 ] = q[ 1 ] * q[ 1 ];
-	q2[ 2 ] = q[ 2 ] * q[ 2 ];
-	q2[ 3 ] = q[ 3 ] * q[ 3 ];
+    q2[0] = q[0] * q[0];
+    q2[1] = q[1] * q[1];
+    q2[2] = q[2] * q[2];
+    q2[3] = q[3] * q[3];
 
-	angles[ PITCH ] = RAD2DEG( asin( -2 * ( q[ 2 ] * q[ 0 ] - q[ 3 ] * q[ 1 ] ) ) );
-	angles[ YAW ] = RAD2DEG( atan2( 2 * ( q[ 2 ] * q[ 3 ] + q[ 0 ] * q[ 1 ] ), ( q2[ 2 ] - q2[ 3 ] - q2[ 0 ] + q2[ 1 ] ) ) );
-	angles[ ROLL ] = RAD2DEG( atan2( 2 * ( q[ 3 ] * q[ 0 ] + q[ 2 ] * q[ 1 ] ), ( -q2[ 2 ] - q2[ 3 ] + q2[ 0 ] + q2[ 1 ] ) ) );
+    angles[PITCH] = RAD2DEG(asin(-2 * (q[2] * q[0] - q[3] * q[1]) ) );
+    angles[YAW] = RAD2DEG(atan2(2 * (q[2] * q[3] + q[0] * q[1]), (q2[2] - q2[3] - q2[0] + q2[1]) ) );
+    angles[ROLL] = RAD2DEG(atan2(2 * (q[3] * q[0] + q[2] * q[1]), (-q2[2] - q2[3] + q2[0] + q2[1]) ) );
 }
 
-void QuatMultiply0( quat_t qa, const quat_t qb )
-{
-	quat_t tmp;
+void QuatMultiply0(quat_t qa, const quat_t qb) {
+    quat_t tmp;
 
-	QuatCopy( qa, tmp );
-	QuatMultiply1( tmp, qb, qa );
+    QuatCopy(qa, tmp);
+    QuatMultiply1(tmp, qb, qa);
 }
 
-void QuatMultiply1( const quat_t qa, const quat_t qb, quat_t qc )
-{
-	/*
-	 *	   from matrix and quaternion faq
-	 *	   x = w1x2 + x1w2 + y1z2 - z1y2
-	 *	   y = w1y2 + y1w2 + z1x2 - x1z2
-	 *	   z = w1z2 + z1w2 + x1y2 - y1x2
-	 *
-	 *	   w = w1w2 - x1x2 - y1y2 - z1z2
-	 */
+void QuatMultiply1(const quat_t qa, const quat_t qb, quat_t qc) {
+    /*
+     *	   from matrix and quaternion faq
+     *	   x = w1x2 + x1w2 + y1z2 - z1y2
+     *	   y = w1y2 + y1w2 + z1x2 - x1z2
+     *	   z = w1z2 + z1w2 + x1y2 - y1x2
+     *
+     *	   w = w1w2 - x1x2 - y1y2 - z1z2
+     */
 
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] - qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = qa[ 3 ] * qb[ 1 ] + qa[ 1 ] * qb[ 3 ] + qa[ 2 ] * qb[ 0 ] - qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = qa[ 3 ] * qb[ 2 ] + qa[ 2 ] * qb[ 3 ] + qa[ 0 ] * qb[ 1 ] - qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] - qa[ 2 ] * qb[ 2 ];
+    qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] - qa[2] * qb[1];
+    qc[1] = qa[3] * qb[1] + qa[1] * qb[3] + qa[2] * qb[0] - qa[0] * qb[2];
+    qc[2] = qa[3] * qb[2] + qa[2] * qb[3] + qa[0] * qb[1] - qa[1] * qb[0];
+    qc[3] = qa[3] * qb[3] - qa[0] * qb[0] - qa[1] * qb[1] - qa[2] * qb[2];
 }
-void QuatMultiply2( const quat_t qa, const quat_t qb, quat_t qc )
-{
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] + qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = qa[ 3 ] * qb[ 1 ] - qa[ 1 ] * qb[ 3 ] - qa[ 2 ] * qb[ 0 ] + qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = qa[ 3 ] * qb[ 2 ] - qa[ 2 ] * qb[ 3 ] - qa[ 0 ] * qb[ 1 ] + qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] + qa[ 2 ] * qb[ 2 ];
+void QuatMultiply2(const quat_t qa, const quat_t qb, quat_t qc) {
+    qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] + qa[2] * qb[1];
+    qc[1] = qa[3] * qb[1] - qa[1] * qb[3] - qa[2] * qb[0] + qa[0] * qb[2];
+    qc[2] = qa[3] * qb[2] - qa[2] * qb[3] - qa[0] * qb[1] + qa[1] * qb[0];
+    qc[3] = qa[3] * qb[3] - qa[0] * qb[0] - qa[1] * qb[1] + qa[2] * qb[2];
 }
-void QuatMultiply3( const quat_t qa, const quat_t qb, quat_t qc )
-{
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] + qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = -qa[ 3 ] * qb[ 1 ] + qa[ 1 ] * qb[ 3 ] - qa[ 2 ] * qb[ 0 ] + qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = -qa[ 3 ] * qb[ 2 ] + qa[ 2 ] * qb[ 3 ] - qa[ 0 ] * qb[ 1 ] + qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = -qa[ 3 ] * qb[ 3 ] + qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] + qa[ 2 ] * qb[ 2 ];
+void QuatMultiply3(const quat_t qa, const quat_t qb, quat_t qc) {
+    qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] + qa[2] * qb[1];
+    qc[1] = -qa[3] * qb[1] + qa[1] * qb[3] - qa[2] * qb[0] + qa[0] * qb[2];
+    qc[2] = -qa[3] * qb[2] + qa[2] * qb[3] - qa[0] * qb[1] + qa[1] * qb[0];
+    qc[3] = -qa[3] * qb[3] + qa[0] * qb[0] - qa[1] * qb[1] + qa[2] * qb[2];
 }
-void QuatMultiply4( const quat_t qa, const quat_t qb, quat_t qc )
-{
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] - qa[ 0 ] * qb[ 3 ] - qa[ 1 ] * qb[ 2 ] - qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = -qa[ 3 ] * qb[ 1 ] - qa[ 1 ] * qb[ 3 ] + qa[ 2 ] * qb[ 0 ] - qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = -qa[ 3 ] * qb[ 2 ] - qa[ 2 ] * qb[ 3 ] + qa[ 0 ] * qb[ 1 ] - qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = -qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] + qa[ 1 ] * qb[ 1 ] - qa[ 2 ] * qb[ 2 ];
+void QuatMultiply4(const quat_t qa, const quat_t qb, quat_t qc) {
+    qc[0] = qa[3] * qb[0] - qa[0] * qb[3] - qa[1] * qb[2] - qa[2] * qb[1];
+    qc[1] = -qa[3] * qb[1] - qa[1] * qb[3] + qa[2] * qb[0] - qa[0] * qb[2];
+    qc[2] = -qa[3] * qb[2] - qa[2] * qb[3] + qa[0] * qb[1] - qa[1] * qb[0];
+    qc[3] = -qa[3] * qb[3] - qa[0] * qb[0] + qa[1] * qb[1] - qa[2] * qb[2];
 }
 
-void QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out )
-{
-#if 0
-	quat_t to1;
-	float omega, cosom, sinom, scale0, scale1;
+void QuatSlerp(const quat_t from, const quat_t to, float frac, quat_t out) {
+    #if 0
+    quat_t to1;
+    float omega, cosom, sinom, scale0, scale1;
 
-	cosom = from[ 0 ] * to[ 0 ] + from[ 1 ] * to[ 1 ] + from[ 2 ] * to[ 2 ] + from[ 3 ] * to[ 3 ];
+    cosom = from[0] * to[0] + from[1] * to[1] + from[2] * to[2] + from[3] * to[3];
 
-	if ( cosom < 0.0 )
-	{
-		cosom = -cosom;
+    if (cosom < 0.0) {
+        cosom = -cosom;
 
-		QuatCopy( to, to1 );
-		QuatAntipodal( to1 );
-	}
+        QuatCopy(to, to1);
+        QuatAntipodal(to1);
+    } else {
+        QuatCopy(to, to1);
+    }
 
-	else
-	{
-		QuatCopy( to, to1 );
-	}
+    if ( (1.0 - cosom) > 0) {
+        omega = acos(cosom);
+        sinom = sin(omega);
+        scale0 = sin( (1.0 - frac) * omega) / sinom;
+        scale1 = sin(frac * omega) / sinom;
+    } else {
+        scale0 = 1.0 - frac;
+        scale1 = frac;
+    }
 
-	if ( ( 1.0 - cosom ) > 0 )
-	{
-		omega = acos( cosom );
-		sinom = sin( omega );
-		scale0 = sin( ( 1.0 - frac ) * omega ) / sinom;
-		scale1 = sin( frac * omega ) / sinom;
-	}
+    out[0] = scale0 * from[0] + scale1 * to1[0];
+    out[1] = scale0 * from[1] + scale1 * to1[1];
+    out[2] = scale0 * from[2] + scale1 * to1[2];
+    out[3] = scale0 * from[3] + scale1 * to1[3];
+    #else
 
-	else
-	{
-		scale0 = 1.0 - frac;
-		scale1 = frac;
-	}
+    /*
+     *	   Slerping Clock Cycles
+     *	   February 27th 2005
+     *	   J.M.P. van Waveren
+     *
+     *	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293747.htm
+     */
+    float cosom, absCosom, sinom, sinSqr, omega, scale0, scale1;
 
-	out[ 0 ] = scale0 * from[ 0 ] + scale1 * to1[ 0 ];
-	out[ 1 ] = scale0 * from[ 1 ] + scale1 * to1[ 1 ];
-	out[ 2 ] = scale0 * from[ 2 ] + scale1 * to1[ 2 ];
-	out[ 3 ] = scale0 * from[ 3 ] + scale1 * to1[ 3 ];
-#else
+    if (frac <= 0.0f) {
+        QuatCopy(from, out);
+        return;
+    }
 
-	/*
-	 *	   Slerping Clock Cycles
-	 *	   February 27th 2005
-	 *	   J.M.P. van Waveren
-	 *
-	 *	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293747.htm
-	 */
-	float cosom, absCosom, sinom, sinSqr, omega, scale0, scale1;
+    if (frac >= 1.0f) {
+        QuatCopy(to, out);
+        return;
+    }
 
-	if ( frac <= 0.0f )
-	{
-		QuatCopy( from, out );
-		return;
-	}
+    if (QuatCompare(from, to) ) {
+        QuatCopy(from, out);
+        return;
+    }
 
-	if ( frac >= 1.0f )
-	{
-		QuatCopy( to, out );
-		return;
-	}
+    cosom = from[0] * to[0] + from[1] * to[1] + from[2] * to[2] + from[3] * to[3];
+    absCosom = fabs(cosom);
 
-	if ( QuatCompare( from, to ) )
-	{
-		QuatCopy( from, out );
-		return;
-	}
+    if ( (1.0f - absCosom) > 1e-6f) {
+        sinSqr = 1.0f - absCosom * absCosom;
+        sinom = 1.0f / sqrt(sinSqr);
+        omega = atan2(sinSqr * sinom, absCosom);
 
-	cosom = from[ 0 ] * to[ 0 ] + from[ 1 ] * to[ 1 ] + from[ 2 ] * to[ 2 ] + from[ 3 ] * to[ 3 ];
-	absCosom = fabs( cosom );
+        scale0 = sin( (1.0f - frac) * omega) * sinom;
+        scale1 = sin(frac * omega) * sinom;
+    } else {
+        scale0 = 1.0f - frac;
+        scale1 = frac;
+    }
 
-	if ( ( 1.0f - absCosom ) > 1e-6f )
-	{
-		sinSqr = 1.0f - absCosom * absCosom;
-		sinom = 1.0f / sqrt( sinSqr );
-		omega = atan2( sinSqr * sinom, absCosom );
+    scale1 = (cosom >= 0.0f) ? scale1 : -scale1;
 
-		scale0 = sin( ( 1.0f - frac ) * omega ) * sinom;
-		scale1 = sin( frac * omega ) * sinom;
-	}
-
-	else
-	{
-		scale0 = 1.0f - frac;
-		scale1 = frac;
-	}
-
-	scale1 = ( cosom >= 0.0f ) ? scale1 : -scale1;
-
-	out[ 0 ] = scale0 * from[ 0 ] + scale1 * to[ 0 ];
-	out[ 1 ] = scale0 * from[ 1 ] + scale1 * to[ 1 ];
-	out[ 2 ] = scale0 * from[ 2 ] + scale1 * to[ 2 ];
-	out[ 3 ] = scale0 * from[ 3 ] + scale1 * to[ 3 ];
-#endif
+    out[0] = scale0 * from[0] + scale1 * to[0];
+    out[1] = scale0 * from[1] + scale1 * to[1];
+    out[2] = scale0 * from[2] + scale1 * to[2];
+    out[3] = scale0 * from[3] + scale1 * to[3];
+    #endif
 }
 
-void QuatTransformVector( const quat_t q, const vec3_t in, vec3_t out )
-{
-#if 0
-	matrix_t m;
+void QuatTransformVector(const quat_t q, const vec3_t in, vec3_t out) {
+    #if 0
+    matrix_t m;
 
-	MatrixFromQuat( m, q );
-	MatrixTransformNormal( m, in, out );
-#else
-	vec3_t tmp, tmp2;
+    MatrixFromQuat(m, q);
+    MatrixTransformNormal(m, in, out);
+    #else
+    vec3_t tmp, tmp2;
 
-	CrossProduct( q, in, tmp );
-	VectorScale( tmp, 2.0f, tmp );
-	CrossProduct( q, tmp, tmp2 );
-	VectorMA( in, q[3], tmp, out );
-	VectorAdd( out, tmp2, out );
-#endif
+    CrossProduct(q, in, tmp);
+    VectorScale(tmp, 2.0f, tmp);
+    CrossProduct(q, tmp, tmp2);
+    VectorMA(in, q[3], tmp, out);
+    VectorAdd(out, tmp2, out);
+    #endif
 }
 
-void QuatTransformVectorInverse( const quat_t q, const vec3_t in, vec3_t out )
-{
-	vec3_t tmp, tmp2;
+void QuatTransformVectorInverse(const quat_t q, const vec3_t in, vec3_t out) {
+    vec3_t tmp, tmp2;
 
-	// The inverse rotation is obtained by negating the vector
-	// component of q, but that is mathematically the same as
-	// swapping the arguments of the cross product.
-	CrossProduct( in, q, tmp );
-	VectorScale( tmp, 2.0f, tmp );
-	CrossProduct( tmp, q, tmp2 );
-	VectorMA( in, q[3], tmp, out );
-	VectorAdd( out, tmp2, out );
+    // The inverse rotation is obtained by negating the vector
+    // component of q, but that is mathematically the same as
+    // swapping the arguments of the cross product.
+    CrossProduct(in, q, tmp);
+    VectorScale(tmp, 2.0f, tmp);
+    CrossProduct(tmp, q, tmp2);
+    VectorMA(in, q[3], tmp, out);
+    VectorAdd(out, tmp2, out);
 }
 
 #if !idx86_sse
 // create an identity transform
-void TransInit( transform_t *t )
-{
-	QuatClear( t->rot );
-	VectorClear( t->trans );
-	t->scale = 1.0f;
+void TransInit(transform_t* t) {
+    QuatClear(t->rot);
+    VectorClear(t->trans);
+    t->scale = 1.0f;
 }
 
 // copy a transform
-void TransCopy( const transform_t *in, transform_t *out )
-{
-	Com_Memcpy( out, in, sizeof( transform_t ) );
+void TransCopy(const transform_t* in, transform_t* out) {
+    Com_Memcpy(out, in, sizeof(transform_t) );
 }
 
 // apply a transform to a point
-void TransformPoint( const transform_t *t, const vec3_t in, vec3_t out )
-{
-	QuatTransformVector( t->rot, in, out );
-	VectorScale( out, t->scale, out );
-	VectorAdd( out, t->trans, out );
+void TransformPoint(const transform_t* t, const vec3_t in, vec3_t out) {
+    QuatTransformVector(t->rot, in, out);
+    VectorScale(out, t->scale, out);
+    VectorAdd(out, t->trans, out);
 }
 // apply the inverse of a transform to a point
-void TransformPointInverse( const transform_t *t, const vec3_t in, vec3_t out )
-{
-	VectorSubtract( in, t->trans, out );
-	VectorScale( out, 1.0f / t->scale, out );
-	QuatTransformVectorInverse( t->rot, out, out );
+void TransformPointInverse(const transform_t* t, const vec3_t in, vec3_t out) {
+    VectorSubtract(in, t->trans, out);
+    VectorScale(out, 1.0f / t->scale, out);
+    QuatTransformVectorInverse(t->rot, out, out);
 }
 
 // apply a transform to a normal vector (ignore scale and translation)
-void TransformNormalVector( const transform_t *t, const vec3_t in, vec3_t out )
-{
-	QuatTransformVector( t->rot, in, out );
+void TransformNormalVector(const transform_t* t, const vec3_t in, vec3_t out) {
+    QuatTransformVector(t->rot, in, out);
 }
 // apply the inverse of a transform to a normal vector (ignore scale
 // and translation)
-void TransformNormalVectorInverse( const transform_t *t, const vec3_t in,
-                                   vec3_t out )
-{
-	QuatTransformVectorInverse( t->rot, in, out );
+void TransformNormalVectorInverse(const transform_t* t, const vec3_t in,
+                                  vec3_t out) {
+    QuatTransformVectorInverse(t->rot, in, out);
 }
 
 // initialize a transform with a pure rotation
-void TransInitRotationQuat( const quat_t quat, transform_t *t )
-{
-	QuatCopy( quat, t->rot );
-	VectorClear( t->trans );
-	t->scale = 1.0f;
+void TransInitRotationQuat(const quat_t quat, transform_t* t) {
+    QuatCopy(quat, t->rot);
+    VectorClear(t->trans);
+    t->scale = 1.0f;
 }
-void TransInitRotation( const vec3_t axis, float angle, transform_t *t )
-{
-	float sa = sin( 0.5f * angle );
-	float ca = cos( 0.5f * angle );
-	quat_t q;
+void TransInitRotation(const vec3_t axis, float angle, transform_t* t) {
+    float sa = sin(0.5f * angle);
+    float ca = cos(0.5f * angle);
+    quat_t q;
 
-	VectorScale( axis, sa, q );
-	q[3] = ca;
-	TransInitRotationQuat( q, t );
+    VectorScale(axis, sa, q);
+    q[3] = ca;
+    TransInitRotationQuat(q, t);
 }
 // initialize a transform with a pure translation
-void TransInitTranslation( const vec3_t vec, transform_t *t )
-{
-	QuatClear( t->rot );
-	VectorCopy( vec, t->trans );
-	t->scale = 1.0f;
+void TransInitTranslation(const vec3_t vec, transform_t* t) {
+    QuatClear(t->rot);
+    VectorCopy(vec, t->trans);
+    t->scale = 1.0f;
 }
 
 // initialize a transform with a pure scale
-void TransInitScale( float factor, transform_t *t )
-{
-	QuatClear( t->rot );
-	VectorClear( t->trans );
-	t->scale = factor;
+void TransInitScale(float factor, transform_t* t) {
+    QuatClear(t->rot);
+    VectorClear(t->trans);
+    t->scale = factor;
 }
 
 // add a rotation to the start of an existing transform
-void TransInsRotationQuat( const quat_t quat, transform_t *t )
-{
-	QuatMultiply0( t->rot, quat );
+void TransInsRotationQuat(const quat_t quat, transform_t* t) {
+    QuatMultiply0(t->rot, quat);
 }
-void TransInsRotation( const vec3_t axis, float angle, transform_t *t )
-{
-	float sa = sin( 0.5f * angle );
-	float ca = cos( 0.5f * angle );
-	quat_t q;
+void TransInsRotation(const vec3_t axis, float angle, transform_t* t) {
+    float sa = sin(0.5f * angle);
+    float ca = cos(0.5f * angle);
+    quat_t q;
 
-	VectorScale( axis, sa, q );
-	q[3] = ca;
-	TransInsRotationQuat( q, t );
+    VectorScale(axis, sa, q);
+    q[3] = ca;
+    TransInsRotationQuat(q, t);
 }
 
 // add a rotation to the end of an existing transform
-void TransAddRotationQuat( const quat_t quat, transform_t *t )
-{
-	quat_t tmp;
+void TransAddRotationQuat(const quat_t quat, transform_t* t) {
+    quat_t tmp;
 
-	QuatTransformVector( quat, t->trans, t->trans );
-	QuatCopy( quat, tmp );
-	QuatMultiply0( tmp, t->rot );
-	QuatCopy( tmp, t->rot );
+    QuatTransformVector(quat, t->trans, t->trans);
+    QuatCopy(quat, tmp);
+    QuatMultiply0(tmp, t->rot);
+    QuatCopy(tmp, t->rot);
 }
-void TransAddRotation( const vec3_t axis, float angle, transform_t *t )
-{
-	float sa = sin( 0.5f * angle );
-	float ca = cos( 0.5f * angle );
-	quat_t q;
+void TransAddRotation(const vec3_t axis, float angle, transform_t* t) {
+    float sa = sin(0.5f * angle);
+    float ca = cos(0.5f * angle);
+    quat_t q;
 
-	VectorScale( axis, sa, q );
-	q[3] = ca;
-	TransAddRotationQuat( q, t );
+    VectorScale(axis, sa, q);
+    q[3] = ca;
+    TransAddRotationQuat(q, t);
 }
 
 // add a scale to the start of an existing transform
-void TransInsScale( float factor, transform_t *t )
-{
-	t->scale *= factor;
+void TransInsScale(float factor, transform_t* t) {
+    t->scale *= factor;
 }
 
 // add a scale to the end of an existing transform
-void TransAddScale( float factor, transform_t *t )
-{
-	VectorScale( t->trans, factor, t->trans );
-	t->scale *= factor;
+void TransAddScale(float factor, transform_t* t) {
+    VectorScale(t->trans, factor, t->trans);
+    t->scale *= factor;
 }
 // add a translation at the start of an existing transformation
-void TransInsTranslation( const vec3_t vec, transform_t *t )
-{
-	vec3_t tmp;
+void TransInsTranslation(const vec3_t vec, transform_t* t) {
+    vec3_t tmp;
 
-	TransformPoint( t, vec, tmp );
-	VectorAdd( t->trans, tmp, t->trans );
+    TransformPoint(t, vec, tmp);
+    VectorAdd(t->trans, tmp, t->trans);
 }
 
 // add a translation at the end of an existing transformation
-void TransAddTranslation( const vec3_t vec, transform_t *t )
-{
-	VectorAdd( t->trans, vec, t->trans );
+void TransAddTranslation(const vec3_t vec, transform_t* t) {
+    VectorAdd(t->trans, vec, t->trans);
 }
 
 // combine transform a and transform b into transform c
-void TransCombine( const transform_t *a, const transform_t *b,
-                   transform_t *out )
-{
-	TransCopy( a, out );
+void TransCombine(const transform_t* a, const transform_t* b,
+                  transform_t* out) {
+    TransCopy(a, out);
 
-	TransAddRotationQuat( b->rot, out );
-	TransAddScale( b->scale, out );
-	TransAddTranslation( b->trans, out );
+    TransAddRotationQuat(b->rot, out);
+    TransAddScale(b->scale, out);
+    TransAddTranslation(b->trans, out);
 }
 
 // compute the inverse transform
-void TransInverse( const transform_t *in, transform_t *out )
-{
-	quat_t inverse;
-	static transform_t tmp; // static for proper alignment in QVMs
+void TransInverse(const transform_t* in, transform_t* out) {
+    quat_t inverse;
+    static transform_t tmp; // static for proper alignment in QVMs
 
-	TransInit( &tmp );
-	VectorNegate( in->trans, tmp.trans );
-	TransAddScale( 1.0f / in->scale, &tmp );
-	QuatCopy( in->rot, inverse );
-	QuatInverse( inverse );
-	TransAddRotationQuat( inverse, &tmp );
-	TransCopy( &tmp, out );
+    TransInit(&tmp);
+    VectorNegate(in->trans, tmp.trans);
+    TransAddScale(1.0f / in->scale, &tmp);
+    QuatCopy(in->rot, inverse);
+    QuatInverse(inverse);
+    TransAddRotationQuat(inverse, &tmp);
+    TransCopy(&tmp, out);
 }
 
 // lerp between transforms
-void TransStartLerp( transform_t *t )
-{
-	QuatZero( t->rot );
-	VectorClear( t->trans );
-	t->scale = 0.0f;
+void TransStartLerp(transform_t* t) {
+    QuatZero(t->rot);
+    VectorClear(t->trans);
+    t->scale = 0.0f;
 }
-void TransAddWeight( float weight, const transform_t *a, transform_t *out )
-{
-	if ( DotProduct4( out->rot, a->rot ) < 0 )
-	{
-		QuatMA( out->rot, -weight, a->rot, out->rot );
-	}
+void TransAddWeight(float weight, const transform_t* a, transform_t* out) {
+    if (DotProduct4(out->rot, a->rot) < 0) {
+        QuatMA(out->rot, -weight, a->rot, out->rot);
+    } else {
+        QuatMA(out->rot, weight, a->rot, out->rot);
+    }
 
-	else
-	{
-		QuatMA( out->rot, weight, a->rot, out->rot );
-	}
-
-	VectorMA( out->trans, weight, a->trans, out->trans );
-	out->scale      += a->scale      * weight;
+    VectorMA(out->trans, weight, a->trans, out->trans);
+    out->scale      += a->scale      * weight;
 }
-void TransEndLerp( transform_t *t )
-{
-	QuatNormalize( t->rot );
+void TransEndLerp(transform_t* t) {
+    QuatNormalize(t->rot);
 }
 #endif
 

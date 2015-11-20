@@ -43,127 +43,120 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *-sizeof(int) == 4
  */
 
-namespace Audio{
-/*
- *Used by OggCallbackRead
- *audioFile contains the whole .ogg file
- *position tracks the current position while reading the file
- */
-struct OggDataSource {
-	std::string* audioFile;
-	size_t position;
-};
+namespace Audio {
+    /*
+     *Used by OggCallbackRead
+     *audioFile contains the whole .ogg file
+     *position tracks the current position while reading the file
+     */
+    struct OggDataSource {
+        std::string* audioFile;
+        size_t position;
+    };
 
-/*
- *Replacement for the read_func
- *ptr: Pointer to a block of memory with a size of at least (size*count) bytes, converted to a void*.
- *size: Size, in bytes, of each element to be read.
- *count: Number of elements, each one of size bytes.
- *datasource: Pointer to an object (here a OggDataSource) which contains the data to be read into ptr, converted to a *void. 
- *Returns the number of successfully read elements.
- */
-size_t OggCallbackRead(void* ptr, size_t size, size_t count, void* datasource)
-{
+    /*
+     *Replacement for the read_func
+     *ptr: Pointer to a block of memory with a size of at least (size*count) bytes, converted to a void*.
+     *size: Size, in bytes, of each element to be read.
+     *count: Number of elements, each one of size bytes.
+     *datasource: Pointer to an object (here a OggDataSource) which contains the data to be read into ptr, converted to a *void.
+     *Returns the number of successfully read elements.
+     */
+    size_t OggCallbackRead(void* ptr, size_t size, size_t count, void* datasource) {
 
-	OggDataSource* data = static_cast<OggDataSource*>(datasource);
+        OggDataSource* data = static_cast<OggDataSource*>(datasource);
 
-	// check if input is valid
-	if ( !ptr )
-	{
-		errno = EFAULT;
-		return 0;
-	}
+        // check if input is valid
+        if (!ptr) {
+            errno = EFAULT;
+            return 0;
+        }
 
-	if ( !( size && count ) )
-	{
-		// It's not an error, caller just wants zero bytes!
-		errno = 0;
-		return 0;
-	}
+        if (!(size && count) ) {
+            // It's not an error, caller just wants zero bytes!
+            errno = 0;
+            return 0;
+        }
 
-	if (data == nullptr || data->audioFile == nullptr || data->audioFile->size() < data->position) {
-		errno = EBADF;
-		return 0;
-	}
+        if (data == nullptr || data->audioFile == nullptr || data->audioFile->size() < data->position) {
+            errno = EBADF;
+            return 0;
+        }
 
-	std::string* audioFile = data->audioFile;
-	size_t position = data->position;
-	size_t bytesRemaining = audioFile->size() - position;
-	size_t bytesToRead = size * count;
-	if (bytesToRead > bytesRemaining) {
-		bytesToRead = bytesRemaining;
-	}
+        std::string* audioFile = data->audioFile;
+        size_t position = data->position;
+        size_t bytesRemaining = audioFile->size() - position;
+        size_t bytesToRead = size * count;
+        if (bytesToRead > bytesRemaining) {
+            bytesToRead = bytesRemaining;
+        }
 
-	std::copy_n(audioFile->cbegin() + position, bytesToRead, static_cast<char*>(ptr));
-	data->position += bytesToRead;
+        std::copy_n(audioFile->cbegin() + position, bytesToRead, static_cast<char*>(ptr));
+        data->position += bytesToRead;
 
-	size_t elementsRead = bytesToRead / size;
+        size_t elementsRead = bytesToRead / size;
 
-    //An element was partially read
-	if (bytesToRead % size) {
-		++ elementsRead;
+        // An element was partially read
+        if (bytesToRead % size) {
+            ++elementsRead;
+        }
+
+        return elementsRead;
     }
 
-    return elementsRead;
-}
 
+    const ov_callbacks Ogg_Callbacks = {&OggCallbackRead, nullptr, nullptr, nullptr};
 
-const ov_callbacks Ogg_Callbacks = {&OggCallbackRead, nullptr, nullptr, nullptr};
+    AudioData LoadOggCodec(std::string filename) {
+        std::string audioFile;
+        try {
+            audioFile = FS::PakPath::ReadFile(filename);
+        } catch (std::system_error& err) {
+            audioLogs.Warn("Failed to open %s: %s", filename, err.what());
+            return AudioData();
+        }
+        OggDataSource dataSource = {&audioFile, 0};
+        std::unique_ptr<OggVorbis_File> vorbisFile(new OggVorbis_File);
 
-AudioData LoadOggCodec(std::string filename)
-{
-	std::string audioFile;
-	try
-	{
-		audioFile = FS::PakPath::ReadFile(filename);
-	}
-	catch (std::system_error& err)
-	{
-		audioLogs.Warn("Failed to open %s: %s", filename, err.what());
-		return AudioData();
-	}
-	OggDataSource dataSource = {&audioFile, 0};
-	std::unique_ptr<OggVorbis_File> vorbisFile(new OggVorbis_File);
+        if (ov_open_callbacks(&dataSource, vorbisFile.get(), nullptr, 0, Ogg_Callbacks) != 0) {
+            audioLogs.Warn("Error while reading %s", filename);
+            ov_clear(vorbisFile.get());
+            return AudioData();
+        }
 
-	if (ov_open_callbacks(&dataSource, vorbisFile.get(), nullptr, 0, Ogg_Callbacks) != 0) {
-        audioLogs.Warn("Error while reading %s", filename);
-		ov_clear(vorbisFile.get());
-		return AudioData();
-	}
+        if (ov_streams(vorbisFile.get()) != 1) {
+            audioLogs.Warn("Unsupported number of streams in %s.", filename);
+            ov_clear(vorbisFile.get());
+            return AudioData();
+        }
 
-	if (ov_streams(vorbisFile.get()) != 1) {
-		audioLogs.Warn("Unsupported number of streams in %s.", filename);
-		ov_clear(vorbisFile.get());
-		return AudioData();
-	}
+        vorbis_info* oggInfo = ov_info(vorbisFile.get(), 0);
 
-	vorbis_info* oggInfo = ov_info(vorbisFile.get(), 0);
+        if (!oggInfo) {
+            audioLogs.Warn("Could not read vorbis_info in %s.", filename);
+            ov_clear(vorbisFile.get());
+            return AudioData();
+        }
 
-	if (!oggInfo) {
-        audioLogs.Warn("Could not read vorbis_info in %s.", filename);
-		ov_clear(vorbisFile.get());
-		return AudioData();
-	}
+        const int sampleWidth = 2;
 
-	const int sampleWidth = 2;
+        int sampleRate = oggInfo->rate;
+        int numberOfChannels = oggInfo->channels;
 
-	int sampleRate = oggInfo->rate;
-	int numberOfChannels = oggInfo->channels;
+        char buffer[4096];
+        int bytesRead = 0;
+        int bitStream = 0;
 
-	char buffer[4096];
-	int bytesRead = 0;
-	int bitStream = 0;
+        std::vector<char> samples;
 
-	std::vector<char> samples;
+        while ((bytesRead = ov_read(vorbisFile.get(), buffer, 4096, 0, sampleWidth, 1, &bitStream)) > 0) {
+            std::copy_n(buffer, bytesRead, std::back_inserter(samples));
+        }
+        ov_clear(vorbisFile.get());
 
-	while ((bytesRead = ov_read(vorbisFile.get(), buffer, 4096, 0, sampleWidth, 1, &bitStream)) > 0) {
-		std::copy_n(buffer, bytesRead, std::back_inserter(samples));
-	}
-	ov_clear(vorbisFile.get());
+        char* rawSamples = new char[samples.size()];
+        std::copy_n(samples.data(), samples.size(), rawSamples);
+        return AudioData(sampleRate, sampleWidth, numberOfChannels, samples.size(), rawSamples);
+    }
 
-	char* rawSamples = new char[samples.size()];
-	std::copy_n(samples.data(), samples.size(), rawSamples);
-	return AudioData(sampleRate, sampleWidth, numberOfChannels, samples.size(), rawSamples);
-}
-
-} //namespace Audio
+} // namespace Audio

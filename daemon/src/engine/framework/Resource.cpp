@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Resource {
 
     Resource::Resource(std::string name) : name(std::move(name)),
-    loaded(false), failed(false), keep(true) {
+        loaded(false), failed(false), keep(true) {
     }
 
     Resource::~Resource() {

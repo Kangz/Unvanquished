@@ -69,7 +69,7 @@ namespace VM {
         QVM_COMMON_FS_WRITE,
         QVM_COMMON_FS_SEEK,
         QVM_COMMON_FS_TELL,
-		QVM_COMMON_FS_FILELENGTH,
+        QVM_COMMON_FS_FILELENGTH,
         QVM_COMMON_FS_RENAME,
         QVM_COMMON_FS_FCLOSE_FILE,
         QVM_COMMON_FS_GET_FILE_LIST,
@@ -89,96 +89,96 @@ namespace VM {
     typedef IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PRINT>, std::string> PrintMsg;
     // ErrorMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_ERROR>, std::string>
-    > ErrorMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_ERROR>, std::string>
+            > ErrorMsg;
     // LogMsg TODO
     // SendConsoleCommandMsg
     typedef IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_SEND_CONSOLE_COMMAND>, std::string> SendConsoleCommandMsg;
 
     // FSFOpenFileMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FOPEN_FILE>, std::string, bool, int>,
-        IPC::Reply<int, int>
-    > FSFOpenFileMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FOPEN_FILE>, std::string, bool, int>,
+            IPC::Reply<int, int>
+            > FSFOpenFileMsg;
     // FSReadMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_READ>, int, int>,
-        IPC::Reply<std::string, int>
-    > FSReadMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_READ>, int, int>,
+            IPC::Reply<std::string, int>
+            > FSReadMsg;
     // FSWriteMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_WRITE>, int, std::string>,
-        IPC::Reply<int>
-    > FSWriteMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_WRITE>, int, std::string>,
+            IPC::Reply<int>
+            > FSWriteMsg;
     // FSSeekMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_SEEK>, int, int, int>,
-        IPC::Reply<int>
-    > FSSeekMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_SEEK>, int, int, int>,
+            IPC::Reply<int>
+            > FSSeekMsg;
     // FSTellMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_TELL>, fileHandle_t>,
-        IPC::Reply<int>
-    > FSTellMsg;
-	// FSFileLengthMsg
-	typedef IPC::SyncMessage<
-		IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FILELENGTH>, fileHandle_t>,
-		IPC::Reply<int>
-	> FSFileLengthMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_TELL>, fileHandle_t>,
+            IPC::Reply<int>
+            > FSTellMsg;
+    // FSFileLengthMsg
+    typedef IPC::SyncMessage<
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FILELENGTH>, fileHandle_t>,
+            IPC::Reply<int>
+            > FSFileLengthMsg;
     // FSRenameMsg
     typedef IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_RENAME>, std::string, std::string> FSRenameMsg;
     // FSFCloseFile
     typedef IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FCLOSE_FILE>, int> FSFCloseFileMsg;
     // FSGetFileListMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_GET_FILE_LIST>, std::string, std::string, int>,
-        IPC::Reply<int, std::string>
-    > FSGetFileListMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_GET_FILE_LIST>, std::string, std::string, int>,
+            IPC::Reply<int, std::string>
+            > FSGetFileListMsg;
     // FSGetFileListRecursiveMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_GET_FILE_LIST_RECURSIVE>, std::string, std::string, int>,
-        IPC::Reply<int, std::string>
-    > FSGetFileListRecursiveMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_GET_FILE_LIST_RECURSIVE>, std::string, std::string, int>,
+            IPC::Reply<int, std::string>
+            > FSGetFileListRecursiveMsg;
     // FSFindPakMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FIND_PAK>, std::string>,
-        IPC::Reply<bool>
-    > FSFindPakMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_FIND_PAK>, std::string>,
+            IPC::Reply<bool>
+            > FSFindPakMsg;
     // FSLoadPakMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_LOAD_PAK>, std::string, std::string>,
-        IPC::Reply<bool>
-    > FSLoadPakMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_LOAD_PAK>, std::string, std::string>,
+            IPC::Reply<bool>
+            > FSLoadPakMsg;
     // FSLoadMapMetadataMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_LOAD_MAP_METADATA>>
-    > FSLoadMapMetadataMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_FS_LOAD_MAP_METADATA> >
+            > FSLoadMapMetadataMsg;
 
-    //ParseAddGlobalDefineMsg
+    // ParseAddGlobalDefineMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_ADD_GLOBAL_DEFINE>, std::string>,
-        IPC::Reply<int>
-    > ParseAddGlobalDefineMsg;
-    //ParseLoadSourceMsg
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_ADD_GLOBAL_DEFINE>, std::string>,
+            IPC::Reply<int>
+            > ParseAddGlobalDefineMsg;
+    // ParseLoadSourceMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_LOAD_SOURCE>, std::string>,
-        IPC::Reply<int>
-    > ParseLoadSourceMsg;
-    //ParseFreeSourceMsg
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_LOAD_SOURCE>, std::string>,
+            IPC::Reply<int>
+            > ParseLoadSourceMsg;
+    // ParseFreeSourceMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_FREE_SOURCE>, int>,
-        IPC::Reply<int>
-    > ParseFreeSourceMsg;
-    //ParseReadTokenMsg
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_FREE_SOURCE>, int>,
+            IPC::Reply<int>
+            > ParseFreeSourceMsg;
+    // ParseReadTokenMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_READ_TOKEN>, int>,
-        IPC::Reply<bool, pc_token_t>
-    > ParseReadTokenMsg;
-    //ParseSourceFileAndLineMsg
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_READ_TOKEN>, int>,
+            IPC::Reply<bool, pc_token_t>
+            > ParseReadTokenMsg;
+    // ParseSourceFileAndLineMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_SOURCE_FILE_AND_LINE>, int>,
-        IPC::Reply<int, std::string, int>
-    > ParseSourceFileAndLineMsg;
+            IPC::Message<IPC::Id<VM::QVM_COMMON, QVM_COMMON_PARSE_SOURCE_FILE_AND_LINE>, int>,
+            IPC::Reply<int, std::string, int>
+            > ParseSourceFileAndLineMsg;
 
     // Misc Syscall Definitions
 
@@ -188,9 +188,9 @@ namespace VM {
 
     // CreateSharedMemoryMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<MISC, CREATE_SHARED_MEMORY>, uint32_t>,
-        IPC::Reply<IPC::SharedMemory>
-    > CreateSharedMemoryMsg;
+            IPC::Message<IPC::Id<MISC, CREATE_SHARED_MEMORY>, uint32_t>,
+            IPC::Reply<IPC::SharedMemory>
+            > CreateSharedMemoryMsg;
 
     // Command-Related Syscall Definitions
 
@@ -217,13 +217,13 @@ namespace VM {
 
     // ExecuteMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<COMMAND, EXECUTE>, std::string>
-    >ExecuteMsg;
+            IPC::Message<IPC::Id<COMMAND, EXECUTE>, std::string>
+            >ExecuteMsg;
     // CompleteMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<COMMAND, COMPLETE>, int, std::string, std::string>,
-        IPC::Reply<Cmd::CompletionResult>
-    > CompleteMsg;
+            IPC::Message<IPC::Id<COMMAND, COMPLETE>, int, std::string, std::string>,
+            IPC::Reply<Cmd::CompletionResult>
+            > CompleteMsg;
 
     // Cvar-Related Syscall Definitions
 
@@ -236,22 +236,22 @@ namespace VM {
 
     // RegisterCvarMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<CVAR, REGISTER_CVAR>, std::string, std::string, int, std::string>
-    > RegisterCvarMsg;
+            IPC::Message<IPC::Id<CVAR, REGISTER_CVAR>, std::string, std::string, int, std::string>
+            > RegisterCvarMsg;
     // GetCvarMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<CVAR, GET_CVAR>, std::string>,
-        IPC::Reply<std::string>
-    > GetCvarMsg;
+            IPC::Message<IPC::Id<CVAR, GET_CVAR>, std::string>,
+            IPC::Reply<std::string>
+            > GetCvarMsg;
     // SetCvarMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<CVAR, SET_CVAR>, std::string, std::string>
-    > SetCvarMsg;
+            IPC::Message<IPC::Id<CVAR, SET_CVAR>, std::string, std::string>
+            > SetCvarMsg;
     // SetCvarMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<CVAR, ADD_CVAR_FLAGS>, std::string, int>,
-        IPC::Reply<bool>
-    > AddCvarFlagsMsg;
+            IPC::Message<IPC::Id<CVAR, ADD_CVAR_FLAGS>, std::string, int>,
+            IPC::Reply<bool>
+            > AddCvarFlagsMsg;
 
     enum VMCvarMessages {
         ON_VALUE_CHANGED
@@ -259,9 +259,9 @@ namespace VM {
 
     // OnValueChangedMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<CVAR, ON_VALUE_CHANGED>, std::string, std::string>,
-        IPC::Reply<bool, std::string>
-    > OnValueChangedMsg;
+            IPC::Message<IPC::Id<CVAR, ON_VALUE_CHANGED>, std::string, std::string>,
+            IPC::Reply<bool, std::string>
+            > OnValueChangedMsg;
 
     // Log-Related Syscall Definitions
 
@@ -290,58 +290,58 @@ namespace VM {
 
     // FSInitializeMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_INITIALIZE>>,
-        IPC::Reply<std::string, std::string, std::vector<FS::PakInfo>, std::vector<FS::LoadedPakInfo>, std::unordered_map<std::string, std::pair<uint32_t, FS::offset_t>>>
-    > FSInitializeMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_INITIALIZE> >,
+            IPC::Reply<std::string, std::string, std::vector<FS::PakInfo>, std::vector<FS::LoadedPakInfo>, std::unordered_map<std::string, std::pair<uint32_t, FS::offset_t> > >
+            > FSInitializeMsg;
     // FSHomePathOpenModeMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_OPENMODE>, std::string, uint32_t>,
-        IPC::Reply<Util::optional<IPC::OwnedFileHandle>>
-    > FSHomePathOpenModeMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_OPENMODE>, std::string, uint32_t>,
+            IPC::Reply<Util::optional<IPC::OwnedFileHandle> >
+            > FSHomePathOpenModeMsg;
     // FSHomePathFileExistsMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_FILEEXISTS>, std::string>,
-        IPC::Reply<bool>
-    > FSHomePathFileExistsMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_FILEEXISTS>, std::string>,
+            IPC::Reply<bool>
+            > FSHomePathFileExistsMsg;
     // FSHomePathTimestampMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_TIMESTAMP>, std::string>,
-        IPC::Reply<Util::optional<uint64_t>>
-    > FSHomePathTimestampMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_TIMESTAMP>, std::string>,
+            IPC::Reply<Util::optional<uint64_t> >
+            > FSHomePathTimestampMsg;
     // FSHomePathMoveFileMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_MOVEFILE>, std::string, std::string>,
-        IPC::Reply<bool>
-    > FSHomePathMoveFileMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_MOVEFILE>, std::string, std::string>,
+            IPC::Reply<bool>
+            > FSHomePathMoveFileMsg;
     // FSHomePathDeleteFileMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_DELETEFILE>, std::string>,
-        IPC::Reply<bool>
-    > FSHomePathDeleteFileMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_DELETEFILE>, std::string>,
+            IPC::Reply<bool>
+            > FSHomePathDeleteFileMsg;
     // FSHomePathListFilesMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_LISTFILES>, std::string>,
-        IPC::Reply<Util::optional<std::vector<std::string>>>
-    > FSHomePathListFilesMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_LISTFILES>, std::string>,
+            IPC::Reply<Util::optional<std::vector<std::string> > >
+            > FSHomePathListFilesMsg;
     // FSHomePathListFilesRecursiveMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_LISTFILESRECURSIVE>, std::string>,
-        IPC::Reply<Util::optional<std::vector<std::string>>>
-    > FSHomePathListFilesRecursiveMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_HOMEPATH_LISTFILESRECURSIVE>, std::string>,
+            IPC::Reply<Util::optional<std::vector<std::string> > >
+            > FSHomePathListFilesRecursiveMsg;
     // FSPakPathOpenMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_OPEN>, uint32_t, std::string>,
-        IPC::Reply<Util::optional<IPC::OwnedFileHandle>>
-    > FSPakPathOpenMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_OPEN>, uint32_t, std::string>,
+            IPC::Reply<Util::optional<IPC::OwnedFileHandle> >
+            > FSPakPathOpenMsg;
     // FSPakPathTimestampMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_TIMESTAMP>, uint32_t, std::string>,
-        IPC::Reply<Util::optional<uint64_t>>
-    > FSPakPathTimestampMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_TIMESTAMP>, uint32_t, std::string>,
+            IPC::Reply<Util::optional<uint64_t> >
+            > FSPakPathTimestampMsg;
     // FSPakPathLoadPakMsg
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_LOADPAK>, uint32_t, Util::optional<uint32_t>, std::string>
-    > FSPakPathLoadPakMsg;
+            IPC::Message<IPC::Id<FILESYSTEM, FS_PAKPATH_LOADPAK>, uint32_t, Util::optional<uint32_t>, std::string>
+            > FSPakPathLoadPakMsg;
 
 }
 

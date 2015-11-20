@@ -31,17 +31,17 @@ along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 #define S_BUILTIN_LAYOUT           "*BUILTIN*"
 
-#define N_( text ) text
-#define P_( one, many, count ) ( ( count ) == 1 ? ( one ) : ( many ) )
+#define N_(text) text
+#define P_(one, many, count) ( (count) == 1 ? (one) : (many) )
 
 // factor applied to burning durations for randomization
-#define BURN_PERIODS_RAND_MOD ( 1.0f + ( random() - 0.5f ) * 2.0f * BURN_PERIODS_RAND )
+#define BURN_PERIODS_RAND_MOD (1.0f + (random() - 0.5f) * 2.0f * BURN_PERIODS_RAND)
 
 // resolves a variatingTime_t to a variated next level.time
-#define VariatedLevelTime( variableTime ) level.time + ( variableTime.time + variableTime.variance * crandom() ) * 1000
+#define VariatedLevelTime(variableTime) level.time + (variableTime.time + variableTime.variance * crandom() ) * 1000
 
-#define QUEUE_PLUS1(x)  ((( x ) + 1 ) % MAX_CLIENTS )
-#define QUEUE_MINUS1(x) ((( x ) + MAX_CLIENTS - 1 ) % MAX_CLIENTS )
+#define QUEUE_PLUS1(x)  (((x) + 1) % MAX_CLIENTS)
+#define QUEUE_MINUS1(x) (((x) + MAX_CLIENTS - 1) % MAX_CLIENTS)
 
 
 // TODO: Move to HealthComponent.
@@ -53,6 +53,6 @@ along with Daemon Source Code.  If not, see <http://www.gnu.org/licenses/>.
 #define MAX_DAMAGE_REGIONS     16
 #define MAX_DAMAGE_REGION_TEXT 8192
 
-#define FOFS(x) ((size_t)&(((gentity_t *)0 )->x ))
+#define FOFS(x) ((size_t)&(((gentity_t*)0)->x))
 
 #endif // SG_DEFINITIONS_H_

@@ -33,66 +33,70 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // Used for legacy stage sensors
 #define MOMENTUM_PER_LEGACY_STAGE 100
 
-typedef enum
-{
-	CONF_GENERIC,
-	CONF_BUILDING,
-	CONF_DECONSTRUCTING,
-	CONF_DESTROYING,
-	CONF_KILLING,
+typedef enum {
+    CONF_GENERIC,
+    CONF_BUILDING,
+    CONF_DECONSTRUCTING,
+    CONF_DESTROYING,
+    CONF_KILLING,
 
-	NUM_CONF
+    NUM_CONF
 } momentum_t;
 
 // -------------
 // local methods
 // -------------
 
-const char *MomentumTypeToReason( momentum_t type )
-{
-	switch ( type )
-	{
-		case CONF_GENERIC:        return "generic actions";
-		case CONF_BUILDING:       return "building a structure";
-		case CONF_DECONSTRUCTING: return "deconstructing a structure";
-		case CONF_DESTROYING:     return "destryoing a structure";
-		case CONF_KILLING:        return "killing a player";
-		default:                  return "(unknown momentum type)";
-	}
+const char* MomentumTypeToReason(momentum_t type) {
+    switch (type) {
+    case CONF_GENERIC:
+        return "generic actions";
+
+    case CONF_BUILDING:
+        return "building a structure";
+
+    case CONF_DECONSTRUCTING:
+        return "deconstructing a structure";
+
+    case CONF_DESTROYING:
+        return "destryoing a structure";
+
+    case CONF_KILLING:
+        return "killing a player";
+
+    default:
+        return "(unknown momentum type)";
+    }
 }
 
 /**
  * Has to be called whenever the momentum of a team has been modified.
  */
-void MomentumChanged()
-{
-	int       playerNum;
-	gentity_t *player;
-	gclient_t *client;
-	team_t    team;
+void MomentumChanged() {
+    int playerNum;
+    gentity_t* player;
+    gclient_t* client;
+    team_t team;
 
-	// send to clients
-	for ( playerNum = 0; playerNum < level.maxclients; playerNum++ )
-	{
-		player = &g_entities[ playerNum ];
-		client = player->client;
+    // send to clients
+    for (playerNum = 0; playerNum < level.maxclients; playerNum++) {
+        player = &g_entities[playerNum];
+        client = player->client;
 
-		if ( !client )
-		{
-			continue;
-		}
+        if (!client) {
+            continue;
+        }
 
-		team = (team_t) client->pers.team;
+        team = (team_t) client->pers.team;
 
-		if ( team > TEAM_NONE && team < NUM_TEAMS )
-		{
-			client->ps.persistant[ PERS_MOMENTUM ] = ( short )
-				( level.team[ team ].momentum * 10.0f + 0.5f );
-		}
-	}
+        if (team > TEAM_NONE && team < NUM_TEAMS) {
+            client->ps.persistant[PERS_MOMENTUM] = (short)
+                                                   (level.team[team].momentum * 10.0f + 0.5f);
+        }
+    }
 
-	// check team progress
-	G_UpdateUnlockables();
+    // check team progress
+    G_UpdateUnlockables();
 }
 
 /**
@@ -100,112 +104,98 @@ void MomentumChanged()
  *
  * To be called after the team's momentum has been modified.
  */
-void NotifyLegacyStageSensors( team_t team, float amount )
-{
-	int   stage;
-	float momentum;
+void NotifyLegacyStageSensors(team_t team, float amount) {
+    int stage;
+    float momentum;
 
-	for ( stage = 1; stage < 3; stage++ )
-	{
-		momentum = stage * ( float )MOMENTUM_PER_LEGACY_STAGE;
+    for (stage = 1; stage < 3; stage++) {
+        momentum = stage * (float)MOMENTUM_PER_LEGACY_STAGE;
 
-		if ( ( level.team[ team ].momentum - amount < momentum ) ==
-		     ( level.team[ team ].momentum          > momentum ) )
-		{
-			if      ( amount > 0.0f )
-			{
-				G_notify_sensor_stage( team, stage - 1, stage     );
-			}
-			else if ( amount < 0.0f )
-			{
-				G_notify_sensor_stage( team, stage,     stage - 1 );
-			}
-		}
-	}
+        if ( (level.team[team].momentum - amount < momentum) ==
+             (level.team[team].momentum          > momentum) ) {
+            if (amount > 0.0f) {
+                G_notify_sensor_stage(team, stage - 1, stage);
+            } else if (amount < 0.0f) {
+                G_notify_sensor_stage(team, stage, stage - 1);
+            }
+        }
+    }
 }
 
-static INLINE float MomentumTimeMod()
-{
-	if ( g_momentumRewardDoubleTime.value <= 0.0f )
-	{
-		return 1.0f;
-	}
-	else
-	{
-		// ln(2) ~= 0.6931472
-		return exp( 0.6931472f * ( ( level.matchTime / 60000.0f ) / g_momentumRewardDoubleTime.value ) );
-	}
+static INLINE float MomentumTimeMod() {
+    if (g_momentumRewardDoubleTime.value <= 0.0f) {
+        return 1.0f;
+    } else {
+        // ln(2) ~= 0.6931472
+        return exp(0.6931472f * ( (level.matchTime / 60000.0f) / g_momentumRewardDoubleTime.value) );
+    }
 }
 
 /**
  * @todo Currently this function is just a guess, find out the correct mod via statistics.
  */
-static INLINE float MomentumPlayerCountMod()
-{
-	int playerCount = std::max( 2, level.team[ TEAM_ALIENS ].numClients +
-	                               level.team[ TEAM_HUMANS ].numClients );
+static INLINE float MomentumPlayerCountMod() {
+    int playerCount = std::max(2, level.team[TEAM_ALIENS].numClients +
+                               level.team[TEAM_HUMANS].numClients);
 
-	// HACK: This uses the average number of players taking part in development games so that the
-	//       average momentum gain through all matches remains unchanged for now.
-	return 9.0f / (float)playerCount;
+    // HACK: This uses the average number of players taking part in development games so that the
+    // average momentum gain through all matches remains unchanged for now.
+    return 9.0f / (float)playerCount;
 }
 
 /**
  * Modifies a momentum reward based on type, player count and match time.
  */
-static float MomentumMod( momentum_t type )
-{
-	float baseMod, typeMod, timeMod, playerCountMod, mod;
+static float MomentumMod(momentum_t type) {
+    float baseMod, typeMod, timeMod, playerCountMod, mod;
 
-	// type mod
-	switch ( type )
-	{
-		case CONF_KILLING:
-			baseMod        = g_momentumBaseMod.value;
-			typeMod        = g_momentumKillMod.value;
-			timeMod        = MomentumTimeMod();
-			playerCountMod = MomentumPlayerCountMod();
-			break;
+    // type mod
+    switch (type) {
+    case CONF_KILLING:
+        baseMod        = g_momentumBaseMod.value;
+        typeMod        = g_momentumKillMod.value;
+        timeMod        = MomentumTimeMod();
+        playerCountMod = MomentumPlayerCountMod();
+        break;
 
-		case CONF_BUILDING:
-			baseMod        = g_momentumBaseMod.value;
-			typeMod        = g_momentumBuildMod.value;
-			timeMod        = MomentumTimeMod();
-			playerCountMod = 1.0f;
-			break;
+    case CONF_BUILDING:
+        baseMod        = g_momentumBaseMod.value;
+        typeMod        = g_momentumBuildMod.value;
+        timeMod        = MomentumTimeMod();
+        playerCountMod = 1.0f;
+        break;
 
-		case CONF_DECONSTRUCTING:
-			// always used on top of build mod, so neutral baseMod/timeMod/playerCountMod
-			baseMod        = 1.0f;
-			typeMod        = g_momentumDeconMod.value;
-			timeMod        = 1.0f;
-			playerCountMod = 1.0f;
-			break;
+    case CONF_DECONSTRUCTING:
+        // always used on top of build mod, so neutral baseMod/timeMod/playerCountMod
+        baseMod        = 1.0f;
+        typeMod        = g_momentumDeconMod.value;
+        timeMod        = 1.0f;
+        playerCountMod = 1.0f;
+        break;
 
-		case CONF_DESTROYING:
-			baseMod        = g_momentumBaseMod.value;
-			typeMod        = g_momentumDestroyMod.value;
-			timeMod        = MomentumTimeMod();
-			playerCountMod = 1.0f;
-			break;
+    case CONF_DESTROYING:
+        baseMod        = g_momentumBaseMod.value;
+        typeMod        = g_momentumDestroyMod.value;
+        timeMod        = MomentumTimeMod();
+        playerCountMod = 1.0f;
+        break;
 
-		case CONF_GENERIC:
-		default:
-			baseMod        = 1.0f;
-			typeMod        = 1.0f;
-			timeMod        = 1.0f;
-			playerCountMod = 1.0f;
-	}
+    case CONF_GENERIC:
+    default:
+        baseMod        = 1.0f;
+        typeMod        = 1.0f;
+        timeMod        = 1.0f;
+        playerCountMod = 1.0f;
+    }
 
-	mod = baseMod * typeMod * timeMod * playerCountMod;
+    mod = baseMod * typeMod * timeMod * playerCountMod;
 
-	if ( g_debugMomentum.integer > 1 )
-	{
-		Com_Printf( "Momentum mod for %s: Base %.2f, Type %.2f, Time %.2f, Playercount %.2f → %.2f\n",
-		            MomentumTypeToReason( type ), baseMod, typeMod, timeMod, playerCountMod, mod );
-	}
+    if (g_debugMomentum.integer > 1) {
+        Com_Printf("Momentum mod for %s: Base %.2f, Type %.2f, Time %.2f, Playercount %.2f → %.2f\n",
+                   MomentumTypeToReason(type), baseMod, typeMod, timeMod, playerCountMod, mod);
+    }
 
-	return mod;
+    return mod;
 }
 
 /**
@@ -213,86 +203,72 @@ static float MomentumMod( momentum_t type )
  *
  * Will notify the client hwo earned it if given, otherwise the whole team, with an event.
  */
-static float AddMomentum( momentum_t type, team_t team, float amount,
-                            gentity_t *source, bool skipChangeHook )
-{
-	gentity_t *event = nullptr;
-	gclient_t *client;
-	const char *clientName;
+static float AddMomentum(momentum_t type, team_t team, float amount,
+                         gentity_t* source, bool skipChangeHook) {
+    gentity_t* event = nullptr;
+    gclient_t* client;
+    const char* clientName;
 
-	if ( team <= TEAM_NONE || team >= NUM_TEAMS )
-	{
-		return 0.0f;
-	}
+    if (team <= TEAM_NONE || team >= NUM_TEAMS) {
+        return 0.0f;
+    }
 
-	// apply modifier
-	amount *= MomentumMod( type );
+    // apply modifier
+    amount *= MomentumMod(type);
 
-	// limit a team's total
-	if ( level.team[ team ].momentum + amount > MOMENTUM_MAX )
-	{
-		amount = MOMENTUM_MAX - level.team[ team ].momentum;
-	}
+    // limit a team's total
+    if (level.team[team].momentum + amount > MOMENTUM_MAX) {
+        amount = MOMENTUM_MAX - level.team[team].momentum;
+    }
 
-	if ( amount != 0.0f )
-	{
-		// add momentum to team
-		level.team[ team ].momentum += amount;
+    if (amount != 0.0f) {
+        // add momentum to team
+        level.team[team].momentum += amount;
 
-		// run change hook if requested
-		if ( !skipChangeHook )
-		{
-			MomentumChanged();
-		}
+        // run change hook if requested
+        if (!skipChangeHook) {
+            MomentumChanged();
+        }
 
-		// notify source
-		if ( source )
-		{
-			client = source->client;
+        // notify source
+        if (source) {
+            client = source->client;
 
-			if ( client && client->pers.team == team )
-			{
-				event = G_NewTempEntity( client->ps.origin, EV_MOMENTUM );
-				event->r.svFlags = SVF_SINGLECLIENT;
-				event->r.singleClient = client->ps.clientNum;
-			}
-		}
-		else
-		{
-			event = G_NewTempEntity( vec3_origin, EV_MOMENTUM );
-			event->r.svFlags = ( SVF_BROADCAST | SVF_CLIENTMASK );
-			G_TeamToClientmask( team, &( event->r.loMask ), &( event->r.hiMask ) );
-		}
-		if ( event )
-		{
-			// TODO: Use more bits for momentum value
-			event->s.eventParm = 0;
-			event->s.otherEntityNum = 0;
-			event->s.otherEntityNum2 = ( int )( fabs( amount ) * 10.0f + 0.5f );
-			event->s.groundEntityNum = amount < 0.0f ? true : false;
-		}
+            if (client && client->pers.team == team) {
+                event = G_NewTempEntity(client->ps.origin, EV_MOMENTUM);
+                event->r.svFlags = SVF_SINGLECLIENT;
+                event->r.singleClient = client->ps.clientNum;
+            }
+        } else {
+            event = G_NewTempEntity(vec3_origin, EV_MOMENTUM);
+            event->r.svFlags = (SVF_BROADCAST | SVF_CLIENTMASK);
+            G_TeamToClientmask(team, &(event->r.loMask), &(event->r.hiMask) );
+        }
+        if (event) {
+            // TODO: Use more bits for momentum value
+            event->s.eventParm = 0;
+            event->s.otherEntityNum = 0;
+            event->s.otherEntityNum2 = (int)(fabs(amount) * 10.0f + 0.5f);
+            event->s.groundEntityNum = amount < 0.0f ? true : false;
+        }
 
-		// notify legacy stage sensors
-		NotifyLegacyStageSensors( team, amount );
-	}
+        // notify legacy stage sensors
+        NotifyLegacyStageSensors(team, amount);
+    }
 
-	if ( g_debugMomentum.integer > 0 )
-	{
-		if ( source && source->client )
-		{
-			clientName = source->client->pers.netname;
-		}
-		else
-		{
-			clientName = "no source";
-		}
+    if (g_debugMomentum.integer > 0) {
+        if (source && source->client) {
+            clientName = source->client->pers.netname;
+        } else {
+            clientName = "no source";
+        }
 
-		Com_Printf( "Momentum: %.2f to %s (%s by %s for %s)\n",
-		            amount, BG_TeamNamePlural( team ), amount < 0.0f ? "lost" : "earned",
-		            clientName, MomentumTypeToReason( type ) );
-	}
+        Com_Printf("Momentum: %.2f to %s (%s by %s for %s)\n",
+                   amount, BG_TeamNamePlural(team), amount < 0.0f ? "lost" : "earned",
+                   clientName, MomentumTypeToReason(type) );
+    }
 
-	return amount;
+    return amount;
 }
 
 // ------------
@@ -302,58 +278,52 @@ static float AddMomentum( momentum_t type, team_t team, float amount,
 /**
  * Exponentially decreases momentum.
  */
-void G_DecreaseMomentum()
-{
-	int          team;
-	float        amount;
+void G_DecreaseMomentum() {
+    int team;
+    float amount;
 
-	static float decreaseFactor = 1.0f, lastMomentumHalfLife = 0.0f;
-	static int   nextCalculation = 0;
+    static float decreaseFactor = 1.0f, lastMomentumHalfLife = 0.0f;
+    static int nextCalculation = 0;
 
-	if ( level.time < nextCalculation )
-	{
-		return;
-	}
+    if (level.time < nextCalculation) {
+        return;
+    }
 
-	if ( g_momentumHalfLife.value <= 0.0f )
-	{
-		return;
-	}
+    if (g_momentumHalfLife.value <= 0.0f) {
+        return;
+    }
 
-	// only calculate decreaseFactor if the server configuration changed
-	if ( lastMomentumHalfLife != g_momentumHalfLife.value )
-	{
-		// ln(2) ~= 0.6931472
-		decreaseFactor = exp( ( -0.6931472f / ( ( 60000.0f / DECREASE_MOMENTUM_PERIOD ) *
-		                                        g_momentumHalfLife.value ) ) );
+    // only calculate decreaseFactor if the server configuration changed
+    if (lastMomentumHalfLife != g_momentumHalfLife.value) {
+        // ln(2) ~= 0.6931472
+        decreaseFactor = exp( (-0.6931472f / ( (60000.0f / DECREASE_MOMENTUM_PERIOD) *
+                                               g_momentumHalfLife.value) ) );
 
-		lastMomentumHalfLife = g_momentumHalfLife.value;
-	}
+        lastMomentumHalfLife = g_momentumHalfLife.value;
+    }
 
-	// decrease momentum
-	for ( team = TEAM_NONE + 1; team < NUM_TEAMS; team++ )
-	{
-		amount = level.team[ team ].momentum * ( decreaseFactor - 1.0f );
+    // decrease momentum
+    for (team = TEAM_NONE + 1; team < NUM_TEAMS; team++) {
+        amount = level.team[team].momentum * (decreaseFactor - 1.0f);
 
-		level.team[ team ].momentum += amount;
+        level.team[team].momentum += amount;
 
-		// notify legacy stage sensors
-		NotifyLegacyStageSensors( (team_t) team, amount );
-	}
+        // notify legacy stage sensors
+        NotifyLegacyStageSensors( (team_t) team, amount);
+    }
 
-	MomentumChanged();
+    MomentumChanged();
 
-	nextCalculation = level.time + DECREASE_MOMENTUM_PERIOD;
+    nextCalculation = level.time + DECREASE_MOMENTUM_PERIOD;
 }
 
 /**
  * Adds momentum.
  */
-float G_AddMomentumGeneric( team_t team, float amount )
-{
-	AddMomentum( CONF_GENERIC, team, amount, nullptr, false );
+float G_AddMomentumGeneric(team_t team, float amount) {
+    AddMomentum(CONF_GENERIC, team, amount, nullptr, false);
 
-	return amount;
+    return amount;
 }
 
 /**
@@ -361,11 +331,10 @@ float G_AddMomentumGeneric( team_t team, float amount )
  *
  * G_AddMomentumEnd has to be called after all G_AddMomentum*Step steps are done.
  */
-float G_AddMomentumGenericStep( team_t team, float amount )
-{
-	AddMomentum( CONF_GENERIC, team, amount, nullptr, true );
+float G_AddMomentumGenericStep(team_t team, float amount) {
+    AddMomentum(CONF_GENERIC, team, amount, nullptr, true);
 
-	return amount;
+    return amount;
 }
 
 /**
@@ -374,14 +343,12 @@ float G_AddMomentumGenericStep( team_t team, float amount )
  * Is used for the buildlog entry, which is written before the actual reward happens.
  * Also used to calculate the deconstruction penalty for preplaced buildables.
  */
-float G_PredictMomentumForBuilding( gentity_t *buildable )
-{
-	if ( !buildable || buildable->s.eType != ET_BUILDABLE )
-	{
-		return 0.0f;
-	}
+float G_PredictMomentumForBuilding(gentity_t* buildable) {
+    if (!buildable || buildable->s.eType != ET_BUILDABLE) {
+        return 0.0f;
+    }
 
-	return BG_Buildable( buildable->s.modelindex )->buildPoints * MomentumMod( CONF_BUILDING );
+    return BG_Buildable(buildable->s.modelindex)->buildPoints * MomentumMod(CONF_BUILDING);
 }
 
 /**
@@ -389,65 +356,55 @@ float G_PredictMomentumForBuilding( gentity_t *buildable )
  *
  * Will save the reward with the buildable.
  */
-float G_AddMomentumForBuilding( gentity_t *buildable )
-{
-	float     value, reward;
-	team_t    team;
-	gentity_t *builder;
+float G_AddMomentumForBuilding(gentity_t* buildable) {
+    float value, reward;
+    team_t team;
+    gentity_t* builder;
 
-	if ( !buildable || buildable->s.eType != ET_BUILDABLE )
-	{
-		return 0.0f;
-	}
+    if (!buildable || buildable->s.eType != ET_BUILDABLE) {
+        return 0.0f;
+    }
 
-	value   = BG_Buildable( buildable->s.modelindex )->buildPoints;
-	team    = BG_Buildable( buildable->s.modelindex )->team;
+    value   = BG_Buildable(buildable->s.modelindex)->buildPoints;
+    team    = BG_Buildable(buildable->s.modelindex)->team;
 
-	if ( buildable->builtBy->slot != -1 )
-	{
-		builder = &g_entities[ buildable->builtBy->slot ];
-	}
-	else
-	{
-		builder = nullptr;
-	}
+    if (buildable->builtBy->slot != -1) {
+        builder = &g_entities[buildable->builtBy->slot];
+    } else {
+        builder = nullptr;
+    }
 
-	reward = AddMomentum( CONF_BUILDING, team, value, builder, false );
+    reward = AddMomentum(CONF_BUILDING, team, value, builder, false);
 
-	// Save reward with buildable so it can be reverted
-	buildable->momentumEarned = reward;
+    // Save reward with buildable so it can be reverted
+    buildable->momentumEarned = reward;
 
-	return reward;
+    return reward;
 }
 
 /**
  * Removes momentum for deconstructing a buildable.
  */
-float G_RemoveMomentumForDecon( gentity_t *buildable, gentity_t *deconner )
-{
-	float     value;
-	team_t    team;
+float G_RemoveMomentumForDecon(gentity_t* buildable, gentity_t* deconner) {
+    float value;
+    team_t team;
 
-	// sanity check buildable
-	if ( !buildable || buildable->s.eType != ET_BUILDABLE )
-	{
-		return 0.0f;
-	}
-	team           = BG_Buildable( buildable->s.modelindex )->team;
+    // sanity check buildable
+    if (!buildable || buildable->s.eType != ET_BUILDABLE) {
+        return 0.0f;
+    }
+    team           = BG_Buildable(buildable->s.modelindex)->team;
 
-	if ( buildable->momentumEarned )
-	{
-		value = buildable->momentumEarned;
-	}
-	else
-	{
-		// assume the buildable has just been placed
-		value = G_PredictMomentumForBuilding( buildable );
-	}
+    if (buildable->momentumEarned) {
+        value = buildable->momentumEarned;
+    } else {
+        // assume the buildable has just been placed
+        value = G_PredictMomentumForBuilding(buildable);
+    }
 
-	value *= buildable->deconHealthFrac;
+    value *= buildable->deconHealthFrac;
 
-	return AddMomentum( CONF_DECONSTRUCTING, team, -value, deconner, false );
+    return AddMomentum(CONF_DECONSTRUCTING, team, -value, deconner, false);
 }
 
 /**
@@ -455,25 +412,22 @@ float G_RemoveMomentumForDecon( gentity_t *buildable, gentity_t *deconner )
  *
  * G_AddMomentumEnd has to be called after all G_AddMomentum*Step steps are done.
  */
-float G_AddMomentumForDestroyingStep( gentity_t *buildable, gentity_t *attacker, float amount )
-{
-	team_t team;
+float G_AddMomentumForDestroyingStep(gentity_t* buildable, gentity_t* attacker, float amount) {
+    team_t team;
 
-	// sanity check buildable
-	if ( !buildable || buildable->s.eType != ET_BUILDABLE )
-	{
-		return 0.0f;
-	}
+    // sanity check buildable
+    if (!buildable || buildable->s.eType != ET_BUILDABLE) {
+        return 0.0f;
+    }
 
-	// sanity check attacker
-	if ( !attacker || !attacker->client )
-	{
-		return 0.0f;
-	}
+    // sanity check attacker
+    if (!attacker || !attacker->client) {
+        return 0.0f;
+    }
 
-	team = (team_t) attacker->client->pers.team;
+    team = (team_t) attacker->client->pers.team;
 
-	return AddMomentum( CONF_DESTROYING, team, amount, attacker, true );
+    return AddMomentum(CONF_DESTROYING, team, amount, attacker, true);
 }
 
 /**
@@ -481,33 +435,29 @@ float G_AddMomentumForDestroyingStep( gentity_t *buildable, gentity_t *attacker,
  *
  * G_AddMomentumEnd has to be called after all G_AddMomentum*Step steps are done.
  */
-float G_AddMomentumForKillingStep( gentity_t *victim, gentity_t *attacker, float share )
-{
-	float  value;
-	team_t team;
+float G_AddMomentumForKillingStep(gentity_t* victim, gentity_t* attacker, float share) {
+    float value;
+    team_t team;
 
-	// sanity check victim
-	if ( !victim || !victim->client )
-	{
-		return 0.0f;
-	}
+    // sanity check victim
+    if (!victim || !victim->client) {
+        return 0.0f;
+    }
 
-	// sanity check attacker
-	if ( !attacker || !attacker->client )
-	{
-		return 0.0f;
-	}
+    // sanity check attacker
+    if (!attacker || !attacker->client) {
+        return 0.0f;
+    }
 
-	value = BG_GetValueOfPlayer( &victim->client->ps ) * MOMENTUM_PER_CREDIT * share;
-	team  = (team_t) attacker->client->pers.team;
+    value = BG_GetValueOfPlayer(&victim->client->ps) * MOMENTUM_PER_CREDIT * share;
+    team  = (team_t) attacker->client->pers.team;
 
-	return AddMomentum( CONF_KILLING, team, value, attacker, true );
+    return AddMomentum(CONF_KILLING, team, value, attacker, true);
 }
 
 /**
  * Has to be called after the last G_AddMomentum*Step step.
  */
-void G_AddMomentumEnd()
-{
-	MomentumChanged();
+void G_AddMomentumEnd() {
+    MomentumChanged();
 }

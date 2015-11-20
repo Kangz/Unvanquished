@@ -35,64 +35,70 @@ Maryland 20850 USA.
 
 namespace Color {
 
-/*
- * Returns a 4 bit integer with the bits following this pattern:
- *  1 red
- *  2 green
- *  4 blue
- *  8 bright
- */
-int To4bit(const Color& c) NOEXCEPT
-{
-    int color = 0;
+    /*
+     * Returns a 4 bit integer with the bits following this pattern:
+     *  1 red
+     *  2 green
+     *  4 blue
+     *  8 bright
+     */
+    int To4bit(const Color& c) NOEXCEPT {
+        int color = 0;
 
-    float cmax = std::max({c.Red(),c.Green(),c.Blue()});
-    float cmin = std::min({c.Red(),c.Green(),c.Blue()});
-    float delta = cmax-cmin;
+        float cmax = std::max({c.Red(), c.Green(), c.Blue()});
+        float cmin = std::min({c.Red(), c.Green(), c.Blue()});
+        float delta = cmax-cmin;
 
-    if ( delta > 0 )
-    {
-        float hue = 0;
-        if ( c.Red() == cmax )
-            hue = (c.Green()-c.Blue())/delta;
-        else if ( c.Green() == cmax )
-            hue = (c.Blue()-c.Red())/delta + 2;
-        else if ( c.Blue() == cmax )
-            hue = (c.Red()-c.Green())/delta + 4;
+        if (delta > 0) {
+            float hue = 0;
+            if (c.Red() == cmax) {
+                hue = (c.Green()-c.Blue())/delta;
+            } else if (c.Green() == cmax) {
+                hue = (c.Blue()-c.Red())/delta + 2;
+            } else if (c.Blue() == cmax) {
+                hue = (c.Red()-c.Green())/delta + 4;
+            }
 
-        float sat = delta / cmax;
-        if ( sat >= 0.3 )
-        {
-            if ( hue < 0 )
-                hue += 6;
+            float sat = delta / cmax;
+            if (sat >= 0.3) {
+                if (hue < 0) {
+                    hue += 6;
+                }
 
-            if ( hue <= 0.5 )      color = 1; // red
-            else if ( hue <= 1.5 ) color = 3; // yellow
-            else if ( hue <= 2.5 ) color = 2; // green
-            else if ( hue <= 3.5 ) color = 6; // cyan
-            else if ( hue <= 4.5 ) color = 4; // blue
-            else if ( hue <= 5.5 ) color = 5; // magenta
-            else                   color = 1; // red
+                if (hue <= 0.5) {
+                    color = 1; // red
+                } else if (hue <= 1.5) {
+                    color = 3; // yellow
+                } else if (hue <= 2.5) {
+                    color = 2; // green
+                } else if (hue <= 3.5) {
+                    color = 6; // cyan
+                } else if (hue <= 4.5) {
+                    color = 4; // blue
+                } else if (hue <= 5.5) {
+                    color = 5; // magenta
+                } else {                                                          color = 1; // red
+                }
+            } else if (cmax >= 0.5) {
+                color = 7;
+            }
+
+            if ( (cmax + cmin) / 2 >= 0.64) {
+                color |= 8; // bright
+            }
+        } else {
+            if (cmax > 0.8) {
+                color = 15; // white
+            } else if (cmax > 0.53) {
+                color = 7; // silver
+            } else if (cmax > 0.27) {
+                color = 8; // gray
+            } else {
+                color = 0; // black
+            }
         }
-        else if ( cmax >= 0.5 )
-            color = 7;
 
-        if ( ( cmax + cmin ) / 2 >= 0.64 )
-            color |= 8; // bright
+        return color;
     }
-    else
-    {
-        if ( cmax > 0.8 )
-            color = 15; // white
-        else if ( cmax > 0.53 )
-            color = 7; // silver
-        else if ( cmax > 0.27 )
-            color = 8; // gray
-        else
-            color = 0; // black
-    }
-
-    return color;
-}
 
 } // namespace Color

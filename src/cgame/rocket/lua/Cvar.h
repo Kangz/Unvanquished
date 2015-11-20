@@ -39,23 +39,23 @@ Maryland 20850 USA.
 #include <Rocket/Core/Lua/LuaType.h>
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
-// Dummy class for cvars
-class Cvar
-{
+    namespace Core {
+        namespace Lua {
+            // Dummy class for cvars
+            class Cvar {
 
-};
+            };
 
-template<> void ExtraInit<Cvar>(lua_State* L, int metatable_index);
-int Cvarget(lua_State* L);
-int Cvarset(lua_State* L);
-int Cvararchive(lua_State* L);
+            template<>
+            void ExtraInit<Cvar>(lua_State* L, int metatable_index);
+            int Cvarget(lua_State* L);
+            int Cvarset(lua_State* L);
+            int Cvararchive(lua_State* L);
 
-extern RegType<Cvar> CvarMethods[];
-extern luaL_Reg CvarGetters[];
-extern luaL_Reg CvarSetters[];
-}
-}
+            extern RegType<Cvar> CvarMethods[];
+            extern luaL_Reg CvarGetters[];
+            extern luaL_Reg CvarSetters[];
+        }
+    }
 }
 #endif

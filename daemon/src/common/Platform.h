@@ -33,57 +33,57 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Platform-specific configuration
 #ifdef _WIN32
-#define DLL_EXT ".dll"
-#define EXE_EXT ".exe"
-#define PATH_SEP '\\'
-#define PLATFORM_STRING "Windows"
+    #define DLL_EXT ".dll"
+    #define EXE_EXT ".exe"
+    #define PATH_SEP '\\'
+    #define PLATFORM_STRING "Windows"
 #elif defined(__APPLE__)
-#define DLL_EXT ".so"
-#define EXE_EXT ""
-#define PATH_SEP '/'
-#define PLATFORM_STRING "Mac OS X"
+    #define DLL_EXT ".so"
+    #define EXE_EXT ""
+    #define PATH_SEP '/'
+    #define PLATFORM_STRING "Mac OS X"
 #elif defined(__linux__)
-#define DLL_EXT ".so"
-#define EXE_EXT ""
-#define PATH_SEP '/'
-#define PLATFORM_STRING "Linux"
+    #define DLL_EXT ".so"
+    #define EXE_EXT ""
+    #define PATH_SEP '/'
+    #define PLATFORM_STRING "Linux"
 #elif defined(__native_client__)
-#define PLATFORM_STRING "Native Client"
+    #define PLATFORM_STRING "Native Client"
 #else
-#error "Platform not supported"
+    #error "Platform not supported"
 #endif
 
 // Architecture-specific configuration
 #if defined(__i386__) || defined(_M_IX86)
-#undef __i386__
-#define __i386__ 1
-#define ARCH_STRING "x86"
+    #undef __i386__
+    #define __i386__ 1
+    #define ARCH_STRING "x86"
 #elif defined(__amd64) || defined(__amd64__) || defined(_M_AMD64) || defined(__x86_64__) || defined(_M_X64)
-#undef __x86_64__
-#define __x86_64__ 1
-#define ARCH_STRING "x86_64"
+    #undef __x86_64__
+    #define __x86_64__ 1
+    #define ARCH_STRING "x86_64"
 #elif defined(__pnacl__)
-#define ARCH_STRING "PNaCl"
+    #define ARCH_STRING "PNaCl"
 #else
-#error "Architecture not supported"
+    #error "Architecture not supported"
 #endif
 
 // SSE support
 #if defined(__x86_64__) || defined(__SSE__) || _M_IX86_FP >= 1
-#include <xmmintrin.h>
-#if defined(__x86_64__) || defined(__SSE2__) || _M_IX86_FP >= 2
-#include <emmintrin.h>
-#define idx86_sse 2
-#else
-#define idx86_sse 1
-#endif
+    #include <xmmintrin.h>
+    #if defined(__x86_64__) || defined(__SSE2__) || _M_IX86_FP >= 2
+        #include <emmintrin.h>
+        #define idx86_sse 2
+    #else
+        #define idx86_sse 1
+    #endif
 #endif
 
 // VM Prefixes
 #if !defined(VM_NAME)
-#define VM_STRING_PREFIX ""
+    #define VM_STRING_PREFIX ""
 #else
-#define VM_STRING_PREFIX XSTRING(VM_NAME) "."
+    #define VM_STRING_PREFIX XSTRING(VM_NAME) "."
 #endif
 
 #endif // COMMON_PLATFORM_H_

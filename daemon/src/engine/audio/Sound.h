@@ -51,7 +51,7 @@ namespace Audio {
         class Source;
     }
 
-    //TODO sound.mute
+    // TODO sound.mute
     class Sound {
         public:
             Sound();
@@ -139,4 +139,4 @@ namespace Audio {
 
 }
 
-#endif //AUDIO_SOUND_H_
+#endif // AUDIO_SOUND_H_

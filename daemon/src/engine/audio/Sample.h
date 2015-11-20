@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Audio {
 
-    //TODO remove once we have VM handles
+    // TODO remove once we have VM handles
     template<typename T>
     class HandledResource {
         public:
@@ -43,7 +43,7 @@ namespace Audio {
             };
 
             static bool IsValidHandle(int handle) {
-                return handle >= 0 and (unsigned)handle < handles.size() and handles[handle].active;
+                return handle >= 0 and(unsigned) handle < handles.size() and handles[handle].active;
             }
             static std::shared_ptr<T> FromHandle(int handle) {
                 if (not IsValidHandle(handle)) {
@@ -73,7 +73,7 @@ namespace Audio {
             }
 
         protected:
-            HandledResource(): handle(-1) {
+            HandledResource() : handle(-1) {
             }
 
             ~HandledResource() {
@@ -96,7 +96,7 @@ namespace Audio {
     template<typename T>
     std::vector<int> HandledResource<T>::inactiveHandles;
 
-    class Sample: public HandledResource<Sample>, public Resource::Resource {
+    class Sample : public HandledResource<Sample>, public Resource::Resource {
         public:
             explicit Sample(std::string name);
             virtual ~Sample() OVERRIDE FINAL;
@@ -113,11 +113,11 @@ namespace Audio {
     void InitSamples();
     void ShutdownSamples();
 
-	std::vector<std::string> ListSamples();
+    std::vector<std::string> ListSamples();
 
     void BeginSampleRegistration();
     std::shared_ptr<Sample> RegisterSample(Str::StringRef filename);
     void EndSampleRegistration();
 }
 
-#endif //AUDIO_SAMPLE_H_
+#endif // AUDIO_SAMPLE_H_

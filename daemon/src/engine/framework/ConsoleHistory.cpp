@@ -32,117 +32,104 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ConsoleHistory.h"
 
 namespace Console {
-History::Container History::lines;
-std::mutex History::lines_mutex;
+    History::Container History::lines;
+    std::mutex History::lines_mutex;
 
-std::string History::GetFilename()
-{
-	return "conhistory" + Application::GetTraits().uniqueHomepathSuffix;
-}
+    std::string History::GetFilename() {
+        return "conhistory" + Application::GetTraits().uniqueHomepathSuffix;
+    }
 
-void History::Save() {
-	try {
-		FS::File f = FS::HomePath::OpenWrite(GetFilename());
+    void History::Save() {
+        try {
+            FS::File f = FS::HomePath::OpenWrite(GetFilename());
 
-		auto lock = Lock();
-		Container::size_type i = 0;
-		if ( lines.size() > SAVED_HISTORY_LINES )
-			i = lines.size() - SAVED_HISTORY_LINES;
-		for (; i < lines.size(); i++)
-		{
-			f.Write(lines[i].data(), lines[i].size());
-			f.Write("\n", 1);
-		}
-	} catch (const std::system_error& error) {
-		Log::Warn("Couldn't write %s: %s", GetFilename(), error.what());
-	}
-}
+            auto lock = Lock();
+            Container::size_type i = 0;
+            if (lines.size() > SAVED_HISTORY_LINES) {
+                i = lines.size() - SAVED_HISTORY_LINES;
+            }
+            for (; i < lines.size(); i++) {
+                f.Write(lines[i].data(), lines[i].size());
+                f.Write("\n", 1);
+            }
+        } catch (const std::system_error& error) {
+            Log::Warn("Couldn't write %s: %s", GetFilename(), error.what());
+        }
+    }
 
-void History::Load() {
-	std::string buffer;
+    void History::Load() {
+        std::string buffer;
 
-	try {
-		FS::File f = FS::HomePath::OpenRead(GetFilename());
-		buffer = f.ReadAll();
-	} catch (const std::system_error& error) {
-		Log::Warn("Couldn't read %s: %s", GetFilename(), error.what());
-	}
+        try {
+            FS::File f = FS::HomePath::OpenRead(GetFilename());
+            buffer = f.ReadAll();
+        } catch (const std::system_error& error) {
+            Log::Warn("Couldn't read %s: %s", GetFilename(), error.what());
+        }
 
-	auto lock = Lock();
-	lines.clear();
-	std::size_t currentPos = 0;
-	std::size_t nextPos = 0;
-	while (true)
-	{
-		nextPos = buffer.find('\n', currentPos);
-		if ( nextPos == std::string::npos )
-			break;
-		lines.emplace_back(buffer, currentPos, (nextPos - currentPos));
-		currentPos = nextPos + 1;
-	}
-}
+        auto lock = Lock();
+        lines.clear();
+        std::size_t currentPos = 0;
+        std::size_t nextPos = 0;
+        while (true) {
+            nextPos = buffer.find('\n', currentPos);
+            if (nextPos == std::string::npos) {
+                break;
+            }
+            lines.emplace_back(buffer, currentPos, (nextPos - currentPos));
+            currentPos = nextPos + 1;
+        }
+    }
 
-History::History()
-	: current_line( std::numeric_limits<Container::size_type>::max() )
-{}
+    History::History()
+        : current_line(std::numeric_limits<Container::size_type>::max() ) {
+    }
 
-void History::Add( const Line& text )
-{
-	auto lock = Lock();
+    void History::Add(const Line& text) {
+        auto lock = Lock();
 
-	if ( lines.empty() || text != lines.back() )
-	{
-		lines.push_back(std::move( text ));
-	}
+        if (lines.empty() || text != lines.back() ) {
+            lines.push_back(std::move(text));
+        }
 
-	current_line = lines.size();
-	unfinished.clear();
+        current_line = lines.size();
+        unfinished.clear();
 
-	lock.unlock();
-	Save();
-}
+        lock.unlock();
+        Save();
+    }
 
-void History::PrevLine( Line& text )
-{
-	auto lock = Lock();
+    void History::PrevLine(Line& text) {
+        auto lock = Lock();
 
-	if ( lines.empty() )
-	{
-		return;
-	}
+        if (lines.empty() ) {
+            return;
+        }
 
-	if ( !text.empty() && ( current_line >= lines.size() || text != lines[current_line] ) )
-	{
-		unfinished = text;
-	}
+        if (!text.empty() && (current_line >= lines.size() || text != lines[current_line]) ) {
+            unfinished = text;
+        }
 
-	if ( current_line >= lines.size() )
-	{
-		current_line = lines.size() - 1;
-	}
-	else if ( current_line > 0 )
-	{
-		current_line--;
-	}
+        if (current_line >= lines.size() ) {
+            current_line = lines.size() - 1;
+        } else if (current_line > 0) {
+            current_line--;
+        }
 
-	text = lines[current_line];
-}
+        text = lines[current_line];
+    }
 
-void History::NextLine( Line& text )
-{
-	auto lock = Lock();
+    void History::NextLine(Line& text) {
+        auto lock = Lock();
 
-	if ( lines.empty() || current_line >= lines.size() - 1 )
-	{
-		text = unfinished;
-		unfinished.clear();
-		current_line = lines.size();
-	}
-	else
-	{
-		current_line++;
-		text = lines[current_line];
-	}
-}
+        if (lines.empty() || current_line >= lines.size() - 1) {
+            text = unfinished;
+            unfinished.clear();
+            current_line = lines.size();
+        } else {
+            current_line++;
+            text = lines[current_line];
+        }
+    }
 
 }

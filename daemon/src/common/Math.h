@@ -33,14 +33,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Math {
 
-	template<typename T> static inline T Clamp(T value, T min, T max)
-	{
-		// if min > max, use min instead of max
-		return std::max(min, std::min(std::max(min, max), value));
-	}
+    template<typename T>
+    static inline T Clamp(T value, T min, T max) {
+        // if min > max, use min instead of max
+        return std::max(min, std::min(std::max(min, max), value));
+    }
 
 }
 
 #include "math/Vector.h"
 
-#endif //COMMON_MATH_H_
+#endif // COMMON_MATH_H_

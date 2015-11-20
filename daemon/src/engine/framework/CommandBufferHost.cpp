@@ -32,22 +32,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace IPC {
 
-    CommandBufferHost::CommandBufferHost(std::string name): name(name), logs(name + ".commandBufferHost") {
+    CommandBufferHost::CommandBufferHost(std::string name) : name(name), logs(name + ".commandBufferHost") {
     }
 
     void CommandBufferHost::Syscall(int index, Util::Reader& reader, IPC::Channel& channel) {
         switch (index) {
-            case IPC::COMMAND_BUFFER_LOCATE:
-                IPC::HandleMsg<IPC::CommandBufferLocateMsg>(channel, std::move(reader), [this] (IPC::SharedMemory mem) {
-                    this->Init(std::move(mem));
-                });
-                break;
+        case IPC::COMMAND_BUFFER_LOCATE:
+            IPC::HandleMsg<IPC::CommandBufferLocateMsg>(channel, std::move(reader), [this](IPC::SharedMemory mem) {
+                this->Init(std::move(mem));
+            });
+            break;
 
-            case IPC::COMMAND_BUFFER_CONSUME:
-                IPC::HandleMsg<IPC::CommandBufferConsumeMsg>(channel, std::move(reader), [this] () {
-                    this->Consume();
-                });
-                break;
+        case IPC::COMMAND_BUFFER_CONSUME:
+            IPC::HandleMsg<IPC::CommandBufferConsumeMsg>(channel, std::move(reader), [this]() {
+                this->Consume();
+            });
+            break;
+
         default:
             Sys::Drop("Bad CGame Command Buffer syscall minor number: %d", index);
         }
@@ -64,9 +65,9 @@ namespace IPC {
         buffer.LoadWriterData();
         logs.Debug("Consuming up to %i data from buffer for %s", buffer.GetMaxReadLength(), name);
         bool consuming = true;
-        //TODO set fixed bound too
+        // TODO set fixed bound too
 
-        while(consuming) {
+        while (consuming) {
             Util::Reader reader;
             consuming = ConsumeOne(reader);
 
@@ -76,7 +77,7 @@ namespace IPC {
                 int minor = id & 0xffff;
                 this->HandleCommandBufferSyscall(major, minor, reader);
             }
-            //TODO add more logic to stop consuming (e.g. when the socket is ready)
+            // TODO add more logic to stop consuming (e.g. when the socket is ready)
         }
     }
 

@@ -34,48 +34,48 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Application {
 
-class ServerApplication : public Application {
-    public:
-        ServerApplication() {
-            #ifdef _WIN32
+    class ServerApplication : public Application {
+        public:
+            ServerApplication() {
+                #ifdef _WIN32
                 // The windows dedicated server and tty client must enable the
                 // curses interface because they have no other usable interface.
                 traits.useCurses = true;
-            #endif
-            traits.isServer = true;
-            traits.uniqueHomepathSuffix = "-server";
-        }
+                #endif
+                traits.isServer = true;
+                traits.uniqueHomepathSuffix = "-server";
+            }
 
-        void LoadInitialConfig(bool resetConfig) override {
-            //TODO(kangz) move this functions and its friends to FileSystem.cpp
-	        FS_LoadBasePak();
-	        if (!resetConfig) {
-		        Cmd::BufferCommandText("exec -f " SERVERCONFIG_NAME);
-	        }
-        }
+            void LoadInitialConfig(bool resetConfig) override {
+                // TODO(kangz) move this functions and its friends to FileSystem.cpp
+                FS_LoadBasePak();
+                if (!resetConfig) {
+                    Cmd::BufferCommandText("exec -f " SERVERCONFIG_NAME);
+                }
+            }
 
-        void Initialize(Str::StringRef) override {
-            Com_Init((char*) "");
-        }
+            void Initialize(Str::StringRef) override {
+                Com_Init((char*) "");
+            }
 
-        void Frame() override {
-            Com_Frame();
-        }
+            void Frame() override {
+                Com_Frame();
+            }
 
-        void OnDrop(Str::StringRef reason) override {
-            FS::PakPath::ClearPaks();
-            FS_LoadBasePak();
-            SV_Shutdown(va("********************\nServer crashed: %s\n********************\n", reason.c_str()));
-        }
+            void OnDrop(Str::StringRef reason) override {
+                FS::PakPath::ClearPaks();
+                FS_LoadBasePak();
+                SV_Shutdown(va("********************\nServer crashed: %s\n********************\n", reason.c_str()));
+            }
 
-        void Shutdown(bool error, Str::StringRef message) override {
-            TRY_SHUTDOWN(
-                SV_Shutdown(error ? va("Server fatal crashed: %s\n", message.c_str()) : va("%s\n", message.c_str()))
-            );
-            TRY_SHUTDOWN(Com_Shutdown());
-        }
-};
+            void Shutdown(bool error, Str::StringRef message) override {
+                TRY_SHUTDOWN(
+                    SV_Shutdown(error ? va("Server fatal crashed: %s\n", message.c_str()) : va("%s\n", message.c_str()))
+                    );
+                TRY_SHUTDOWN(Com_Shutdown());
+            }
+    };
 
-INSTANTIATE_APPLICATION(ServerApplication);
+    INSTANTIATE_APPLICATION(ServerApplication);
 
 }

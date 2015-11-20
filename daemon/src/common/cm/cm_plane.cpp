@@ -35,13 +35,13 @@ Maryland 20850 USA.
 #include "cm_local.h"
 
 #define PLANE_HASHES 8192
-static cPlane_t *planeHashTable[ PLANE_HASHES ];
+static cPlane_t* planeHashTable[PLANE_HASHES];
 
-int      numPlanes;
-cPlane_t planes[ SHADER_MAX_TRIANGLES ];
+int numPlanes;
+cPlane_t planes[SHADER_MAX_TRIANGLES];
 
-int      numFacets;
-cFacet_t facets[ SHADER_MAX_TRIANGLES ];
+int numFacets;
+cFacet_t facets[SHADER_MAX_TRIANGLES];
 
 /*
 =================
@@ -49,32 +49,28 @@ CM_ResetPlaneCounts
 =================
 */
 
-void CM_ResetPlaneCounts()
-{
-	memset( planeHashTable, 0, sizeof( planeHashTable ) );
-	numPlanes = 0;
-	numFacets = 0;
+void CM_ResetPlaneCounts() {
+    memset(planeHashTable, 0, sizeof(planeHashTable) );
+    numPlanes = 0;
+    numFacets = 0;
 }
 /*
 =================
 CM_SignbitsForNormal
 =================
 */
-int CM_SignbitsForNormal( vec3_t normal )
-{
-	int bits, j;
+int CM_SignbitsForNormal(vec3_t normal) {
+    int bits, j;
 
-	bits = 0;
+    bits = 0;
 
-	for ( j = 0; j < 3; j++ )
-	{
-		if ( normal[ j ] < 0 )
-		{
-			bits |= 1 << j;
-		}
-	}
+    for (j = 0; j < 3; j++) {
+        if (normal[j] < 0) {
+            bits |= 1 << j;
+        }
+    }
 
-	return bits;
+    return bits;
 }
 
 /*
@@ -85,21 +81,19 @@ Returns false if the triangle is degenerate.
 The normal will point out of the clock for clockwise ordered points
 =====================
 */
-bool CM_PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c )
-{
-	vec3_t d1, d2;
+bool CM_PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c) {
+    vec3_t d1, d2;
 
-	VectorSubtract( b, a, d1 );
-	VectorSubtract( c, a, d2 );
-	CrossProduct( d2, d1, plane );
+    VectorSubtract(b, a, d1);
+    VectorSubtract(c, a, d2);
+    CrossProduct(d2, d1, plane);
 
-	if ( VectorNormalize( plane ) == 0 )
-	{
-		return false;
-	}
+    if (VectorNormalize(plane) == 0) {
+        return false;
+    }
 
-	plane[ 3 ] = DotProduct( a, plane );
-	return true;
+    plane[3] = DotProduct(a, plane);
+    return true;
 }
 
 #define NORMAL_EPSILON    0.0001
@@ -110,30 +104,27 @@ bool CM_PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec
 CM_PlaneEqual
 ==================
 */
-int CM_PlaneEqual( cPlane_t *p, float plane[ 4 ], bool *flipped )
-{
-	float invplane[ 4 ];
+int CM_PlaneEqual(cPlane_t* p, float plane[4], bool* flipped) {
+    float invplane[4];
 
-	if ( fabs( p->plane[ 0 ] - plane[ 0 ] ) < NORMAL_EPSILON
-	     && fabs( p->plane[ 1 ] - plane[ 1 ] ) < NORMAL_EPSILON
-	     && fabs( p->plane[ 2 ] - plane[ 2 ] ) < NORMAL_EPSILON && fabs( p->plane[ 3 ] - plane[ 3 ] ) < DIST_EPSILON )
-	{
-		*flipped = false;
-		return true;
-	}
+    if (fabs(p->plane[0] - plane[0]) < NORMAL_EPSILON
+        && fabs(p->plane[1] - plane[1]) < NORMAL_EPSILON
+        && fabs(p->plane[2] - plane[2]) < NORMAL_EPSILON && fabs(p->plane[3] - plane[3]) < DIST_EPSILON) {
+        *flipped = false;
+        return true;
+    }
 
-	VectorNegate( plane, invplane );
-	invplane[ 3 ] = -plane[ 3 ];
+    VectorNegate(plane, invplane);
+    invplane[3] = -plane[3];
 
-	if ( fabs( p->plane[ 0 ] - invplane[ 0 ] ) < NORMAL_EPSILON
-	     && fabs( p->plane[ 1 ] - invplane[ 1 ] ) < NORMAL_EPSILON
-	     && fabs( p->plane[ 2 ] - invplane[ 2 ] ) < NORMAL_EPSILON && fabs( p->plane[ 3 ] - invplane[ 3 ] ) < DIST_EPSILON )
-	{
-		*flipped = true;
-		return true;
-	}
+    if (fabs(p->plane[0] - invplane[0]) < NORMAL_EPSILON
+        && fabs(p->plane[1] - invplane[1]) < NORMAL_EPSILON
+        && fabs(p->plane[2] - invplane[2]) < NORMAL_EPSILON && fabs(p->plane[3] - invplane[3]) < DIST_EPSILON) {
+        *flipped = true;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 /*
@@ -141,26 +132,22 @@ int CM_PlaneEqual( cPlane_t *p, float plane[ 4 ], bool *flipped )
 CM_SnapVector
 ==================
 */
-void CM_SnapVector( vec3_t normal )
-{
-	int i;
+void CM_SnapVector(vec3_t normal) {
+    int i;
 
-	for ( i = 0; i < 3; i++ )
-	{
-		if ( fabs( normal[ i ] - 1 ) < NORMAL_EPSILON )
-		{
-			VectorClear( normal );
-			normal[ i ] = 1;
-			break;
-		}
+    for (i = 0; i < 3; i++) {
+        if (fabs(normal[i] - 1) < NORMAL_EPSILON) {
+            VectorClear(normal);
+            normal[i] = 1;
+            break;
+        }
 
-		if ( fabs( normal[ i ] - -1 ) < NORMAL_EPSILON )
-		{
-			VectorClear( normal );
-			normal[ i ] = -1;
-			break;
-		}
-	}
+        if (fabs(normal[i] - -1) < NORMAL_EPSILON) {
+            VectorClear(normal);
+            normal[i] = -1;
+            break;
+        }
+    }
 }
 
 /*
@@ -170,14 +157,13 @@ CM_GenerateHashValue
 return a hash value for a plane
 ================
 */
-static long CM_GenerateHashValue( vec4_t plane )
-{
-	long hash;
+static long CM_GenerateHashValue(vec4_t plane) {
+    long hash;
 
-	hash = ( int ) fabs( plane[ 3 ] );
-	hash &= ( PLANE_HASHES - 1 );
+    hash = (int) fabs(plane[3]);
+    hash &= (PLANE_HASHES - 1);
 
-	return hash;
+    return hash;
 }
 
 /*
@@ -185,14 +171,13 @@ static long CM_GenerateHashValue( vec4_t plane )
 CM_AddPlaneToHash
 ================
 */
-static void CM_AddPlaneToHash( cPlane_t *p )
-{
-	long hash;
+static void CM_AddPlaneToHash(cPlane_t* p) {
+    long hash;
 
-	hash = CM_GenerateHashValue( p->plane );
+    hash = CM_GenerateHashValue(p->plane);
 
-	p->hashChain = planeHashTable[ hash ];
-	planeHashTable[ hash ] = p;
+    p->hashChain = planeHashTable[hash];
+    planeHashTable[hash] = p;
 }
 
 /*
@@ -200,25 +185,23 @@ static void CM_AddPlaneToHash( cPlane_t *p )
 CM_CreateNewFloatPlane
 ================
 */
-static int CM_CreateNewFloatPlane( vec4_t plane )
-{
-	cPlane_t *p; //, temp;
+static int CM_CreateNewFloatPlane(vec4_t plane) {
+    cPlane_t* p; // , temp;
 
-	// create a new plane
-	if ( numPlanes == SHADER_MAX_TRIANGLES )
-	{
-		Sys::Drop( "CM_FindPlane: SHADER_MAX_TRIANGLES" );
-	}
+    // create a new plane
+    if (numPlanes == SHADER_MAX_TRIANGLES) {
+        Sys::Drop("CM_FindPlane: SHADER_MAX_TRIANGLES");
+    }
 
-	p = &planes[ numPlanes ];
-	Vector4Copy( plane, p->plane );
+    p = &planes[numPlanes];
+    Vector4Copy(plane, p->plane);
 
-	p->signbits = CM_SignbitsForNormal( plane );
+    p->signbits = CM_SignbitsForNormal(plane);
 
-	numPlanes++;
+    numPlanes++;
 
-	CM_AddPlaneToHash( p );
-	return numPlanes - 1;
+    CM_AddPlaneToHash(p);
+    return numPlanes - 1;
 }
 
 /*
@@ -226,31 +209,27 @@ static int CM_CreateNewFloatPlane( vec4_t plane )
 CM_FindPlane2
 ==================
 */
-int CM_FindPlane2( float plane[ 4 ], bool *flipped )
-{
-	int      i;
-	cPlane_t *p;
-	int      hash, h;
+int CM_FindPlane2(float plane[4], bool* flipped) {
+    int i;
+    cPlane_t* p;
+    int hash, h;
 
-	//SnapPlane(normal, &dist);
-	hash = CM_GenerateHashValue( plane );
+    // SnapPlane(normal, &dist);
+    hash = CM_GenerateHashValue(plane);
 
-	// search the border bins as well
-	for ( i = -1; i <= 1; i++ )
-	{
-		h = ( hash + i ) & ( PLANE_HASHES - 1 );
+    // search the border bins as well
+    for (i = -1; i <= 1; i++) {
+        h = (hash + i) & (PLANE_HASHES - 1);
 
-		for ( p = planeHashTable[ h ]; p; p = p->hashChain )
-		{
-			if ( CM_PlaneEqual( p, plane, flipped ) )
-			{
-				return p - planes;
-			}
-		}
-	}
+        for (p = planeHashTable[h]; p; p = p->hashChain) {
+            if (CM_PlaneEqual(p, plane, flipped) ) {
+                return p - planes;
+            }
+        }
+    }
 
-	*flipped = false;
-	return CM_CreateNewFloatPlane( plane );
+    *flipped = false;
+    return CM_CreateNewFloatPlane(plane);
 }
 
 /*
@@ -258,60 +237,52 @@ int CM_FindPlane2( float plane[ 4 ], bool *flipped )
 CM_FindPlane
 ==================
 */
-int CM_FindPlane( const float *p1, const float *p2, const float *p3 )
-{
-	float      plane[ 4 ];
-	int        i;
-	float      d;
-	cPlane_t   *p;
-	int        hash, h;
+int CM_FindPlane(const float* p1, const float* p2, const float* p3) {
+    float plane[4];
+    int i;
+    float d;
+    cPlane_t* p;
+    int hash, h;
 
-	if ( !CM_PlaneFromPoints( plane, p1, p2, p3 ) )
-	{
-		return -1;
-	}
+    if (!CM_PlaneFromPoints(plane, p1, p2, p3) ) {
+        return -1;
+    }
 
-	hash = CM_GenerateHashValue( plane );
+    hash = CM_GenerateHashValue(plane);
 
-	// search the border bins as well
-	for ( i = -1; i <= 1; i++ )
-	{
-		h = ( hash + i ) & ( PLANE_HASHES - 1 );
+    // search the border bins as well
+    for (i = -1; i <= 1; i++) {
+        h = (hash + i) & (PLANE_HASHES - 1);
 
-		for ( p = planeHashTable[ h ]; p; p = p->hashChain )
-		{
-			//check points on the plane
-			if ( DotProduct( plane, p->plane ) < 0 )
-			{
-				continue; // allow backwards planes?
-			}
+        for (p = planeHashTable[h]; p; p = p->hashChain) {
+            // check points on the plane
+            if (DotProduct(plane, p->plane) < 0) {
+                continue; // allow backwards planes?
+            }
 
-			d = DotProduct( p1, p->plane ) - p->plane[ 3 ];
+            d = DotProduct(p1, p->plane) - p->plane[3];
 
-			if ( d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON )
-			{
-				continue;
-			}
+            if (d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON) {
+                continue;
+            }
 
-			d = DotProduct( p2, p->plane ) - p->plane[ 3 ];
+            d = DotProduct(p2, p->plane) - p->plane[3];
 
-			if ( d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON )
-			{
-				continue;
-			}
+            if (d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON) {
+                continue;
+            }
 
-			d = DotProduct( p3, p->plane ) - p->plane[ 3 ];
+            d = DotProduct(p3, p->plane) - p->plane[3];
 
-			if ( d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON )
-			{
-				continue;
-			}
+            if (d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON) {
+                continue;
+            }
 
-			return p - planes;
-		}
-	}
+            return p - planes;
+        }
+    }
 
-	return CM_CreateNewFloatPlane( plane );
+    return CM_CreateNewFloatPlane(plane);
 }
 
 /*
@@ -319,31 +290,27 @@ int CM_FindPlane( const float *p1, const float *p2, const float *p3 )
 CM_PointOnPlaneSide
 ==================
 */
-int CM_PointOnPlaneSide( float *p, int planeNum )
-{
-	float *plane;
-	float d;
+int CM_PointOnPlaneSide(float* p, int planeNum) {
+    float* plane;
+    float d;
 
-	if ( planeNum == -1 )
-	{
-		return SIDE_ON;
-	}
+    if (planeNum == -1) {
+        return SIDE_ON;
+    }
 
-	plane = planes[ planeNum ].plane;
+    plane = planes[planeNum].plane;
 
-	d = DotProduct( p, plane ) - plane[ 3 ];
+    d = DotProduct(p, plane) - plane[3];
 
-	if ( d > PLANE_TRI_EPSILON )
-	{
-		return SIDE_FRONT;
-	}
+    if (d > PLANE_TRI_EPSILON) {
+        return SIDE_FRONT;
+    }
 
-	if ( d < -PLANE_TRI_EPSILON )
-	{
-		return SIDE_BACK;
-	}
+    if (d < -PLANE_TRI_EPSILON) {
+        return SIDE_BACK;
+    }
 
-	return SIDE_ON;
+    return SIDE_ON;
 }
 
 /*
@@ -353,68 +320,58 @@ CM_ValidateFacet
 If the facet isn't bounded by its borders, we screwed up.
 ==================
 */
-bool CM_ValidateFacet( cFacet_t *facet )
-{
-	float     plane[ 4 ];
-	int       j;
-	winding_t *w;
-	vec3_t    bounds[ 2 ];
+bool CM_ValidateFacet(cFacet_t* facet) {
+    float plane[4];
+    int j;
+    winding_t* w;
+    vec3_t bounds[2];
 
-	if ( facet->surfacePlane == -1 )
-	{
-		return false;
-	}
+    if (facet->surfacePlane == -1) {
+        return false;
+    }
 
-	Vector4Copy( planes[ facet->surfacePlane ].plane, plane );
-	w = BaseWindingForPlane( plane, plane[ 3 ] );
+    Vector4Copy(planes[facet->surfacePlane].plane, plane);
+    w = BaseWindingForPlane(plane, plane[3]);
 
-	for ( j = 0; j < facet->numBorders && w; j++ )
-	{
-		if ( facet->borderPlanes[ j ] == -1 )
-		{
-			FreeWinding( w );
-			return false;
-		}
+    for (j = 0; j < facet->numBorders && w; j++) {
+        if (facet->borderPlanes[j] == -1) {
+            FreeWinding(w);
+            return false;
+        }
 
-		Vector4Copy( planes[ facet->borderPlanes[ j ] ].plane, plane );
+        Vector4Copy(planes[facet->borderPlanes[j]].plane, plane);
 
-		if ( !facet->borderInward[ j ] )
-		{
-			VectorSubtract( vec3_origin, plane, plane );
-			plane[ 3 ] = -plane[ 3 ];
-		}
+        if (!facet->borderInward[j]) {
+            VectorSubtract(vec3_origin, plane, plane);
+            plane[3] = -plane[3];
+        }
 
-		ChopWindingInPlace( &w, plane, plane[ 3 ], 0.1f );
-	}
+        ChopWindingInPlace(&w, plane, plane[3], 0.1f);
+    }
 
-	if ( !w )
-	{
-		return false; // winding was completely chopped away
-	}
+    if (!w) {
+        return false; // winding was completely chopped away
+    }
 
-	// see if the facet is unreasonably large
-	WindingBounds( w, bounds[ 0 ], bounds[ 1 ] );
-	FreeWinding( w );
+    // see if the facet is unreasonably large
+    WindingBounds(w, bounds[0], bounds[1]);
+    FreeWinding(w);
 
-	for ( j = 0; j < 3; j++ )
-	{
-		if ( bounds[ 1 ][ j ] - bounds[ 0 ][ j ] > MAX_WORLD_COORD )
-		{
-			return false; // we must be missing a plane
-		}
+    for (j = 0; j < 3; j++) {
+        if (bounds[1][j] - bounds[0][j] > MAX_WORLD_COORD) {
+            return false; // we must be missing a plane
+        }
 
-		if ( bounds[ 0 ][ j ] >= MAX_WORLD_COORD )
-		{
-			return false;
-		}
+        if (bounds[0][j] >= MAX_WORLD_COORD) {
+            return false;
+        }
 
-		if ( bounds[ 1 ][ j ] <= MIN_WORLD_COORD )
-		{
-			return false;
-		}
-	}
+        if (bounds[1][j] <= MIN_WORLD_COORD) {
+            return false;
+        }
+    }
 
-	return true; // winding is fine
+    return true; // winding is fine
 }
 
 /*
@@ -422,229 +379,192 @@ bool CM_ValidateFacet( cFacet_t *facet )
 CM_AddFacetBevels
 ==================
 */
-void CM_AddFacetBevels( cFacet_t *facet )
-{
-	int       i, j, k, l;
-	int       axis, dir, order;
-	bool  flipped;
-	float     plane[ 4 ], d, newplane[ 4 ];
-	winding_t *w, *w2;
-	vec3_t    mins, maxs, vec, vec2;
+void CM_AddFacetBevels(cFacet_t* facet) {
+    int i, j, k, l;
+    int axis, dir, order;
+    bool flipped;
+    float plane[4], d, newplane[4];
+    winding_t* w, * w2;
+    vec3_t mins, maxs, vec, vec2;
 
-	Vector4Copy( planes[ facet->surfacePlane ].plane, plane );
+    Vector4Copy(planes[facet->surfacePlane].plane, plane);
 
-	w = BaseWindingForPlane( plane, plane[ 3 ] );
+    w = BaseWindingForPlane(plane, plane[3]);
 
-	for ( j = 0; j < facet->numBorders && w; j++ )
-	{
-		if ( facet->borderPlanes[ j ] == facet->surfacePlane )
-		{
-			continue;
-		}
+    for (j = 0; j < facet->numBorders && w; j++) {
+        if (facet->borderPlanes[j] == facet->surfacePlane) {
+            continue;
+        }
 
-		Vector4Copy( planes[ facet->borderPlanes[ j ] ].plane, plane );
+        Vector4Copy(planes[facet->borderPlanes[j]].plane, plane);
 
-		if ( !facet->borderInward[ j ] )
-		{
-			VectorSubtract( vec3_origin, plane, plane );
-			plane[ 3 ] = -plane[ 3 ];
-		}
+        if (!facet->borderInward[j]) {
+            VectorSubtract(vec3_origin, plane, plane);
+            plane[3] = -plane[3];
+        }
 
-		ChopWindingInPlace( &w, plane, plane[ 3 ], 0.1f );
-	}
+        ChopWindingInPlace(&w, plane, plane[3], 0.1f);
+    }
 
-	if ( !w )
-	{
-		return;
-	}
+    if (!w) {
+        return;
+    }
 
-	WindingBounds( w, mins, maxs );
+    WindingBounds(w, mins, maxs);
 
-	// add the axial planes
-	order = 0;
+    // add the axial planes
+    order = 0;
 
-	for ( axis = 0; axis < 3; axis++ )
-	{
-		for ( dir = -1; dir <= 1; dir += 2, order++ )
-		{
-			VectorClear( plane );
-			plane[ axis ] = dir;
+    for (axis = 0; axis < 3; axis++) {
+        for (dir = -1; dir <= 1; dir += 2, order++) {
+            VectorClear(plane);
+            plane[axis] = dir;
 
-			if ( dir == 1 )
-			{
-				plane[ 3 ] = maxs[ axis ];
-			}
-			else
-			{
-				plane[ 3 ] = -mins[ axis ];
-			}
+            if (dir == 1) {
+                plane[3] = maxs[axis];
+            } else {
+                plane[3] = -mins[axis];
+            }
 
-			//if it's the surface plane
-			if ( CM_PlaneEqual( &planes[ facet->surfacePlane ], plane, &flipped ) )
-			{
-				continue;
-			}
+            // if it's the surface plane
+            if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped) ) {
+                continue;
+            }
 
-			// see if the plane is already present
-			for ( i = 0; i < facet->numBorders; i++ )
-			{
-				if ( CM_PlaneEqual( &planes[ facet->borderPlanes[ i ] ], plane, &flipped ) )
-				{
-					break;
-				}
-			}
+            // see if the plane is already present
+            for (i = 0; i < facet->numBorders; i++) {
+                if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped) ) {
+                    break;
+                }
+            }
 
-			if ( i == facet->numBorders )
-			{
-				if ( facet->numBorders > MAX_FACET_BEVELS )
-				{
-					Log::Warn( "too many bevels" );
-				}
+            if (i == facet->numBorders) {
+                if (facet->numBorders > MAX_FACET_BEVELS) {
+                    Log::Warn("too many bevels");
+                }
 
-				facet->borderPlanes[ facet->numBorders ] = CM_FindPlane2( plane, &flipped );
-				facet->borderNoAdjust[ facet->numBorders ] = false;
-				facet->borderInward[ facet->numBorders ] = flipped;
-				facet->numBorders++;
-			}
-		}
-	}
+                facet->borderPlanes[facet->numBorders] = CM_FindPlane2(plane, &flipped);
+                facet->borderNoAdjust[facet->numBorders] = false;
+                facet->borderInward[facet->numBorders] = flipped;
+                facet->numBorders++;
+            }
+        }
+    }
 
-	//
-	// add the edge bevels
-	//
-	// test the non-axial plane edges
-	for ( j = 0; j < w->numpoints; j++ )
-	{
-		k = ( j + 1 ) % w->numpoints;
-		VectorSubtract( w->p[ j ], w->p[ k ], vec );
+    //
+    // add the edge bevels
+    //
+    // test the non-axial plane edges
+    for (j = 0; j < w->numpoints; j++) {
+        k = (j + 1) % w->numpoints;
+        VectorSubtract(w->p[j], w->p[k], vec);
 
-		//if it's a degenerate edge
-		if ( VectorNormalize( vec ) < 0.5 )
-		{
-			continue;
-		}
+        // if it's a degenerate edge
+        if (VectorNormalize(vec) < 0.5) {
+            continue;
+        }
 
-		CM_SnapVector( vec );
+        CM_SnapVector(vec);
 
-		for ( k = 0; k < 3; k++ )
-		{
-			if ( vec[ k ] == -1 || vec[ k ] == 1 )
-			{
-				break; // axial
-			}
-		}
+        for (k = 0; k < 3; k++) {
+            if (vec[k] == -1 || vec[k] == 1) {
+                break; // axial
+            }
+        }
 
-		if ( k < 3 )
-		{
-			continue; // only test non-axial edges
-		}
+        if (k < 3) {
+            continue; // only test non-axial edges
+        }
 
-		// try the six possible slanted axials from this edge
-		for ( axis = 0; axis < 3; axis++ )
-		{
-			for ( dir = -1; dir <= 1; dir += 2 )
-			{
-				// construct a plane
-				VectorClear( vec2 );
-				vec2[ axis ] = dir;
-				CrossProduct( vec, vec2, plane );
+        // try the six possible slanted axials from this edge
+        for (axis = 0; axis < 3; axis++) {
+            for (dir = -1; dir <= 1; dir += 2) {
+                // construct a plane
+                VectorClear(vec2);
+                vec2[axis] = dir;
+                CrossProduct(vec, vec2, plane);
 
-				if ( VectorNormalize( plane ) < 0.5 )
-				{
-					continue;
-				}
+                if (VectorNormalize(plane) < 0.5) {
+                    continue;
+                }
 
-				plane[ 3 ] = DotProduct( w->p[ j ], plane );
+                plane[3] = DotProduct(w->p[j], plane);
 
-				// if all the points of the facet winding are
-				// behind this plane, it is a proper edge bevel
-				for ( l = 0; l < w->numpoints; l++ )
-				{
-					d = DotProduct( w->p[ l ], plane ) - plane[ 3 ];
+                // if all the points of the facet winding are
+                // behind this plane, it is a proper edge bevel
+                for (l = 0; l < w->numpoints; l++) {
+                    d = DotProduct(w->p[l], plane) - plane[3];
 
-					if ( d > 0.1 )
-					{
-						break; // point in front
-					}
-				}
+                    if (d > 0.1) {
+                        break; // point in front
+                    }
+                }
 
-				if ( l < w->numpoints )
-				{
-					continue;
-				}
+                if (l < w->numpoints) {
+                    continue;
+                }
 
-				//if it's the surface plane
-				if ( CM_PlaneEqual( &planes[ facet->surfacePlane ], plane, &flipped ) )
-				{
-					continue;
-				}
+                // if it's the surface plane
+                if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped) ) {
+                    continue;
+                }
 
-				// see if the plane is already present
-				for ( i = 0; i < facet->numBorders; i++ )
-				{
-					if ( CM_PlaneEqual( &planes[ facet->borderPlanes[ i ] ], plane, &flipped ) )
-					{
-						break;
-					}
-				}
+                // see if the plane is already present
+                for (i = 0; i < facet->numBorders; i++) {
+                    if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped) ) {
+                        break;
+                    }
+                }
 
-				if ( i == facet->numBorders )
-				{
-					if ( facet->numBorders > MAX_FACET_BEVELS )
-					{
-						Log::Warn( "too many bevels" );
-					}
+                if (i == facet->numBorders) {
+                    if (facet->numBorders > MAX_FACET_BEVELS) {
+                        Log::Warn("too many bevels");
+                    }
 
-					facet->borderPlanes[ facet->numBorders ] = CM_FindPlane2( plane, &flipped );
+                    facet->borderPlanes[facet->numBorders] = CM_FindPlane2(plane, &flipped);
 
-					for ( k = 0; k < facet->numBorders; k++ )
-					{
-						if ( facet->borderPlanes[ facet->numBorders ] == facet->borderPlanes[ k ] )
-						{
-							Log::Warn( "bevel plane already used" );
-						}
-					}
+                    for (k = 0; k < facet->numBorders; k++) {
+                        if (facet->borderPlanes[facet->numBorders] == facet->borderPlanes[k]) {
+                            Log::Warn("bevel plane already used");
+                        }
+                    }
 
-					facet->borderNoAdjust[ facet->numBorders ] = false;
-					facet->borderInward[ facet->numBorders ] = flipped;
-					//
-					w2 = CopyWinding( w );
-					Vector4Copy( planes[ facet->borderPlanes[ facet->numBorders ] ].plane, newplane );
+                    facet->borderNoAdjust[facet->numBorders] = false;
+                    facet->borderInward[facet->numBorders] = flipped;
+                    //
+                    w2 = CopyWinding(w);
+                    Vector4Copy(planes[facet->borderPlanes[facet->numBorders]].plane, newplane);
 
-					if ( !facet->borderInward[ facet->numBorders ] )
-					{
-						VectorNegate( newplane, newplane );
-						newplane[ 3 ] = -newplane[ 3 ];
-					}
+                    if (!facet->borderInward[facet->numBorders]) {
+                        VectorNegate(newplane, newplane);
+                        newplane[3] = -newplane[3];
+                    }
 
-					ChopWindingInPlace( &w2, newplane, newplane[ 3 ], 0.1f );
+                    ChopWindingInPlace(&w2, newplane, newplane[3], 0.1f);
 
-					if ( !w2 )
-					{
-						cmLog.Debug( "WARNING: CM_AddFacetBevels... invalid bevel\n" );
-						continue;
-					}
-					else
-					{
-						FreeWinding( w2 );
-					}
+                    if (!w2) {
+                        cmLog.Debug("WARNING: CM_AddFacetBevels... invalid bevel\n");
+                        continue;
+                    } else {
+                        FreeWinding(w2);
+                    }
 
-					//
-					facet->numBorders++;
-					//already got a bevel
-//                  break;
-				}
-			}
-		}
-	}
+                    //
+                    facet->numBorders++;
+                    // already got a bevel
+                    // break;
+                }
+            }
+        }
+    }
 
-	FreeWinding( w );
+    FreeWinding(w);
 
-	// add opposite plane
-	facet->borderPlanes[ facet->numBorders ] = facet->surfacePlane;
-	facet->borderNoAdjust[ facet->numBorders ] = false;
-	facet->borderInward[ facet->numBorders ] = true;
-	facet->numBorders++;
+    // add opposite plane
+    facet->borderPlanes[facet->numBorders] = facet->surfacePlane;
+    facet->borderNoAdjust[facet->numBorders] = false;
+    facet->borderInward[facet->numBorders] = true;
+    facet->numBorders++;
 }
 
 /*
@@ -652,13 +572,12 @@ void CM_AddFacetBevels( cFacet_t *facet )
 CM_GenerateBoundaryForPoints
 ==================
 */
-static int CM_GenerateBoundaryForPoints( const vec4_t triPlane, const vec3_t p1, const vec3_t p2 )
-{
-	vec3_t up;
+static int CM_GenerateBoundaryForPoints(const vec4_t triPlane, const vec3_t p1, const vec3_t p2) {
+    vec3_t up;
 
-	VectorMA( p1, 4, triPlane, up );
+    VectorMA(p1, 4, triPlane, up);
 
-	return CM_FindPlane( p1, p2, up );
+    return CM_FindPlane(p1, p2, up);
 }
 
 /*
@@ -666,33 +585,31 @@ static int CM_GenerateBoundaryForPoints( const vec4_t triPlane, const vec3_t p1,
 CM_GenerateFacetFor3Points
 =====================
 */
-bool CM_GenerateFacetFor3Points( cFacet_t *facet, const vec3_t p1, const vec3_t p2, const vec3_t p3 )
-{
-	vec4_t          plane;
+bool CM_GenerateFacetFor3Points(cFacet_t* facet, const vec3_t p1, const vec3_t p2, const vec3_t p3) {
+    vec4_t plane;
 
-	// if we can't generate a valid plane for the points, ignore the facet
-	//if(!PlaneFromPoints(f->surface, a, b, c, true))
-	if ( facet->surfacePlane == -1 )
-	{
-		facet->numBorders = 0;
-		return false;
-	}
+    // if we can't generate a valid plane for the points, ignore the facet
+    // if(!PlaneFromPoints(f->surface, a, b, c, true))
+    if (facet->surfacePlane == -1) {
+        facet->numBorders = 0;
+        return false;
+    }
 
-	Vector4Copy( planes[ facet->surfacePlane ].plane, plane );
+    Vector4Copy(planes[facet->surfacePlane].plane, plane);
 
-	facet->numBorders = 3;
+    facet->numBorders = 3;
 
-	facet->borderNoAdjust[ 0 ] = false;
-	facet->borderNoAdjust[ 1 ] = false;
-	facet->borderNoAdjust[ 2 ] = false;
+    facet->borderNoAdjust[0] = false;
+    facet->borderNoAdjust[1] = false;
+    facet->borderNoAdjust[2] = false;
 
-	facet->borderPlanes[ 0 ] = CM_GenerateBoundaryForPoints( plane, p1, p2 );
-	facet->borderPlanes[ 1 ] = CM_GenerateBoundaryForPoints( plane, p2, p3 );
-	facet->borderPlanes[ 2 ] = CM_GenerateBoundaryForPoints( plane, p3, p1 );
+    facet->borderPlanes[0] = CM_GenerateBoundaryForPoints(plane, p1, p2);
+    facet->borderPlanes[1] = CM_GenerateBoundaryForPoints(plane, p2, p3);
+    facet->borderPlanes[2] = CM_GenerateBoundaryForPoints(plane, p3, p1);
 
-	//VectorCopy(a->xyz, f->points[0]);
-	//VectorCopy(b->xyz, f->points[1]);
-	//VectorCopy(c->xyz, f->points[2]);
+    // VectorCopy(a->xyz, f->points[0]);
+    // VectorCopy(b->xyz, f->points[1]);
+    // VectorCopy(c->xyz, f->points[2]);
 
-	return true;
+    return true;
 }

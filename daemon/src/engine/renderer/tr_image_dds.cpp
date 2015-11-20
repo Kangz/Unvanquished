@@ -24,55 +24,51 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "tr_local.h"
 
-typedef struct
-{
-	unsigned int dwColorSpaceLowValue; // low boundary of color space that is to
-	// be treated as Color Key, inclusive
+typedef struct {
+    unsigned int dwColorSpaceLowValue; // low boundary of color space that is to
+    // be treated as Color Key, inclusive
 
-	unsigned int dwColorSpaceHighValue; // high boundary of color space that is
-	// to be treated as Color Key, inclusive
+    unsigned int dwColorSpaceHighValue; // high boundary of color space that is
+    // to be treated as Color Key, inclusive
 } DDCOLORKEY_t;
 
-typedef struct
-{
-	unsigned int dwCaps; // capabilities of surface wanted
-	unsigned int dwCaps2;
-	unsigned int dwCaps3;
-	unsigned int dwCaps4;
+typedef struct {
+    unsigned int dwCaps; // capabilities of surface wanted
+    unsigned int dwCaps2;
+    unsigned int dwCaps3;
+    unsigned int dwCaps4;
 } DDSCAPS2_t;
 
-typedef struct
-{
-	unsigned int dwSize; // size of structure
-	unsigned int dwFlags; // pixel format flags
-	unsigned int dwFourCC; // (FOURCC code)
+typedef struct {
+    unsigned int dwSize; // size of structure
+    unsigned int dwFlags; // pixel format flags
+    unsigned int dwFourCC; // (FOURCC code)
 
-	unsigned int dwRGBBitCount; // how many bits per pixel
-	unsigned int dwRBitMask; // mask for red bit
-	unsigned int dwGBitMask; // mask for green bits
-	unsigned int dwBBitMask; // mask for blue bits
-	unsigned int dwABitMask; // mask for alpha channel
+    unsigned int dwRGBBitCount; // how many bits per pixel
+    unsigned int dwRBitMask; // mask for red bit
+    unsigned int dwGBitMask; // mask for green bits
+    unsigned int dwBBitMask; // mask for blue bits
+    unsigned int dwABitMask; // mask for alpha channel
 } DDS_PIXELFORMAT_t;
 
-typedef struct
-{
-	unsigned int dwSize; // size of the DDSURFACEDESC structure
-	unsigned int dwFlags; // determines what fields are valid
-	unsigned int dwHeight; // height of surface to be created
-	unsigned int dwWidth; // width of input surface
+typedef struct {
+    unsigned int dwSize; // size of the DDSURFACEDESC structure
+    unsigned int dwFlags; // determines what fields are valid
+    unsigned int dwHeight; // height of surface to be created
+    unsigned int dwWidth; // width of input surface
 
-	unsigned int dwPitchOrLinearSize; // Formless late-allocated optimized surface size
+    unsigned int dwPitchOrLinearSize; // Formless late-allocated optimized surface size
 
-	unsigned int dwDepth; // the depth if this is a volume texture
+    unsigned int dwDepth; // the depth if this is a volume texture
 
-	unsigned int dwMipMapCount; // number of mip-map levels requestde
+    unsigned int dwMipMapCount; // number of mip-map levels requestde
 
-	unsigned int dwReserved[11]; // reserved
+    unsigned int dwReserved[11]; // reserved
 
-	DDS_PIXELFORMAT_t ddpfPixelFormat; // pixel format description of the surface
+    DDS_PIXELFORMAT_t ddpfPixelFormat; // pixel format description of the surface
 
-	DDSCAPS2_t   ddsCaps; // direct draw surface capabilities
-	unsigned int dwReserved2;
+    DDSCAPS2_t ddsCaps; // direct draw surface capabilities
+    unsigned int dwReserved2;
 } DDSHEADER_t;
 
 //
@@ -118,247 +114,225 @@ typedef struct
 
 #ifndef MAKEFOURCC
 
-#define MAKEFOURCC(ch0, ch1, ch2, ch3)                                                                                  \
-        ((unsigned int)(char)( ch0 ) | ((unsigned int)(char)( ch1 ) << 8 ) |                     \
-         ((unsigned int)(char)( ch2 ) << 16 ) | ((unsigned int)(char)( ch3 ) << 24 ))
+    #define MAKEFOURCC(ch0, ch1, ch2, ch3)                                                                                  \
+    ((unsigned int)(char)(ch0) | ((unsigned int)(char)(ch1) << 8) |                     \
+     ((unsigned int)(char)(ch2) << 16) | ((unsigned int)(char)(ch3) << 24))
 
 #endif
 
-#define FOURCC_DDS              MAKEFOURCC( 'D', 'D', 'S', ' ' )
+#define FOURCC_DDS              MAKEFOURCC('D', 'D', 'S', ' ')
 
-//FOURCC codes for DXTn compressed-texture pixel formats
-#define FOURCC_DXT1             MAKEFOURCC( 'D', 'X', 'T', '1' )
-#define FOURCC_DXT2             MAKEFOURCC( 'D', 'X', 'T', '2' )
-#define FOURCC_DXT3             MAKEFOURCC( 'D', 'X', 'T', '3' )
-#define FOURCC_DXT4             MAKEFOURCC( 'D', 'X', 'T', '4' )
-#define FOURCC_DXT5             MAKEFOURCC( 'D', 'X', 'T', '5' )
-#define FOURCC_ATI1             MAKEFOURCC( 'A', 'T', 'I', '1' )
-#define FOURCC_ATI2             MAKEFOURCC( 'A', 'T', 'I', '2' )
-#define FOURCC_BC4U             MAKEFOURCC( 'B', 'C', '4', 'U' )
-#define FOURCC_BC5U             MAKEFOURCC( 'B', 'C', '5', 'U' )
+// FOURCC codes for DXTn compressed-texture pixel formats
+#define FOURCC_DXT1             MAKEFOURCC('D', 'X', 'T', '1')
+#define FOURCC_DXT2             MAKEFOURCC('D', 'X', 'T', '2')
+#define FOURCC_DXT3             MAKEFOURCC('D', 'X', 'T', '3')
+#define FOURCC_DXT4             MAKEFOURCC('D', 'X', 'T', '4')
+#define FOURCC_DXT5             MAKEFOURCC('D', 'X', 'T', '5')
+#define FOURCC_ATI1             MAKEFOURCC('A', 'T', 'I', '1')
+#define FOURCC_ATI2             MAKEFOURCC('A', 'T', 'I', '2')
+#define FOURCC_BC4U             MAKEFOURCC('B', 'C', '4', 'U')
+#define FOURCC_BC5U             MAKEFOURCC('B', 'C', '5', 'U')
 
-void R_LoadDDSImageData( void *pImageData, const char *name, byte **data,
-			 int *width, int *height, int *numLayers,
-			 int *numMips, int *bits )
-{
-	byte         *buff;
-	DDSHEADER_t  *ddsd; //used to get at the dds header in the read buffer
+void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
+                        int* width, int* height, int* numLayers,
+                        int* numMips, int* bits) {
+    byte* buff;
+    DDSHEADER_t* ddsd; // used to get at the dds header in the read buffer
 
-	//mip count and pointers to image data for each mip
-	//level, idx 0 = top level last pointer does not start
-	//a mip level, it's just there to mark off the end of
-	//the final mip data segment (thus the odd + 1)
-	//
-	//for cube textures we only find the offsets into the
-	//first face of the cube, subsequent faces will use the
-	//same offsets, just shifted over
-	int      i, size;
-	bool compressed;
+    // mip count and pointers to image data for each mip
+    // level, idx 0 = top level last pointer does not start
+    // a mip level, it's just there to mark off the end of
+    // the final mip data segment (thus the odd + 1)
+    //
+    // for cube textures we only find the offsets into the
+    // first face of the cube, subsequent faces will use the
+    // same offsets, just shifted over
+    int i, size;
+    bool compressed;
 
-	*numLayers = 0;
+    *numLayers = 0;
 
-	buff = ( byte * ) pImageData;
+    buff = (byte*) pImageData;
 
-	data[0] = nullptr;
+    data[0] = nullptr;
 
-	if ( strncmp( ( const char * ) buff, "DDS ", 4 ) != 0 )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name );
-		return;
-	}
+    if (strncmp( (const char*) buff, "DDS ", 4) != 0) {
+        ri.Printf(PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name);
+        return;
+    }
 
-	ddsd = ( DDSHEADER_t * )( buff + 4 );
+    ddsd = (DDSHEADER_t*)(buff + 4);
 
-	//Byte Swapping for the DDS headers.
-	//beware: we ignore some of the shorts.
-#ifdef Q3_BIG_ENDIAN
-	{
-		int i;
-		int *field;
+    // Byte Swapping for the DDS headers.
+    // beware: we ignore some of the shorts.
+    #ifdef Q3_BIG_ENDIAN
+    {
+        int i;
+        int* field;
 
-		for ( i = 0; i < sizeof( DDSHEADER_t ) / sizeof( int ); i++ )
-		{
-			field = ( int * ) ddsd;
-			field[ i ] = LittleLong( field[ i ] );
-		}
-	}
-#endif
+        for (i = 0; i < sizeof(DDSHEADER_t) / sizeof(int); i++) {
+            field = (int*) ddsd;
+            field[i] = LittleLong(field[i]);
+        }
+    }
+    #endif
 
-	if ( ddsd->dwSize != sizeof( DDSHEADER_t ) || ddsd->ddpfPixelFormat.dwSize != sizeof( DDS_PIXELFORMAT_t ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name );
-		return;
-	}
+    if (ddsd->dwSize != sizeof(DDSHEADER_t) || ddsd->ddpfPixelFormat.dwSize != sizeof(DDS_PIXELFORMAT_t) ) {
+        ri.Printf(PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name);
+        return;
+    }
 
-	*numMips = ( ( ddsd->dwFlags & DDSD_MIPMAPCOUNT ) && ( ddsd->dwMipMapCount > 1 ) ) ? ddsd->dwMipMapCount : 1;
+    *numMips = ( (ddsd->dwFlags & DDSD_MIPMAPCOUNT) && (ddsd->dwMipMapCount > 1) ) ? ddsd->dwMipMapCount : 1;
 
-	if ( *numMips > MAX_TEXTURE_MIPS )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadDDSImage: dds image has too many mip levels \"%s\"\n", name );
-		return;
-	}
+    if (*numMips > MAX_TEXTURE_MIPS) {
+        ri.Printf(PRINT_WARNING, "R_LoadDDSImage: dds image has too many mip levels \"%s\"\n", name);
+        return;
+    }
 
-	compressed = ( ddsd->ddpfPixelFormat.dwFlags & DDPF_FOURCC ) ? true : false;
+    compressed = (ddsd->ddpfPixelFormat.dwFlags & DDPF_FOURCC) ? true : false;
 
-	// either a cube or a volume
-	if ( ddsd->ddsCaps.dwCaps2 & DDSCAPS2_CUBEMAP )
-	{
-		// cube texture
+    // either a cube or a volume
+    if (ddsd->ddsCaps.dwCaps2 & DDSCAPS2_CUBEMAP) {
+        // cube texture
 
-		if ( ddsd->dwWidth != ddsd->dwHeight )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: invalid dds image \"%s\"\n", name );
-			return;
-		}
+        if (ddsd->dwWidth != ddsd->dwHeight) {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: invalid dds image \"%s\"\n", name);
+            return;
+        }
 
-		*width = ddsd->dwWidth;
-		*height = ddsd->dwHeight;
-		*numLayers = 6;
+        *width = ddsd->dwWidth;
+        *height = ddsd->dwHeight;
+        *numLayers = 6;
 
-		if ( *width & ( *width - 1 ) )
-		{
-			//cubes must be a power of two
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: cube images must be power of two \"%s\"\n", name );
-			return;
-		}
-	}
-	else if ( ( ddsd->ddsCaps.dwCaps2 & DDSCAPS2_VOLUME ) && ( ddsd->dwFlags & DDSD_DEPTH ) )
-	{
-		// 3D texture
+        if (*width & (*width - 1) ) {
+            // cubes must be a power of two
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: cube images must be power of two \"%s\"\n", name);
+            return;
+        }
+    } else if ( (ddsd->ddsCaps.dwCaps2 & DDSCAPS2_VOLUME) && (ddsd->dwFlags & DDSD_DEPTH) ) {
+        // 3D texture
 
-		*width = ddsd->dwWidth;
-		*height = ddsd->dwHeight;
-		*numLayers = ddsd->dwDepth;
+        *width = ddsd->dwWidth;
+        *height = ddsd->dwHeight;
+        *numLayers = ddsd->dwDepth;
 
-		if ( *numLayers > MAX_TEXTURE_LAYERS )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: dds image has too many layers \"%s\"\n", name );
-			return;
-		}
+        if (*numLayers > MAX_TEXTURE_LAYERS) {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: dds image has too many layers \"%s\"\n", name);
+            return;
+        }
 
-		if ( *width & ( *width - 1 ) || *height & ( *height - 1 ) || *numLayers & ( *numLayers - 1 ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: volume images must be power of two \"%s\"\n", name );
-			return;
-		}
-	}
-	else
-	{
-		// 2D texture
+        if (*width & (*width - 1) || *height & (*height - 1) || *numLayers & (*numLayers - 1) ) {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: volume images must be power of two \"%s\"\n", name);
+            return;
+        }
+    } else {
+        // 2D texture
 
-		*width = ddsd->dwWidth;
-		*height = ddsd->dwHeight;
-		*numLayers = 0;
+        *width = ddsd->dwWidth;
+        *height = ddsd->dwHeight;
+        *numLayers = 0;
 
-		//these are allowed to be non power of two, will be dealt with later on
-		//except for compressed images!
-		if ( compressed && ( *width & ( *width - 1 ) || *height & ( *height - 1 ) ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: compressed texture images must be power of two \"%s\"\n", name );
-			return;
-		}
-	}
+        // these are allowed to be non power of two, will be dealt with later on
+        // except for compressed images!
+        if (compressed && (*width & (*width - 1) || *height & (*height - 1) ) ) {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: compressed texture images must be power of two \"%s\"\n", name);
+            return;
+        }
+    }
 
-	if ( compressed )
-	{
-		int w, h, blockSize;
+    if (compressed) {
+        int w, h, blockSize;
 
-		if ( *numLayers != 0 )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: compressed volume textures are not supported \"%s\"\n", name );
-			return;
-		}
+        if (*numLayers != 0) {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: compressed volume textures are not supported \"%s\"\n", name);
+            return;
+        }
 
-		//compressed FOURCC formats
-		switch ( ddsd->ddpfPixelFormat.dwFourCC )
-		{
-		case FOURCC_DXT1:
-			*bits |= IF_BC1;
-			blockSize = 8;
-			break;
+        // compressed FOURCC formats
+        switch (ddsd->ddpfPixelFormat.dwFourCC) {
+        case FOURCC_DXT1:
+            *bits |= IF_BC1;
+            blockSize = 8;
+            break;
 
-		case FOURCC_DXT5:
-			*bits |= IF_BC3;
-			blockSize = 16;
-			break;
+        case FOURCC_DXT5:
+            *bits |= IF_BC3;
+            blockSize = 16;
+            break;
 
-		case FOURCC_ATI1:
-		case FOURCC_BC4U:
-			*bits |= IF_BC4;
-			blockSize = 8;
-			break;
+        case FOURCC_ATI1:
+        case FOURCC_BC4U:
+            *bits |= IF_BC4;
+            blockSize = 8;
+            break;
 
-		case FOURCC_ATI2:
-		case FOURCC_BC5U:
-			*bits |= IF_BC5;
-			blockSize = 16;
-			break;
+        case FOURCC_ATI2:
+        case FOURCC_BC5U:
+            *bits |= IF_BC5;
+            blockSize = 16;
+            break;
 
-		default:
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: unsupported FOURCC 0x%08x, \"%s\"\n",
-				   ddsd->ddpfPixelFormat.dwFourCC, name );
-			return;
-		}
-		w = *width;
-		h = *height;
-		size = 0;
+        default:
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: unsupported FOURCC 0x%08x, \"%s\"\n",
+                      ddsd->ddpfPixelFormat.dwFourCC, name);
+            return;
+        }
+        w = *width;
+        h = *height;
+        size = 0;
 
-		for( i = 0; i < *numMips; i++ ) {
-			int mipSize = ((w + 3) >> 2) * ((h + 3) >> 2) * blockSize;
+        for (i = 0; i < *numMips; i++) {
+            int mipSize = ((w + 3) >> 2) * ((h + 3) >> 2) * blockSize;
 
-			data[ i ] = (byte *)(intptr_t)size;
-			size += mipSize;
-			if( w > 1 ) w >>= 1;
-			if( h > 1 ) h >>= 1;
-		}
-	}
-	else
-	{
-		// uncompressed format
-		if ( ddsd->ddpfPixelFormat.dwFlags & DDPF_RGB )
-		{
-			switch ( ddsd->ddpfPixelFormat.dwRGBBitCount )
-			{
-				case 32:
-					size = 4 * *width * *height;
-					break;
+            data[i] = (byte*)(intptr_t)size;
+            size += mipSize;
+            if (w > 1) {
+                w >>= 1;
+            }
+            if (h > 1) {
+                h >>= 1;
+            }
+        }
+    } else {
+        // uncompressed format
+        if (ddsd->ddpfPixelFormat.dwFlags & DDPF_RGB) {
+            switch (ddsd->ddpfPixelFormat.dwRGBBitCount) {
+            case 32:
+                size = 4 * *width * *height;
+                break;
 
-				default:
-					ri.Printf( PRINT_WARNING, "R_LoadDDSImage: unsupported RGB bit depth \"%s\"\n", name );
-					return;
-			}
-		}
-		else
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadDDSImage: unsupported DDS image type \"%s\"\n", name );
-			return;
-		}
-	}
+            default:
+                ri.Printf(PRINT_WARNING, "R_LoadDDSImage: unsupported RGB bit depth \"%s\"\n", name);
+                return;
+            }
+        } else {
+            ri.Printf(PRINT_WARNING, "R_LoadDDSImage: unsupported DDS image type \"%s\"\n", name);
+            return;
+        }
+    }
 
-	data[0] = (byte*) ri.Z_Malloc( size );
-	Com_Memcpy( data[0], ddsd + 1, size );
+    data[0] = (byte*) ri.Z_Malloc(size);
+    Com_Memcpy(data[0], ddsd + 1, size);
 
-	if( compressed ) {
-		for( i = 1; i < *numMips; i++ ) {
-			data[ i ] = (intptr_t)data[ i ] + data[ 0 ];
-		}
-	}
+    if (compressed) {
+        for (i = 1; i < *numMips; i++) {
+            data[i] = (intptr_t)data[i] + data[0];
+        }
+    }
 }
 
-void LoadDDS( const char *name, byte **data, int *width, int *height,
-	      int *numLayers, int *numMips, int *bits, byte )
-{
-	byte    *buff;
+void LoadDDS(const char* name, byte** data, int* width, int* height,
+             int* numLayers, int* numMips, int* bits, byte) {
+    byte* buff;
 
-	ri.FS_ReadFile( name, ( void ** ) &buff );
+    ri.FS_ReadFile(name, (void**) &buff);
 
-	if ( !buff )
-	{
-		return;
-	}
+    if (!buff) {
+        return;
+    }
 
-	R_LoadDDSImageData( buff, name, data, width, height,
-			    numLayers, numMips, bits );
+    R_LoadDDSImageData(buff, name, data, width, height,
+                       numLayers, numMips, bits);
 
-	ri.FS_FreeFile( buff );
+    ri.FS_FreeFile(buff);
 }

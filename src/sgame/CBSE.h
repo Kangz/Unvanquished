@@ -15,13 +15,13 @@
 
 /** A helper to register component thinkers. */
 #define REGISTER_THINKER(METHOD, SCHEDULER, PERIOD) \
-	GetThinkingComponent().RegisterThinker([this](int i){this->METHOD(i);}, SCHEDULER, PERIOD)
+    GetThinkingComponent().RegisterThinker([this](int i) {this->METHOD(i); }, SCHEDULER, PERIOD)
 
 // ----------------
 
 // Include the backend. These should be the last lines in this header.
 #ifndef CBSE_INCLUDE_TYPES_ONLY
-#include "backend/CBSEEntities.h"
+    #include "backend/CBSEEntities.h"
 #endif // CBSE_INCLUDE_TYPES_ONLY
 
 #endif // CBSE_H_

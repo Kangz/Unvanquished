@@ -40,8 +40,7 @@ Maryland 20850 USA.
 CON_Shutdown
 ==================
 */
-void CON_Shutdown_TTY()
-{
+void CON_Shutdown_TTY() {
 }
 
 /*
@@ -49,8 +48,7 @@ void CON_Shutdown_TTY()
 CON_Init
 ==================
 */
-void CON_Init_TTY()
-{
+void CON_Init_TTY() {
 }
 
 /*
@@ -58,9 +56,8 @@ void CON_Init_TTY()
 CON_Input
 ==================
 */
-char *CON_Input_TTY()
-{
-	return nullptr;
+char* CON_Input_TTY() {
+    return nullptr;
 }
 
 /*
@@ -68,10 +65,9 @@ char *CON_Input_TTY()
 CON_Print
 ==================
 */
-void CON_Print_TTY( const char *msg )
-{
-	//if( com_ansiColor && com_ansiColor->integer )
-	//  Sys_AnsiColorPrint( msg );
-	//else
-	fputs( msg, stderr );
+void CON_Print_TTY(const char* msg) {
+    // if( com_ansiColor && com_ansiColor->integer )
+    // Sys_AnsiColorPrint( msg );
+    // else
+    fputs(msg, stderr);
 }

@@ -40,7 +40,7 @@ Maryland 20850 USA.
 Cvar::Cvar<bool> com_ansiColor("com_ansiColor", "", Cvar::NONE, true);
 Cvar::Cvar<std::string> com_consoleCommand("com_consoleCommand", "", Cvar::NONE, "");
 
-static char         consoleLog[ MAX_LOG ];
+static char consoleLog[MAX_LOG];
 static unsigned int writePos = 0;
 static unsigned int readPos = 0;
 
@@ -49,16 +49,12 @@ static unsigned int readPos = 0;
 CON_LogSize
 ==================
 */
-unsigned int CON_LogSize()
-{
-	if ( readPos <= writePos )
-	{
-		return writePos - readPos;
-	}
-	else
-	{
-		return writePos + MAX_LOG - readPos;
-	}
+unsigned int CON_LogSize() {
+    if (readPos <= writePos) {
+        return writePos - readPos;
+    } else {
+        return writePos + MAX_LOG - readPos;
+    }
 }
 
 /*
@@ -66,9 +62,8 @@ unsigned int CON_LogSize()
 CON_LogFree
 ==================
 */
-static unsigned int CON_LogFree()
-{
-	return MAX_LOG - CON_LogSize() - 1;
+static unsigned int CON_LogFree() {
+    return MAX_LOG - CON_LogSize() - 1;
 }
 
 /*
@@ -76,44 +71,37 @@ static unsigned int CON_LogFree()
 CON_LogWrite
 ==================
 */
-unsigned int CON_LogWrite( const char *in )
-{
-	unsigned int length = strlen( in );
-	unsigned int firstChunk;
-	unsigned int secondChunk;
+unsigned int CON_LogWrite(const char* in) {
+    unsigned int length = strlen(in);
+    unsigned int firstChunk;
+    unsigned int secondChunk;
 
-	while ( CON_LogFree() < length && CON_LogSize() > 0 )
-	{
-		// Free enough space
-		while ( consoleLog[ readPos ] != '\n' && CON_LogSize() > 1 )
-		{
-			readPos = ( readPos + 1 ) % MAX_LOG;
-		}
+    while (CON_LogFree() < length && CON_LogSize() > 0) {
+        // Free enough space
+        while (consoleLog[readPos] != '\n' && CON_LogSize() > 1) {
+            readPos = (readPos + 1) % MAX_LOG;
+        }
 
-		// Skip past the '\n'
-		readPos = ( readPos + 1 ) % MAX_LOG;
-	}
+        // Skip past the '\n'
+        readPos = (readPos + 1) % MAX_LOG;
+    }
 
-	if ( CON_LogFree() < length )
-	{
-		return 0;
-	}
+    if (CON_LogFree() < length) {
+        return 0;
+    }
 
-	if ( writePos + length > MAX_LOG )
-	{
-		firstChunk = MAX_LOG - writePos;
-		secondChunk = length - firstChunk;
-	}
-	else
-	{
-		firstChunk = length;
-		secondChunk = 0;
-	}
+    if (writePos + length > MAX_LOG) {
+        firstChunk = MAX_LOG - writePos;
+        secondChunk = length - firstChunk;
+    } else {
+        firstChunk = length;
+        secondChunk = 0;
+    }
 
-	Com_Memcpy( consoleLog + writePos, in, firstChunk );
-	Com_Memcpy( consoleLog, in + firstChunk, secondChunk );
+    Com_Memcpy(consoleLog + writePos, in, firstChunk);
+    Com_Memcpy(consoleLog, in + firstChunk, secondChunk);
 
-	writePos = ( writePos + length ) % MAX_LOG;
+    writePos = (writePos + length) % MAX_LOG;
 
-	return length;
+    return length;
 }

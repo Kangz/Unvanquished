@@ -21,40 +21,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 // tr_image_exr.c
 
-//#include "tr_local.h"
+// #include "tr_local.h"
 #include "qcommon/q_shared.h"
 
-//#include <OpenEXR/half.h>
+// #include <OpenEXR/half.h>
 #include "openexr/half.h"
 
-	void LoadRGBEToFloats( const char *name, float **pic, int *width, int *height );
-	void LoadRGBEToHalfs( const char *name, unsigned short **halfImage, int *width, int *height )
-	{
-		int            i, j;
-		int            w, h;
-		float          *hdrImage;
-		float          *floatbuf;
-		unsigned short *halfbuf;
+void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height);
+void LoadRGBEToHalfs(const char* name, unsigned short** halfImage, int* width, int* height) {
+    int i, j;
+    int w, h;
+    float* hdrImage;
+    float* floatbuf;
+    unsigned short* halfbuf;
 
-		w = h = 0;
-		LoadRGBEToFloats( name, &hdrImage, &w, &h );
+    w = h = 0;
+    LoadRGBEToFloats(name, &hdrImage, &w, &h);
 
-		*width = w;
-		*height = h;
+    *width = w;
+    *height = h;
 
-		*halfImage = ( unsigned short * ) Com_Allocate( w * h * 3 * 6 );
+    *halfImage = (unsigned short*) Com_Allocate(w * h * 3 * 6);
 
-		halfbuf = *halfImage;
-		floatbuf = hdrImage;
+    halfbuf = *halfImage;
+    floatbuf = hdrImage;
 
-		for ( i = 0; i < ( w * h ); i++ )
-		{
-			for ( j = 0; j < 3; j++ )
-			{
-				half sample( *floatbuf++ );
-				*halfbuf++ = sample.bits();
-			}
-		}
+    for (i = 0; i < (w * h); i++) {
+        for (j = 0; j < 3; j++) {
+            half sample(*floatbuf++);
+            *halfbuf++ = sample.bits();
+        }
+    }
 
-		Com_Dealloc( hdrImage );
-	}
+    Com_Dealloc(hdrImage);
+}

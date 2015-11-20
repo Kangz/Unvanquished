@@ -32,9 +32,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Audio {
 
-    //TODO lazily check for the values
-    static Cvar::Range<Cvar::Cvar<float>> effectsVolume("audio.volume.effects", "the volume of the effects", Cvar::NONE, 0.8f, 0.0f, 1.0f);
-    static Cvar::Range<Cvar::Cvar<float>> musicVolume("audio.volume.music", "the volume of the music", Cvar::NONE, 0.8f, 0.0f, 1.0f);
+    // TODO lazily check for the values
+    static Cvar::Range<Cvar::Cvar<float> > effectsVolume("audio.volume.effects", "the volume of the effects", Cvar::NONE, 0.8f, 0.0f, 1.0f);
+    static Cvar::Range<Cvar::Cvar<float> > musicVolume("audio.volume.music", "the volume of the music", Cvar::NONE, 0.8f, 0.0f, 1.0f);
 
     // We have a big, fixed number of source to avoid rendering too many sounds and slowing down the rest of the engine.
     struct sourceRecord_t {
@@ -45,7 +45,7 @@ namespace Audio {
     };
 
     static sourceRecord_t* sources = nullptr;
-    static CONSTEXPR int nSources = 128; //TODO see what's the limit for OpenAL soft
+    static CONSTEXPR int nSources = 128; // TODO see what's the limit for OpenAL soft
 
     sourceRecord_t* GetSource(int priority);
 
@@ -125,7 +125,7 @@ namespace Audio {
 
     // Finds a inactive or low-priority source to play a new sound.
     sourceRecord_t* GetSource(int priority) {
-        //TODO make a better heuristic? (take into account the distance / the volume /... ?)
+        // TODO make a better heuristic? (take into account the distance / the volume /... ?)
         int best = -1;
         int bestPriority = priority;
 
@@ -165,7 +165,7 @@ namespace Audio {
 
     // Implementation of Sound
 
-    Sound::Sound(): positionalGain(1.0f), soundGain(1.0f), currentGain(1.0f), playing(false), source(nullptr) {
+    Sound::Sound() : positionalGain(1.0f), soundGain(1.0f), currentGain(1.0f), playing(false), source(nullptr) {
     }
 
     Sound::~Sound() {
@@ -228,13 +228,13 @@ namespace Audio {
         // Fade the Gain update to avoid "ticking" sounds when there is a gain discontinuity
         float targetGain = positionalGain * soundGain * SliderToAmplitude(effectsVolume.Get());
 
-        //TODO make it framerate independant and fade out in about 1/8 seconds ?
+        // TODO make it framerate independant and fade out in about 1/8 seconds ?
         if (currentGain > targetGain) {
             currentGain = std::max(currentGain - 0.02f, targetGain);
-            //currentGain = std::max(currentGain * 1.05f, targetGain);
+            // currentGain = std::max(currentGain * 1.05f, targetGain);
         } else if (currentGain < targetGain) {
             currentGain = std::min(currentGain + 0.02f, targetGain);
-            //currentGain = std::min(currentGain / 1.05f - 0.01f, targetGain);
+            // currentGain = std::min(currentGain / 1.05f - 0.01f, targetGain);
         }
 
         source->SetGain(currentGain);
@@ -243,7 +243,7 @@ namespace Audio {
     }
     // Implementation of OneShotSound
 
-    OneShotSound::OneShotSound(std::shared_ptr<Sample> sample): sample(sample) {
+    OneShotSound::OneShotSound(std::shared_ptr<Sample> sample) : sample(sample) {
     }
 
     OneShotSound::~OneShotSound() {
@@ -266,8 +266,9 @@ namespace Audio {
 
     LoopingSound::LoopingSound(std::shared_ptr<Sample> loopingSample, std::shared_ptr<Sample> leadingSample)
         : loopingSample(loopingSample),
-          leadingSample(leadingSample),
-          fadingOut(false) {}
+        leadingSample(leadingSample),
+        fadingOut(false) {
+    }
 
     LoopingSound::~LoopingSound() {
     }
@@ -303,7 +304,7 @@ namespace Audio {
         }
     }
 
-    void LoopingSound::SetupLoopingSound(AL::Source& source){
+    void LoopingSound::SetupLoopingSound(AL::Source& source) {
         source.SetLooping(true);
         if (loopingSample) {
             source.SetBuffer(loopingSample->GetBuffer());
@@ -333,7 +334,7 @@ namespace Audio {
         }
     }
 
-    //TODO somehow try to catch back when data is coming faster than we consume (e.g. capture data)
+    // TODO somehow try to catch back when data is coming faster than we consume (e.g. capture data)
     void StreamingSound::AppendBuffer(AL::Buffer buffer) {
         if (IsStopped()) {
             return;

@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "qcommon/qcommon.h"
 
 #ifndef AUDIO_AUDIO_PRIVATE_H_
-#define AUDIO_AUDIO_PRIVATE_H_
+    #define AUDIO_AUDIO_PRIVATE_H_
 
 namespace Audio {
 
@@ -69,11 +69,11 @@ namespace Audio {
     extern Log::Logger audioLogs;
 }
 
-#include "ALObjects.h"
-#include "Audio.h"
-#include "Emitter.h"
-#include "Sample.h"
-#include "Sound.h"
+    #include "ALObjects.h"
+    #include "Audio.h"
+    #include "Emitter.h"
+    #include "Sample.h"
+    #include "Sound.h"
 
 
-#endif //AUDIO_AUDIO_PRIVATE_H_
+#endif // AUDIO_AUDIO_PRIVATE_H_

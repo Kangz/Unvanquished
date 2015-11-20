@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Application.h"
 
-//TODO: use case-insensitive comparisons for commands (store the lower case version?)
+// TODO: use case-insensitive comparisons for commands (store the lower case version?)
 namespace Cmd {
 
     Log::Logger commandLog("common.commands");
@@ -120,7 +120,7 @@ namespace Cmd {
     }
 
     // Used to emalute the C API
-    //TODO: remove the need for this
+    // TODO: remove the need for this
     Args currentArgs;
     Args oldArgs;
 
@@ -132,7 +132,7 @@ namespace Cmd {
             return;
         }
 
-        if (!commands.insert({name, commandRecord_t{std::move(description), &cmd}}).second) {
+        if (!commands.insert({name, commandRecord_t {std::move(description), &cmd}}).second) {
             commandLog.Warn("Cmd::AddCommand: %s already defined", name);
         }
     }
@@ -155,13 +155,13 @@ namespace Cmd {
     void RemoveFlaggedCommands(int flag) {
         CommandMap& commands = GetCommandMap();
 
-        for (auto it = commands.cbegin(); it != commands.cend();) {
+        for (auto it = commands.cbegin(); it != commands.cend(); ) {
             const commandRecord_t& record = it->second;
 
             if (record.cmd->GetFlags() & flag) {
-                commands.erase(it ++);
+                commands.erase(it++);
             } else {
-                ++ it;
+                ++it;
             }
         }
     }
@@ -169,11 +169,11 @@ namespace Cmd {
     void RemoveSameCommands(const CmdBase& cmd) {
         CommandMap& commands = GetCommandMap();
 
-        for (auto it = commands.cbegin(); it != commands.cend();) {
+        for (auto it = commands.cbegin(); it != commands.cend(); ) {
             if (it->second.cmd == &cmd) {
-                commands.erase(it ++);
+                commands.erase(it++);
             } else {
-                ++ it;
+                ++it;
             }
         }
     }
@@ -195,8 +195,9 @@ namespace Cmd {
         commandLog.Debug("Execing command '%s'", command);
 
         std::string parsedString;
-        if (parseCvars)
+        if (parseCvars) {
             parsedString = SubstituteCvars(command);
+        }
 
         Args args(parseCvars ? Str::StringRef(parsedString) : command);
         currentArgs = args;
@@ -307,10 +308,10 @@ namespace Cmd {
     */
 
 
-    class ListCmdsCmd: public StaticCmd {
+    class ListCmdsCmd : public StaticCmd {
         public:
             ListCmdsCmd(std::string name, int cmdFlags, std::string description, int showCmdFlags)
-            :StaticCmd(std::move(name), cmdFlags, std::move(description)), showCmdFlags(showCmdFlags) {
+                : StaticCmd(std::move(name), cmdFlags, std::move(description)), showCmdFlags(showCmdFlags) {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -320,11 +321,11 @@ namespace Cmd {
                 std::vector<const std::string*> matchesNames;
                 unsigned long maxNameLength = 0;
 
-                //Find all the matching commands and their names
+                // Find all the matching commands and their names
                 for (auto it = commands.cbegin(); it != commands.cend(); ++it) {
                     const commandRecord_t& record = it->second;
 
-                    // /listCmds's arguement is used for prefix matching
+                    ///listCmds's arguement is used for prefix matching
                     if (args.Argc() >= 2 and not Str::IsIPrefix(args.Argv(1), it->first)) {
                         continue;
                     }
@@ -336,7 +337,7 @@ namespace Cmd {
                     }
                 }
 
-                //Print the matches, keeping the description aligned
+                // Print the matches, keeping the description aligned
                 for (unsigned i = 0; i < matches.size(); i++) {
                     int toFill = maxNameLength - matchesNames[i]->size();
                     Print("  %s%s %s", matchesNames[i]->c_str(), std::string(toFill, ' ').c_str(), matches[i]->description.c_str());

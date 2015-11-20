@@ -33,14 +33,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Application {
 
     Traits::Traits()
-    : isClient(false), isTTYClient(false), isServer(false), useCurses(false), supportsUri(false) {
+        : isClient(false), isTTYClient(false), isServer(false), useCurses(false), supportsUri(false) {
     }
 
     // Forward declaration of the function declared by INSTANTIATE_APPLICATION
     Application& GetApp();
 
-    Application::Application()
-    {
+    Application::Application() {
     }
 
     void Application::LoadInitialConfig(bool) {

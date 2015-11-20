@@ -47,15 +47,15 @@ namespace Audio {
     // Position Emitters can be reused so we keep the list of all of them
     // this is not very efficient but we cannot have more position emitters
     // than sounds, that is about 128
-    static std::vector<std::shared_ptr<PositionEmitter>> posEmitters;
+    static std::vector<std::shared_ptr<PositionEmitter> > posEmitters;
 
     // There is a single LocalEmitter
     static std::shared_ptr<Emitter> localEmitter;
 
     static const Vec3 origin = {0.0f, 0.0f, 0.0f};
 
-    static Cvar::Range<Cvar::Cvar<float>> dopplerExaggeration("audio.dopplerExaggeration", "controls the pitch change of the doppler effect", Cvar::ARCHIVE, 0.4, 0.0, 1.0);
-    static Cvar::Range<Cvar::Cvar<float>> reverbIntensity("audio.reverbIntensity", "the intensity of the reverb effects", Cvar::ARCHIVE, 1.0, 0.0, 1.0);
+    static Cvar::Range<Cvar::Cvar<float> > dopplerExaggeration("audio.dopplerExaggeration", "controls the pitch change of the doppler effect", Cvar::ARCHIVE, 0.4, 0.0, 1.0);
+    static Cvar::Range<Cvar::Cvar<float> > reverbIntensity("audio.reverbIntensity", "the intensity of the reverb effects", Cvar::ARCHIVE, 1.0, 0.0, 1.0);
 
     struct ReverbSlot {
         AL::EffectSlot* effect;
@@ -139,14 +139,14 @@ namespace Audio {
             }
         }
 
-        for (auto it = posEmitters.begin(); it != posEmitters.end();){
+        for (auto it = posEmitters.begin(); it != posEmitters.end(); ) {
             (*it)->Update();
 
             // No sound is using this emitter, destroy it
             if ((*it).unique()) {
                 it = posEmitters.erase(it);
             } else {
-                it ++;
+                it++;
             }
         }
 
@@ -270,10 +270,10 @@ namespace Audio {
 
     // Implementation of EntityEmitter
 
-    EntityEmitter::EntityEmitter(int entityNum): entityNum(entityNum) {
+    EntityEmitter::EntityEmitter(int entityNum) : entityNum(entityNum) {
     }
 
-    EntityEmitter::~EntityEmitter(){
+    EntityEmitter::~EntityEmitter() {
     }
 
     void EntityEmitter::Update() {
@@ -298,7 +298,7 @@ namespace Audio {
 
     // Implementation of PositionEmitter
 
-    PositionEmitter::PositionEmitter(Vec3 position){
+    PositionEmitter::PositionEmitter(Vec3 position) {
         VectorCopy(position, this->position);
     }
 
@@ -306,7 +306,7 @@ namespace Audio {
     }
 
     void PositionEmitter::Update() {
-        //TODO
+        // TODO
     }
 
     void PositionEmitter::UpdateSound(Sound& sound) {
@@ -347,7 +347,7 @@ namespace Audio {
 
     class TestReverbCmd : public Cmd::StaticCmd {
         public:
-            TestReverbCmd(): StaticCmd("testReverb", Cmd::AUDIO, "Tests a reverb preset.") {
+            TestReverbCmd() : StaticCmd("testReverb", Cmd::AUDIO, "Tests a reverb preset.") {
             }
 
             virtual void Run(const Cmd::Args& args) const OVERRIDE {

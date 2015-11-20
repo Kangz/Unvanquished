@@ -120,7 +120,8 @@ namespace Log {
 
     struct Event {
         Event(std::string text)
-            : text(std::move(text)) {}
+            : text(std::move(text)) {
+        }
         std::string text;
     };
 
@@ -139,7 +140,7 @@ namespace Log {
         MAX_TARGET_ID
     };
 
-    //Internals
+    // Internals
 
     // Functions used for Cvar<Log::Level>
     bool ParseCvarValue(std::string value, Log::Level& result);
@@ -224,4 +225,4 @@ namespace Cvar {
     std::string GetCvarTypeName<Log::Level>();
 }
 
-#endif //COMMON_LOG_H_
+#endif // COMMON_LOG_H_

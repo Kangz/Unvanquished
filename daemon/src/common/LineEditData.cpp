@@ -30,12 +30,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Common.h"
 
-//TODO: use a std::string instead of a fixed size char* ?
-//TODO: support MAJ-selection ?
+// TODO: use a std::string instead of a fixed size char* ?
+// TODO: support MAJ-selection ?
 
 namespace Util {
     LineEditData::LineEditData(unsigned size, unsigned scrollSize)
-    :scrollSize(scrollSize), width(size), scroll(0), cursor(0) {
+        : scrollSize(scrollSize), width(size), scroll(0), cursor(0) {
     }
     const std::u32string& LineEditData::GetText() const {
         return buffer;
@@ -65,8 +65,9 @@ namespace Util {
         cursor = buffer.size();
         if (cursor > width) {
             scroll = cursor - width + std::min(width - 1, scrollSize);
-        } else
+        } else {
             scroll = 0;
+        }
     }
 
     void LineEditData::CursorLeft(int times) {
@@ -107,7 +108,7 @@ namespace Util {
 
     void LineEditData::AddChar(char32_t a) {
         buffer.insert(buffer.begin() + cursor, a);
-        cursor ++;
+        cursor++;
         UpdateScroll();
     }
 

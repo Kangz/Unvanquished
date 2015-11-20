@@ -39,62 +39,48 @@ Maryland 20850 USA.
 #include "rocket.h"
 #include <Rocket/Core/Core.h>
 
-class RocketFocusManager : public Rocket::Core::EventListener
-{
-public:
-	RocketFocusManager() { }
-	void ProcessEvent( Rocket::Core::Event &evt )
-	{
-		bool anyVisible = false;
-		Rocket::Core::Context* context = evt.GetTargetElement() ? evt.GetTargetElement()->GetContext() : nullptr;
+class RocketFocusManager : public Rocket::Core::EventListener {
+    public:
+        RocketFocusManager() {
+        }
+        void ProcessEvent(Rocket::Core::Event &evt) {
+            bool anyVisible = false;
+            Rocket::Core::Context* context = evt.GetTargetElement() ? evt.GetTargetElement()->GetContext() : nullptr;
 
-		if ( context )
-		{
-			for ( int i = 0; i < context->GetNumDocuments(); ++i )
-			{
-				if ( context->GetDocument( i )->IsVisible() )
-				{
-					anyVisible = true;
-					break;
-				}
-			}
-		}
+            if (context) {
+                for (int i = 0; i < context->GetNumDocuments(); ++i) {
+                    if (context->GetDocument(i)->IsVisible() ) {
+                        anyVisible = true;
+                        break;
+                    }
+                }
+            }
 
-		if ( anyVisible && ! ( rocketInfo.keyCatcher & KEYCATCH_UI ) )
-		{
-			trap_Key_ClearCmdButtons();
-			trap_Key_ClearStates();
-			CG_SetKeyCatcher( KEYCATCH_UI );
-		}
-		else if ( !anyVisible && rocketInfo.keyCatcher && rocketInfo.cstate.connState >= CA_PRIMED )
-		{
-			CG_SetKeyCatcher( 0 );
-		}
-	}
+            if (anyVisible && !(rocketInfo.keyCatcher & KEYCATCH_UI) ) {
+                trap_Key_ClearCmdButtons();
+                trap_Key_ClearStates();
+                CG_SetKeyCatcher(KEYCATCH_UI);
+            } else if (!anyVisible && rocketInfo.keyCatcher && rocketInfo.cstate.connState >= CA_PRIMED) {
+                CG_SetKeyCatcher(0);
+            }
+        }
 
-private:
-	// Checks if parents are visible as well
-	bool IsTreeVisible( Rocket::Core::Element *element )
-	{
-		if ( element && element->IsVisible() )
-		{
-			Rocket::Core::Element *parent = element;
+    private:
+        // Checks if parents are visible as well
+        bool IsTreeVisible(Rocket::Core::Element* element) {
+            if (element && element->IsVisible() ) {
+                Rocket::Core::Element* parent = element;
 
-			while ( ( parent = parent->GetParentNode() ) )
-			{
-				if ( !parent->IsVisible() )
-				{
-					return false;
-				}
-			}
+                while ( (parent = parent->GetParentNode() ) ) {
+                    if (!parent->IsVisible() ) {
+                        return false;
+                    }
+                }
 
-			return true;
-		}
-
-		else
-		{
-			return false;
-		}
-	}
+                return true;
+            } else {
+                return false;
+            }
+        }
 };
 #endif

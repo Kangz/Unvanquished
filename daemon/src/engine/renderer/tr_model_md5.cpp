@@ -30,620 +30,555 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 R_LoadMD5
 =================
 */
-bool R_LoadMD5( model_t *mod, void *buffer, const char *modName )
-{
-	md5Model_t    *md5;
-	md5Bone_t     *bone;
-	md5Surface_t  *surf;
-	srfTriangle_t *tri;
-	md5Vertex_t   *v;
-	md5Weight_t   *weight;
-	int           version;
-	shader_t      *sh;
-	const char    *buf_p;
-	char          *token;
-	vec3_t        boneOrigin;
-	quat_t        boneQuat;
-	matrix_t      boneMat;
+bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
+    md5Model_t* md5;
+    md5Bone_t* bone;
+    md5Surface_t* surf;
+    srfTriangle_t* tri;
+    md5Vertex_t* v;
+    md5Weight_t* weight;
+    int version;
+    shader_t* sh;
+    const char* buf_p;
+    char* token;
+    vec3_t boneOrigin;
+    quat_t boneQuat;
+    matrix_t boneMat;
 
-	int           numRemaining;
-	growList_t    sortedTriangles;
-	growList_t    vboTriangles;
-	growList_t    vboSurfaces;
+    int numRemaining;
+    growList_t sortedTriangles;
+    growList_t vboTriangles;
+    growList_t vboSurfaces;
 
-	int           numBoneReferences;
-	int           boneReferences[ MAX_BONES ];
+    int numBoneReferences;
+    int boneReferences[MAX_BONES];
 
-	buf_p = ( char * ) buffer;
+    buf_p = (char*) buffer;
 
-	// skip MD5Version indent string
-	COM_ParseExt2( &buf_p, false );
+    // skip MD5Version indent string
+    COM_ParseExt2(&buf_p, false);
 
-	// check version
-	token = COM_ParseExt2( &buf_p, false );
-	version = atoi( token );
+    // check version
+    token = COM_ParseExt2(&buf_p, false);
+    version = atoi(token);
 
-	if ( version != MD5_VERSION )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: %s has wrong version (%i should be %i)\n", modName, version, MD5_VERSION );
-		return false;
-	}
+    if (version != MD5_VERSION) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: %s has wrong version (%i should be %i)\n", modName, version, MD5_VERSION);
+        return false;
+    }
 
-	mod->type = MOD_MD5;
-	mod->dataSize += sizeof( md5Model_t );
-	md5 = mod->md5 = (md5Model_t*) ri.Hunk_Alloc( sizeof( md5Model_t ), h_low );
+    mod->type = MOD_MD5;
+    mod->dataSize += sizeof(md5Model_t);
+    md5 = mod->md5 = (md5Model_t*) ri.Hunk_Alloc(sizeof(md5Model_t), h_low);
 
-	// skip commandline <arguments string>
-	token = COM_ParseExt2( &buf_p, true );
-	token = COM_ParseExt2( &buf_p, true );
+    // skip commandline <arguments string>
+    token = COM_ParseExt2(&buf_p, true);
+    token = COM_ParseExt2(&buf_p, true);
 
-	// parse numJoints <number>
-	token = COM_ParseExt2( &buf_p, true );
+    // parse numJoints <number>
+    token = COM_ParseExt2(&buf_p, true);
 
-	if ( Q_stricmp( token, "numJoints" ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numJoints' found '%s' in model '%s'\n", token, modName );
-		return false;
-	}
+    if (Q_stricmp(token, "numJoints") ) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numJoints' found '%s' in model '%s'\n", token, modName);
+        return false;
+    }
 
-	token = COM_ParseExt2( &buf_p, false );
-	md5->numBones = atoi( token );
+    token = COM_ParseExt2(&buf_p, false);
+    md5->numBones = atoi(token);
 
-	// parse numMeshes <number>
-	token = COM_ParseExt2( &buf_p, true );
+    // parse numMeshes <number>
+    token = COM_ParseExt2(&buf_p, true);
 
-	if ( Q_stricmp( token, "numMeshes" ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numMeshes' found '%s' in model '%s'\n", token, modName );
-		return false;
-	}
+    if (Q_stricmp(token, "numMeshes") ) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numMeshes' found '%s' in model '%s'\n", token, modName);
+        return false;
+    }
 
-	token = COM_ParseExt2( &buf_p, false );
-	md5->numSurfaces = atoi( token );
+    token = COM_ParseExt2(&buf_p, false);
+    md5->numSurfaces = atoi(token);
 
-	if ( md5->numBones < 1 )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: '%s' has no bones\n", modName );
-		return false;
-	}
+    if (md5->numBones < 1) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: '%s' has no bones\n", modName);
+        return false;
+    }
 
-	if ( md5->numBones > MAX_BONES )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: '%s' has more than %i bones (%i)\n", modName, MAX_BONES, md5->numBones );
-		return false;
-	}
+    if (md5->numBones > MAX_BONES) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: '%s' has more than %i bones (%i)\n", modName, MAX_BONES, md5->numBones);
+        return false;
+    }
 
-	// parse all the bones
-	md5->bones = (md5Bone_t*) ri.Hunk_Alloc( sizeof( *bone ) * md5->numBones, h_low );
+    // parse all the bones
+    md5->bones = (md5Bone_t*) ri.Hunk_Alloc(sizeof(*bone) * md5->numBones, h_low);
 
-	// parse joints {
-	token = COM_ParseExt2( &buf_p, true );
+    // parse joints {
+    token = COM_ParseExt2(&buf_p, true);
 
-	if ( Q_stricmp( token, "joints" ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'joints' found '%s' in model '%s'\n", token, modName );
-		return false;
-	}
+    if (Q_stricmp(token, "joints") ) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'joints' found '%s' in model '%s'\n", token, modName);
+        return false;
+    }
 
-	token = COM_ParseExt2( &buf_p, false );
+    token = COM_ParseExt2(&buf_p, false);
 
-	if ( Q_stricmp( token, "{" ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName );
-		return false;
-	}
+    if (Q_stricmp(token, "{") ) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName);
+        return false;
+    }
 
     bone = md5->bones;
-	for ( int i = 0; i < md5->numBones; i++, bone++ )
-	{
-		token = COM_ParseExt2( &buf_p, true );
-		Q_strncpyz( bone->name, token, sizeof( bone->name ) );
+    for (int i = 0; i < md5->numBones; i++, bone++) {
+        token = COM_ParseExt2(&buf_p, true);
+        Q_strncpyz(bone->name, token, sizeof(bone->name) );
 
-		token = COM_ParseExt2( &buf_p, false );
-		bone->parentIndex = atoi( token );
+        token = COM_ParseExt2(&buf_p, false);
+        bone->parentIndex = atoi(token);
 
-		if ( bone->parentIndex >= md5->numBones )
-		{
-			ri.Error( ERR_DROP, "R_LoadMD5: '%s' has bone '%s' with bad parent index %i while numBones is %i", modName,
-			          bone->name, bone->parentIndex, md5->numBones );
-		}
+        if (bone->parentIndex >= md5->numBones) {
+            ri.Error(ERR_DROP, "R_LoadMD5: '%s' has bone '%s' with bad parent index %i while numBones is %i", modName,
+                     bone->name, bone->parentIndex, md5->numBones);
+        }
 
-		// skip (
-		token = COM_ParseExt2( &buf_p, false );
+        // skip (
+        token = COM_ParseExt2(&buf_p, false);
 
-		if ( Q_stricmp( token, "(" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "(") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		for (unsigned j = 0; j < 3; j++ )
-		{
-			token = COM_ParseExt2( &buf_p, false );
-			boneOrigin[ j ] = atof( token );
-		}
+        for (unsigned j = 0; j < 3; j++) {
+            token = COM_ParseExt2(&buf_p, false);
+            boneOrigin[j] = atof(token);
+        }
 
-		// skip )
-		token = COM_ParseExt2( &buf_p, false );
+        // skip )
+        token = COM_ParseExt2(&buf_p, false);
 
-		if ( Q_stricmp( token, ")" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, ")") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		// skip (
-		token = COM_ParseExt2( &buf_p, false );
+        // skip (
+        token = COM_ParseExt2(&buf_p, false);
 
-		if ( Q_stricmp( token, "(" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "(") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		for (unsigned j = 0; j < 3; j++ )
-		{
-			token = COM_ParseExt2( &buf_p, false );
-			boneQuat[ j ] = atof( token );
-		}
+        for (unsigned j = 0; j < 3; j++) {
+            token = COM_ParseExt2(&buf_p, false);
+            boneQuat[j] = atof(token);
+        }
 
-		QuatCalcW( boneQuat );
-		MatrixFromQuat( boneMat, boneQuat );
+        QuatCalcW(boneQuat);
+        MatrixFromQuat(boneMat, boneQuat);
 
-		VectorCopy( boneOrigin, bone->origin );
-		QuatCopy( boneQuat, bone->rotation );
+        VectorCopy(boneOrigin, bone->origin);
+        QuatCopy(boneQuat, bone->rotation);
 
-		// skip )
-		token = COM_ParseExt2( &buf_p, false );
+        // skip )
+        token = COM_ParseExt2(&buf_p, false);
 
-		if ( Q_stricmp( token, ")" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
-	}
+        if (Q_stricmp(token, ")") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
+    }
 
-	// parse }
-	token = COM_ParseExt2( &buf_p, true );
+    // parse }
+    token = COM_ParseExt2(&buf_p, true);
 
-	if ( Q_stricmp( token, "}" ) )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName );
-		return false;
-	}
+    if (Q_stricmp(token, "}") ) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName);
+        return false;
+    }
 
-	// parse all the surfaces
-	if ( md5->numSurfaces < 1 )
-	{
-		ri.Printf( PRINT_WARNING, "R_LoadMD5: '%s' has no surfaces\n", modName );
-		return false;
-	}
+    // parse all the surfaces
+    if (md5->numSurfaces < 1) {
+        ri.Printf(PRINT_WARNING, "R_LoadMD5: '%s' has no surfaces\n", modName);
+        return false;
+    }
 
-	md5->surfaces = (md5Surface_t*) ri.Hunk_Alloc( sizeof( *surf ) * md5->numSurfaces, h_low );
+    md5->surfaces = (md5Surface_t*) ri.Hunk_Alloc(sizeof(*surf) * md5->numSurfaces, h_low);
 
     surf = md5->surfaces;
-	for ( unsigned i = 0; i < md5->numSurfaces; i++, surf++ )
-	{
-		// parse mesh {
-		token = COM_ParseExt2( &buf_p, true );
+    for (unsigned i = 0; i < md5->numSurfaces; i++, surf++) {
+        // parse mesh {
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "mesh" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'mesh' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "mesh") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'mesh' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		token = COM_ParseExt2( &buf_p, false );
+        token = COM_ParseExt2(&buf_p, false);
 
-		if ( Q_stricmp( token, "{" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "{") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		// change to surface identifier
-		surf->surfaceType = SF_MD5;
+        // change to surface identifier
+        surf->surfaceType = SF_MD5;
 
-		// give pointer to model for Tess_SurfaceMD5
-		surf->model = md5;
+        // give pointer to model for Tess_SurfaceMD5
+        surf->model = md5;
 
-		// parse shader <name>
-		token = COM_ParseExt2( &buf_p, true );
+        // parse shader <name>
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "shader" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'shader' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "shader") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'shader' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		token = COM_ParseExt2( &buf_p, false );
-		Q_strncpyz( surf->shader, token, sizeof( surf->shader ) );
+        token = COM_ParseExt2(&buf_p, false);
+        Q_strncpyz(surf->shader, token, sizeof(surf->shader) );
 
-		// FIXME .md5mesh meshes don't have surface names
-		// lowercase the surface name so skin compares are faster
+        // FIXME .md5mesh meshes don't have surface names
+        // lowercase the surface name so skin compares are faster
 
-		// register the shaders
-		sh = R_FindShader( surf->shader, SHADER_3D_DYNAMIC, RSF_DEFAULT );
+        // register the shaders
+        sh = R_FindShader(surf->shader, SHADER_3D_DYNAMIC, RSF_DEFAULT);
 
-		if ( sh->defaultShader )
-		{
-			surf->shaderIndex = 0;
-		}
-		else
-		{
-			surf->shaderIndex = sh->index;
-		}
+        if (sh->defaultShader) {
+            surf->shaderIndex = 0;
+        } else {
+            surf->shaderIndex = sh->index;
+        }
 
-		// parse numVerts <number>
-		token = COM_ParseExt2( &buf_p, true );
+        // parse numVerts <number>
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "numVerts" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numVerts' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "numVerts") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numVerts' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		token = COM_ParseExt2( &buf_p, false );
-		surf->numVerts = atoi( token );
+        token = COM_ParseExt2(&buf_p, false);
+        surf->numVerts = atoi(token);
 
-		if ( surf->numVerts > SHADER_MAX_VERTEXES )
-		{
-			ri.Error( ERR_DROP, "R_LoadMD5: '%s' has more than %i verts on a surface (%i)",
-			          modName, SHADER_MAX_VERTEXES, surf->numVerts );
-		}
+        if (surf->numVerts > SHADER_MAX_VERTEXES) {
+            ri.Error(ERR_DROP, "R_LoadMD5: '%s' has more than %i verts on a surface (%i)",
+                     modName, SHADER_MAX_VERTEXES, surf->numVerts);
+        }
 
-		surf->verts = (md5Vertex_t*) ri.Hunk_Alloc( sizeof( *v ) * surf->numVerts, h_low );
-		assert( ((intptr_t) surf->verts & 15) == 0 );
+        surf->verts = (md5Vertex_t*) ri.Hunk_Alloc(sizeof(*v) * surf->numVerts, h_low);
+        assert( ((intptr_t) surf->verts & 15) == 0);
 
         v = surf->verts;
-		for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-		{
-			// skip vert <number>
-			token = COM_ParseExt2( &buf_p, true );
+        for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+            // skip vert <number>
+            token = COM_ParseExt2(&buf_p, true);
 
-			if ( Q_stricmp( token, "vert" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'vert' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, "vert") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'vert' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			COM_ParseExt2( &buf_p, false );
+            COM_ParseExt2(&buf_p, false);
 
-			// skip (
-			token = COM_ParseExt2( &buf_p, false );
+            // skip (
+            token = COM_ParseExt2(&buf_p, false);
 
-			if ( Q_stricmp( token, "(" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, "(") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			for (unsigned k = 0; k < 2; k++ )
-			{
-				token = COM_ParseExt2( &buf_p, false );
-				v->texCoords[ k ] = atof( token );
-			}
+            for (unsigned k = 0; k < 2; k++) {
+                token = COM_ParseExt2(&buf_p, false);
+                v->texCoords[k] = atof(token);
+            }
 
-			// skip )
-			token = COM_ParseExt2( &buf_p, false );
+            // skip )
+            token = COM_ParseExt2(&buf_p, false);
 
-			if ( Q_stricmp( token, ")" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, ")") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			token = COM_ParseExt2( &buf_p, false );
-			v->firstWeight = atoi( token );
+            token = COM_ParseExt2(&buf_p, false);
+            v->firstWeight = atoi(token);
 
-			token = COM_ParseExt2( &buf_p, false );
-			v->numWeights = atoi( token );
+            token = COM_ParseExt2(&buf_p, false);
+            v->numWeights = atoi(token);
 
-			if ( v->numWeights > MAX_WEIGHTS )
-			{
-				ri.Error( ERR_DROP, "R_LoadMD5: vertex %i requires more than %i weights on surface (%i) in model '%s'",
-				          j, MAX_WEIGHTS, i, modName );
-			}
-		}
+            if (v->numWeights > MAX_WEIGHTS) {
+                ri.Error(ERR_DROP, "R_LoadMD5: vertex %i requires more than %i weights on surface (%i) in model '%s'",
+                         j, MAX_WEIGHTS, i, modName);
+            }
+        }
 
-		// parse numTris <number>
-		token = COM_ParseExt2( &buf_p, true );
+        // parse numTris <number>
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "numTris" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numTris' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "numTris") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numTris' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		token = COM_ParseExt2( &buf_p, false );
-		surf->numTriangles = atoi( token );
+        token = COM_ParseExt2(&buf_p, false);
+        surf->numTriangles = atoi(token);
 
-		if ( surf->numTriangles > SHADER_MAX_TRIANGLES )
-		{
-			ri.Error( ERR_DROP, "R_LoadMD5: '%s' has more than %i triangles on a surface (%i)",
-			          modName, SHADER_MAX_TRIANGLES, surf->numTriangles );
-		}
+        if (surf->numTriangles > SHADER_MAX_TRIANGLES) {
+            ri.Error(ERR_DROP, "R_LoadMD5: '%s' has more than %i triangles on a surface (%i)",
+                     modName, SHADER_MAX_TRIANGLES, surf->numTriangles);
+        }
 
-		surf->triangles = (srfTriangle_t*) ri.Hunk_Alloc( sizeof( *tri ) * surf->numTriangles, h_low );
+        surf->triangles = (srfTriangle_t*) ri.Hunk_Alloc(sizeof(*tri) * surf->numTriangles, h_low);
 
         tri = surf->triangles;
-		for (unsigned j = 0; j < surf->numTriangles; j++, tri++ )
-		{
-			// skip tri <number>
-			token = COM_ParseExt2( &buf_p, true );
+        for (unsigned j = 0; j < surf->numTriangles; j++, tri++) {
+            // skip tri <number>
+            token = COM_ParseExt2(&buf_p, true);
 
-			if ( Q_stricmp( token, "tri" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'tri' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, "tri") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'tri' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			COM_ParseExt2( &buf_p, false );
+            COM_ParseExt2(&buf_p, false);
 
-			for (unsigned k = 0; k < 3; k++ )
-			{
-				token = COM_ParseExt2( &buf_p, false );
-				tri->indexes[ k ] = atoi( token );
-			}
-		}
+            for (unsigned k = 0; k < 3; k++) {
+                token = COM_ParseExt2(&buf_p, false);
+                tri->indexes[k] = atoi(token);
+            }
+        }
 
-		// parse numWeights <number>
-		token = COM_ParseExt2( &buf_p, true );
+        // parse numWeights <number>
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "numWeights" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numWeights' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "numWeights") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numWeights' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		token = COM_ParseExt2( &buf_p, false );
-		surf->numWeights = atoi( token );
+        token = COM_ParseExt2(&buf_p, false);
+        surf->numWeights = atoi(token);
 
-		surf->weights = (md5Weight_t*) ri.Hunk_Alloc( sizeof( *weight ) * surf->numWeights, h_low );
+        surf->weights = (md5Weight_t*) ri.Hunk_Alloc(sizeof(*weight) * surf->numWeights, h_low);
 
         weight = surf->weights;
-		for (unsigned j = 0; j < surf->numWeights; j++, weight++ )
-		{
-			// skip weight <number>
-			token = COM_ParseExt2( &buf_p, true );
+        for (unsigned j = 0; j < surf->numWeights; j++, weight++) {
+            // skip weight <number>
+            token = COM_ParseExt2(&buf_p, true);
 
-			if ( Q_stricmp( token, "weight" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'weight' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, "weight") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'weight' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			COM_ParseExt2( &buf_p, false );
+            COM_ParseExt2(&buf_p, false);
 
-			token = COM_ParseExt2( &buf_p, false );
-			weight->boneIndex = atoi( token );
+            token = COM_ParseExt2(&buf_p, false);
+            weight->boneIndex = atoi(token);
 
-			token = COM_ParseExt2( &buf_p, false );
-			weight->boneWeight = atof( token );
+            token = COM_ParseExt2(&buf_p, false);
+            weight->boneWeight = atof(token);
 
-			// skip (
-			token = COM_ParseExt2( &buf_p, false );
+            // skip (
+            token = COM_ParseExt2(&buf_p, false);
 
-			if ( Q_stricmp( token, "(" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
+            if (Q_stricmp(token, "(") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
 
-			for (unsigned k = 0; k < 3; k++ )
-			{
-				token = COM_ParseExt2( &buf_p, false );
-				weight->offset[ k ] = atof( token );
-			}
+            for (unsigned k = 0; k < 3; k++) {
+                token = COM_ParseExt2(&buf_p, false);
+                weight->offset[k] = atof(token);
+            }
 
-			// skip )
-			token = COM_ParseExt2( &buf_p, false );
+            // skip )
+            token = COM_ParseExt2(&buf_p, false);
 
-			if ( Q_stricmp( token, ")" ) )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName );
-				return false;
-			}
-		}
+            if (Q_stricmp(token, ")") ) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
+                return false;
+            }
+        }
 
-		// parse }
-		token = COM_ParseExt2( &buf_p, true );
+        // parse }
+        token = COM_ParseExt2(&buf_p, true);
 
-		if ( Q_stricmp( token, "}" ) )
-		{
-			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName );
-			return false;
-		}
+        if (Q_stricmp(token, "}") ) {
+            ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName);
+            return false;
+        }
 
-		// loop through all vertices and set up the vertex weights and base positions
+        // loop through all vertices and set up the vertex weights and base positions
         v = surf->verts;
-		for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-		{
-			md5Weight_t *w = surf->weights + v->firstWeight;
-			Vector4Set( v->position, 0, 0, 0, 1 );
+        for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+            md5Weight_t* w = surf->weights + v->firstWeight;
+            Vector4Set(v->position, 0, 0, 0, 1);
 
-			for (unsigned k = 0; k < v->numWeights; k++, w++ )
-			{
-				vec3_t offsetVec;
+            for (unsigned k = 0; k < v->numWeights; k++, w++) {
+                vec3_t offsetVec;
 
-				v->boneIndexes[ k ] = w->boneIndex;
-				v->boneWeights[ k ] = w->boneWeight;
+                v->boneIndexes[k] = w->boneIndex;
+                v->boneWeights[k] = w->boneWeight;
 
-				bone = &md5->bones[ w->boneIndex ];
+                bone = &md5->bones[w->boneIndex];
 
-				QuatTransformVector( bone->rotation, w->offset, offsetVec );
-				VectorAdd( bone->origin, offsetVec, offsetVec );
+                QuatTransformVector(bone->rotation, w->offset, offsetVec);
+                VectorAdd(bone->origin, offsetVec, offsetVec);
 
-				VectorMA( v->position, w->boneWeight, offsetVec, v->position );
-			}
-		}
-	}
+                VectorMA(v->position, w->boneWeight, offsetVec, v->position);
+            }
+        }
+    }
 
-	// loading is done now calculate the bounding box and tangent spaces
-	ClearBounds( md5->bounds[ 0 ], md5->bounds[ 1 ] );
+    // loading is done now calculate the bounding box and tangent spaces
+    ClearBounds(md5->bounds[0], md5->bounds[1]);
 
     surf = md5->surfaces;
-	for (unsigned i = 0; i < md5->numSurfaces; i++, surf++ )
-	{
+    for (unsigned i = 0; i < md5->numSurfaces; i++, surf++) {
         v = surf->verts;
-		for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-		{
-			AddPointToBounds( v->position, md5->bounds[ 0 ], md5->bounds[ 1 ] );
-		}
+        for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+            AddPointToBounds(v->position, md5->bounds[0], md5->bounds[1]);
+        }
 
-		// calc tangent spaces
-		{
-			const float *v0, *v1, *v2;
-			const float *t0, *t1, *t2;
-			vec3_t      tangent;
-			vec3_t      binormal;
-			vec3_t      normal;
+        // calc tangent spaces
+        {
+            const float* v0, * v1, * v2;
+            const float* t0, * t1, * t2;
+            vec3_t tangent;
+            vec3_t binormal;
+            vec3_t normal;
 
             v = surf->verts;
-			for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-			{
-				VectorClear( v->tangent );
-				VectorClear( v->binormal );
-				VectorClear( v->normal );
-			}
+            for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+                VectorClear(v->tangent);
+                VectorClear(v->binormal);
+                VectorClear(v->normal);
+            }
 
             tri = surf->triangles;
-			for (unsigned j = 0; j < surf->numTriangles; j++, tri++ )
-			{
-				v0 = surf->verts[ tri->indexes[ 0 ] ].position;
-				v1 = surf->verts[ tri->indexes[ 1 ] ].position;
-				v2 = surf->verts[ tri->indexes[ 2 ] ].position;
+            for (unsigned j = 0; j < surf->numTriangles; j++, tri++) {
+                v0 = surf->verts[tri->indexes[0]].position;
+                v1 = surf->verts[tri->indexes[1]].position;
+                v2 = surf->verts[tri->indexes[2]].position;
 
-				t0 = surf->verts[ tri->indexes[ 0 ] ].texCoords;
-				t1 = surf->verts[ tri->indexes[ 1 ] ].texCoords;
-				t2 = surf->verts[ tri->indexes[ 2 ] ].texCoords;
+                t0 = surf->verts[tri->indexes[0]].texCoords;
+                t1 = surf->verts[tri->indexes[1]].texCoords;
+                t2 = surf->verts[tri->indexes[2]].texCoords;
 
-				R_CalcFaceNormal( normal, v0, v1, v2 );
-				R_CalcTangents( tangent, binormal, v0, v1, v2, t0, t1, t2 );
+                R_CalcFaceNormal(normal, v0, v1, v2);
+                R_CalcTangents(tangent, binormal, v0, v1, v2, t0, t1, t2);
 
-				for (unsigned k = 0; k < 3; k++ )
-				{
-					float *v;
+                for (unsigned k = 0; k < 3; k++) {
+                    float* v;
 
-					v = surf->verts[ tri->indexes[ k ] ].tangent;
-					VectorAdd( v, tangent, v );
+                    v = surf->verts[tri->indexes[k]].tangent;
+                    VectorAdd(v, tangent, v);
 
-					v = surf->verts[ tri->indexes[ k ] ].binormal;
-					VectorAdd( v, binormal, v );
+                    v = surf->verts[tri->indexes[k]].binormal;
+                    VectorAdd(v, binormal, v);
 
-					v = surf->verts[ tri->indexes[ k ] ].normal;
-					VectorAdd( v, normal, v );
-				}
-			}
+                    v = surf->verts[tri->indexes[k]].normal;
+                    VectorAdd(v, normal, v);
+                }
+            }
             v = surf->verts;
-			for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-			{
-				VectorNormalize( v->tangent );
-				v->tangent[ 3 ] = 0;
-				VectorNormalize( v->binormal );
-				v->binormal[ 3 ] = 0;
-				VectorNormalize( v->normal );
-				v->normal[ 3 ] = 0;
-			}
-		}
-	}
-	md5->internalScale = BoundsMaxExtent( md5->bounds[ 0 ], md5->bounds[ 1 ] );
-	if( md5->internalScale > 0.0f ) {
-		float invScale = 1.0f / md5->internalScale;
+            for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+                VectorNormalize(v->tangent);
+                v->tangent[3] = 0;
+                VectorNormalize(v->binormal);
+                v->binormal[3] = 0;
+                VectorNormalize(v->normal);
+                v->normal[3] = 0;
+            }
+        }
+    }
+    md5->internalScale = BoundsMaxExtent(md5->bounds[0], md5->bounds[1]);
+    if (md5->internalScale > 0.0f) {
+        float invScale = 1.0f / md5->internalScale;
 
         surf = md5->surfaces;
-		for (unsigned i = 0; i < md5->numSurfaces; i++, surf++ )
-		{
+        for (unsigned i = 0; i < md5->numSurfaces; i++, surf++) {
             v = surf->verts;
-			for (unsigned j = 0; j < surf->numVerts; j++, v++ )
-			{
-				VectorScale( v->position, invScale, v->position );
-			}
-		}
-	}
+            for (unsigned j = 0; j < surf->numVerts; j++, v++) {
+                VectorScale(v->position, invScale, v->position);
+            }
+        }
+    }
 
-	// split the surfaces into VBO surfaces by the maximum number of GPU vertex skinning bones
-	Com_InitGrowList( &vboSurfaces, 10 );
+    // split the surfaces into VBO surfaces by the maximum number of GPU vertex skinning bones
+    Com_InitGrowList(&vboSurfaces, 10);
 
     surf = md5->surfaces;
-	for (unsigned i = 0; i < md5->numSurfaces; i++, surf++ )
-	{
-		// sort triangles
-		Com_InitGrowList( &sortedTriangles, 1000 );
+    for (unsigned i = 0; i < md5->numSurfaces; i++, surf++) {
+        // sort triangles
+        Com_InitGrowList(&sortedTriangles, 1000);
 
         tri = surf->triangles;
-		for (unsigned j = 0; j < surf->numTriangles; j++, tri++ )
-		{
-			skelTriangle_t *sortTri = (skelTriangle_t*) Com_Allocate( sizeof( *sortTri ) );
+        for (unsigned j = 0; j < surf->numTriangles; j++, tri++) {
+            skelTriangle_t* sortTri = (skelTriangle_t*) Com_Allocate(sizeof(*sortTri) );
 
-			for (unsigned k = 0; k < 3; k++ )
-			{
-				sortTri->indexes[ k ] = tri->indexes[ k ];
-				sortTri->vertexes[ k ] = &surf->verts[ tri->indexes[ k ] ];
-			}
+            for (unsigned k = 0; k < 3; k++) {
+                sortTri->indexes[k] = tri->indexes[k];
+                sortTri->vertexes[k] = &surf->verts[tri->indexes[k]];
+            }
 
-			sortTri->referenced = false;
+            sortTri->referenced = false;
 
-			Com_AddToGrowList( &sortedTriangles, sortTri );
-		}
+            Com_AddToGrowList(&sortedTriangles, sortTri);
+        }
 
-		numRemaining = sortedTriangles.currentElements;
+        numRemaining = sortedTriangles.currentElements;
 
-		while ( numRemaining )
-		{
-			numBoneReferences = 0;
-			Com_Memset( boneReferences, 0, sizeof( boneReferences ) );
+        while (numRemaining) {
+            numBoneReferences = 0;
+            Com_Memset(boneReferences, 0, sizeof(boneReferences) );
 
-			Com_InitGrowList( &vboTriangles, 1000 );
+            Com_InitGrowList(&vboTriangles, 1000);
 
-			for (int j = 0; j < sortedTriangles.currentElements; j++ )
-			{
-				skelTriangle_t *sortTri = (skelTriangle_t*) Com_GrowListElement( &sortedTriangles, j );
+            for (int j = 0; j < sortedTriangles.currentElements; j++) {
+                skelTriangle_t* sortTri = (skelTriangle_t*) Com_GrowListElement(&sortedTriangles, j);
 
-				if ( sortTri->referenced )
-				{
-					continue;
-				}
+                if (sortTri->referenced) {
+                    continue;
+                }
 
-				if ( AddTriangleToVBOTriangleList( &vboTriangles, sortTri, &numBoneReferences, boneReferences ) )
-				{
-					sortTri->referenced = true;
-				}
-			}
+                if (AddTriangleToVBOTriangleList(&vboTriangles, sortTri, &numBoneReferences, boneReferences) ) {
+                    sortTri->referenced = true;
+                }
+            }
 
-			if ( !vboTriangles.currentElements )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: could not add triangles to a remaining VBO surfaces for model '%s'\n", modName );
-				Com_DestroyGrowList( &vboTriangles );
-				break;
-			}
+            if (!vboTriangles.currentElements) {
+                ri.Printf(PRINT_WARNING, "R_LoadMD5: could not add triangles to a remaining VBO surfaces for model '%s'\n", modName);
+                Com_DestroyGrowList(&vboTriangles);
+                break;
+            }
 
-			AddSurfaceToVBOSurfacesList( &vboSurfaces, &vboTriangles, md5, surf, i, boneReferences );
-			numRemaining -= vboTriangles.currentElements;
+            AddSurfaceToVBOSurfacesList(&vboSurfaces, &vboTriangles, md5, surf, i, boneReferences);
+            numRemaining -= vboTriangles.currentElements;
 
-			Com_DestroyGrowList( &vboTriangles );
-		}
+            Com_DestroyGrowList(&vboTriangles);
+        }
 
-		for (int j = 0; j < sortedTriangles.currentElements; j++ )
-		{
-			skelTriangle_t *sortTri = (skelTriangle_t*) Com_GrowListElement( &sortedTriangles, j );
+        for (int j = 0; j < sortedTriangles.currentElements; j++) {
+            skelTriangle_t* sortTri = (skelTriangle_t*) Com_GrowListElement(&sortedTriangles, j);
 
-			Com_Dealloc( sortTri );
-		}
+            Com_Dealloc(sortTri);
+        }
 
-		Com_DestroyGrowList( &sortedTriangles );
-	}
+        Com_DestroyGrowList(&sortedTriangles);
+    }
 
-	// move VBO surfaces list to hunk
-	md5->numVBOSurfaces = vboSurfaces.currentElements;
-	md5->vboSurfaces = (srfVBOMD5Mesh_t**) ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
+    // move VBO surfaces list to hunk
+    md5->numVBOSurfaces = vboSurfaces.currentElements;
+    md5->vboSurfaces = (srfVBOMD5Mesh_t**) ri.Hunk_Alloc(md5->numVBOSurfaces * sizeof(*md5->vboSurfaces), h_low);
 
-	for ( unsigned i = 0; i < md5->numVBOSurfaces; i++ )
-	{
-		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t * ) Com_GrowListElement( &vboSurfaces, i );
-	}
+    for (unsigned i = 0; i < md5->numVBOSurfaces; i++) {
+        md5->vboSurfaces[i] = (srfVBOMD5Mesh_t*) Com_GrowListElement(&vboSurfaces, i);
+    }
 
-	Com_DestroyGrowList( &vboSurfaces );
+    Com_DestroyGrowList(&vboSurfaces);
 
-	return true;
+    return true;
 }

@@ -42,12 +42,11 @@ Maryland 20850 USA.
 
 #define MAX_CMD_BUFFER 131072
 
-typedef struct cmdContext_s
-{
-	int  argc;
-	char *argv[ MAX_STRING_TOKENS ]; // points into cmd.tokenized
-	char tokenized[ BIG_INFO_STRING + MAX_STRING_TOKENS ]; // will have 0 bytes inserted
-	char cmd[ BIG_INFO_STRING ]; // the original command we received (no token processing)
+typedef struct cmdContext_s {
+    int argc;
+    char* argv[MAX_STRING_TOKENS]; // points into cmd.tokenized
+    char tokenized[BIG_INFO_STRING + MAX_STRING_TOKENS]; // will have 0 bytes inserted
+    char cmd[BIG_INFO_STRING]; // the original command we received (no token processing)
 } cmdContext_t;
 
 static cmdContext_t cmd;
@@ -65,9 +64,8 @@ static cmdContext_t cmd;
 Cmd_SaveCmdContext
 ============
 */
-void Cmd_SaveCmdContext()
-{
-	Cmd::SaveArgs();
+void Cmd_SaveCmdContext() {
+    Cmd::SaveArgs();
 }
 
 /*
@@ -75,9 +73,8 @@ void Cmd_SaveCmdContext()
 Cmd_RestoreCmdContext
 ============
 */
-void Cmd_RestoreCmdContext()
-{
-	Cmd::LoadArgs();
+void Cmd_RestoreCmdContext() {
+    Cmd::LoadArgs();
 }
 
 /*
@@ -85,16 +82,12 @@ void Cmd_RestoreCmdContext()
 Cmd_PrintUsage
 ============
 */
-void Cmd_PrintUsage( const char *syntax, const char *description )
-{
-	if(!description)
-	{
-		Com_Printf( "%s: %s %s\n", "usage", Cmd_Argv( 0 ), syntax );
-	}
-	else
-	{
-		Com_Printf( "%s: %s %s — %s\n", "usage",  Cmd_Argv( 0 ), syntax, description );
-	}
+void Cmd_PrintUsage(const char* syntax, const char* description) {
+    if (!description) {
+        Com_Printf("%s: %s %s\n", "usage", Cmd_Argv(0), syntax);
+    } else {
+        Com_Printf("%s: %s %s — %s\n", "usage", Cmd_Argv(0), syntax, description);
+    }
 }
 
 /*
@@ -102,10 +95,9 @@ void Cmd_PrintUsage( const char *syntax, const char *description )
 Cmd_Argc
 ============
 */
-int Cmd_Argc()
-{
-	const Cmd::Args& args = Cmd::GetCurrentArgs();
-	return args.Argc();
+int Cmd_Argc() {
+    const Cmd::Args& args = Cmd::GetCurrentArgs();
+    return args.Argc();
 }
 
 /*
@@ -113,19 +105,18 @@ int Cmd_Argc()
 Cmd_Argv
 ============
 */
-const char *Cmd_Argv( int arg )
-{
-	if (arg >= Cmd_Argc() || arg < 0) {
-		return "";
-	}
+const char* Cmd_Argv(int arg) {
+    if (arg >= Cmd_Argc() || arg < 0) {
+        return "";
+    }
 
-	const Cmd::Args& args = Cmd::GetCurrentArgs();
-	const std::string& res = args.Argv(arg);
-	static char buffer[100][1024];
+    const Cmd::Args& args = Cmd::GetCurrentArgs();
+    const std::string& res = args.Argv(arg);
+    static char buffer[100][1024];
 
-	Q_strncpyz(buffer[arg], res.c_str(), sizeof(buffer[arg]));
+    Q_strncpyz(buffer[arg], res.c_str(), sizeof(buffer[arg]));
 
-	return buffer[arg];
+    return buffer[arg];
 }
 
 /*
@@ -135,15 +126,14 @@ Cmd_Args
 Returns a single string containing argv(arg) to argv(argc()-1)
 ============
 */
-char *Cmd_ArgsFrom( int arg )
-{
-	static char cmd_args[ BIG_INFO_STRING ];
+char* Cmd_ArgsFrom(int arg) {
+    static char cmd_args[BIG_INFO_STRING];
 
-	const Cmd::Args& args = Cmd::GetCurrentArgs();
-	const std::string& res = args.EscapedArgs(arg);
-	Q_strncpyz(cmd_args, res.c_str(), BIG_INFO_STRING);
+    const Cmd::Args& args = Cmd::GetCurrentArgs();
+    const std::string& res = args.EscapedArgs(arg);
+    Q_strncpyz(cmd_args, res.c_str(), BIG_INFO_STRING);
 
-	return cmd_args;
+    return cmd_args;
 }
 
 /*
@@ -153,9 +143,8 @@ Cmd_Args
 Returns a single string containing argv(1) to argv(argc()-1)
 ============
 */
-char           *Cmd_Args()
-{
-	return Cmd_ArgsFrom( 1 );
+char* Cmd_Args() {
+    return Cmd_ArgsFrom(1);
 }
 
 /*
@@ -168,121 +157,102 @@ are inserted in the appropriate place. The argv array
 will point into this temporary buffer.
 ============
 */
-static void Tokenise( const char *text, char *textOut, bool tokens, bool ignoreQuotes )
-{
-	// Assumption:
-	// if ( tokens ) cmd.argc == 0 && textOut == cmd.tokenized
-	// textOut points to a large buffer
-	// text which is processed here is already of limited length...
-	char *textOutStart = textOut;
+static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQuotes) {
+    // Assumption:
+    // if ( tokens ) cmd.argc == 0 && textOut == cmd.tokenized
+    // textOut points to a large buffer
+    // text which is processed here is already of limited length...
+    char* textOutStart = textOut;
 
-	*textOut = '\0'; // initial NUL-termination in case of early exit
+    *textOut = '\0'; // initial NUL-termination in case of early exit
 
-	while ( 1 )
-	{
-		if ( tokens && cmd.argc == MAX_STRING_TOKENS )
-		{
-			goto done; // this is usually something malicious
-		}
+    while (1) {
+        if (tokens && cmd.argc == MAX_STRING_TOKENS) {
+            goto done; // this is usually something malicious
+        }
 
-		while ( 1 )
-		{
-			// skip whitespace
-			while ( *text > '\0' && *text <= ' ' )
-			{
-				text++;
-			}
+        while (1) {
+            // skip whitespace
+            while (*text > '\0' && *text <= ' ') {
+                text++;
+            }
 
-			if ( !*text )
-			{
-				goto done; // all tokens parsed
-			}
+            if (!*text) {
+                goto done; // all tokens parsed
+            }
 
-			// skip // comments
-			if ( text[ 0 ] == '/' && text[ 1 ] == '/' )
-			{
-				goto done; // all tokens parsed
-			}
+            // skip // comments
+            if (text[0] == '/' && text[1] == '/') {
+                goto done; // all tokens parsed
+            }
 
-			// skip /* */ comments
-			if ( text[ 0 ] == '/' && text[ 1 ] == '*' )
-			{
-				// two increments, avoiding matching /*/
-				++text;
-				while ( *++text && !( text[ 0 ] == '*' && text[ 1 ] == '/' ) ) {}
+            // skip /* */ comments
+            if (text[0] == '/' && text[1] == '*') {
+                // two increments, avoiding matching /*/
+                ++text;
+                while (*++text && !(text[0] == '*' && text[1] == '/') ) {
+                }
 
-				if ( !*text )
-				{
-					goto done; // all tokens parsed
-				}
+                if (!*text) {
+                    goto done; // all tokens parsed
+                }
 
-				text += 2;
-			}
-			else
-			{
-				break; // we are ready to parse a token
-			}
-		}
+                text += 2;
+            } else {
+                break; // we are ready to parse a token
+            }
+        }
 
-		// regular token
-		if ( tokens )
-		{
-			cmd.argv[ cmd.argc ] = textOut;
-			cmd.argc++;
-		}
+        // regular token
+        if (tokens) {
+            cmd.argv[cmd.argc] = textOut;
+            cmd.argc++;
+        }
 
-		while ( *text < 0 || *text > ' ' )
-		{
-			if ( ignoreQuotes || text[ 0 ] != '"' )
-			{
-				// copy until next space, quote or EOT, handling backslashes
-				while ( *text < 0 || ( *text > ' ' && *text != '"' ) )
-				{
-					if ( *text == '\\' && (++text, (*text >= 0 && *text < ' ') ) )
-					{
-						break;
-					}
+        while (*text < 0 || * text > ' ') {
+            if (ignoreQuotes || text[0] != '"') {
+                // copy until next space, quote or EOT, handling backslashes
+                while (*text < 0 || (*text > ' ' && *text != '"') ) {
+                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' ') ) ) {
+                        break;
+                    }
 
-					*textOut++ = *text++;
-				}
-			}
-			else
-			{
-				// quoted string :-)
-				// copy until next " or EOT, handling backslashes
-				// missing trailing " is fine
-				++text;
+                    *textOut++ = *text++;
+                }
+            } else {
+                // quoted string :-)
+                // copy until next " or EOT, handling backslashes
+                // missing trailing " is fine
+                ++text;
 
-				while ( *text && *text != '"' )
-				{
-					if ( *text == '\\' && (++text, (*text >= 0 && *text < ' ') ) )
-					{
-						break;
-					}
+                while (*text && *text != '"') {
+                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' ') ) ) {
+                        break;
+                    }
 
-					*textOut++ = *text++;
-				}
+                    *textOut++ = *text++;
+                }
 
-				if ( *text ) ++text; // terminating ", if any
-			}
-		}
+                if (*text) {
+                    ++text; // terminating ", if any
+                }
+            }
+        }
 
-		*textOut++ = tokens ? '\0' : ' ';
+        *textOut++ = tokens ? '\0' : ' ';
 
-		if ( !*text )
-		{
-			goto done; // all tokens parsed
-		}
-	}
+        if (!*text) {
+            goto done; // all tokens parsed
+        }
+    }
 
-	done:
+done:
 
-	if ( textOut > textOutStart )
-	{
-		// will be NUL-terminated if in token mode
-		// otherwise there'll be a space there...
-		*--textOut = '\0';
-	}
+    if (textOut > textOutStart) {
+        // will be NUL-terminated if in token mode
+        // otherwise there'll be a space there...
+        *--textOut = '\0';
+    }
 }
 
 /*
@@ -290,10 +260,9 @@ static void Tokenise( const char *text, char *textOut, bool tokens, bool ignoreQ
 Cmd_TokenizeString
 ============
 */
-void Cmd_TokenizeString( const char *text_in )
-{
-	Cmd::Args args(text_in);
-	Cmd::SetCurrentArgs(args);
+void Cmd_TokenizeString(const char* text_in) {
+    Cmd::Args args(text_in);
+    Cmd::SetCurrentArgs(args);
 }
 
 /*
@@ -306,85 +275,82 @@ Optionally wrap in ""
 ============
 */
 #define ESCAPEBUFFER_SIZE BIG_INFO_STRING
-static char *GetEscapeBuffer()
-{
-	static char escapeBuffer[ 4 ][ ESCAPEBUFFER_SIZE ];
-	static int escapeIndex = -1;
+static char* GetEscapeBuffer() {
+    static char escapeBuffer[4][ESCAPEBUFFER_SIZE];
+    static int escapeIndex = -1;
 
-	escapeIndex = ( escapeIndex + 1 ) & 3;
-	return escapeBuffer[ escapeIndex ];
+    escapeIndex = (escapeIndex + 1) & 3;
+    return escapeBuffer[escapeIndex];
 }
 
-static const char *EscapeString( const char *in, bool quote )
-{
-	char        *escapeBuffer = GetEscapeBuffer();
-	char        *out = escapeBuffer;
-	const char  *end = escapeBuffer + ESCAPEBUFFER_SIZE - 1 - !!quote;
-	bool    quoted = false;
-	bool    forcequote = false;
+static const char* EscapeString(const char* in, bool quote) {
+    char* escapeBuffer = GetEscapeBuffer();
+    char* out = escapeBuffer;
+    const char* end = escapeBuffer + ESCAPEBUFFER_SIZE - 1 - !!quote;
+    bool quoted = false;
+    bool forcequote = false;
 
-	if ( quote )
-	{
-		*out++ = '"';
-	}
+    if (quote) {
+        *out++ = '"';
+    }
 
-	while ( *in && out < end )
-	{
-		char c = *in++;
+    while (*in && out < end) {
+        char c = *in++;
 
-		if ( forcequote )
-		{
-			forcequote = false;
-			goto doquote;
-		}
+        if (forcequote) {
+            forcequote = false;
+            goto doquote;
+        }
 
-		switch ( c )
-		{
-		case '/':
-			// only quote "//" and "/*"
-			if ( *in != '/' && *in != '*' ) break;
-			forcequote = true;
-			goto doquote;
-		case ';':
-			// no need to quote semicolons if in ""
-			quoted = true;
-			if ( quote ) break;
-		case '"':
-		case '$':
-		case '\\':
-			doquote:
-			quoted = true;
-			*out++ = '\\'; // could set out == end - is fine
-			break;
-		}
+        switch (c) {
+        case '/':
+            // only quote "//" and "/*"
+            if (*in != '/' && *in != '*') {
+                break;
+            }
+            forcequote = true;
+            goto doquote;
 
-		// keep quotes if we have white space
-		if ( c >= '\0' && c <= ' ' ) quoted = true;
+        case ';':
+            // no need to quote semicolons if in ""
+            quoted = true;
+            if (quote) {
+                break;
+            }
 
-		// if out == end, overrun (but within escapeBuffer)
-		*out++ = c;
-	}
+        case '"':
+        case '$':
+        case '\\':
+doquote:
+            quoted = true;
+            *out++ = '\\'; // could set out == end - is fine
+            break;
+        }
 
-	if ( out > end )
-	{
-		out -= 2; // an escape overran; allow overwrite
-	}
+        // keep quotes if we have white space
+        if (c >= '\0' && c <= ' ') {
+            quoted = true;
+        }
 
-	if ( quote )
-	{
-		// we have an empty string or something was escaped
-		if ( quoted || out == escapeBuffer + 1 )
-		{
-			*out++ = '"';
-		}
-		else
-		{
-			memmove( escapeBuffer, escapeBuffer + 1, --out - escapeBuffer );
-		}
-	}
+        // if out == end, overrun (but within escapeBuffer)
+        *out++ = c;
+    }
 
-	*out = '\0';
-	return escapeBuffer;
+    if (out > end) {
+        out -= 2; // an escape overran; allow overwrite
+    }
+
+    if (quote) {
+        // we have an empty string or something was escaped
+        if (quoted || out == escapeBuffer + 1) {
+            *out++ = '"';
+        } else {
+            memmove(escapeBuffer, escapeBuffer + 1, --out - escapeBuffer);
+        }
+    }
+
+    *out = '\0';
+    return escapeBuffer;
 }
 
 /*
@@ -394,9 +360,8 @@ Cmd_QuoteString
 Adds escapes (see above), wraps in quotation marks.
 ============
 */
-const char *Cmd_QuoteString( const char *in )
-{
-	return EscapeString( in, true );
+const char* Cmd_QuoteString(const char* in) {
+    return EscapeString(in, true);
 }
 
 /*
@@ -406,9 +371,8 @@ Cmd_QuoteStringBuffer
 Cmd_QuoteString for VM usage
 ============
 */
-void Cmd_QuoteStringBuffer( const char *in, char *buffer, int size )
-{
-	Q_strncpyz( buffer, Cmd_QuoteString( in ), size );
+void Cmd_QuoteStringBuffer(const char* in, char* buffer, int size) {
+    Q_strncpyz(buffer, Cmd_QuoteString(in), size);
 }
 
 /*
@@ -419,61 +383,61 @@ Usually passed a raw partial command string
 String length is UNCHECKED
 ===================
 */
-const char *Cmd_UnquoteString( const char *str )
-{
-	char *escapeBuffer = GetEscapeBuffer();
-	Tokenise( str, escapeBuffer, false, false );
-	return escapeBuffer;
+const char* Cmd_UnquoteString(const char* str) {
+    char* escapeBuffer = GetEscapeBuffer();
+    Tokenise(str, escapeBuffer, false, false);
+    return escapeBuffer;
 }
 
-struct proxyInfo_t{
-	xcommand_t cmd;
-	completionFunc_t complete;
+struct proxyInfo_t {
+    xcommand_t cmd;
+    completionFunc_t complete;
 };
 
-//Contains the commands given through the C interface
+// Contains the commands given through the C interface
 std::unordered_map<std::string, proxyInfo_t, Str::IHash, Str::IEqual> proxies;
 
 Cmd::CompletionResult completeMatches;
 std::string completedPrefix;
 
-//Is registered in the new command system for all the commands registered through the C interface.
-class ProxyCmd: public Cmd::CmdBase {
-	public:
-		ProxyCmd(): Cmd::CmdBase(Cmd::PROXY_FOR_OLD) {}
+// Is registered in the new command system for all the commands registered through the C interface.
+class ProxyCmd : public Cmd::CmdBase {
+    public:
+        ProxyCmd() : Cmd::CmdBase(Cmd::PROXY_FOR_OLD) {
+        }
 
-		void Run(const Cmd::Args& args) const OVERRIDE {
-			proxyInfo_t proxy = proxies[args.Argv(0)];
-			proxy.cmd();
-		}
+        void Run(const Cmd::Args& args) const OVERRIDE {
+            proxyInfo_t proxy = proxies[args.Argv(0)];
+            proxy.cmd();
+        }
 
-		Cmd::CompletionResult Complete(int argNum, const Cmd::Args& args, Str::StringRef prefix) const OVERRIDE {
-			static char buffer[4096];
-			proxyInfo_t proxy = proxies[args.Argv(0)];
+        Cmd::CompletionResult Complete(int argNum, const Cmd::Args& args, Str::StringRef prefix) const OVERRIDE {
+            static char buffer[4096];
+            proxyInfo_t proxy = proxies[args.Argv(0)];
 
-			if (!proxy.complete) {
-				return {};
-			}
-			completedPrefix = prefix;
-			completeMatches.clear();
+            if (!proxy.complete) {
+                return {};
+            }
+            completedPrefix = prefix;
+            completeMatches.clear();
 
-			//Completing an empty arg, we add a space to mimic the old autocompletion behavior
-			if (args.Argc() == argNum) {
-				Q_strncpyz(buffer, (args.ConcatArgs(0) + " ").c_str(), sizeof(buffer));
-			} else {
-				Q_strncpyz(buffer, args.ConcatArgs(0).c_str(), sizeof(buffer));
-			}
+            // Completing an empty arg, we add a space to mimic the old autocompletion behavior
+            if (args.Argc() == argNum) {
+                Q_strncpyz(buffer, (args.ConcatArgs(0) + " ").c_str(), sizeof(buffer));
+            } else {
+                Q_strncpyz(buffer, args.ConcatArgs(0).c_str(), sizeof(buffer));
+            }
 
-			//Some completion handlers expect tokenized arguments
-			Cmd::Args savedArgs = Cmd::GetCurrentArgs();
-			Cmd::SetCurrentArgs(args);
+            // Some completion handlers expect tokenized arguments
+            Cmd::Args savedArgs = Cmd::GetCurrentArgs();
+            Cmd::SetCurrentArgs(args);
 
-			proxy.complete(buffer, argNum + 1);
+            proxy.complete(buffer, argNum + 1);
 
-			Cmd::SetCurrentArgs(savedArgs);
+            Cmd::SetCurrentArgs(savedArgs);
 
-			return completeMatches;
-		}
+            return completeMatches;
+        }
 };
 
 ProxyCmd myProxyCmd;
@@ -488,14 +452,13 @@ void Cmd_OnCompleteMatch(const char* s) {
 Cmd_AddCommand
 ============
 */
-void Cmd_AddCommand( const char *cmd_name, xcommand_t function )
-{
-	proxies[cmd_name] = proxyInfo_t{function, nullptr};
+void Cmd_AddCommand(const char* cmd_name, xcommand_t function) {
+    proxies[cmd_name] = proxyInfo_t {function, nullptr};
 
-	//VMs do not properly clean up commands so we avoid creating a command if there is already one
-	if (not Cmd::CommandExists(cmd_name)) {
-		Cmd::AddCommand(cmd_name, myProxyCmd, "--");
-	}
+    // VMs do not properly clean up commands so we avoid creating a command if there is already one
+    if (not Cmd::CommandExists(cmd_name)) {
+        Cmd::AddCommand(cmd_name, myProxyCmd, "--");
+    }
 }
 
 /*
@@ -503,9 +466,8 @@ void Cmd_AddCommand( const char *cmd_name, xcommand_t function )
 Cmd_SetCommandCompletionFunc
 ============
 */
-void Cmd_SetCommandCompletionFunc( const char *command, completionFunc_t complete )
-{
-	proxies[command].complete = complete;
+void Cmd_SetCommandCompletionFunc(const char* command, completionFunc_t complete) {
+    proxies[command].complete = complete;
 }
 
 /*
@@ -513,8 +475,7 @@ void Cmd_SetCommandCompletionFunc( const char *command, completionFunc_t complet
 Cmd_RemoveCommand
 ============
 */
-void Cmd_RemoveCommand( const char *cmd_name )
-{
-	proxies.erase(cmd_name);
-	Cmd::RemoveCommand(cmd_name);
+void Cmd_RemoveCommand(const char* cmd_name) {
+    proxies.erase(cmd_name);
+    Cmd::RemoveCommand(cmd_name);
 }

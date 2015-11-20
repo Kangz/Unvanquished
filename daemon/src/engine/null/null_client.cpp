@@ -29,83 +29,64 @@ If you have questions concerning this license or the applicable additional terms
 #include "qcommon/q_shared.h"
 #include "qcommon/qcommon.h"
 
-cvar_t *cl_shownet;
+cvar_t* cl_shownet;
 
-void CL_Shutdown()
-{
+void CL_Shutdown() {
 }
 
-void CL_Init()
-{
-	cl_shownet = Cvar_Get( "cl_shownet", "0", CVAR_TEMP );
-	// TTimo: localisation, prolly not any use in dedicated / null client
+void CL_Init() {
+    cl_shownet = Cvar_Get("cl_shownet", "0", CVAR_TEMP);
+    // TTimo: localisation, prolly not any use in dedicated / null client
 }
 
-void CL_MouseEvent( int, int, int )
-{
+void CL_MouseEvent(int, int, int) {
 }
 
-void CL_MousePosEvent( int, int )
-{
+void CL_MousePosEvent(int, int) {
 }
 
-void Key_WriteBindings( fileHandle_t )
-{
+void Key_WriteBindings(fileHandle_t) {
 }
 
-void CL_Frame( int )
-{
+void CL_Frame(int) {
 }
 
-void CL_PacketEvent( netadr_t, msg_t*  )
-{
+void CL_PacketEvent(netadr_t, msg_t*) {
 }
 
-void CL_CharEvent( int )
-{
+void CL_CharEvent(int) {
 }
 
-void CL_Disconnect( bool )
-{
+void CL_Disconnect(bool) {
 }
 
-void CL_MapLoading()
-{
+void CL_MapLoading() {
 }
 
-void CL_KeyEvent( int, bool, unsigned )
-{
+void CL_KeyEvent(int, bool, unsigned) {
 }
 
-void CL_ForwardCommandToServer( const char *cmd )
-{
-	Com_Printf( "Unknown command \"%s\"\n", cmd );
+void CL_ForwardCommandToServer(const char* cmd) {
+    Com_Printf("Unknown command \"%s\"\n", cmd);
 }
 
-void CL_ConsolePrint( std::string )
-{
+void CL_ConsolePrint(std::string) {
 }
 
-void CL_JoystickEvent( int, int, int )
-{
+void CL_JoystickEvent(int, int, int) {
 }
 
-void CL_InitKeyCommands()
-{
+void CL_InitKeyCommands() {
 }
 
-void CL_FlushMemory()
-{
+void CL_FlushMemory() {
 }
 
-void CL_StartHunkUsers()
-{
+void CL_StartHunkUsers() {
 }
 
-void CL_ShutdownAll()
-{
+void CL_ShutdownAll() {
 }
 
-void Key_ClearStates()
-{
+void Key_ClearStates() {
 }

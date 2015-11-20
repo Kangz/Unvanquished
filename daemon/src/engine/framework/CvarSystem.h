@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "qcommon/qcommon.h"
 
 #ifndef FRAMEWORK_CVAR_SYSTEM_H_
-#define FRAMEWORK_CVAR_SYSTEM_H_
+    #define FRAMEWORK_CVAR_SYSTEM_H_
 
 /**
  * Cvar access and registration.
@@ -57,14 +57,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *  the local code, for example when doing commands (/set ...)
  */
 
-//TODO add callbacks for when cvars are modified
+// TODO add callbacks for when cvars are modified
 
 namespace Cvar {
 
     // Generic ways to access cvars, might specialize it to parse and serialize automatically
 
     void SetValue(const std::string& cvarName, const std::string& value);
-    //Used for ROM cvars, will trigger a warning if the cvar is not ROM
+    // Used for ROM cvars, will trigger a warning if the cvar is not ROM
     void SetValueForce(const std::string& cvarName, const std::string& value);
     std::string GetValue(const std::string& cvarName);
 
@@ -87,19 +87,19 @@ namespace Cvar {
 
     void SetCheatsAllowed(bool allowed);
 
-    //Kept as a reference for cvar flags
+    // Kept as a reference for cvar flags
 
     // Keep
-    //CVAR_ARCHIVE, CVAR_*INFO, CVAR_ROM CVAR_CHEAT are kept
+    // CVAR_ARCHIVE, CVAR_*INFO, CVAR_ROM CVAR_CHEAT are kept
 
     // Remove eventually
-    //CVAR_UNSAFE, not sure <- no support for now
-    //CVAR_USER_CREATED is kept for now but not really needed
-    //CVAR_LATCH, CVAR_SHADER, CVAR_INIT are not longer supported, will be implemented by the proxy
+    // CVAR_UNSAFE, not sure <- no support for now
+    // CVAR_USER_CREATED is kept for now but not really needed
+    // CVAR_LATCH, CVAR_SHADER, CVAR_INIT are not longer supported, will be implemented by the proxy
 
-    //CVAR_NORESTART is not used will be killed
-    //CVAR_TEMP seems useless, don't put the CVAR_ARCHIVE and CVAR_CHEAT
-    //CVAR_SERVERINFO_NOUPDATE is not used
+    // CVAR_NORESTART is not used will be killed
+    // CVAR_TEMP seems useless, don't put the CVAR_ARCHIVE and CVAR_CHEAT
+    // CVAR_SERVERINFO_NOUPDATE is not used
 }
 
 #endif // FRAMEWORK_CVAR_SYSTEM_H_

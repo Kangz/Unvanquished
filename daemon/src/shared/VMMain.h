@@ -35,18 +35,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace VM {
 
-	// Root channel used to communicate with the engine
-	extern IPC::Channel rootChannel;
+    // Root channel used to communicate with the engine
+    extern IPC::Channel rootChannel;
 
-	// Functions each specific gamelogic should implement
-	void VMInit();
-	void VMHandleSyscall(uint32_t id, Util::Reader reader);
-	extern int VM_API_VERSION;
+    // Functions each specific gamelogic should implement
+    void VMInit();
+    void VMHandleSyscall(uint32_t id, Util::Reader reader);
+    extern int VM_API_VERSION;
 
-	// Send a message to the engine
-	template<typename Msg, typename... Args> void SendMsg(Args&&... args) {
-		IPC::SendMsg<Msg>(rootChannel, VMHandleSyscall, std::forward<Args>(args)...);
-	}
+    // Send a message to the engine
+    template<typename Msg, typename ... Args>
+    void SendMsg(Args&& ... args) {
+        IPC::SendMsg<Msg>(rootChannel, VMHandleSyscall, std::forward<Args>(args) ...);
+    }
 
 }
 

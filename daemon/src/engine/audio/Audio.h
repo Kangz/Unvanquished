@@ -72,4 +72,4 @@ namespace Audio {
     void StopCapture();
 }
 
-#endif //AUDIO_AUDIO_H_
+#endif // AUDIO_AUDIO_H_

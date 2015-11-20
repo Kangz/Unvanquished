@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // and try to memcpy over that or binary write an std::string to a file.
 static_assert(std::is_pod<GLShaderHeader>::value, "Value must be a pod while code in this cpp file reads and writes this object to file as binary.");
 
-extern std::unordered_map<std::string, const char *> shadermap;
+extern std::unordered_map<std::string, const char*> shadermap;
 // shaderKind's value will be determined later based on command line setting or absence of.
 ShaderKind shaderKind = ShaderKind::Unknown;
 
@@ -121,7 +121,7 @@ namespace // Implementation details
 	{
 		// A windows user changing the shader file can put
 		// Windows can put CRLF's in the file. Make them LF's.
-		CRLFToLF(text); 
+		CRLFToLF(text);
 	}
 
 	std::string GetShaderFilename(Str::StringRef filename)
@@ -165,11 +165,11 @@ namespace // Implementation details
 			// Alert the user when a file does not match it's built-in version.
 			// There should be no differences in normal conditions.
 			// When testing shader file changes this is an expected message
-			// and helps the tester track which files have changed and need 
+			// and helps the tester track which files have changed and need
 			// to be recommmitted to git.
 			// If one is not making shader files changes this message
 			// indicates there is a mismatch between disk changes and builtins
-			// which the application is out of sync with it's files 
+			// which the application is out of sync with it's files
 			// and he translation script needs to be run.
 			auto textPtr = GetInternalShader(filename);
 			std::string internalShaderText;

@@ -44,16 +44,18 @@ namespace IPC {
 
             void Init();
 
-            template<typename Message, typename... Args> void SendMsg(Args&&... args) {
-                SendMsgImpl(Message(), std::forward<Args>(args)...);
+            template<typename Message, typename ... Args>
+            void SendMsg(Args&& ... args) {
+                SendMsgImpl(Message(), std::forward<Args>(args) ...);
             }
 
-            template<typename Message, typename... Args> void SendMsgImpl(Message, Args&&... args) {
-                static_assert(sizeof...(Args) == std::tuple_size<typename Message::Inputs>::value, "Incorrect number of arguments for CommandBufferClient::SendMsg");
+            template<typename Message, typename ... Args>
+            void SendMsgImpl(Message, Args&& ... args) {
+                static_assert(sizeof ... (Args) == std::tuple_size<typename Message::Inputs>::value, "Incorrect number of arguments for CommandBufferClient::SendMsg");
 
                 Util::Writer writer;
                 writer.Write<uint32_t>(Message::id);
-                writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args)...);
+                writer.WriteArgs(Util::TypeListFromTuple<typename Message::Inputs>(), std::forward<Args>(args) ...);
 
                 Write(writer);
             }
@@ -62,7 +64,7 @@ namespace IPC {
 
         private:
             std::string name;
-            Cvar::Range<Cvar::Cvar<int>> bufferSize;
+            Cvar::Range<Cvar::Cvar<int> > bufferSize;
             Log::Logger logs;
             IPC::CommandBuffer buffer;
             IPC::SharedMemory shm;

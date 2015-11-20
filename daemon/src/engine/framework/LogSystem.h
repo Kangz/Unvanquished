@@ -70,4 +70,4 @@ namespace Log {
     void RegisterTarget(TargetId id, Target* target);
 }
 
-#endif //FRAMEWORK_LOG_SYSTEM_H_
+#endif // FRAMEWORK_LOG_SYSTEM_H_

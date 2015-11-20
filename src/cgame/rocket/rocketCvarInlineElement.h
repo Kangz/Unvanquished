@@ -38,77 +38,63 @@ Maryland 20850 USA.
 #include <Rocket/Core/Core.h>
 #include "../cg_local.h"
 
-class RocketCvarInlineElement : public Rocket::Core::Element
-{
-public:
-	RocketCvarInlineElement( const Rocket::Core::String& tag ) : Rocket::Core::Element( tag ), cvar( "" ), cvar_value( "" ), dirty_value( false ) {}
+class RocketCvarInlineElement : public Rocket::Core::Element {
+    public:
+        RocketCvarInlineElement(const Rocket::Core::String& tag) : Rocket::Core::Element(tag), cvar(""), cvar_value(""), dirty_value(false) {
+        }
 
-	enum CvarType
-	{
-	    NUMBER,
-	    STRING
-	};
+        enum CvarType {
+            NUMBER,
+            STRING
+        };
 
-	virtual void OnAttributeChange( const Rocket::Core::AttributeNameList& changed_attributes )
-	{
-		Rocket::Core::Element::OnAttributeChange( changed_attributes );
+        virtual void OnAttributeChange(const Rocket::Core::AttributeNameList& changed_attributes) {
+            Rocket::Core::Element::OnAttributeChange(changed_attributes);
 
-		if ( changed_attributes.find( "cvar" ) != changed_attributes.end() )
-		{
-			cvar = GetAttribute< Rocket::Core::String >( "cvar",  "" );
-			dirty_value = true;
-		}
+            if (changed_attributes.find("cvar") != changed_attributes.end() ) {
+                cvar = GetAttribute< Rocket::Core::String >("cvar", "");
+                dirty_value = true;
+            }
 
-		if ( changed_attributes.find( "type" ) != changed_attributes.end() )
-		{
-			Rocket::Core::String typeString = GetAttribute< Rocket::Core::String >( "type", "" );
+            if (changed_attributes.find("type") != changed_attributes.end() ) {
+                Rocket::Core::String typeString = GetAttribute< Rocket::Core::String >("type", "");
 
-			if ( typeString == "number" )
-			{
-				type = NUMBER;
-			}
-			else
-			{
-				type = STRING;
-			}
-			dirty_value = true;
-		}
+                if (typeString == "number") {
+                    type = NUMBER;
+                } else {
+                    type = STRING;
+                }
+                dirty_value = true;
+            }
 
-		if ( changed_attributes.find( "format" ) != changed_attributes.end() )
-		{
-			format = GetAttribute<Rocket::Core::String>( "format", "" );
-			dirty_value = true;
-		}
-	}
+            if (changed_attributes.find("format") != changed_attributes.end() ) {
+                format = GetAttribute<Rocket::Core::String>("format", "");
+                dirty_value = true;
+            }
+        }
 
-	virtual void OnUpdate()
-	{
-		if ( dirty_value || ( !cvar.Empty() && cvar_value.CString() != Cvar::GetValue( cvar.CString() ) ) )
-		{
-			Rocket::Core::String value = cvar_value = Cvar::GetValue( cvar.CString() ).c_str();
+        virtual void OnUpdate() {
+            if (dirty_value || (!cvar.Empty() && cvar_value.CString() != Cvar::GetValue(cvar.CString() ) ) ) {
+                Rocket::Core::String value = cvar_value = Cvar::GetValue(cvar.CString() ).c_str();
 
-			if (!format.Empty())
-			{
-				if (type == NUMBER)
-				{
-					value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), atof( Cvar::GetValue( cvar.CString() ).c_str() ) );
-				}
-				else
-				{
-					value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), Cvar::GetValue(cvar.CString()).c_str());
-				}
-			}
+                if (!format.Empty()) {
+                    if (type == NUMBER) {
+                        value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), atof(Cvar::GetValue(cvar.CString() ).c_str() ) );
+                    } else {
+                        value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), Cvar::GetValue(cvar.CString()).c_str());
+                    }
+                }
 
-			SetInnerRML( value );
-			dirty_value = false;
-		}
-	}
-private:
-	Rocket::Core::String cvar;
-	Rocket::Core::String cvar_value;
-	Rocket::Core::String format;
-	CvarType type;
-	bool dirty_value;
+                SetInnerRML(value);
+                dirty_value = false;
+            }
+        }
+    private:
+        Rocket::Core::String cvar;
+        Rocket::Core::String cvar_value;
+        Rocket::Core::String format;
+        CvarType type;
+        bool dirty_value;
 };
 
 #endif

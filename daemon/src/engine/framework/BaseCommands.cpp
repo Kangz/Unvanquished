@@ -40,9 +40,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Cmd {
 
-    class VstrCmd: public StaticCmd {
+    class VstrCmd : public StaticCmd {
         public:
-            VstrCmd(): StaticCmd("vstr", BASE, "executes a variable command") {
+            VstrCmd() : StaticCmd("vstr", BASE, "executes a variable command") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -67,9 +67,9 @@ namespace Cmd {
     };
     static VstrCmd VstrCmdRegistration;
 
-    class ExecCmd: public StaticCmd {
+    class ExecCmd : public StaticCmd {
         public:
-            ExecCmd(Str::StringRef name, bool readHomepath): StaticCmd(name, BASE, "executes a command file"), readHomepath(readHomepath) {
+            ExecCmd(Str::StringRef name, bool readHomepath) : StaticCmd(name, BASE, "executes a command file"), readHomepath(readHomepath) {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -77,7 +77,7 @@ namespace Cmd {
                 bool failSilent = false;
                 bool hasOptions = args.Argc() >= 3 and args.Argv(1).size() >= 2 and args.Argv(1)[0] == '-';
 
-                //Check the syntax
+                // Check the syntax
                 if (args.Argc() < 2) {
                     if (readHomepath) {
                         PrintUsage(args, "[-q|-f|-s] <filename> [<arguments>…]", "execute a user script file from config/.");
@@ -87,23 +87,23 @@ namespace Cmd {
                     return;
                 }
 
-                //Read options
+                // Read options
                 if (hasOptions) {
                     switch (args.Argv(1)[1]) {
-                        case 'q':
-                            executeSilent = true;
-                            break;
+                    case 'q':
+                        executeSilent = true;
+                        break;
 
-                        case 'f':
-                            failSilent = true;
-                            break;
+                    case 'f':
+                        failSilent = true;
+                        break;
 
-                        case 's':
-                            executeSilent = failSilent = true;
-                            break;
+                    case 's':
+                        executeSilent = failSilent = true;
+                        break;
 
-                        default:
-                            break;
+                    default:
+                        break;
                     }
                 }
 
@@ -121,10 +121,11 @@ namespace Cmd {
 
             Cmd::CompletionResult Complete(int argNum, const Args& args, Str::StringRef prefix) const OVERRIDE {
                 if (argNum == 1 || (argNum == 2 && Str::IsPrefix("-", args.Argv(1)))) {
-                    if (readHomepath)
+                    if (readHomepath) {
                         return FS::HomePath::CompleteFilename(prefix, "config", ".cfg", true, false);
-                    else
+                    } else {
                         return FS::PakPath::CompleteFilename(prefix, "", ".cfg", true, false);
+                    }
                 }
 
                 return {};
@@ -134,7 +135,7 @@ namespace Cmd {
             bool readHomepath;
 
             void SetExecArgs(const Cmd::Args& args, int start) const {
-                //Set some cvars up so that scripts file can be used like functions
+                // Set some cvars up so that scripts file can be used like functions
                 ExecuteAfter(Str::Format("set arg_all %s", Cmd::Escape(args.ConcatArgs(start))));
                 ExecuteAfter(Str::Format("set arg_count %d", args.Argc() - start));
 
@@ -148,8 +149,9 @@ namespace Cmd {
                 std::error_code err;
                 if (readHomepath) {
                     FS::File file = FS::HomePath::OpenRead(FS::Path::Build("config", filename), err);
-                    if (!err)
+                    if (!err) {
                         buffer = file.ReadAll(err);
+                    }
                 } else {
                     buffer = FS::PakPath::ReadFile(filename, err);
                 }
@@ -168,9 +170,9 @@ namespace Cmd {
     static ExecCmd ExecCmdRegistration("exec", true);
     static ExecCmd PresetCmdRegistration("preset", false);
 
-    class EchoCmd: public StaticCmd {
+    class EchoCmd : public StaticCmd {
         public:
-            EchoCmd(): StaticCmd("echo", BASE, "prints to the console") {
+            EchoCmd() : StaticCmd("echo", BASE, "prints to the console") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -184,9 +186,9 @@ namespace Cmd {
     };
     static EchoCmd EchoCmdRegistration;
 
-    class RandomCmd: public StaticCmd {
+    class RandomCmd : public StaticCmd {
         public:
-            RandomCmd(): StaticCmd("random", BASE, "sets a variable to a random integer") {
+            RandomCmd() : StaticCmd("random", BASE, "sets a variable to a random integer") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -214,9 +216,9 @@ namespace Cmd {
     };
     static RandomCmd RandomCmdRegistration;
 
-    class ConcatCmd: public StaticCmd {
+    class ConcatCmd : public StaticCmd {
         public:
-            ConcatCmd(): StaticCmd("concat", BASE, "concatenatas variables") {
+            ConcatCmd() : StaticCmd("concat", BASE, "concatenatas variables") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -244,19 +246,19 @@ namespace Cmd {
     };
     static ConcatCmd ConcatCmdRegistration;
 
-    class MathCmd: public StaticCmd {
+    class MathCmd : public StaticCmd {
         public:
-            MathCmd(): StaticCmd("math", BASE, "does math and sets the result to a variable") {
+            MathCmd() : StaticCmd("math", BASE, "does math and sets the result to a variable") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
-                if  (args.Argc() < 2) {
+                if (args.Argc() < 2) {
                     Usage(args);
                     return;
                 }
 
                 const std::string& targetName = args.Argv(1);
-                float currentValue = atof(Cvar::GetValue(targetName).c_str()); //TODO: Str::ToFloat
+                float currentValue = atof(Cvar::GetValue(targetName).c_str()); // TODO: Str::ToFloat
                 float newValue;
 
                 if (args.Argc() == 3) {
@@ -325,7 +327,7 @@ namespace Cmd {
                 Cvar::SetValue(targetName, std::to_string(newValue));
             }
 
-            void Usage(const Cmd::Args& args) const{
+            void Usage(const Cmd::Args& args) const {
                 PrintUsage(args, "<variableToSet> = <number> <operator> <number>", "");
                 PrintUsage(args, "<variableToSet> <operator> <number>", "");
                 PrintUsage(args, "<variableToSet> (++|--)", "");
@@ -344,9 +346,9 @@ namespace Cmd {
     };
     static MathCmd MathCmdRegistration;
 
-    class IfCmd: public StaticCmd {
+    class IfCmd : public StaticCmd {
         public:
-            IfCmd(): StaticCmd("if", BASE, "conditionally execute commands") {
+            IfCmd() : StaticCmd("if", BASE, "conditionally execute commands") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -378,7 +380,7 @@ namespace Cmd {
                 } else if (!Str::ParseInt(intValue1, value1) || !Str::ParseInt(intValue2, value2)) {
                     Usage(args);
                     return;
-                
+
 
                 } else if (relation == "=" or relation == "==") {
                     result = intValue1 == intValue2;
@@ -389,7 +391,7 @@ namespace Cmd {
                 } else if (relation == "<") {
                     result = intValue1 < intValue2;
 
-                } else if (relation == "<=" or relation == "≤" ) {
+                } else if (relation == "<=" or relation == "≤") {
                     result = intValue1 <= intValue2;
 
                 } else if (relation == ">") {
@@ -399,7 +401,7 @@ namespace Cmd {
                     result = intValue1 >= intValue2;
 
                 } else {
-                    Print( "invalid relation operator in if command. valid relation operators are = != ≠ < > ≥ >= ≤ <= eq ne in !in" );
+                    Print("invalid relation operator in if command. valid relation operators are = != ≠ < > ≥ >= ≤ <= eq ne in !in");
                     Usage(args);
                     return;
                 }
@@ -410,8 +412,8 @@ namespace Cmd {
 
                 const std::string& toRun = result ? args.Argv(4) : args.Argv(5);
 
-                //if it starts with / or \ it is a quoted command
-                if (toRun.size() > 0 and (toRun[0] == '/' or toRun[0] == '\\')) {
+                // if it starts with / or \ it is a quoted command
+                if (toRun.size() > 0 and(toRun[0] == '/' or toRun[0] == '\\')) {
                     ExecuteAfter(toRun.c_str() + 1, true);
 
                 } else {
@@ -420,7 +422,7 @@ namespace Cmd {
                 }
             }
 
-            void Usage(const Cmd::Args& args) const{
+            void Usage(const Cmd::Args& args) const {
                 PrintUsage(args, "if <number|string> <relation> <number|string> <cmdthen> (<cmdelse>)", "compares two numbers or two strings and executes <cmdthen> if true, <cmdelse> if false\n");
                 Print("-- commands are cvar names unless prefixed with / or \\");
             }
@@ -437,9 +439,9 @@ namespace Cmd {
     };
     static IfCmd IfCmdRegistration;
 
-    class ToggleCmd: public Cmd::StaticCmd {
+    class ToggleCmd : public Cmd::StaticCmd {
         public:
-            ToggleCmd(): Cmd::StaticCmd("toggle", Cmd::BASE, "toggles a cvar between different values") {
+            ToggleCmd() : Cmd::StaticCmd("toggle", Cmd::BASE, "toggles a cvar between different values") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -468,20 +470,21 @@ namespace Cmd {
                 const std::string& name = args.Argv(listStart - 1);
 
                 if (args.Argc() == listStart) {
-                    //There is no list, toggle between 0 and 1
+                    // There is no list, toggle between 0 and 1
                     bool value;
-                    if (!Cvar::ParseCvarValue(Cvar::GetValue(name), value))
+                    if (!Cvar::ParseCvarValue(Cvar::GetValue(name), value)) {
                         value = false;
+                    }
                     Cvar::SetValue(name, va("%d", !value));
                     return;
                 }
 
-                //Toggle the cvar through a list of values
+                // Toggle the cvar through a list of values
                 std::string currentValue = Cvar::GetValue(name);
 
-                for(int i = listStart; i < args.Argc(); i++) {
-                    if(currentValue == args.Argv(i)) {
-                        //Found the current value, choose the next one
+                for (int i = listStart; i < args.Argc(); i++) {
+                    if (currentValue == args.Argv(i)) {
+                        // Found the current value, choose the next one
                         int next = (i + direction) % (args.Argc() - listStart);
 
                         Cvar::SetValue(name, args.Argv(next + listStart));
@@ -489,7 +492,7 @@ namespace Cmd {
                     }
                 }
 
-                //fallback
+                // fallback
                 Cvar::SetValue(name, args.Argv(listStart));
             }
 
@@ -503,15 +506,15 @@ namespace Cmd {
                 return {};
             }
 
-            void Usage(const Cmd::Args& args) const{
+            void Usage(const Cmd::Args& args) const {
                 PrintUsage(args, "[+|-] <variable> [<value>…]", "");
             }
     };
     static ToggleCmd ToggleCmdRegistration;
 
-    class CycleCmd: public Cmd::StaticCmd {
+    class CycleCmd : public Cmd::StaticCmd {
         public:
-            CycleCmd(): Cmd::StaticCmd("cycle", Cmd::BASE, "cycles a cvar through numbers") {
+            CycleCmd() : Cmd::StaticCmd("cycle", Cmd::BASE, "cycles a cvar through numbers") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -532,7 +535,7 @@ namespace Cmd {
                     step = 1;
                 }
 
-                //TODO: rewrite all this nonsense
+                // TODO: rewrite all this nonsense
                 int newValue;
                 if (end < start) {
                     newValue = oldValue - step;
@@ -587,16 +590,16 @@ namespace Cmd {
 
     void DelayFrame() {
         auto time = Sys::SteadyClock::now();
-        delayFrame ++;
+        delayFrame++;
 
-        for (auto it = delays.begin(); it != delays.end();) {
+        for (auto it = delays.begin(); it != delays.end(); ) {
             const delayRecord_t& delay = *it;
 
-            if ((delay.type == MSEC and delay.targetTime <= time) or (delay.type == FRAME and delay.targetFrame < delayFrame)) {
+            if ((delay.type == MSEC and delay.targetTime <= time)or(delay.type == FRAME and delay.targetFrame < delayFrame)) {
                 Cmd::BufferCommandText(delay.command, true);
                 it = delays.erase(it);
             } else {
-                it ++;
+                it++;
             }
         }
     }
@@ -613,20 +616,20 @@ namespace Cmd {
         return res;
     }
 
-    class DelayCmd: public StaticCmd {
+    class DelayCmd : public StaticCmd {
         public:
-            DelayCmd(): StaticCmd("delay", BASE, "executes a command after a delay") {
+            DelayCmd() : StaticCmd("delay", BASE, "executes a command after a delay") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
                 int argc = args.Argc();
 
                 if (argc < 3) {
-		            PrintUsage(args, "delay (name) <delay in milliseconds> <command>\n  delay (name) <delay in frames>f <command>", "executes <command> after the delay" );
-		            return;
+                    PrintUsage(args, "delay (name) <delay in milliseconds> <command>\n  delay (name) <delay in frames>f <command>", "executes <command> after the delay");
+                    return;
                 }
 
-                //Get all the parameters!
+                // Get all the parameters!
                 bool isNamed = !isdigit(args.Argv(1)[0]);
                 const std::string& name = isNamed ? args.Argv(1) : "";
                 const std::string& command = args.EscapedArgs(2 + isNamed);
@@ -634,7 +637,7 @@ namespace Cmd {
                 bool frames = delay.back() == 'f';
 
                 if (frames) {
-                    delay.erase(--delay.end()); //FIXME-gcc-4.6 delay.pop_back()
+                    delay.erase(--delay.end()); // FIXME-gcc-4.6 delay.pop_back()
                 }
 
                 int target;
@@ -645,10 +648,10 @@ namespace Cmd {
 
                 if (frames) {
                     int targetFrame = target + delayFrame;
-                    delays.emplace_back(delayRecord_t{name, command, {}, targetFrame, FRAME});
+                    delays.emplace_back(delayRecord_t {name, command, {}, targetFrame, FRAME});
                 } else {
                     auto targetTime = Sys::SteadyClock::now() + std::chrono::milliseconds(target);
-                    delays.emplace_back(delayRecord_t{name, command, targetTime, 0, MSEC});
+                    delays.emplace_back(delayRecord_t {name, command, targetTime, 0, MSEC});
                 }
 
             }
@@ -662,9 +665,9 @@ namespace Cmd {
             }
     };
 
-    class UndelayCmd: public StaticCmd {
+    class UndelayCmd : public StaticCmd {
         public:
-            UndelayCmd(): StaticCmd("undelay", BASE, "removes named /delay commands") {
+            UndelayCmd() : StaticCmd("undelay", BASE, "removes named /delay commands") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -676,13 +679,13 @@ namespace Cmd {
                 const std::string& name = args.Argv(1);
                 const std::string& command = (args.Argc() >= 3) ? args.EscapedArgs(2) : "";
 
-                for (auto it = delays.begin(); it != delays.end();) {
+                for (auto it = delays.begin(); it != delays.end(); ) {
                     const delayRecord_t& delay = *it;
 
                     if (Q_stristr(delay.name.c_str(), name.c_str()) and Q_stristr(delay.command.c_str(), command.c_str())) {
                         it = delays.erase(it);
                     } else {
-                        it ++;
+                        it++;
                     }
                 }
             }
@@ -698,13 +701,13 @@ namespace Cmd {
             }
     };
 
-    class UndelayAllCmd: public StaticCmd {
+    class UndelayAllCmd : public StaticCmd {
         public:
-            UndelayAllCmd(): StaticCmd("undelayAll", BASE, "removes all the pending /delay commands") {
+            UndelayAllCmd() : StaticCmd("undelayAll", BASE, "removes all the pending /delay commands") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
-                Q_UNUSED(args); //TODO
+                Q_UNUSED(args); // TODO
                 delays.clear();
             }
     };
@@ -752,9 +755,9 @@ namespace Cmd {
         return res;
     }
 
-    class AliasProxy: public CmdBase {
+    class AliasProxy : public CmdBase {
         public:
-            AliasProxy(): CmdBase(0) {
+            AliasProxy() : CmdBase(0) {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -772,7 +775,7 @@ namespace Cmd {
                 bool startsRun = not inAliasRun;
                 if (startsRun) {
                     inAliasRun = true;
-                    aliasRun ++;
+                    aliasRun++;
                 }
 
                 if (alias.lastRun == aliasRun) {
@@ -789,9 +792,9 @@ namespace Cmd {
     };
     static AliasProxy aliasProxy;
 
-    class AliasCmd: StaticCmd {
+    class AliasCmd : StaticCmd {
         public:
-            AliasCmd(): StaticCmd("alias", BASE, "creates or view an alias") {
+            AliasCmd() : StaticCmd("alias", BASE, "creates or view an alias") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -803,7 +806,7 @@ namespace Cmd {
 
                 const std::string& name = args.Argv(1);
 
-                //Show an alias
+                // Show an alias
                 if (args.Argc() == 2) {
                     auto iter = aliases.find(name);
                     if (iter != aliases.end()) {
@@ -814,7 +817,7 @@ namespace Cmd {
                     return;
                 }
 
-                //Modify or create an alias
+                // Modify or create an alias
                 const std::string& command = args.ConcatArgs(2);
 
                 auto iter = aliases.find(name);
@@ -833,10 +836,10 @@ namespace Cmd {
                     return;
                 }
 
-                aliases[name] = aliasRecord_t{command, aliasRun};
+                aliases[name] = aliasRecord_t {command, aliasRun};
                 AddCommand(name, aliasProxy, "a user-defined alias command");
 
-                //Force an update of autogen.cfg (TODO: get rid of this super global variable)
+                // Force an update of autogen.cfg (TODO: get rid of this super global variable)
                 cvar_modifiedFlags |= CVAR_ARCHIVE_BITS;
             }
 
@@ -852,9 +855,9 @@ namespace Cmd {
     };
     static AliasCmd AliasCmdRegistration;
 
-    class UnaliasCmd: StaticCmd {
+    class UnaliasCmd : StaticCmd {
         public:
-            UnaliasCmd(): StaticCmd("unalias", BASE, "deletes an alias") {
+            UnaliasCmd() : StaticCmd("unalias", BASE, "deletes an alias") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
@@ -884,26 +887,26 @@ namespace Cmd {
     };
     static UnaliasCmd UnaliasCmdRegistration;
 
-    class ClearAliasesCmd: StaticCmd {
+    class ClearAliasesCmd : StaticCmd {
         public:
-            ClearAliasesCmd(): StaticCmd("clearAliases", BASE, "deletes all the aliases") {
+            ClearAliasesCmd() : StaticCmd("clearAliases", BASE, "deletes all the aliases") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
-                Q_UNUSED(args); //TODO
+                Q_UNUSED(args); // TODO
                 RemoveFlaggedCommands(ALIAS);
                 aliases.clear();
             }
     };
     static ClearAliasesCmd ClearAliasesCmdRegistration;
 
-    class ListAliasesCmd: StaticCmd {
+    class ListAliasesCmd : StaticCmd {
         public:
-            ListAliasesCmd(): StaticCmd("listAliases", BASE, "lists aliases") {
+            ListAliasesCmd() : StaticCmd("listAliases", BASE, "lists aliases") {
             }
 
             void Run(const Cmd::Args& args) const OVERRIDE {
-                Q_UNUSED(args); //TODO
+                Q_UNUSED(args); // TODO
                 std::string name;
 
                 if (args.Argc() > 1) {
@@ -916,7 +919,7 @@ namespace Cmd {
                 std::vector<const std::string*> matchesNames;
                 unsigned long maxNameLength = 0;
 
-                //Find all the matching aliases and their names
+                // Find all the matching aliases and their names
                 for (auto it = aliases.cbegin(); it != aliases.cend(); ++it) {
                     if (Q_stristr(it->first.c_str(), name.c_str())) {
                         matches.push_back(&it->second);
@@ -925,7 +928,7 @@ namespace Cmd {
                     }
                 }
 
-                //Print the matches, keeping the description aligned
+                // Print the matches, keeping the description aligned
                 for (unsigned i = 0; i < matches.size(); i++) {
                     int toFill = maxNameLength - matchesNames[i]->size();
                     Print("  %s%s ⇒ %s", matchesNames[i]->c_str(), std::string(toFill, ' ').c_str(), matches[i]->command.c_str());

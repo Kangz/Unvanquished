@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Cvar {
 
     CvarProxy::CvarProxy(std::string name, int flags, std::string defaultValue)
-    : name(std::move(name)), flags(flags), defaultValue(std::move(defaultValue)) {
+        : name(std::move(name)), flags(flags), defaultValue(std::move(defaultValue)) {
     }
 
     void CvarProxy::SetValue(std::string value) {
@@ -65,7 +65,7 @@ namespace Cvar {
     }
 
     bool ParseCvarValue(Str::StringRef value, int& result) {
-        //TODO: this accepts "1a" as a valid int
+        // TODO: this accepts "1a" as a valid int
         return Str::ParseInt(result, value);
     }
 
@@ -94,12 +94,12 @@ namespace Cvar {
     }
 
     bool ParseCvarValue(std::string value, std::string& result) {
-		result = std::move(value);
-		return true;
+        result = std::move(value);
+        return true;
     }
 
     std::string SerializeCvarValue(std::string value) {
-		return value;
+        return value;
     }
 
     template<>

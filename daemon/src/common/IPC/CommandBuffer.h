@@ -83,38 +83,38 @@ namespace IPC {
         void AdvanceWritePointer(size_t offset);
 
         size_t GetSize() const;
-    private:
-        // Wraps offset in the circular buffer
-        size_t Normalize(size_t offset) const;
+        private:
+            // Wraps offset in the circular buffer
+            size_t Normalize(size_t offset) const;
 
-        // Returns the position of offset if we consider the read (resp. write) offset to be the origin
-        size_t FromRead(size_t offset) const;
-        size_t FromWrite(size_t offset) const;
+            // Returns the position of offset if we consider the read (resp. write) offset to be the origin
+            size_t FromRead(size_t offset) const;
+            size_t FromWrite(size_t offset) const;
 
-        void InternalRead(size_t fromOffset, char* out, size_t len);
-        void InternalWrite(size_t toOffset, const char* in, size_t len);
+            void InternalRead(size_t fromOffset, char* out, size_t len);
+            void InternalWrite(size_t toOffset, const char* in, size_t len);
 
-        // If we have the read offset equal to the write offset then we don't know
-        // if the full buffer is ready to be read or written. So we force a constant
-        // "safety" offset between the read and the write pointer, here at 4 so we
-        // start aligned. (otherwise it could be 1).
-        static const int SAFETY_OFFSET = 4;
+            // If we have the read offset equal to the write offset then we don't know
+            // if the full buffer is ready to be read or written. So we force a constant
+            // "safety" offset between the read and the write pointer, here at 4 so we
+            // start aligned. (otherwise it could be 1).
+            static const int SAFETY_OFFSET = 4;
 
-        // We assume these structure will be packed, and static assert on it.
-        struct SharedWriterData {
-            std::atomic<uint32_t> offset;
-        };
-        static_assert(offsetof(SharedWriterData, offset) == 0, "Wrong packing on SharedWriterData");
+            // We assume these structure will be packed, and static assert on it.
+            struct SharedWriterData {
+                std::atomic<uint32_t> offset;
+            };
+            static_assert(offsetof(SharedWriterData, offset) == 0, "Wrong packing on SharedWriterData");
 
-        struct SharedReaderData {
-            std::atomic<uint32_t> offset;
-        };
-        static_assert(offsetof(SharedReaderData, offset) == 0, "Wrong packing on SharedReaderData");
+            struct SharedReaderData {
+                std::atomic<uint32_t> offset;
+            };
+            static_assert(offsetof(SharedReaderData, offset) == 0, "Wrong packing on SharedReaderData");
 
-        char* base;
-        size_t writerOffset;
-        size_t readerOffset;
-        size_t size;
+            char* base;
+            size_t writerOffset;
+            size_t readerOffset;
+            size_t size;
     };
 
     enum {
@@ -123,12 +123,12 @@ namespace IPC {
     };
 
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::COMMAND_BUFFER, COMMAND_BUFFER_LOCATE>, IPC::SharedMemory>
-    > CommandBufferLocateMsg;
+            IPC::Message<IPC::Id<VM::COMMAND_BUFFER, COMMAND_BUFFER_LOCATE>, IPC::SharedMemory>
+            > CommandBufferLocateMsg;
 
     typedef IPC::SyncMessage<
-        IPC::Message<IPC::Id<VM::COMMAND_BUFFER, COMMAND_BUFFER_CONSUME>>
-    > CommandBufferConsumeMsg;
+            IPC::Message<IPC::Id<VM::COMMAND_BUFFER, COMMAND_BUFFER_CONSUME> >
+            > CommandBufferConsumeMsg;
 
 } // namespace IPC
 

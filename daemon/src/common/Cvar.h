@@ -96,7 +96,8 @@ namespace Cvar {
      * The functions bool ParseCvarValue(string, T& res), string SerializeCvarValue(T)
      * and string GetCvarTypeName<T>() must be implemented for Cvar<T> to work.
      */
-    template<typename T> class Cvar : public CvarProxy{
+    template<typename T>
+    class Cvar : public CvarProxy {
         public:
             typedef T value_type;
 
@@ -104,14 +105,14 @@ namespace Cvar {
             Cvar(std::string name, std::string description, int flags, value_type defaultValue);
             Cvar(NoRegisterTag, std::string name, std::string description, int flags, value_type defaultValue);
 
-            //Outside code accesses the Cvar value by doing my_cvar.Get() or *my_cvar
+            // Outside code accesses the Cvar value by doing my_cvar.Get() or *my_cvar
             T Get();
             T operator*();
 
-            //Outside code can also change the value but it won't be seen immediately after with a .Get()
+            // Outside code can also change the value but it won't be seen immediately after with a .Get()
             void Set(T newValue);
 
-            //Called by the cvar system when the value is changed
+            // Called by the cvar system when the value is changed
             virtual OnValueChangedResult OnValueChanged(Str::StringRef text);
 
         protected:
@@ -143,12 +144,13 @@ namespace Cvar {
      * registering.
      */
 
-    //TODO do not force people to include functional?
+    // TODO do not force people to include functional?
     /*
      * Callback<CvarType> adds a callback that is called with the parsed value when
      * the value changes
      */
-    template<typename Base> class Callback : public Base {
+    template<typename Base>
+    class Callback : public Base {
         public:
             typedef typename Base::value_type value_type;
 
@@ -168,7 +170,8 @@ namespace Cvar {
      * (resets the modified flag to false)
      */
 
-    template<typename Base> class Modified : public Base {
+    template<typename Base>
+    class Modified : public Base {
         public:
             typedef typename Base::value_type value_type;
 
@@ -179,7 +182,7 @@ namespace Cvar {
 
             virtual OnValueChangedResult OnValueChanged(Str::StringRef newValue);
 
-            //TODO change it when we have optional
+            // TODO change it when we have optional
             bool GetModifiedValue(value_type& value);
 
         private:
@@ -190,7 +193,8 @@ namespace Cvar {
      * Range<CvarType> forces the cvar to stay in a range of values.
      */
 
-    template<typename Base> class Range : public Base {
+    template<typename Base>
+    class Range : public Base {
         public:
             typedef typename Base::value_type value_type;
 
@@ -241,14 +245,14 @@ namespace Cvar {
 
     template<typename T>
     Cvar<T>::Cvar(std::string name, std::string description, int flags, value_type defaultValue)
-    : CvarProxy(std::move(name), flags, SerializeCvarValue(defaultValue)), description(std::move(description)) {
+        : CvarProxy(std::move(name), flags, SerializeCvarValue(defaultValue)), description(std::move(description)) {
         value = std::move(defaultValue);
         Register();
     }
 
     template<typename T>
     Cvar<T>::Cvar(NoRegisterTag, std::string name, std::string description, int flags, value_type defaultValue)
-    : CvarProxy(std::move(name), flags, SerializeCvarValue(defaultValue)), description(std::move(description)) {
+        : CvarProxy(std::move(name), flags, SerializeCvarValue(defaultValue)), description(std::move(description)) {
         value = std::move(defaultValue);
     }
 
@@ -274,12 +278,12 @@ namespace Cvar {
         if (Parse(text, value)) {
             OnValueChangedResult validationResult = Validate(value);
             if (validationResult.success) {
-                return OnValueChangedResult{true, GetDescription()};
+                return OnValueChangedResult {true, GetDescription()};
             } else {
                 return validationResult;
             }
         } else {
-            return OnValueChangedResult{false, Str::Format("value \"%s\" is not of type '%s' as expected", text, GetCvarTypeName<T>())};
+            return OnValueChangedResult {false, Str::Format("value \"%s\" is not of type '%s' as expected", text, GetCvarTypeName<T>())};
         }
     }
 
@@ -290,7 +294,7 @@ namespace Cvar {
 
     template<typename T>
     OnValueChangedResult Cvar<T>::Validate(const T&) {
-        return OnValueChangedResult{true, ""};
+        return OnValueChangedResult {true, ""};
     }
 
     template<typename T>
@@ -313,16 +317,16 @@ namespace Cvar {
     template <typename Base>
     template <typename ... Args>
     Callback<Base>::Callback(std::string name, std::string description, int flags, value_type defaultValue, std::function<void(value_type)> callback, Args&& ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...),
-    callback(callback) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...),
+        callback(callback) {
         Cvar<value_type>::Register();
     }
 
     template <typename Base>
     template <typename ... Args>
     Callback<Base>::Callback(NoRegisterTag, std::string name, std::string description, int flags, value_type defaultValue, std::function<void(value_type)> callback, Args&& ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...),
-    callback(callback) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...),
+        callback(callback) {
     }
 
     template <typename Base>
@@ -340,14 +344,14 @@ namespace Cvar {
     template <typename Base>
     template <typename ... Args>
     Modified<Base>::Modified(std::string name, std::string description, int flags, value_type defaultValue, Args ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), modified(false) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), modified(false) {
         Cvar<value_type>::Register();
     }
 
     template <typename Base>
     template <typename ... Args>
     Modified<Base>::Modified(NoRegisterTag, std::string name, std::string description, int flags, value_type defaultValue, Args ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), modified(false) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), modified(false) {
     }
 
     template <typename Base>
@@ -373,23 +377,23 @@ namespace Cvar {
     template <typename Base>
     template <typename ... Args>
     Range<Base>::Range(std::string name, std::string description, int flags, value_type defaultValue, value_type min, value_type max, Args ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), min(min), max(max) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), min(min), max(max) {
         Cvar<value_type>::Register();
     }
 
     template <typename Base>
     template <typename ... Args>
     Range<Base>::Range(NoRegisterTag, std::string name, std::string description, int flags, value_type defaultValue, value_type min, value_type max, Args ... args)
-    : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), min(min), max(max) {
+        : Base(NoRegisterTag(), std::move(name), std::move(description), flags, std::move(defaultValue), std::forward<Args>(args) ...), min(min), max(max) {
     }
 
     template <typename Base>
     OnValueChangedResult Range<Base>::Validate(const value_type& value) {
         bool inBounds = value <= max and value >= min;
         if (inBounds) {
-            return OnValueChangedResult{true, ""};
+            return OnValueChangedResult {true, ""};
         } else {
-            return OnValueChangedResult{false, Str::Format("%s is not between %s and %s", SerializeCvarValue(value), SerializeCvarValue(min), SerializeCvarValue(max))};
+            return OnValueChangedResult {false, Str::Format("%s is not between %s and %s", SerializeCvarValue(value), SerializeCvarValue(min), SerializeCvarValue(max))};
         }
     }
 

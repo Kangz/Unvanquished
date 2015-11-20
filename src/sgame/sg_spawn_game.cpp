@@ -44,31 +44,24 @@ game_score
 =================================================================================
 */
 
-void game_score_act( gentity_t *self, gentity_t*, gentity_t *activator )
-{
-	if ( !activator )
-	{
-		return;
-	}
+void game_score_act(gentity_t* self, gentity_t*, gentity_t* activator) {
+    if (!activator) {
+        return;
+    }
 
-	G_AddCreditsToScore( activator, self->config.amount );
+    G_AddCreditsToScore(activator, self->config.amount);
 }
 
-void SP_game_score( gentity_t *self )
-{
-	if ( !self->config.amount )
-	{
-		if( G_SpawnInt( "count", "0", &self->config.amount) )
-		{
-			G_WarnAboutDeprecatedEntityField( self, "amount", "count", ENT_V_RENAMED );
-		}
-		else
-		{
-			self->config.amount = 1;
-		}
-	}
+void SP_game_score(gentity_t* self) {
+    if (!self->config.amount) {
+        if (G_SpawnInt("count", "0", &self->config.amount) ) {
+            G_WarnAboutDeprecatedEntityField(self, "amount", "count", ENT_V_RENAMED);
+        } else {
+            self->config.amount = 1;
+        }
+    }
 
-	self->act = game_score_act;
+    self->act = game_score_act;
 }
 
 /*
@@ -78,26 +71,20 @@ game_end
 
 =================================================================================
 */
-void game_end_act( gentity_t *self, gentity_t*, gentity_t* )
-{
-	if ( level.unconditionalWin == TEAM_NONE ) // only if not yet triggered
-	{
-		level.unconditionalWin = self->conditions.team;
-	}
+void game_end_act(gentity_t* self, gentity_t*, gentity_t*) {
+    if (level.unconditionalWin == TEAM_NONE) { // only if not yet triggered
+        level.unconditionalWin = self->conditions.team;
+    }
 }
 
-void SP_game_end( gentity_t *self )
-{
-	if(!Q_stricmp(self->classname, "target_human_win"))
-	{
-		self->conditions.team = TEAM_HUMANS;
-	}
-	else if(!Q_stricmp(self->classname, "target_alien_win"))
-	{
-		self->conditions.team = TEAM_ALIENS;
-	}
+void SP_game_end(gentity_t* self) {
+    if (!Q_stricmp(self->classname, "target_human_win")) {
+        self->conditions.team = TEAM_HUMANS;
+    } else if (!Q_stricmp(self->classname, "target_alien_win")) {
+        self->conditions.team = TEAM_ALIENS;
+    }
 
-	self->act = game_end_act;
+    self->act = game_end_act;
 }
 
 /*
@@ -108,25 +95,21 @@ game_funds
 =================================================================================
 */
 
-void game_funds_act( gentity_t *self, gentity_t*, gentity_t *activator )
-{
-	if( !activator )
-	{
-		return;
-	}
+void game_funds_act(gentity_t* self, gentity_t*, gentity_t* activator) {
+    if (!activator) {
+        return;
+    }
 
-	G_AddCreditToClient( activator->client, self->amount, true );
+    G_AddCreditToClient(activator->client, self->amount, true);
 }
 
-void game_funds_reset( gentity_t *self )
-{
-	G_ResetIntField( &self->amount, false, self->config.amount, self->eclass->config.amount, 0);
+void game_funds_reset(gentity_t* self) {
+    G_ResetIntField(&self->amount, false, self->config.amount, self->eclass->config.amount, 0);
 }
 
-void SP_game_funds( gentity_t *self )
-{
-	self->act = game_funds_act;
-	self->reset = game_funds_reset;
+void SP_game_funds(gentity_t* self) {
+    self->act = game_funds_act;
+    self->reset = game_funds_reset;
 }
 
 
@@ -137,17 +120,14 @@ game_kill
 
 =================================================================================
 */
-void game_kill_act( gentity_t*, gentity_t*, gentity_t *activator )
-{
-	if ( !activator )
-	{
-		return;
-	}
+void game_kill_act(gentity_t*, gentity_t*, gentity_t* activator) {
+    if (!activator) {
+        return;
+    }
 
-	G_Kill(activator, MOD_TELEFRAG);
+    G_Kill(activator, MOD_TELEFRAG);
 }
 
-void SP_game_kill( gentity_t *self )
-{
-	self->act = game_kill_act;
+void SP_game_kill(gentity_t* self) {
+    self->act = game_kill_act;
 }

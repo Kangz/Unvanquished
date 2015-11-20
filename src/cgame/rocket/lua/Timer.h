@@ -40,32 +40,31 @@ Maryland 20850 USA.
 #include <Rocket/Core/Lua/LuaType.h>
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
-class Timer
-{
-public:
-	void Add(int delayMs, int callbackRef, lua_State* L);
-	void RunUpdate( int time );
-	static void Update(int time);
+    namespace Core {
+        namespace Lua {
+            class Timer {
+                public:
+                    void Add(int delayMs, int callbackRef, lua_State* L);
+                    void RunUpdate(int time);
+                    static void Update(int time);
 
-private:
-	struct TimerEvent
-	{
-		int delayMs;
-		int callbackRef;
-		lua_State* L;
-	};
-	int lastTime;
-	std::list<TimerEvent> events;
-};
-template<> void ExtraInit<Timer>(lua_State* L, int metatable_index);
-int Timeradd(lua_State* L);
+                private:
+                    struct TimerEvent {
+                        int delayMs;
+                        int callbackRef;
+                        lua_State* L;
+                    };
+                    int lastTime;
+                    std::list<TimerEvent> events;
+            };
+            template<>
+            void ExtraInit<Timer>(lua_State* L, int metatable_index);
+            int Timeradd(lua_State* L);
 
-extern RegType<Timer> TimerMethods[];
-extern luaL_Reg TimerGetters[];
-extern luaL_Reg TimerSetters[];
-}
-}
+            extern RegType<Timer> TimerMethods[];
+            extern luaL_Reg TimerGetters[];
+            extern luaL_Reg TimerSetters[];
+        }
+    }
 }
 #endif

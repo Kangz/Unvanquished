@@ -36,140 +36,114 @@ Maryland 20850 USA.
 #include "../cg_local.h"
 
 
-struct HudUnit
-{
-	HudUnit( Rocket::Core::ElementDocument *doc ) : unit( doc )
-	{
-		load = true;
-	}
+struct HudUnit {
+    HudUnit(Rocket::Core::ElementDocument* doc) : unit(doc) {
+        load = true;
+    }
 
-	Rocket::Core::ElementDocument *unit; // Element document that holds the unit
-	bool load; // Whether to load or not
+    Rocket::Core::ElementDocument* unit; // Element document that holds the unit
+    bool load; // Whether to load or not
 };
 
 typedef std::list<HudUnit> RocketHud;
-RocketHud *activeHud = nullptr;
+RocketHud* activeHud = nullptr;
 std::vector<RocketHud> huds;
 
 
 // Initialized to WP_NUM_WEAPONS, which may be different based on different mods
-void Rocket_InitializeHuds( int size )
-{
-	huds.clear();
+void Rocket_InitializeHuds(int size) {
+    huds.clear();
 
-	for ( int i = 0; i < size; ++i )
-	{
-		huds.push_back( RocketHud() );
-	}
+    for (int i = 0; i < size; ++i) {
+        huds.push_back(RocketHud() );
+    }
 
-	activeHud = nullptr;
+    activeHud = nullptr;
 }
 
-void Rocket_LoadUnit( const char *path )
-{
-	Rocket::Core::ElementDocument *document = hudContext->LoadDocument( path );
+void Rocket_LoadUnit(const char* path) {
+    Rocket::Core::ElementDocument* document = hudContext->LoadDocument(path);
 
-	Rocket::Core::ElementDocument* other;
+    Rocket::Core::ElementDocument* other;
 
-	if ( document )
-	{
-		document->RemoveReference();
-		hudContext->PullDocumentToFront( document );
+    if (document) {
+        document->RemoveReference();
+        hudContext->PullDocumentToFront(document);
 
-		// Close any other documents which may have the same ID
-		other = hudContext->GetDocument( document->GetId() );
-		if ( other && other != document )
-		{
-			other->Close();
-		}
+        // Close any other documents which may have the same ID
+        other = hudContext->GetDocument(document->GetId() );
+        if (other && other != document) {
+            other->Close();
+        }
 
-		document->Hide();
-	}
+        document->Hide();
+    }
 }
 
-void Rocket_AddUnitToHud( int weapon, const char *id )
-{
-	if ( id && *id )
-	{
-		Rocket::Core::ElementDocument *doc = hudContext->GetDocument( id );
-		if ( doc )
-		{
-			huds[ weapon ].push_back( HudUnit( doc ) );
-		}
-	}
+void Rocket_AddUnitToHud(int weapon, const char* id) {
+    if (id && *id) {
+        Rocket::Core::ElementDocument* doc = hudContext->GetDocument(id);
+        if (doc) {
+            huds[weapon].push_back(HudUnit(doc) );
+        }
+    }
 }
 
 // See if unit exists in a hud
-static HudUnit *findUnit( RocketHud *in, HudUnit &find )
-{
-	for ( RocketHud::iterator it = in->begin(); it != in->end(); ++it )
-	{
-		if ( it->unit == find.unit )
-		{
-			return &*it;
-		}
-	}
+static HudUnit* findUnit(RocketHud* in, HudUnit &find) {
+    for (RocketHud::iterator it = in->begin(); it != in->end(); ++it) {
+        if (it->unit == find.unit) {
+            return &*it;
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
-void Rocket_ShowHud( int weapon )
-{
-	RocketHud *currentHud = &huds[ weapon ];
+void Rocket_ShowHud(int weapon) {
+    RocketHud* currentHud = &huds[weapon];
 
-	if ( activeHud )
-	{
-		for ( RocketHud::iterator it = activeHud->begin(); it != activeHud->end(); ++it )
-		{
-			HudUnit *unit;
-			// Check if the new HUD needs this unit
-			if ( ( unit = findUnit( currentHud, *it ) ) )
-			{
-				unit->load = false;
+    if (activeHud) {
+        for (RocketHud::iterator it = activeHud->begin(); it != activeHud->end(); ++it) {
+            HudUnit* unit;
+            // Check if the new HUD needs this unit
+            if ( (unit = findUnit(currentHud, *it) ) ) {
+                unit->load = false;
 
-				continue;
-			}
+                continue;
+            }
 
-			// Nope. Doesn't need it
-			it->unit->Hide();
-		}
-	}
+            // Nope. Doesn't need it
+            it->unit->Hide();
+        }
+    }
 
-	for ( RocketHud::iterator it = currentHud->begin(); it != currentHud->end(); ++it )
-	{
-		if ( it->load )
-		{
-			it->unit->Show();
-		}
+    for (RocketHud::iterator it = currentHud->begin(); it != currentHud->end(); ++it) {
+        if (it->load) {
+            it->unit->Show();
+        }
 
-		// No matter what, reset load status
-		it->load = true;
-	}
+        // No matter what, reset load status
+        it->load = true;
+    }
 
-	activeHud = currentHud;
+    activeHud = currentHud;
 }
 
-void Rocket_ClearHud( unsigned weapon )
-{
-	if ( weapon < huds.size() )
-	{
-		huds[ weapon ].clear();
-	}
+void Rocket_ClearHud(unsigned weapon) {
+    if (weapon < huds.size() ) {
+        huds[weapon].clear();
+    }
 }
 
-void Rocket_ShowScoreboard( const char *name, bool show )
-{
-	Rocket::Core::ElementDocument* doc = hudContext->GetDocument( name );
+void Rocket_ShowScoreboard(const char* name, bool show) {
+    Rocket::Core::ElementDocument* doc = hudContext->GetDocument(name);
 
-	if ( doc )
-	{
-		if ( show )
-		{
-			doc->Show();
-		}
-		else
-		{
-			doc->Hide();
-		}
-	}
+    if (doc) {
+        if (show) {
+            doc->Show();
+        } else {
+            doc->Hide();
+        }
+    }
 }

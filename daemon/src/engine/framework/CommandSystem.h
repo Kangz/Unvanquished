@@ -54,7 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * commands.
  */
 
-//TODO: figure out the threading mode for commands and change the doc accordingly
+// TODO: figure out the threading mode for commands and change the doc accordingly
 
 namespace Cmd {
 
@@ -64,19 +64,19 @@ namespace Cmd {
      * when run and can also be executed in a custom Environment.
      */
 
-    //TODO make it thread safe
+    // TODO make it thread safe
     // Adds a command text to by executed (last, after what's already in the buffer)
     void BufferCommandText(Str::StringRef text, bool parseCvars = false, Environment* env = nullptr);
     // Adds a command text to be executed just after the current command (used by commands execute other commands)
     void BufferCommandTextAfter(Str::StringRef text, bool parseCvars = false, Environment* env = nullptr);
 
-    //TODO: figure out a way to make this convenient for non-main threads
+    // TODO: figure out a way to make this convenient for non-main threads
     // Executes all the buffered commands. Must be called by the main thread.
     void ExecuteCommandBuffer();
 
     // Managing commands.
 
-    //TODO make it thread safe
+    // TODO make it thread safe
     // Registers a command
     void AddCommand(const std::string& name, const CmdBase& cmd, std::string description);
     // Changes the description of a command
@@ -88,25 +88,25 @@ namespace Cmd {
     // Removes all the commands registered with the same handler
     void RemoveSameCommands(const CmdBase& cmd);
 
-    //TODO: figure out a way to make this convenient for non-main threads
+    // TODO: figure out a way to make this convenient for non-main threads
     // Executes a raw command string as a single command. Must be called by the main thread.
     void ExecuteCommand(Str::StringRef command, bool parseCvars = false, Environment* env = nullptr);
 
-    //Completion stuff, highly unstable :-)
+    // Completion stuff, highly unstable :-)
     CompletionResult CompleteArgument(const Args& args, int argNum);
     CompletionResult CompleteCommandNames(Str::StringRef prefix = "");
 
-    //Function to ease the transition to C++
+    // Function to ease the transition to C++
     bool CommandExists(const std::string& name);
     const Args& GetCurrentArgs();
     void SetCurrentArgs(const Args& args);
     void SaveArgs();
     void LoadArgs();
 
-    //Environment related private functions
+    // Environment related private functions
     Environment* GetEnv();
 
-    class DefaultEnvironment: public Environment {
+    class DefaultEnvironment : public Environment {
         public:
             virtual void Print(Str::StringRef text) OVERRIDE;
             virtual void ExecuteAfter(Str::StringRef text, bool parseCvars) OVERRIDE;

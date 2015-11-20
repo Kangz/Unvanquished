@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "common/IPC/Channel.h"
 
 #ifndef COMMON_VM_SERVICES_H_
-#define COMMON_VM_SERVICES_H_
+    #define COMMON_VM_SERVICES_H_
 
 namespace VM {
 
@@ -64,7 +64,7 @@ namespace VM {
 
             class ProxyCmd;
             std::unique_ptr<ProxyCmd> commandProxy;
-            //TODO use the values to help the VM cache the location of the commands instead of doing a second hashtable lookup
+            // TODO use the values to help the VM cache the location of the commands instead of doing a second hashtable lookup
             std::unordered_map<std::string, uint64_t> registeredCommands;
 
             // Cvar Related
@@ -76,7 +76,7 @@ namespace VM {
             void AddCvarFlags(Util::Reader& reader, IPC::Channel& channel);
 
             class ProxyCvar;
-            std::vector<std::unique_ptr<ProxyCvar>> registeredCvars;
+            std::vector<std::unique_ptr<ProxyCvar> > registeredCvars;
 
             // Log Related
             void HandleLogSyscall(int minor, Util::Reader& reader, IPC::Channel& channel);

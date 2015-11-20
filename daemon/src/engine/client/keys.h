@@ -39,37 +39,36 @@ Maryland 20850 USA.
 #define MAX_TEAMS 4
 #define DEFAULT_BINDING 0
 
-typedef struct
-{
-	bool down;
-	int      repeats; // if > 1, it is autorepeating
-	char     *binding[ MAX_TEAMS ];
+typedef struct {
+    bool down;
+    int repeats; // if > 1, it is autorepeating
+    char* binding[MAX_TEAMS];
 } qkey_t;
 
 extern bool key_overstrikeMode;
-extern qkey_t   keys[ MAX_KEYS ];
-extern int      bindTeam;
+extern qkey_t keys[MAX_KEYS];
+extern int bindTeam;
 
 // NOTE TTimo the declaration of field_t and Field_Clear is now in qcommon/qcommon.h
 
-void            Field_KeyDownEvent(Util::LineEditData& edit, int key );
-void            Field_CharEvent(Util::LineEditData& edit, int c );
+void            Field_KeyDownEvent(Util::LineEditData& edit, int key);
+void            Field_CharEvent(Util::LineEditData& edit, int c);
 void            Field_Draw(const Util::LineEditData& edit, int x, int y,
-						   bool showCursor, bool noColorEscape, float alpha );
+                           bool showCursor, bool noColorEscape, float alpha);
 
-extern Console::Field  g_consoleField;
-extern int      anykeydown;
+extern Console::Field g_consoleField;
+extern int anykeydown;
 extern bool chat_irc;
 
-void            Key_WriteBindings( fileHandle_t f );
-void            Key_SetBinding( int keynum, int team, const char *binding );
-void            Key_GetBindingByString( const char *binding, int team, int *key1, int *key2 );
-const char      *Key_GetBinding( int keynum, int team );
-bool        Key_IsDown( int keynum );
+void            Key_WriteBindings(fileHandle_t f);
+void            Key_SetBinding(int keynum, int team, const char* binding);
+void            Key_GetBindingByString(const char* binding, int team, int* key1, int* key2);
+const char* Key_GetBinding(int keynum, int team);
+bool        Key_IsDown(int keynum);
 bool        Key_GetOverstrikeMode();
-void            Key_SetOverstrikeMode( bool state );
+void            Key_SetOverstrikeMode(bool state);
 void            Key_ClearStates();
-int             Key_GetKey( const char *binding, int team );
+int             Key_GetKey(const char* binding, int team);
 
-void            Key_SetTeam( int newTeam );
-int             Key_GetTeam( const char *arg, const char *cmd );
+void            Key_SetTeam(int newTeam);
+int             Key_GetTeam(const char* arg, const char* cmd);

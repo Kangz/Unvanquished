@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifndef GL_SHADER_H
-#define GL_SHADER_H
+    #define GL_SHADER_H
 
-#include "tr_local.h"
-#include <stdexcept>
+    #include "tr_local.h"
+    #include <stdexcept>
 
-#define LOG_GLSL_UNIFORMS 1
-#define USE_UNIFORM_FIREWALL 1
+    #define LOG_GLSL_UNIFORMS 1
+    #define USE_UNIFORM_FIREWALL 1
 
 // *INDENT-OFF*
 static const unsigned int MAX_SHADER_MACROS = 9;
@@ -87,9 +87,9 @@ protected:
 	std::vector< GLUniform * >      _uniforms;
 	std::vector< GLCompileMacro * > _compileMacros;
 
-	
 
-	
+
+
 
 	GLShader( const std::string &name, uint32_t vertexAttribsRequired, GLShaderManager *manager ) :
 		_name( name ),
@@ -2127,7 +2127,7 @@ class GLShader_generic :
 	public u_ViewUp,
 	public u_AlphaThreshold,
 	public u_ModelMatrix,
- 	public u_ProjectionMatrixTranspose,
+        public u_ProjectionMatrixTranspose,
 	public u_ModelViewProjectionMatrix,
 	public u_ColorModulate,
 	public u_Color,

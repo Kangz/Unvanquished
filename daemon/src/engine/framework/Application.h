@@ -33,55 +33,56 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Application {
 
-struct Traits {
-    Traits();
+    struct Traits {
+        Traits();
 
-    // TODO remove the need for these target traits
-    bool isClient;
-    bool isTTYClient;
-    bool isServer;
+        // TODO remove the need for these target traits
+        bool isClient;
+        bool isTTYClient;
+        bool isServer;
 
-    std::string uniqueHomepathSuffix;
-    bool useCurses;
-    bool supportsUri;
-};
+        std::string uniqueHomepathSuffix;
+        bool useCurses;
+        bool supportsUri;
+    };
 
-class Application {
-    public:
-        Application();
+    class Application {
+        public:
+            Application();
 
-        virtual void LoadInitialConfig(bool resetConfig);
-        virtual void Initialize(Str::StringRef uri);
-        virtual void Frame() {}
+            virtual void LoadInitialConfig(bool resetConfig);
+            virtual void Initialize(Str::StringRef uri);
+            virtual void Frame() {
+            }
 
-        virtual void OnDrop(Str::StringRef reason);
-        virtual void Shutdown(bool error, Str::StringRef message);
+            virtual void OnDrop(Str::StringRef reason);
+            virtual void Shutdown(bool error, Str::StringRef message);
 
-        virtual void OnUnhandledCommand(const Cmd::Args& args);
+            virtual void OnUnhandledCommand(const Cmd::Args& args);
 
-        const Traits& GetTraits() const;
+            const Traits& GetTraits() const;
 
-    protected:
-        Traits traits;
-};
+        protected:
+            Traits traits;
+    };
 
-void LoadInitialConfig(bool resetConfig);
-void Initialize(Str::StringRef uri);
-void Frame();
+    void LoadInitialConfig(bool resetConfig);
+    void Initialize(Str::StringRef uri);
+    void Frame();
 
-void OnDrop(Str::StringRef reason);
-void Shutdown(bool error, Str::StringRef message);
+    void OnDrop(Str::StringRef reason);
+    void Shutdown(bool error, Str::StringRef message);
 
-void OnUnhandledCommand(const Cmd::Args& args);
+    void OnUnhandledCommand(const Cmd::Args& args);
 
-const Traits& GetTraits();
+    const Traits& GetTraits();
 
 #define INSTANTIATE_APPLICATION(classname) \
     Application& GetApp() { \
         static classname app; \
         return app; \
     }
-#define TRY_SHUTDOWN(code) try {code;} catch (Sys::DropErr&) {}
+#define TRY_SHUTDOWN(code) try {code; } catch (Sys::DropErr&) {}
 
 }
 

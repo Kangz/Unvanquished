@@ -32,77 +32,71 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Audio {
 
-typedef struct
-{
-	const char *ext;
-	AudioData (*SoundLoader) (std::string);
-} soundExtToLoaderMap_t;
+    typedef struct {
+        const char* ext;
+        AudioData (* SoundLoader)(std::string);
+    } soundExtToLoaderMap_t;
 
-// Note that the ordering indicates the order of preference used
-// when there are multiple sound files of different formats available
-static const soundExtToLoaderMap_t soundLoaders[] =
-{
-	{ ".wav",	LoadWavCodec },
-	{ ".opus",	LoadOpusCodec  },
-	{ ".ogg",	LoadOggCodec  },
-};
+    // Note that the ordering indicates the order of preference used
+    // when there are multiple sound files of different formats available
+    static const soundExtToLoaderMap_t soundLoaders[] ={
+        { ".wav", LoadWavCodec },
+        { ".opus", LoadOpusCodec  },
+        { ".ogg", LoadOggCodec  },
+    };
 
-static int numSoundLoaders = ARRAY_LEN(soundLoaders);
+    static int numSoundLoaders = ARRAY_LEN(soundLoaders);
 
-AudioData LoadSoundCodec(std::string filename)
-{
+    AudioData LoadSoundCodec(std::string filename) {
 
-	std::string ext = FS::Path::Extension(filename);
+        std::string ext = FS::Path::Extension(filename);
 
-	// if filename has extension, try to load it
-	if (ext != "") {
-		// look for the correct loader and use it
-		for (int i = 0; i < numSoundLoaders; i++) {
-			if (ext == soundLoaders[i].ext) {
-				// if file exists, load it
-				if (FS::PakPath::FileExists(filename)) {
-					return soundLoaders[i].SoundLoader(filename);
-				}
-			}
-		}
-	}
+        // if filename has extension, try to load it
+        if (ext != "") {
+            // look for the correct loader and use it
+            for (int i = 0; i < numSoundLoaders; i++) {
+                if (ext == soundLoaders[i].ext) {
+                    // if file exists, load it
+                    if (FS::PakPath::FileExists(filename)) {
+                        return soundLoaders[i].SoundLoader(filename);
+                    }
+                }
+            }
+        }
 
-	// if filename does not have extension or there is no file with such extension
-	// or if there is no codec available for this file format,
-	// try and find a suitable match using all the sound file formats supported
-	// prioritize with the pak priority
-	int bestLoader = -1;
-	const FS::PakInfo* bestPak = nullptr;
-	std::string strippedname = FS::Path::StripExtension(filename);
-	
-	for (int i = 0; i < numSoundLoaders; i++)
-	{
-		std::string altName = Str::Format("%s%s", strippedname, soundLoaders[i].ext);
-		const FS::PakInfo* pak = FS::PakPath::LocateFile(altName);
+        // if filename does not have extension or there is no file with such extension
+        // or if there is no codec available for this file format,
+        // try and find a suitable match using all the sound file formats supported
+        // prioritize with the pak priority
+        int bestLoader = -1;
+        const FS::PakInfo* bestPak = nullptr;
+        std::string strippedname = FS::Path::StripExtension(filename);
 
-		// We found a file and its pak is better than the best pak we have
-		// this relies on how the filesystem works internally and should be moved
-		// to a more explicit interface once there is one. (FIXME)
-		if (pak != nullptr && (bestPak == nullptr || pak < bestPak ))
-		{
-			bestPak = pak;
-			bestLoader = i;
-		}
-	}
+        for (int i = 0; i < numSoundLoaders; i++) {
+            std::string altName = Str::Format("%s%s", strippedname, soundLoaders[i].ext);
+            const FS::PakInfo* pak = FS::PakPath::LocateFile(altName);
 
-	if (bestLoader >= 0)
-	{
-		std::string altName = Str::Format("%s%s", strippedname, soundLoaders[bestLoader].ext );
-		return soundLoaders[bestLoader].SoundLoader(altName);
-	}
+            // We found a file and its pak is better than the best pak we have
+            // this relies on how the filesystem works internally and should be moved
+            // to a more explicit interface once there is one. (FIXME)
+            if (pak != nullptr && (bestPak == nullptr || pak < bestPak)) {
+                bestPak = pak;
+                bestLoader = i;
+            }
+        }
 
-	if (FS::PakPath::FileExists(filename)) {
-		audioLogs.Warn("No codec available for opening %s.", filename);
-		return AudioData();
-	}
+        if (bestLoader >= 0) {
+            std::string altName = Str::Format("%s%s", strippedname, soundLoaders[bestLoader].ext);
+            return soundLoaders[bestLoader].SoundLoader(altName);
+        }
 
-	audioLogs.Warn("Sound file %s not found.", filename);
-	return AudioData();
+        if (FS::PakPath::FileExists(filename)) {
+            audioLogs.Warn("No codec available for opening %s.", filename);
+            return AudioData();
+        }
 
-}
+        audioLogs.Warn("Sound file %s not found.", filename);
+        return AudioData();
+
+    }
 } // namespace Audio

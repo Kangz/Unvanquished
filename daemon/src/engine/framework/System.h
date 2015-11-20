@@ -31,13 +31,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "qcommon/qcommon.h"
 
 #ifndef FRAMEWORK_SYSTEM_H_
-#define FRAMEWORK_SYSTEM_H_
+    #define FRAMEWORK_SYSTEM_H_
 
 // Low-level system functions
 namespace Sys {
 
-// Cleanly exit the engine, shutting down all subsystems.
-NORETURN void Quit(Str::StringRef message);
+    // Cleanly exit the engine, shutting down all subsystems.
+    NORETURN void Quit(Str::StringRef message);
 
 } // namespace Sys
 

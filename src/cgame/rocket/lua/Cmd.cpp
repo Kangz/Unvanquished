@@ -35,47 +35,42 @@ Maryland 20850 USA.
 #include "../../cg_local.h"
 
 namespace Rocket {
-namespace Core {
-namespace Lua {
+    namespace Core {
+        namespace Lua {
 
-template<> void ExtraInit<Lua::Cmd>(lua_State* L, int metatable_index)
-{
-	//due to they way that LuaType::Register is made, we know that the method table is at the index
-	//directly below the metatable
-	int method_index = metatable_index - 1;
+            template<>
+            void ExtraInit<Lua::Cmd>(lua_State* L, int metatable_index) {
+                // due to they way that LuaType::Register is made, we know that the method table is at the index
+                // directly below the metatable
+                int method_index = metatable_index - 1;
 
-	lua_pushcfunction(L, Cmdexec);
-	lua_setfield(L, method_index, "exec");
-
-
-	return;
-}
-
-int Cmdexec(lua_State* L)
-{
-	const char *cmd = luaL_checkstring(L, 1);
-	trap_SendConsoleCommand(cmd);
-	return 0;
-}
+                lua_pushcfunction(L, Cmdexec);
+                lua_setfield(L, method_index, "exec");
 
 
-RegType<Cmd> CmdMethods[] =
-{
-	{ NULL, NULL },
-};
+            }
 
-luaL_Reg CmdGetters[] =
-{
-	{ NULL, NULL },
-};
+            int Cmdexec(lua_State* L) {
+                const char* cmd = luaL_checkstring(L, 1);
+                trap_SendConsoleCommand(cmd);
+                return 0;
+            }
 
-luaL_Reg CmdSetters[] =
-{
-	{ NULL, NULL },
-};
 
-LUACORETYPEDEFINE(Cmd,false)
+            RegType<Cmd> CmdMethods[] ={
+                { NULL, NULL },
+            };
 
-}
-}
+            luaL_Reg CmdGetters[] ={
+                { NULL, NULL },
+            };
+
+            luaL_Reg CmdSetters[] ={
+                { NULL, NULL },
+            };
+
+            LUACORETYPEDEFINE(Cmd, false)
+
+        }
+    }
 }

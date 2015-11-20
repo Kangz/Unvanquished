@@ -38,43 +38,44 @@ Maryland 20850 USA.
 #include <Rocket/Core/EventListenerInstancer.h>
 #include "rocket.h"
 
-void Rocket_ProcessEvent( Rocket::Core::Event&, Rocket::Core::String& );
+void Rocket_ProcessEvent(Rocket::Core::Event&, Rocket::Core::String&);
 
-class RocketEvent : public Rocket::Core::EventListener
-{
-public:
-	RocketEvent(const Rocket::Core::String& value) : value( value ) { }
-	~RocketEvent() { }
+class RocketEvent : public Rocket::Core::EventListener {
+    public:
+        RocketEvent(const Rocket::Core::String& value) : value(value) {
+        }
+        ~RocketEvent() {
+        }
 
-	/// Sends the event value through to the CGame's event processing system.
-	void ProcessEvent(Rocket::Core::Event& event)
-	{
-		Rocket_ProcessEvent( event, value );
-	}
+        /// Sends the event value through to the CGame's event processing system.
+        void ProcessEvent(Rocket::Core::Event& event) {
+            Rocket_ProcessEvent(event, value);
+        }
 
-	/// Destroys the event.
-	void OnDetach(Rocket::Core::Element*)
-	{
-		delete this;
-	}
+        /// Destroys the event.
+        void OnDetach(Rocket::Core::Element*) {
+            delete this;
+        }
 
-private:
-	Rocket::Core::String value;
+    private:
+        Rocket::Core::String value;
 };
 
-class EventInstancer : public Rocket::Core::EventListenerInstancer
-{
-public:
-	EventInstancer() { }
-	~EventInstancer() { }
+class EventInstancer : public Rocket::Core::EventListenerInstancer {
+    public:
+        EventInstancer() {
+        }
+        ~EventInstancer() {
+        }
 
-	/// Instances a new event handle for the CGame
-	Rocket::Core::EventListener* InstanceEventListener(const Rocket::Core::String& value, Rocket::Core::Element*)
-	{
-		return new RocketEvent( value );
-	}
+        /// Instances a new event handle for the CGame
+        Rocket::Core::EventListener* InstanceEventListener(const Rocket::Core::String& value, Rocket::Core::Element*) {
+            return new RocketEvent(value);
+        }
 
-	/// Destroys the instancer.
-	void Release() { delete this; }
+        /// Destroys the instancer.
+        void Release() {
+            delete this;
+        }
 };
 #endif

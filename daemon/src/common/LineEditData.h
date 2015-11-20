@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef COMMON_LINE_EDIT_DATA_H_
 #define COMMON_LINE_EDIT_DATA_H_
 
-//FIXME: the namespace and the class name aren't very explicit
+// FIXME: the namespace and the class name aren't very explicit
 namespace Util {
 
     class LineEditData {
@@ -78,8 +78,7 @@ namespace Util {
 
     // Implementation details
 
-    inline void LineEditData::DeleteEnd()
-    {
+    inline void LineEditData::DeleteEnd() {
         DeleteNext(INT_MAX);
     }
 }

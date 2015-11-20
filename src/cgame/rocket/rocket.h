@@ -35,7 +35,7 @@ Maryland 20850 USA.
 #define ROCKET_H
 #ifdef DotProduct
 // Ugly hack to fix the DotProduct conflict
-#undef DotProduct
+    #undef DotProduct
 #endif
 
 #pragma GCC diagnostic push
@@ -43,60 +43,64 @@ Maryland 20850 USA.
 #include <Rocket/Core/Core.h>
 #pragma GCC diagnostic pop
 
-extern Rocket::Core::Context *menuContext;
-extern Rocket::Core::Context *hudContext;
+extern Rocket::Core::Context* menuContext;
+extern Rocket::Core::Context* hudContext;
 
-class RocketEvent_t
-{
-public:
-	RocketEvent_t( Rocket::Core::Event &event, const Rocket::Core::String &cmds ) : cmd( cmds )
-	{
-		targetElement = event.GetTargetElement();
-		Parameters = *(event.GetParameters());
-	}
-	RocketEvent_t( const Rocket::Core::String &cmds ) : cmd( cmds )
-	{
-	}
-	RocketEvent_t( Rocket::Core::Element *e, const Rocket::Core::String &cmds ) : targetElement( e ), cmd( cmds )
-	{
-	}
-	~RocketEvent_t() { }
-	Rocket::Core::Element *targetElement;
-	Rocket::Core::Dictionary Parameters;
-	Rocket::Core::String cmd;
+class RocketEvent_t {
+    public:
+        RocketEvent_t(Rocket::Core::Event &event, const Rocket::Core::String &cmds) : cmd(cmds) {
+            targetElement = event.GetTargetElement();
+            Parameters = *(event.GetParameters());
+        }
+        RocketEvent_t(const Rocket::Core::String &cmds) : cmd(cmds) {
+        }
+        RocketEvent_t(Rocket::Core::Element* e, const Rocket::Core::String &cmds) : targetElement(e), cmd(cmds) {
+        }
+        ~RocketEvent_t() {
+        }
+        Rocket::Core::Element* targetElement;
+        Rocket::Core::Dictionary Parameters;
+        Rocket::Core::String cmd;
 };
 
-Rocket::Core::String Rocket_QuakeToRML( const char *in, int parseFlags );
-Rocket::Core::String CG_KeyBinding( const char *bind, int team );
+Rocket::Core::String Rocket_QuakeToRML(const char* in, int parseFlags);
+Rocket::Core::String CG_KeyBinding(const char* bind, int team);
 
-void Rocket_AddEvent( RocketEvent_t *event );
+void Rocket_AddEvent(RocketEvent_t* event);
 
 namespace Color {
 
-template<class ColourType, int AlphaDefault>
-class ColorAdaptor<Rocket::Core::Colour<ColourType,AlphaDefault>>
-{
-public:
-	static CONSTEXPR bool is_color = true;
-	typedef Rocket::Core::Colour<ColourType,AlphaDefault> color_type;
-	typedef ColourType component_type;
-	static CONSTEXPR int component_max = AlphaDefault;
+    template<class ColourType, int AlphaDefault>
+    class ColorAdaptor<Rocket::Core::Colour<ColourType, AlphaDefault> >{
+        public:
+            static CONSTEXPR bool is_color = true;
+            typedef Rocket::Core::Colour<ColourType, AlphaDefault> color_type;
+            typedef ColourType component_type;
+            static CONSTEXPR int component_max = AlphaDefault;
 
-	static ColorAdaptor Adapt( const color_type& object )
-	{
-		return ColorAdaptor( object );
-	}
+            static ColorAdaptor Adapt(const color_type& object) {
+                return ColorAdaptor(object);
+            }
 
-	ColorAdaptor( const color_type& object ) : object( object ) {}
+            ColorAdaptor(const color_type& object) : object(object) {
+            }
 
-	component_type Red() const { return object.red; }
-	component_type Green() const { return object.green; }
-	component_type Blue() const { return object.blue; }
-	component_type Alpha() const { return object.alpha; }
+            component_type Red() const {
+                return object.red;
+            }
+            component_type Green() const {
+                return object.green;
+            }
+            component_type Blue() const {
+                return object.blue;
+            }
+            component_type Alpha() const {
+                return object.alpha;
+            }
 
-private:
-	color_type object;
-};
+        private:
+            color_type object;
+    };
 } // namespace Color
 
 #endif
