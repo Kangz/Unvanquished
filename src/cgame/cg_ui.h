@@ -39,7 +39,7 @@ typedef rectDef_t Rectangle;
 #define N_(text)             text
 #define C_(ctxt, text)       Pgettext(ctxt, text)
 #define G_(text)             Pgettext(Trans_GenderContext(gender), text)
-#define P_(one, many, count) GettextPlural( (one), (many), (count) )
+#define P_(one, many, count) GettextPlural((one), (many), (count))
 
 const char* Gettext(const char* msgid) PRINTF_TRANSLATE_ARG(1);
 const char* Pgettext(const char* ctxt, const char* msgid) PRINTF_TRANSLATE_ARG(2);

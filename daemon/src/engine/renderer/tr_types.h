@@ -89,11 +89,11 @@ Maryland 20850 USA.
 typedef unsigned int glIndex_t;
 
 typedef enum RegisterShaderFlags {
-    RSF_DEFAULT           = 0x00,
-    RSF_NOMIP             = 0x01,
+    RSF_DEFAULT = 0x00,
+    RSF_NOMIP = 0x01,
     RSF_LIGHT_ATTENUATION = 0x02,
-    RSF_NOLIGHTSCALE      = 0x04,
-    RSF_SPRITE            = 0x08
+    RSF_NOLIGHTSCALE = 0x04,
+    RSF_SPRITE = 0x08
 } RegisterShaderFlags_t;
 
 typedef struct {

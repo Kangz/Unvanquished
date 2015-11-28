@@ -151,7 +151,7 @@ KeyIdentifier Rocket_FromQuake(int key) {
     }
     std::map< int, int >::iterator it;
     it = keyMap.find(key);
-    if (it != keyMap.end() ) {
+    if (it != keyMap.end()) {
         return static_cast< KeyIdentifier >(it->second);
     }
 
@@ -213,9 +213,9 @@ void Rocket_ProcessMouseClick(int button, bool down) {
     }
 
     if (down) {
-        menuContext->ProcessMouseButtonDown(idx, Rocket_GetKeyModifiers() );
+        menuContext->ProcessMouseButtonDown(idx, Rocket_GetKeyModifiers());
     } else {
-        menuContext->ProcessMouseButtonUp(idx, Rocket_GetKeyModifiers() );
+        menuContext->ProcessMouseButtonUp(idx, Rocket_GetKeyModifiers());
     }
 }
 
@@ -226,25 +226,25 @@ void Rocket_ProcessKeyInput(int key, bool down) {
     }
 
     // Our input system sends mouse events as key presses.
-    if ( (key >= K_MOUSE1 && key <= K_MOUSE5) || (key >= K_AUX1 && key <= K_AUX16) ) {
+    if ((key >= K_MOUSE1 && key <= K_MOUSE5) || (key >= K_AUX1 && key <= K_AUX16)) {
         Rocket_ProcessMouseClick(key, down);
         return;
     }
 
-    if ( (key == K_MWHEELDOWN || key == K_MWHEELUP) ) {
+    if ((key == K_MWHEELDOWN || key == K_MWHEELUP)) {
         // Our input system sends an up event right after a down event
         // We only want to catch one of these.
         if (!down) {
             return;
         }
 
-        menuContext->ProcessMouseWheel(key == K_MWHEELDOWN ? MOUSEWHEEL_DELTA : -MOUSEWHEEL_DELTA, Rocket_GetKeyModifiers() );
+        menuContext->ProcessMouseWheel(key == K_MWHEELDOWN ? MOUSEWHEEL_DELTA : -MOUSEWHEEL_DELTA, Rocket_GetKeyModifiers());
         return;
     }
     if (down) {
-        menuContext->ProcessKeyDown(Rocket_FromQuake(key), Rocket_GetKeyModifiers() );
+        menuContext->ProcessKeyDown(Rocket_FromQuake(key), Rocket_GetKeyModifiers());
     } else {
-        menuContext->ProcessKeyUp(Rocket_FromQuake(key), Rocket_GetKeyModifiers() );
+        menuContext->ProcessKeyUp(Rocket_FromQuake(key), Rocket_GetKeyModifiers());
     }
 }
 
@@ -257,7 +257,7 @@ int utf8_to_ucs2(const unsigned char* input) {
         return input[0];
     }
 
-    if ( (input[0] & 0xE0) == 0xE0) {
+    if ((input[0] & 0xE0) == 0xE0) {
         if (input[1] == 0 || input[2] == 0) {
             return -1;
         }
@@ -268,7 +268,7 @@ int utf8_to_ucs2(const unsigned char* input) {
             (input[2] & 0x3F);
     }
 
-    if ( (input[0] & 0xC0) == 0xC0) {
+    if ((input[0] & 0xC0) == 0xC0) {
         if (input[1] == 0) {
             return -1;
         }
@@ -290,20 +290,20 @@ void Rocket_ProcessTextInput(int key) {
     //
     // ignore any non printable chars
     //
-    const char* s =  Q_UTF8_Unstore(key);
-    if ( (unsigned char)*s < 32 || (unsigned char)*s == 0x7f) {
+    const char* s = Q_UTF8_Unstore(key);
+    if ((unsigned char)*s < 32 || (unsigned char)*s == 0x7f) {
         return;
     }
 
-    menuContext->ProcessTextInput(utf8_to_ucs2( (unsigned char*)s) );
+    menuContext->ProcessTextInput(utf8_to_ucs2((unsigned char*)s));
 }
 
 void Rocket_MouseMove(int x, int y) {
-    if (!menuContext || !(rocketInfo.keyCatcher & KEYCATCH_UI) ) {
+    if (!menuContext || !(rocketInfo.keyCatcher & KEYCATCH_UI)) {
         return;
     }
 
-    menuContext->ProcessMouseMove(x, y, Rocket_GetKeyModifiers() );
+    menuContext->ProcessMouseMove(x, y, Rocket_GetKeyModifiers());
 }
 
 /*
@@ -321,12 +321,12 @@ Rocket::Core::String CG_KeyBinding(const char* bind, int team) {
         return "Unbound";
     }
 
-    trap_Key_KeynumToStringBuf(keyNums[0][0], keyBuf, sizeof(keyBuf) );
+    trap_Key_KeynumToStringBuf(keyNums[0][0], keyBuf, sizeof(keyBuf));
     key = keyBuf;
 
     if (keyNums[0].size() > 1) {
         keyBuf[0] = '\0';
-        trap_Key_KeynumToStringBuf(keyNums[0][1], keyBuf, sizeof(keyBuf) );
+        trap_Key_KeynumToStringBuf(keyNums[0][1], keyBuf, sizeof(keyBuf));
         key += " or ";
         key += keyBuf;
     }

@@ -56,7 +56,7 @@ void SV_SetConfigstring(int index, const char* val) {
     }
 
     // don't bother broadcasting an update if no change
-    if (!strcmp(val, sv.configstrings[index]) ) {
+    if (!strcmp(val, sv.configstrings[index])) {
         return;
     }
 
@@ -88,7 +88,7 @@ void SV_UpdateConfigStrings() {
                 }
 
                 // do not always send server info to all clients
-                if (index == CS_SERVERINFO && client->gentity && (client->gentity->r.svFlags & SVF_NOSERVERINFO) ) {
+                if (index == CS_SERVERINFO && client->gentity && (client->gentity->r.svFlags & SVF_NOSERVERINFO)) {
                     continue;
                 }
 
@@ -111,14 +111,14 @@ void SV_UpdateConfigStrings() {
 
                         Q_strncpyz(buf, &sv.configstrings[index][sent], maxChunkSize);
 
-                        SV_SendServerCommand(client, "%s %i %s\n", cmd, index, Cmd_QuoteString(buf) );
+                        SV_SendServerCommand(client, "%s %i %s\n", cmd, index, Cmd_QuoteString(buf));
 
                         sent += (maxChunkSize - 1);
                         remaining -= (maxChunkSize - 1);
                     }
                 } else {
                     // standard cs, just send it
-                    SV_SendServerCommand(client, "cs %i %s\n", index, Cmd_QuoteString(sv.configstrings[index]) );
+                    SV_SendServerCommand(client, "cs %i %s\n", index, Cmd_QuoteString(sv.configstrings[index]));
                 }
             }
         }
@@ -163,8 +163,8 @@ void SV_SetUserinfo(int index, const char* val) {
         val = "";
     }
 
-    Q_strncpyz(svs.clients[index].userinfo, val, sizeof(svs.clients[index].userinfo) );
-    Q_strncpyz(svs.clients[index].name, Info_ValueForKey(val, "name"), sizeof(svs.clients[index].name) );
+    Q_strncpyz(svs.clients[index].userinfo, val, sizeof(svs.clients[index].userinfo));
+    Q_strncpyz(svs.clients[index].name, Info_ValueForKey(val, "name"), sizeof(svs.clients[index].name));
 }
 
 /*
@@ -247,9 +247,9 @@ void SV_BoundMaxClients(int minimum) {
     sv_maxclients->modified = false;
 
     if (sv_maxclients->integer < minimum) {
-        Cvar_Set("sv_maxclients", va("%i", minimum) );
+        Cvar_Set("sv_maxclients", va("%i", minimum));
     } else if (sv_maxclients->integer > MAX_CLIENTS) {
-        Cvar_Set("sv_maxclients", va("%i", MAX_CLIENTS) );
+        Cvar_Set("sv_maxclients", va("%i", MAX_CLIENTS));
     }
 }
 
@@ -323,14 +323,14 @@ void SV_ChangeMaxClients() {
         return;
     }
 
-    oldClients = (client_t*) Hunk_AllocateTempMemory(count * sizeof(client_t) );
+    oldClients = (client_t*) Hunk_AllocateTempMemory(count * sizeof(client_t));
 
     // copy the clients to hunk memory
     for (i = 0; i < count; i++) {
         if (svs.clients[i].state >= CS_CONNECTED) {
             oldClients[i] = std::move(svs.clients[i]);
         } else {
-            Com_Memset(&oldClients[i], 0, sizeof(client_t) );
+            Com_Memset(&oldClients[i], 0, sizeof(client_t));
         }
     }
 
@@ -346,7 +346,7 @@ void SV_ChangeMaxClients() {
         Com_Error(ERR_FATAL, "SV_Startup: unable to allocate svs.clients");
     }
 
-    Com_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(client_t) );
+    Com_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(client_t));
 
     // copy the clients over
     for (i = 0; i < count; i++) {
@@ -375,7 +375,7 @@ void SV_ClearServer() {
         }
     }
 
-    Com_Memset(&sv, 0, sizeof(sv) );
+    Com_Memset(&sv, 0, sizeof(sv));
 }
 
 /*
@@ -417,7 +417,7 @@ void SV_SpawnServer(const char* server) {
     }
 
     // init client structures and svs.numSnapshotEntities
-    if (!Cvar_VariableValue("sv_running") ) {
+    if (!Cvar_VariableValue("sv_running")) {
         SV_Startup();
     } else {
         // check for maxclients change
@@ -442,8 +442,8 @@ void SV_SpawnServer(const char* server) {
     Cvar_Set("cl_paused", "0");
 
     // get a new checksum feed and restart the file system
-    srand(Sys_Milliseconds() );
-    sv.checksumFeed = ( (rand() << 16) ^ rand() ) ^ Sys_Milliseconds();
+    srand(Sys_Milliseconds());
+    sv.checksumFeed = ((rand() << 16) ^ rand()) ^ Sys_Milliseconds();
 
     FS::PakPath::ClearPaks();
     FS_LoadBasePak();
@@ -459,7 +459,7 @@ void SV_SpawnServer(const char* server) {
     // serverid should be different each time
     sv.serverId = com_frameTime;
     sv.restartedServerId = sv.serverId;
-    Cvar_Set("sv_serverid", va("%i", sv.serverId) );
+    Cvar_Set("sv_serverid", va("%i", sv.serverId));
 
     // media configstring setting should be done during
     // the loading stage, so connected clients don't have
@@ -526,13 +526,13 @@ void SV_SpawnServer(const char* server) {
     // the server sends these to the clients so they can figure
     // out which pk3s should be auto-downloaded
 
-    Cvar_Set("sv_paks", FS_LoadedPaks() );
+    Cvar_Set("sv_paks", FS_LoadedPaks());
 
     // save systeminfo and serverinfo strings
     cvar_modifiedFlags &= ~CVAR_SYSTEMINFO;
-    SV_SetConfigstring(CS_SYSTEMINFO, Cvar_InfoString(CVAR_SYSTEMINFO, true) );
+    SV_SetConfigstring(CS_SYSTEMINFO, Cvar_InfoString(CVAR_SYSTEMINFO, true));
 
-    SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO, false) );
+    SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO, false));
     cvar_modifiedFlags &= ~CVAR_SERVERINFO;
 
     // any media configstring setting now should issue a warning
@@ -685,7 +685,7 @@ void SV_Shutdown(const char* finalmsg) {
     NET_LeaveMulticast6();
 
     if (svs.clients) {
-        SV_FinalCommand(va("print %s", Cmd_QuoteString(finalmsg) ), true);
+        SV_FinalCommand(va("print %s", Cmd_QuoteString(finalmsg)), true);
     }
 
     SV_RemoveOperatorCommands();
@@ -706,7 +706,7 @@ void SV_Shutdown(const char* finalmsg) {
         free(svs.clients);
     }
 
-    memset(&svs, 0, sizeof(svs) );
+    memset(&svs, 0, sizeof(svs));
     svs.serverLoad = -1;
 
     Cvar_Set("sv_running", "0");

@@ -134,7 +134,7 @@ void R_AddPolygonSurfaces() {
 
     for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
         sh = R_GetShaderByHandle(poly->hShader);
-        R_AddDrawSurf( (surfaceType_t*) poly, sh, -1, poly->fogIndex);
+        R_AddDrawSurf((surfaceType_t*) poly, sh, -1, poly->fogIndex);
     }
 }
 
@@ -155,7 +155,7 @@ void R_AddPolygonBufferSurfaces() {
     for (i = 0, polybuffer = tr.refdef.polybuffers; i < tr.refdef.numPolybuffers; i++, polybuffer++) {
         sh = R_GetShaderByHandle(polybuffer->pPolyBuffer->shader);
 
-        R_AddDrawSurf( (surfaceType_t*) polybuffer, sh, -1, polybuffer->fogIndex);
+        R_AddDrawSurf((surfaceType_t*) polybuffer, sh, -1, polybuffer->fogIndex);
     }
 }
 
@@ -202,7 +202,7 @@ static void R_AddPolysToScene(qhandle_t hShader, int numVerts, const polyVert_t*
         poly->numVerts = numVerts;
         poly->verts = &backEndData[tr.smpFrame]->polyVerts[r_numPolyVerts];
 
-        Com_Memcpy(poly->verts, &verts[numVerts * j], numVerts * sizeof(*verts) );
+        Com_Memcpy(poly->verts, &verts[numVerts * j], numVerts * sizeof(*verts));
 
         // done.
         r_numPolys++;
@@ -227,7 +227,7 @@ static void R_AddPolysToScene(qhandle_t hShader, int numVerts, const polyVert_t*
             for (fogIndex = 1; fogIndex < tr.world->numFogs; fogIndex++) {
                 fog = &tr.world->fogs[fogIndex];
 
-                if (BoundsIntersect(bounds[0], bounds[1], fog->bounds[0], fog->bounds[1]) ) {
+                if (BoundsIntersect(bounds[0], bounds[1], fog->bounds[0], fog->bounds[1])) {
                     break;
                 }
             }
@@ -295,7 +295,7 @@ void RE_AddPolyBufferToScene(polyBuffer_t* pPolyBuffer) {
     for (fogIndex = 1; fogIndex < tr.world->numFogs; fogIndex++) {
         fog = &tr.world->fogs[fogIndex];
 
-        if (BoundsIntersect(bounds[0], bounds[1], fog->bounds[0], fog->bounds[1]) ) {
+        if (BoundsIntersect(bounds[0], bounds[1], fog->bounds[0], fog->bounds[1])) {
             break;
         }
     }
@@ -324,11 +324,11 @@ void RE_AddRefEntityToScene(const refEntity_t* ent) {
         return;
     }
 
-    if ( (unsigned) ent->reType >= RT_MAX_REF_ENTITY_TYPE) {
+    if ((unsigned) ent->reType >= RT_MAX_REF_ENTITY_TYPE) {
         ri.Error(ERR_DROP, "RE_AddRefEntityToScene: bad reType %i", ent->reType);
     }
 
-    Com_Memcpy(&backEndData[tr.smpFrame]->entities[r_numEntities].e, ent, sizeof(refEntity_t) );
+    Com_Memcpy(&backEndData[tr.smpFrame]->entities[r_numEntities].e, ent, sizeof(refEntity_t));
     backEndData[tr.smpFrame]->entities[r_numEntities].lightingCalculated = false;
 
     r_numEntities++;
@@ -350,16 +350,16 @@ void RE_AddRefLightToScene(const refLight_t* l) {
         return;
     }
 
-    if (l->radius[0] <= 0 && !VectorLength(l->radius) && !VectorLength(l->projTarget) ) {
+    if (l->radius[0] <= 0 && !VectorLength(l->radius) && !VectorLength(l->projTarget)) {
         return;
     }
 
-    if ( (unsigned) l->rlType >= RL_MAX_REF_LIGHT_TYPE) {
+    if ((unsigned) l->rlType >= RL_MAX_REF_LIGHT_TYPE) {
         ri.Error(ERR_DROP, "RE_AddRefLightToScene: bad rlType %i", l->rlType);
     }
 
     light = &backEndData[tr.smpFrame]->lights[r_numLights++];
-    Com_Memcpy(&light->l, l, sizeof(light->l) );
+    Com_Memcpy(&light->l, l, sizeof(light->l));
 
     light->isStatic = false;
     light->additive = true;
@@ -406,7 +406,7 @@ static void R_AddWorldLightsToScene() {
             continue;
         }
 
-        Com_Memcpy(&backEndData[tr.smpFrame]->lights[r_numLights], light, sizeof(trRefLight_t) );
+        Com_Memcpy(&backEndData[tr.smpFrame]->lights[r_numLights], light, sizeof(trRefLight_t));
         r_numLights++;
     }
 }
@@ -512,7 +512,7 @@ void RE_RenderScene(const refdef_t* fd) {
 
     startTime = ri.Milliseconds();
 
-    if (!tr.world && !(fd->rdflags & RDF_NOWORLDMODEL) ) {
+    if (!tr.world && !(fd->rdflags & RDF_NOWORLDMODEL)) {
         ri.Error(ERR_DROP, "R_RenderScene: NULL worldmodel");
     }
 
@@ -536,7 +536,7 @@ void RE_RenderScene(const refdef_t* fd) {
     // will force a reset of the visible leafs even if the view hasn't moved
     tr.refdef.areamaskModified = false;
 
-    if (!(tr.refdef.rdflags & RDF_NOWORLDMODEL) && !( (tr.refdef.rdflags & RDF_SKYBOXPORTAL) && tr.world->numSkyNodes > 0) ) {
+    if (!(tr.refdef.rdflags & RDF_NOWORLDMODEL) && !((tr.refdef.rdflags & RDF_SKYBOXPORTAL) && tr.world->numSkyNodes > 0)) {
         int areaDiff;
         int i;
 
@@ -544,8 +544,8 @@ void RE_RenderScene(const refdef_t* fd) {
         areaDiff = 0;
 
         for (i = 0; i < MAX_MAP_AREA_BYTES / 4; i++) {
-            areaDiff |= ( (int*) tr.refdef.areamask) [i] ^ ( (int*) fd->areamask) [i];
-            ( (int*) tr.refdef.areamask) [i] = ( (int*) fd->areamask) [i];
+            areaDiff |= ((int*) tr.refdef.areamask) [i] ^ ((int*) fd->areamask) [i];
+            ((int*) tr.refdef.areamask) [i] = ((int*) fd->areamask) [i];
         }
 
         if (areaDiff) {
@@ -605,7 +605,7 @@ void RE_RenderScene(const refdef_t* fd) {
     // The refdef takes 0-at-the-top y coordinates, so
     // convert to GL's 0-at-the-bottom space
     //
-    Com_Memset(&parms, 0, sizeof(parms) );
+    Com_Memset(&parms, 0, sizeof(parms));
 
     if (tr.refdef.pixelTarget == nullptr) {
         parms.viewportX = tr.refdef.x;
@@ -708,7 +708,7 @@ qhandle_t RE_RegisterVisTest() {
         }
     }
 
-    memset(test, 0, sizeof(*test) );
+    memset(test, 0, sizeof(*test));
     test->registered = true;
     tr.numVisTests++;
 
@@ -790,7 +790,7 @@ void RE_UnregisterVisTest(qhandle_t hTest) {
 void R_InitVisTests() {
     int hTest;
 
-    memset(tr.visTests, 0, sizeof(tr.visTests) );
+    memset(tr.visTests, 0, sizeof(tr.visTests));
     tr.numVisTests = 0;
 
     for (hTest = 0; hTest < MAX_VISTESTS; hTest++) {
@@ -798,7 +798,7 @@ void R_InitVisTests() {
 
         glGenQueries(1, &test->hQuery);
         glGenQueries(1, &test->hQueryRef);
-        test->running  = false;
+        test->running = false;
     }
 }
 

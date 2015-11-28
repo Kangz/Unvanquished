@@ -42,16 +42,16 @@ static const char* TranslateText_Internal(bool plural, int firstTextArg) {
     totalArgs = Cmd_Argc();
 
     if (plural) {
-        int number = atoi(Cmd_Argv(firstTextArg) );
+        int number = atoi(Cmd_Argv(firstTextArg));
         const char* text = Cmd_Argv(++firstTextArg);
 
-        Q_strncpyz(buf, PLURAL_TRANSLATE_FUNC(text, text, number), sizeof(buf) );
+        Q_strncpyz(buf, PLURAL_TRANSLATE_FUNC(text, text, number), sizeof(buf));
     } else {
-        Q_strncpyz(buf, TRANSLATE_FUNC(Cmd_Argv(firstTextArg) ), sizeof(buf) );
+        Q_strncpyz(buf, TRANSLATE_FUNC(Cmd_Argv(firstTextArg)), sizeof(buf));
     }
 
     in = buf;
-    memset(&str, 0, sizeof(str) );
+    memset(&str, 0, sizeof(str));
 
     while (*in) {
         c = *in;
@@ -64,21 +64,21 @@ static const char* TranslateText_Internal(bool plural, int firstTextArg) {
             }
 
             while (*in) {
-                if (isdigit(*in) ) {
+                if (isdigit(*in)) {
                     in++;
 
                     if (*in == 't' && *(in+1) == '$') {
                         int num = atoi(number);
 
                         if (num >= 0 && num < totalArgs) {
-                            const char* translated = TRANSLATE_FUNC(Cmd_Argv(num + firstTextArg) );
+                            const char* translated = TRANSLATE_FUNC(Cmd_Argv(num + firstTextArg));
                             int length = strlen(translated);
 
                             i += length;
 
                             if (i >= MAX_STRING_CHARS) {
                                 Com_Printf("%s", str);
-                                memset(&str, 0, sizeof(str) );
+                                memset(&str, 0, sizeof(str));
                                 i = length;
                             }
 
@@ -91,14 +91,14 @@ static const char* TranslateText_Internal(bool plural, int firstTextArg) {
                         int num = atoi(number);
 
                         if (num >= 0 && num < totalArgs) {
-                            const char* translated = TRANSLATE_FUNC(Cmd_Argv(num + firstTextArg) );
+                            const char* translated = TRANSLATE_FUNC(Cmd_Argv(num + firstTextArg));
                             int length = strlen(translated);
 
                             i += length;
 
                             if (i >= MAX_STRING_CHARS) {
                                 Com_Printf("%s", str);
-                                memset(&str, 0, sizeof(str) );
+                                memset(&str, 0, sizeof(str));
                                 i = length;
                             }
 
@@ -124,7 +124,7 @@ literal:
                 str[i++] = c;
             } else {
                 Com_Printf("%s", str);
-                memset(&str, 0, sizeof(str) );
+                memset(&str, 0, sizeof(str));
                 str[0] = c;
                 i = 1;
             }

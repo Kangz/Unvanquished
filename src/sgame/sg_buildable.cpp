@@ -46,7 +46,7 @@ static void G_WarnPrimaryUnderAttack(gentity_t* self) {
         event = attr->team == TEAM_ALIENS ? EV_OVERMIND_ATTACK_1 : EV_REACTOR_ATTACK_1;
     }
 
-    if (event && (event != self->attackLastEvent || level.time > self->attackTimer) ) {
+    if (event && (event != self->attackLastEvent || level.time > self->attackTimer)) {
         self->attackTimer = level.time + ATTACKWARN_PRIMARY_PERIOD; // don't spam
         self->attackLastEvent = event;
         G_BroadcastEvent(event, 0, attr->team);
@@ -273,7 +273,7 @@ gentity_t* G_Reactor() {
 gentity_t* G_AliveReactor() {
     gentity_t* rc = G_Reactor();
 
-    if (!rc || G_Dead(rc) ) {
+    if (!rc || G_Dead(rc)) {
         return nullptr;
     }
 
@@ -304,7 +304,7 @@ gentity_t* G_Overmind() {
 gentity_t* G_AliveOvermind() {
     gentity_t* om = G_Overmind();
 
-    if (!om || G_Dead(om) ) {
+    if (!om || G_Dead(om)) {
         return nullptr;
     }
 
@@ -411,14 +411,14 @@ bool G_FindCreep(gentity_t* self) {
     }
 
     // if self does not have a parentNode or its parentNode is invalid find a new one
-    if (self->client || !self->powerSource || !self->powerSource->inuse || G_Dead(self->powerSource) ) {
+    if (self->client || !self->powerSource || !self->powerSource->inuse || G_Dead(self->powerSource)) {
         for (i = MAX_CLIENTS, ent = g_entities + i; i < level.num_entities; i++, ent++) {
             if (ent->s.eType != ET_BUILDABLE) {
                 continue;
             }
 
-            if ( (ent->s.modelindex == BA_A_SPAWN || ent->s.modelindex == BA_A_OVERMIND) &&
-                 G_Alive(ent) ) {
+            if ((ent->s.modelindex == BA_A_SPAWN || ent->s.modelindex == BA_A_OVERMIND) &&
+                G_Alive(ent)) {
                 VectorSubtract(self->s.origin, ent->s.origin, temp_v);
                 distance = VectorLength(temp_v);
 
@@ -454,7 +454,7 @@ bool G_FindCreep(gentity_t* self) {
 static bool IsCreepHere(vec3_t origin) {
     gentity_t dummy;
 
-    memset(&dummy, 0, sizeof(gentity_t) );
+    memset(&dummy, 0, sizeof(gentity_t));
 
     dummy.powerSource = nullptr;
     dummy.s.modelindex = BA_NONE;
@@ -523,8 +523,8 @@ void ASpawn_Think(gentity_t* self) {
     }
 
     if (self->s.groundEntityNum != ENTITYNUM_NONE) {
-        if ( (ent = G_CheckSpawnPoint(self->s.number, self->s.origin,
-                                      self->s.origin2, BA_A_SPAWN, nullptr) ) != nullptr) {
+        if ((ent = G_CheckSpawnPoint(self->s.number, self->s.origin,
+                                     self->s.origin2, BA_A_SPAWN, nullptr)) != nullptr) {
             // If the thing blocking the spawn is a buildable, kill it.
             // If it's part of the map, kill self.
             if (ent->s.eType == ET_BUILDABLE) {
@@ -556,7 +556,7 @@ static bool AOvermind_TargetValid(gentity_t* self, gentity_t* target) {
         || G_Dead(target)
         || target->flags & FL_NOTARGET
         || !trap_InPVS(self->s.origin, target->s.origin)
-        || !G_LineOfSight(self, target, MASK_SOLID, false) ) {
+        || !G_LineOfSight(self, target, MASK_SOLID, false)) {
         return false;
     }
 
@@ -583,7 +583,7 @@ static bool AOvermind_IsBetterTarget(gentity_t* self, gentity_t* candidate) {
 
     // Prefer closer target.
     if (Distance(self->s.origin, candidate->s.origin) <
-        Distance(self->s.origin, self->target->s.origin) ) {
+        Distance(self->s.origin, self->target->s.origin)) {
         return true;
     }
 
@@ -592,14 +592,14 @@ static bool AOvermind_IsBetterTarget(gentity_t* self, gentity_t* candidate) {
 
 static void AOvermind_FindTarget(gentity_t* self) {
     // Clear old target if invalid.
-    if (!AOvermind_TargetValid(self, self->target) ) {
+    if (!AOvermind_TargetValid(self, self->target)) {
         self->target = nullptr;
     }
 
     // Search best target.
     gentity_t* ent = nullptr;
-    while ( (ent = G_IterateEntities(ent) ) ) {
-        if (AOvermind_TargetValid(self, ent) && AOvermind_IsBetterTarget(self, ent) ) {
+    while ((ent = G_IterateEntities(ent))) {
+        if (AOvermind_TargetValid(self, ent) && AOvermind_IsBetterTarget(self, ent)) {
             self->target = ent;
         }
     }
@@ -615,12 +615,12 @@ void AOvermind_Think(gentity_t* self) {
 
     self->nextthink = level.time + 1000;
 
-    if (self->spawned && G_Alive(self) ) {
+    if (self->spawned && G_Alive(self)) {
         AOvermind_FindTarget(self);
 
         // do some damage
         if (G_SelectiveRadiusDamage(self->s.pos.trBase, self, self->splashDamage,
-                                    self->splashRadius, self, MOD_OVERMIND, TEAM_ALIENS) ) {
+                                    self->splashRadius, self, MOD_OVERMIND, TEAM_ALIENS)) {
             self->timestamp = level.time;
             G_SetBuildableAnim(self, BANIM_ATTACK1, false);
         }
@@ -649,7 +649,7 @@ void AOvermind_Think(gentity_t* self) {
 
                 if (G_Alive(builder) &&
                     (builder->client->pers.classSelection == PCL_ALIEN_BUILDER0 ||
-                     builder->client->pers.classSelection == PCL_ALIEN_BUILDER0_UPG) ) {
+                     builder->client->pers.classSelection == PCL_ALIEN_BUILDER0_UPG)) {
                     haveBuilder = true;
                     break;
                 }
@@ -676,7 +676,7 @@ is enough room.
 ================
 */
 void ABarricade_Shrink(gentity_t* self, bool shrink) {
-    if (!self->spawned || G_Dead(self) ) {
+    if (!self->spawned || G_Dead(self)) {
         shrink = true;
     }
 
@@ -697,7 +697,7 @@ void ABarricade_Shrink(gentity_t* self, bool shrink) {
     }
 
     if (!shrink && (!self->shrunkTime ||
-                    level.time < self->shrunkTime + BARRICADE_SHRINKTIMEOUT) ) {
+                    level.time < self->shrunkTime + BARRICADE_SHRINKTIMEOUT)) {
         return;
     }
 
@@ -708,7 +708,7 @@ void ABarricade_Shrink(gentity_t* self, bool shrink) {
         self->shrunkTime = level.time;
 
         // shrink animation
-        if (self->spawned && G_Alive(self) ) {
+        if (self->spawned && G_Alive(self)) {
             G_SetBuildableAnim(self, BANIM_POWERDOWN, true);
             G_SetIdleBuildableAnim(self, BANIM_IDLE_UNPOWERED);
         }
@@ -799,7 +799,7 @@ bool ASpiker_Fire(gentity_t* self) {
     float totalPerimeter = 0.0f;
 
     for (int row = 0; row < SPIKER_MISSILEROWS; row++) {
-        float altitude = ( ( (float)row + SPIKER_ROWOFFSET) * M_PI_2) / (float)SPIKER_MISSILEROWS;
+        float altitude = (((float)row + SPIKER_ROWOFFSET) * M_PI_2) / (float)SPIKER_MISSILEROWS;
         float perimeter = 2.0f * M_PI * cos(altitude);
 
         totalPerimeter += perimeter;
@@ -812,20 +812,20 @@ bool ASpiker_Fire(gentity_t* self) {
     PerpendicularVector(rotAxis, zenith);
 
     for (int row = 0; row < SPIKER_MISSILEROWS; row++) {
-        float altitude = ( ( (float)row + SPIKER_ROWOFFSET) * M_PI_2) / (float)SPIKER_MISSILEROWS;
+        float altitude = (((float)row + SPIKER_ROWOFFSET) * M_PI_2) / (float)SPIKER_MISSILEROWS;
         float perimeter = 2.0f * M_PI * cos(altitude);
 
-        RotatePointAroundVector(rowBase, rotAxis, zenith, RAD2DEG(M_PI_2 - altitude) );
+        RotatePointAroundVector(rowBase, rotAxis, zenith, RAD2DEG(M_PI_2 - altitude));
 
         // attempt to distribute spikes with equal distance on all rows
-        int spikes = (int)round( ( (float)SPIKER_MISSILES * perimeter) / totalPerimeter);
+        int spikes = (int)round(((float)SPIKER_MISSILES * perimeter) / totalPerimeter);
 
         for (int spike = 0; spike < spikes; spike++) {
-            float azimuth = 2.0f * M_PI * ( ( (float)spike + 0.5f * crandom() ) / (float)spikes);
+            float azimuth = 2.0f * M_PI * (((float)spike + 0.5f * crandom()) / (float)spikes);
             float altitudeVariance = 0.5f * crandom() * M_PI_2 / (float)SPIKER_MISSILEROWS;
 
-            RotatePointAroundVector(dir, zenith, rowBase, RAD2DEG(azimuth) );
-            RotatePointAroundVector(dir, rotAxis, dir, RAD2DEG(altitudeVariance) );
+            RotatePointAroundVector(dir, zenith, rowBase, RAD2DEG(azimuth));
+            RotatePointAroundVector(dir, rotAxis, dir, RAD2DEG(altitudeVariance));
 
             if (g_debugTurrets.integer) {
                 Com_Printf("Spiker #%d fires: Row %d/%d: Spike %2d/%2d: "
@@ -837,7 +837,7 @@ bool ASpiker_Fire(gentity_t* self) {
 
             G_SpawnMissile(MIS_SPIKER, self, self->s.origin, dir, nullptr, G_FreeEntity,
                            level.time + (int)(1000.0f * SPIKER_SPIKE_RANGE /
-                                              (float)BG_Missile(MIS_SPIKER)->speed) );
+                                              (float)BG_Missile(MIS_SPIKER)->speed));
         }
     }
 
@@ -856,7 +856,7 @@ void ASpiker_Think(gentity_t* self) {
 
     self->nextthink = level.time + 500;
 
-    if (!self->spawned || !self->powered || G_Dead(self) ) {
+    if (!self->spawned || !self->powered || G_Dead(self)) {
         return;
     }
 
@@ -872,10 +872,10 @@ void ASpiker_Think(gentity_t* self) {
     enemyDamage = friendlyDamage = 0.0f;
     sensing = false;
     for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin,
-                                                             SPIKER_SPIKE_RANGE) ); ) {
+                                                             SPIKER_SPIKE_RANGE)); ) {
         float health, durability;
 
-        if (self == ent || (ent->flags & FL_NOTARGET) ) {
+        if (self == ent || (ent->flags & FL_NOTARGET)) {
             continue;
         }
 
@@ -885,7 +885,7 @@ void ASpiker_Think(gentity_t* self) {
             continue;
         }
 
-        if (G_OnSameTeam(self, ent) ) {
+        if (G_OnSameTeam(self, ent)) {
             health = healthComponent->Health();
         } else if (ent->s.eType == ET_BUILDABLE) {
             // Enemy buildables don't count in the scoring.
@@ -894,7 +894,7 @@ void ASpiker_Think(gentity_t* self) {
             health = healthComponent->MaxHealth();
         }
 
-        ArmorComponent* armorComponent  = ent->entity->Get<ArmorComponent>();
+        ArmorComponent* armorComponent = ent->entity->Get<ArmorComponent>();
 
         if (armorComponent) {
             durability = health / armorComponent->GetNonLocationalDamageMod();
@@ -902,7 +902,7 @@ void ASpiker_Think(gentity_t* self) {
             durability = health;
         }
 
-        if (durability <= 0.0f || !G_LineOfSight(self, ent) ) {
+        if (durability <= 0.0f || !G_LineOfSight(self, ent)) {
             continue;
         }
 
@@ -923,7 +923,7 @@ void ASpiker_Think(gentity_t* self) {
                                (float)BG_Missile(MIS_SPIKER)->damage;
         float relativeDamage = expectedDamage / durability;
 
-        if (G_OnSameTeam(self, ent) ) {
+        if (G_OnSameTeam(self, ent)) {
             friendlyDamage += relativeDamage;
         } else {
             if (distance < SPIKER_SENSE_RANGE) {
@@ -947,7 +947,7 @@ void ASpiker_Think(gentity_t* self) {
                        sensing ? " (sensing)" : "", senseLost ? " (lost target)" : "");
         }
 
-        if ( (scoring <= self->spikerLastScoring && sensing) || senseLost) {
+        if ((scoring <= self->spikerLastScoring && sensing) || senseLost) {
             ASpiker_Fire(self);
         } else if (sensing) {
             self->nextthink = level.time; // Maximize sampling rate.
@@ -994,7 +994,7 @@ bool AHive_TargetValid(gentity_t* self, gentity_t* target, bool ignoreDistance) 
         || !target->client
         || target->client->pers.team != TEAM_HUMANS
         || G_Dead(target)
-        || (target->flags & FL_NOTARGET) ) {
+        || (target->flags & FL_NOTARGET)) {
         return false;
     }
 
@@ -1031,8 +1031,8 @@ static bool AHive_FindTarget(gentity_t* self) {
 
     // search best target
     gentity_t* ent = nullptr;
-    while ( (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, HIVE_SENSE_RANGE) ) ) {
-        if (AHive_TargetValid(self, ent, false) && AHive_isBetterTarget(self, ent) ) {
+    while ((ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, HIVE_SENSE_RANGE))) {
+        if (AHive_TargetValid(self, ent, false) && AHive_isBetterTarget(self, ent)) {
             // change target if I find a valid target that's better than the old one
             self->target = ent;
         }
@@ -1079,7 +1079,7 @@ void AHive_Think(gentity_t* self) {
         self->active = false;
     }
 
-    if (!self->spawned || !self->powered || G_Dead(self) ) {
+    if (!self->spawned || !self->powered || G_Dead(self)) {
         return;
     }
 
@@ -1088,7 +1088,7 @@ void AHive_Think(gentity_t* self) {
     }
 
     // attempt to find a new target and fire once at it if successful
-    if (AHive_FindTarget(self) ) {
+    if (AHive_FindTarget(self)) {
         AHive_Fire(self);
     }
 }
@@ -1100,7 +1100,7 @@ void ABooster_Think(gentity_t* self) {
     self->nextthink = level.time + BOOST_REPEAT_ANIM / 4;
 
     // check if there is a closeby alien that used this booster for healing recently
-    for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, REGEN_BOOSTER_RANGE) ); ) {
+    for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, REGEN_BOOSTER_RANGE)); ) {
         if (ent->boosterUsed == self && ent->boosterTime == level.previousTime) {
             playHealingEffect = true;
             break;
@@ -1111,7 +1111,7 @@ void ABooster_Think(gentity_t* self) {
         if (level.time > self->timestamp + BOOST_REPEAT_ANIM) {
             self->timestamp = level.time;
             G_SetBuildableAnim(self, BANIM_ATTACK1, false);
-            G_AddEvent(self, EV_ALIEN_BOOSTER, DirToByte(self->s.origin2) );
+            G_AddEvent(self, EV_ALIEN_BOOSTER, DirToByte(self->s.origin2));
         }
     }
 }
@@ -1119,7 +1119,7 @@ void ABooster_Think(gentity_t* self) {
 void ABooster_Touch(gentity_t* self, gentity_t* other, trace_t*) {
     gclient_t* client = other->client;
 
-    if (!self->spawned || !self->powered || G_Dead(self) ) {
+    if (!self->spawned || !self->powered || G_Dead(self)) {
         return;
     }
 
@@ -1156,10 +1156,10 @@ void ATrapper_FireOnEnemy(gentity_t* self, int firespeed) {
     vec3_t halfAcceleration, thirdJerk;
     float distanceToTarget = LOCKBLOB_RANGE;
     int lowMsec = 0;
-    int highMsec = (int)( (
-                              ( (distanceToTarget * LOCKBLOB_SPEED) +
-                                (distanceToTarget * BG_Class(target->client->ps.stats[STAT_CLASS])->speed) ) /
-                              (LOCKBLOB_SPEED * LOCKBLOB_SPEED) ) * 1000.0f);
+    int highMsec = (int)((
+                             ((distanceToTarget * LOCKBLOB_SPEED) +
+                              (distanceToTarget * BG_Class(target->client->ps.stats[STAT_CLASS])->speed)) /
+                             (LOCKBLOB_SPEED * LOCKBLOB_SPEED)) * 1000.0f);
 
     VectorScale(target->acceleration, 1.0f / 2.0f, halfAcceleration);
     VectorScale(target->jerk, 1.0f / 3.0f, thirdJerk);
@@ -1234,7 +1234,7 @@ bool ATrapper_CheckTarget(gentity_t* self, gentity_t* target, int range) {
         return false;
     }
 
-    if (G_Dead(target) ) { // is the target still alive?
+    if (G_Dead(target)) { // is the target still alive?
         return false;
     }
 
@@ -1284,7 +1284,7 @@ void ATrapper_FindEnemy(gentity_t* ent, int range) {
         target = g_entities + (i % MAX_CLIENTS);
 
         // if target is not valid keep searching
-        if (!ATrapper_CheckTarget(ent, target, range) ) {
+        if (!ATrapper_CheckTarget(ent, target, range)) {
             continue;
         }
 
@@ -1307,12 +1307,12 @@ think function for Alien Defense
 void ATrapper_Think(gentity_t* self) {
     self->nextthink = level.time + 100;
 
-    if (!self->spawned || !self->powered || G_Dead(self) ) {
+    if (!self->spawned || !self->powered || G_Dead(self)) {
         return;
     }
 
     // if the current target is not valid find a new one
-    if (!ATrapper_CheckTarget(self, self->target, LOCKBLOB_RANGE) ) {
+    if (!ATrapper_CheckTarget(self, self->target, LOCKBLOB_RANGE)) {
         ATrapper_FindEnemy(self, LOCKBLOB_RANGE);
     }
 
@@ -1389,7 +1389,7 @@ gentity_t* G_NearestPowerSourceInRange(gentity_t* self) {
 
     neighbor = nullptr;
 
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, self->s.origin, PowerRelevantRange() ) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, self->s.origin, PowerRelevantRange()))) {
         if (neighbor->s.eType != ET_BUILDABLE) {
             continue;
         }
@@ -1429,13 +1429,13 @@ static float IncomingInterference(buildable_t buildable, gentity_t* neighbor,
     // interference from human buildables
     if (neighbor->s.eType == ET_BUILDABLE && neighbor->buildableTeam == TEAM_HUMANS) {
         // Only take unpowered and constructing buildables in consideration when predicting
-        if (!prediction && (!neighbor->spawned || !neighbor->powered) ) {
+        if (!prediction && (!neighbor->spawned || !neighbor->powered)) {
             return 0.0f;
         }
 
         switch (neighbor->s.modelindex) {
         case BA_H_REPEATER:
-            if (G_Alive(neighbor) ) {
+            if (G_Alive(neighbor)) {
                 power = g_powerRepeaterSupply.integer;
                 range = g_powerRepeaterRange.integer;
                 break;
@@ -1444,7 +1444,7 @@ static float IncomingInterference(buildable_t buildable, gentity_t* neighbor,
             }
 
         case BA_H_REACTOR:
-            if (G_Alive(neighbor) ) {
+            if (G_Alive(neighbor)) {
                 power = g_powerReactorSupply.integer;
                 range = g_powerReactorRange.integer;
                 break;
@@ -1465,7 +1465,7 @@ static float IncomingInterference(buildable_t buildable, gentity_t* neighbor,
         return 0.0f;
     }
 
-    return power * std::max(0.0f, 1.0f - (distance / range) );
+    return power * std::max(0.0f, 1.0f - (distance / range));
 }
 
 /*
@@ -1513,7 +1513,7 @@ static float OutgoingInterference(buildable_t buildable, gentity_t* neighbor, fl
         return 0.0f;
     }
 
-    return power * std::max(0.0f, 1.0f - (distance / range) );
+    return power * std::max(0.0f, 1.0f - (distance / range));
 }
 
 /*
@@ -1557,17 +1557,17 @@ static void CalculateSparePower(gentity_t* self) {
     }
 
     neighbor = nullptr;
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, self->s.origin, PowerRelevantRange() ) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, self->s.origin, PowerRelevantRange()))) {
         if (self == neighbor) {
             continue;
         }
 
         distance = Distance(self->s.origin, neighbor->s.origin);
 
-        self->expectedSparePower += IncomingInterference( (buildable_t) self->s.modelindex, neighbor, distance, true);
+        self->expectedSparePower += IncomingInterference((buildable_t) self->s.modelindex, neighbor, distance, true);
 
         if (self->spawned) {
-            self->currentSparePower += IncomingInterference( (buildable_t) self->s.modelindex, neighbor, distance, false);
+            self->currentSparePower += IncomingInterference((buildable_t) self->s.modelindex, neighbor, distance, false);
         }
     }
 
@@ -1605,7 +1605,7 @@ void G_SetHumanBuildablePowerState() {
 
     // first pass: predict spare power for all buildables,
     // power up buildables that have enough power
-    while ( (ent = G_IterateEntities(ent, nullptr, false, 0, nullptr) ) ) {
+    while ((ent = G_IterateEntities(ent, nullptr, false, 0, nullptr))) {
         // discard irrelevant entities
         if (ent->s.eType != ET_BUILDABLE || ent->buildableTeam != TEAM_HUMANS) {
             continue;
@@ -1624,7 +1624,7 @@ void G_SetHumanBuildablePowerState() {
         lowestSparePower = MAX_QINT;
 
         // find buildable with highest power deficit
-        while ( (ent = G_IterateEntities(ent, nullptr, false, 0, nullptr) ) ) {
+        while ((ent = G_IterateEntities(ent, nullptr, false, 0, nullptr))) {
             // discard irrelevant entities
             if (ent->s.eType != ET_BUILDABLE || ent->buildableTeam != TEAM_HUMANS) {
                 continue;
@@ -1673,8 +1673,8 @@ void HSpawn_Think(gentity_t* self) {
     if (self->spawned) {
         // only suicide if at rest
         if (self->s.groundEntityNum != ENTITYNUM_NONE) {
-            if ( (ent = G_CheckSpawnPoint(self->s.number, self->s.origin,
-                                          self->s.origin2, BA_H_SPAWN, nullptr) ) != nullptr) {
+            if ((ent = G_CheckSpawnPoint(self->s.number, self->s.origin,
+                                         self->s.origin2, BA_H_SPAWN, nullptr)) != nullptr) {
                 // If the thing blocking the spawn is a buildable, kill it.
                 // If it's part of the map, kill self.
                 if (ent->s.eType == ET_BUILDABLE) {
@@ -1710,12 +1710,12 @@ void HReactor_Think(gentity_t* self) {
 
     self->nextthink = level.time + REACTOR_ATTACK_REPEAT;
 
-    if (!self->spawned || G_Dead(self) ) {
+    if (!self->spawned || G_Dead(self)) {
         return;
     }
 
     // create a tesla trail for every target
-    for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, self->s.pos.trBase, REACTOR_ATTACK_RANGE) ); ) {
+    for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, self->s.pos.trBase, REACTOR_ATTACK_RANGE)); ) {
         if (!ent->client ||
             ent->client->pers.team != TEAM_ALIENS ||
             ent->flags & FL_NOTARGET) {
@@ -1810,7 +1810,7 @@ void HMedistat_Think(gentity_t* self) {
 
         if (self->target == player && PM_Live(client->ps.pm_type) &&
             (!player->entity->Get<HealthComponent>()->FullHealth() ||
-             client->ps.stats[STAT_STAMINA] < STAMINA_MAX) ) {
+             client->ps.stats[STAT_STAMINA] < STAMINA_MAX)) {
             occupied = true;
         }
     }
@@ -1842,8 +1842,8 @@ void HMedistat_Think(gentity_t* self) {
         HealthComponent* healthComponent = player->entity->Get<HealthComponent>();
 
         // give medikit to players with full health
-        if (healthComponent->FullHealth() ) {
-            if (!BG_InventoryContainsUpgrade(UP_MEDKIT, player->client->ps.stats) ) {
+        if (healthComponent->FullHealth()) {
+            if (!BG_InventoryContainsUpgrade(UP_MEDKIT, player->client->ps.stats)) {
                 BG_AddUpgradeToInventory(UP_MEDKIT, player->client->ps.stats);
             }
         }
@@ -1852,7 +1852,7 @@ void HMedistat_Think(gentity_t* self) {
         if (!occupied) {
             if (PM_Live(client->ps.pm_type) &&
                 (!healthComponent->FullHealth() ||
-                 client->ps.stats[STAT_STAMINA] < STAMINA_MAX) ) {
+                 client->ps.stats[STAT_STAMINA] < STAMINA_MAX)) {
                 self->target = player;
                 occupied = true;
             }
@@ -1884,9 +1884,9 @@ void HMedistat_Think(gentity_t* self) {
         player->entity->Heal(1.0f, nullptr);
 
         // check if fully healed
-        if (player->entity->Get<HealthComponent>()->FullHealth() ) {
+        if (player->entity->Get<HealthComponent>()->FullHealth()) {
             // give medikit
-            if (!BG_InventoryContainsUpgrade(UP_MEDKIT, client->ps.stats) ) {
+            if (!BG_InventoryContainsUpgrade(UP_MEDKIT, client->ps.stats)) {
                 BG_AddUpgradeToInventory(UP_MEDKIT, client->ps.stats);
             }
         }
@@ -1952,7 +1952,7 @@ static bool HMGTurret_IsBetterTarget(gentity_t* self, gentity_t* candidate) {
     VectorSubtract(candidate->s.origin, self->s.pos.trBase, dir_c);
     VectorNormalize(dir_c);
 
-    if (DotProduct(dir_t, aimDir) > DotProduct(dir_c, aimDir) ) {
+    if (DotProduct(dir_t, aimDir) > DotProduct(dir_c, aimDir)) {
         return false;
     } else {
         return true;
@@ -1997,7 +1997,7 @@ static bool HRocketpod_IsBetterTarget(gentity_t* self, gentity_t* candidate) {
 
     AngleVectors(self->buildableAim, aimDir, nullptr, nullptr);
 
-    if (DotProduct(dir_t, aimDir) > DotProduct(dir_c, aimDir) ) {
+    if (DotProduct(dir_t, aimDir) > DotProduct(dir_c, aimDir)) {
         return false;
     } else {
         return true;
@@ -2022,7 +2022,7 @@ static bool HTurret_TargetValid(gentity_t* self, gentity_t* target, bool newTarg
         || target->flags & FL_NOTARGET
         || G_OnSameTeam(self, target)
         || Distance(self->s.origin, target->s.origin) > range
-        || !trap_InPVS(self->s.origin, target->s.origin) ) {
+        || !trap_InPVS(self->s.origin, target->s.origin)) {
         if (g_debugTurrets.integer > 0 && self->target) {
             Com_Printf("Turret %d: Target %d lost: Eliminated or out of range.\n",
                        self->s.number, self->target->s.number);
@@ -2032,7 +2032,7 @@ static bool HTurret_TargetValid(gentity_t* self, gentity_t* target, bool newTarg
     }
 
     // check for LOS, don't accept new targets if there is none
-    if (G_LineOfFire(self, target) ) {
+    if (G_LineOfFire(self, target)) {
         self->turretLastLOSToTarget = level.time;
     } else if (newTarget) {
         return false;
@@ -2054,7 +2054,7 @@ static bool HTurret_TargetValid(gentity_t* self, gentity_t* target, bool newTarg
 }
 
 static bool HTurret_FindTarget(gentity_t* self, float range,
-                               bool (* isBetterTarget)(gentity_t*, gentity_t*) ) {
+                               bool (* isBetterTarget)(gentity_t*, gentity_t*)) {
 
     self->turretLastTargetSearch = level.time;
 
@@ -2063,8 +2063,8 @@ static bool HTurret_FindTarget(gentity_t* self, float range,
 
     // search best target
     gentity_t* ent = nullptr;
-    while ( (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, range) ) ) {
-        if (HTurret_TargetValid(self, ent, true, range) && isBetterTarget(self, ent) ) {
+    while ((ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, range))) {
+        if (HTurret_TargetValid(self, ent, true, range) && isBetterTarget(self, ent)) {
             self->target = ent;
         }
     }
@@ -2111,9 +2111,9 @@ static bool HTurret_MoveHeadToTarget(gentity_t* self) {
 
     timeMod = (float)elapsed / 1000.0f;
 
-    maxAngles[YAW]   = timeMod * (float)TURRET_YAW_SPEED;
+    maxAngles[YAW] = timeMod * (float)TURRET_YAW_SPEED;
     maxAngles[PITCH] = timeMod * (float)TURRET_PITCH_SPEED;
-    maxAngles[ROLL]  = 0.0f;
+    maxAngles[ROLL] = 0.0f;
 
     // make sure direction to target is normalized
     VectorNormalize(self->turretDirToTarget);
@@ -2121,7 +2121,7 @@ static bool HTurret_MoveHeadToTarget(gentity_t* self) {
     // get angle from current orientation towards target direction
     CrossProduct(self->s.origin2, upwards, rotAxis);
     VectorNormalize(rotAxis);
-    rotAngle = RAD2DEG(acos(DotProduct(self->s.origin2, upwards) ) );
+    rotAngle = RAD2DEG(acos(DotProduct(self->s.origin2, upwards)));
     RotatePointAroundVector(relativeDirToTarget, rotAxis, self->turretDirToTarget, rotAngle);
     vectoangles(relativeDirToTarget, angleToTarget);
 
@@ -2240,7 +2240,7 @@ void HTurret_PreBlast(gentity_t* self) {
     HTurret_LowerPitch(self);
 
     // Enter regular blast state as soon as the barrel is lowered.
-    if (!HTurret_MoveHeadToTarget(self) ) {
+    if (!HTurret_MoveHeadToTarget(self)) {
         // self->think = HGeneric_Blast;
         self->nextthink = level.time + HUMAN_DETONATION_RAND_DELAY;
     } else {
@@ -2261,7 +2261,7 @@ static bool HTurret_TargetInReach(gentity_t* self, float range) {
     VectorMA(self->s.pos.trBase, range, forward, end);
     trap_Trace(&tr, self->s.pos.trBase, nullptr, nullptr, end, self->s.number, MASK_SHOT, 0);
 
-    return (tr.entityNum == (self->target - g_entities) );
+    return (tr.entityNum == (self->target - g_entities));
 }
 
 static void HMGTurret_Shoot(gentity_t* self) {
@@ -2270,7 +2270,7 @@ static void HMGTurret_Shoot(gentity_t* self) {
 
     self->s.eFlags |= EF_FIRING;
 
-    zone = HMGTurret_DistanceToZone(Distance(self->s.pos.trBase, self->target->s.pos.trBase) );
+    zone = HMGTurret_DistanceToZone(Distance(self->s.pos.trBase, self->target->s.pos.trBase));
     self->turretCurrentDamage = zoneDamage[zone];
 
     if (g_debugTurrets.integer > 1) {
@@ -2322,13 +2322,13 @@ void HMGTurret_Think(gentity_t* self) {
     }
 
     // If powered down, move head to allow for pitch adjustments.
-    if (!HMGTurret_PowerHelper(self) ) {
+    if (!HMGTurret_PowerHelper(self)) {
         HTurret_MoveHeadToTarget(self);
         return;
     }
 
     // Remove existing target if it became invalid.
-    if (!HTurret_TargetValid(self, self->target, false, MGTURRET_RANGE) ) {
+    if (!HTurret_TargetValid(self, self->target, false, MGTURRET_RANGE)) {
         HTurret_RemoveTarget(self);
     }
 
@@ -2349,9 +2349,9 @@ void HMGTurret_Think(gentity_t* self) {
     }
 
     // Shoot if target in reach.
-    if (HTurret_TargetInReach(self, MGTURRET_RANGE) ) {
+    if (HTurret_TargetInReach(self, MGTURRET_RANGE)) {
         // If the target's origin is visible, aim for it first, otherwise pause head.
-        if (G_LineOfFire(self, self->target) ) {
+        if (G_LineOfFire(self, self->target)) {
             HTurret_MoveHeadToTarget(self);
         } else {
             HTurret_PauseHead(self);
@@ -2456,11 +2456,11 @@ static bool HRocketPod_EnemyClose(gentity_t* self) {
     self->turretSafeModeCheckTime = level.time;
 
     for (neighbour = nullptr; (neighbour = G_IterateEntitiesWithinRadius(neighbour, self->s.origin,
-                                                                         ROCKETPOD_RANGE) ); ) {
+                                                                         ROCKETPOD_RANGE)); ) {
         if (neighbour->client && G_Alive(neighbour) && !G_OnSameTeam(self, neighbour) &&
             neighbour->client->sess.spectatorState == SPECTATOR_NOT) {
             classModelConfig_t* cmc = BG_ClassModelConfig(neighbour->client->pers.classSelection);
-            float classRadius = 0.5f * (VectorLength(cmc->mins) + VectorLength(cmc->maxs) );
+            float classRadius = 0.5f * (VectorLength(cmc->mins) + VectorLength(cmc->maxs));
 
             if (Distance(self->s.origin, neighbour->s.origin) - classRadius
                 < BG_Missile(MIS_ROCKET)->splashRadius) {
@@ -2484,13 +2484,13 @@ void HRocketpod_Think(gentity_t* self) {
     }
 
     // If powered down, move head to allow for pitch adjustments.
-    if (!HRocketpod_PowerHelper(self) ) {
+    if (!HRocketpod_PowerHelper(self)) {
         HTurret_MoveHeadToTarget(self);
         return;
     }
 
     // If there's an enemy really close, enter safe mode.
-    HRocketpod_SafeMode(self, HRocketPod_EnemyClose(self) );
+    HRocketpod_SafeMode(self, HRocketPod_EnemyClose(self));
 
     // If in safe mode, move head to allow for pitch adjustments.
     if (self->turretSafeMode) {
@@ -2505,7 +2505,7 @@ void HRocketpod_Think(gentity_t* self) {
     }
 
     // Remove existing target if it became invalid.
-    if (!HTurret_TargetValid(self, self->target, false, ROCKETPOD_RANGE) ) {
+    if (!HTurret_TargetValid(self, self->target, false, ROCKETPOD_RANGE)) {
         HTurret_RemoveTarget(self);
 
         // Delay the first shot on a new target.
@@ -2529,9 +2529,9 @@ void HRocketpod_Think(gentity_t* self) {
     }
 
     // Shoot if target in reach and safe.
-    if (HTurret_TargetInReach(self, ROCKETPOD_RANGE) ) {
+    if (HTurret_TargetInReach(self, ROCKETPOD_RANGE)) {
         // If the target's origin is visible, aim for it first, otherwise pause head.
-        if (G_LineOfFire(self, self->target) ) {
+        if (G_LineOfFire(self, self->target)) {
             HTurret_MoveHeadToTarget(self);
         } else {
             HTurret_PauseHead(self);
@@ -2546,7 +2546,7 @@ void HRocketpod_Think(gentity_t* self) {
             AngleVectors(self->buildableAim, aimDir, nullptr, nullptr);
 
             // While it's safe to shoot, do so.
-            if (G_RocketpodSafeShot(self->s.number, self->s.pos.trBase, aimDir) ) {
+            if (G_RocketpodSafeShot(self->s.number, self->s.pos.trBase, aimDir)) {
                 if (self->turretNextShot < level.time) {
                     HRocketpod_Shoot(self);
                 } else {
@@ -2560,7 +2560,7 @@ void HRocketpod_Think(gentity_t* self) {
         }
     } else {
         // Target not in reach, move head towards it.
-        if (HTurret_MoveHeadToTarget(self) ) {
+        if (HTurret_MoveHeadToTarget(self)) {
             // Delay the first shot after significant tracking.
             self->turretLockonTime = level.time + ROCKETPOD_LOCKON_TIME;
         }
@@ -2594,7 +2594,7 @@ void G_BuildableTouchTriggers(gentity_t* ent) {
     static vec3_t range = { 10, 10, 10 };
 
     // dead buildables don't activate triggers
-    if (G_Dead(ent) ) {
+    if (G_Dead(ent)) {
         return;
     }
 
@@ -2618,7 +2618,7 @@ void G_BuildableTouchTriggers(gentity_t* ent) {
             continue;
         }
 
-        if (!(hit->r.contents & CONTENTS_SENSOR) ) {
+        if (!(hit->r.contents & CONTENTS_SENSOR)) {
             continue;
         }
 
@@ -2631,11 +2631,11 @@ void G_BuildableTouchTriggers(gentity_t* ent) {
             continue;
         }
 
-        if (!trap_EntityContact(mins, maxs, hit) ) {
+        if (!trap_EntityContact(mins, maxs, hit)) {
             continue;
         }
 
-        memset(&trace, 0, sizeof(trace) );
+        memset(&trace, 0, sizeof(trace));
 
         if (hit->touch) {
             hit->touch(hit, ent, &trace);
@@ -2655,9 +2655,9 @@ Check whether a point is within some range of a type of buildable
 bool G_BuildableInRange(vec3_t origin, float radius, buildable_t buildable) {
     gentity_t* neighbor = nullptr;
 
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, radius) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, radius))) {
         if (neighbor->s.eType != ET_BUILDABLE || !neighbor->spawned || G_Dead(neighbor) ||
-            (neighbor->buildableTeam == TEAM_HUMANS && !neighbor->powered) ) {
+            (neighbor->buildableTeam == TEAM_HUMANS && !neighbor->powered)) {
             continue;
         }
 
@@ -2686,7 +2686,7 @@ static gentity_t* FindBuildable(buildable_t buildable) {
             continue;
         }
 
-        if (ent->s.modelindex == buildable && !(ent->s.eFlags & EF_DEAD) ) {
+        if (ent->s.modelindex == buildable && !(ent->s.eFlags & EF_DEAD)) {
             return ent;
         }
     }
@@ -2727,7 +2727,7 @@ qsort comparison function for a buildable removal list
 static buildable_t cmpBuildable;
 static vec3_t cmpOrigin;
 static int CompareBuildablesForRemoval(const void* a, const void* b) {
-    int precedence[] ={
+    int precedence[] = {
         BA_NONE,
 
         BA_A_BARRICADE,
@@ -2768,13 +2768,13 @@ static int CompareBuildablesForRemoval(const void* a, const void* b) {
 
     // If the only spawn is marked, prefer it last
     if (cmpBuildable == BA_A_SPAWN || cmpBuildable == BA_H_SPAWN) {
-        if ( (buildableA->s.modelindex == BA_A_SPAWN && level.team[TEAM_ALIENS].numSpawns == 1) ||
-             (buildableA->s.modelindex == BA_H_SPAWN && level.team[TEAM_HUMANS].numSpawns == 1) ) {
+        if ((buildableA->s.modelindex == BA_A_SPAWN && level.team[TEAM_ALIENS].numSpawns == 1) ||
+            (buildableA->s.modelindex == BA_H_SPAWN && level.team[TEAM_HUMANS].numSpawns == 1)) {
             return 1;
         }
 
-        if ( (buildableB->s.modelindex == BA_A_SPAWN && level.team[TEAM_ALIENS].numSpawns == 1) ||
-             (buildableB->s.modelindex == BA_H_SPAWN && level.team[TEAM_HUMANS].numSpawns == 1) ) {
+        if ((buildableB->s.modelindex == BA_A_SPAWN && level.team[TEAM_ALIENS].numSpawns == 1) ||
+            (buildableB->s.modelindex == BA_H_SPAWN && level.team[TEAM_HUMANS].numSpawns == 1)) {
             return -1;
         }
     }
@@ -2788,7 +2788,7 @@ static int CompareBuildablesForRemoval(const void* a, const void* b) {
 
     // If both are unpowered, prefer the closer buildable
     if (!buildableA->powered && !buildableB->powered) {
-        if (Distance(cmpOrigin, buildableA->s.origin) < Distance(cmpOrigin, buildableB->s.origin) ) {
+        if (Distance(cmpOrigin, buildableA->s.origin) < Distance(cmpOrigin, buildableB->s.origin)) {
             return -1;
         } else {
             return 1;
@@ -2895,7 +2895,7 @@ int G_FreeMarkedBuildables(gentity_t* deconner, char* readable, int rsize,
         removalCounts[bNum]++;
 
         if (nums) {
-            Q_strcat(nums, nsize, va(" %ld", (long)(ent - g_entities) ) );
+            Q_strcat(nums, nsize, va(" %ld", (long)(ent - g_entities)));
         }
 
         numRemoved++;
@@ -2908,9 +2908,9 @@ int G_FreeMarkedBuildables(gentity_t* deconner, char* readable, int rsize,
     for (i = 0; i < BA_NUM_BUILDABLES; i++) {
         if (removalCounts[i]) {
             if (listItems) {
-                if (listItems == (totalListItems - 1) ) {
+                if (listItems == (totalListItems - 1)) {
                     Q_strcat(readable, rsize, va("%s and ",
-                                                 (totalListItems > 2) ? "," : "") );
+                                                 (totalListItems > 2) ? "," : ""));
                 } else {
                     Q_strcat(readable, rsize, ", ");
                 }
@@ -2919,7 +2919,7 @@ int G_FreeMarkedBuildables(gentity_t* deconner, char* readable, int rsize,
             Q_strcat(readable, rsize, BG_Buildable(i)->humanName);
 
             if (removalCounts[i] > 1) {
-                Q_strcat(readable, rsize, va(" (%dx)", removalCounts[i]) );
+                Q_strcat(readable, rsize, va(" (%dx)", removalCounts[i]));
             }
 
             listItems++;
@@ -2943,16 +2943,16 @@ static bool IsSetForDeconstruction(gentity_t* ent) {
 
 static itemBuildError_t BuildableReplacementChecks(buildable_t oldBuildable, buildable_t newBuildable) {
     // don't replace the main buildable with any other buildable
-    if (    (oldBuildable == BA_H_REACTOR  && newBuildable != BA_H_REACTOR)
-            || (oldBuildable == BA_A_OVERMIND && newBuildable != BA_A_OVERMIND) ) {
+    if ((oldBuildable == BA_H_REACTOR  && newBuildable != BA_H_REACTOR)
+        || (oldBuildable == BA_A_OVERMIND && newBuildable != BA_A_OVERMIND)) {
         return IBE_MAINSTRUCTURE;
     }
 
     // don't replace last spawn with a non-spawn
-    if (    (oldBuildable == BA_H_SPAWN && newBuildable != BA_H_SPAWN &&
-             level.team[TEAM_HUMANS].numSpawns == 1)
-            || (oldBuildable == BA_A_SPAWN && newBuildable != BA_A_SPAWN &&
-                level.team[TEAM_ALIENS].numSpawns == 1) ) {
+    if ((oldBuildable == BA_H_SPAWN && newBuildable != BA_H_SPAWN &&
+         level.team[TEAM_HUMANS].numSpawns == 1)
+        || (oldBuildable == BA_A_SPAWN && newBuildable != BA_A_SPAWN &&
+            level.team[TEAM_ALIENS].numSpawns == 1)) {
         return IBE_LASTSPAWN;
     }
 
@@ -2981,7 +2981,7 @@ static bool PredictBuildablePower(buildable_t buildable, vec3_t origin) {
     }
 
     // reactor enables base supply everywhere on the map
-    if (G_AliveReactor() ) {
+    if (G_AliveReactor()) {
         baseSupply = g_powerBaseSupply.integer;
     } else {
         baseSupply = 0;
@@ -2990,14 +2990,14 @@ static bool PredictBuildablePower(buildable_t buildable, vec3_t origin) {
     ownPrediction = baseSupply - powerConsumption;
 
     neighbor = nullptr;
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, PowerRelevantRange() ) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, PowerRelevantRange()))) {
         // only predict interference with friendly buildables
         if (neighbor->s.eType != ET_BUILDABLE || neighbor->buildableTeam != TEAM_HUMANS) {
             continue;
         }
 
         // discard neighbors that are set for deconstruction
-        if (IsSetForDeconstruction(neighbor) ) {
+        if (IsSetForDeconstruction(neighbor)) {
             continue;
         }
 
@@ -3009,10 +3009,10 @@ static bool PredictBuildablePower(buildable_t buildable, vec3_t origin) {
         // check power of neighbor, with regards to pending deconstruction
         if (neighborPrediction < 0.0f && distance < g_powerCompetitionRange.integer) {
             buddy = nullptr;
-            while ( (buddy = G_IterateEntitiesWithinRadius(buddy, neighbor->s.origin, PowerRelevantRange() ) ) ) {
-                if (IsSetForDeconstruction(buddy) ) {
+            while ((buddy = G_IterateEntitiesWithinRadius(buddy, neighbor->s.origin, PowerRelevantRange()))) {
+                if (IsSetForDeconstruction(buddy)) {
                     distance = Distance(neighbor->s.origin, buddy->s.origin);
-                    neighborPrediction -= IncomingInterference( (buildable_t) neighbor->s.modelindex, buddy, distance, true);
+                    neighborPrediction -= IncomingInterference((buildable_t) neighbor->s.modelindex, buddy, distance, true);
                 }
             }
 
@@ -3058,7 +3058,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         ent = G_Reactor();
 
         if (ent) {
-            if (ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+            if (ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
                 level.markedBuildables[level.numBuildablesForRemoval++] = ent;
             } else {
                 return IBE_ONEREACTOR;
@@ -3068,7 +3068,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         ent = G_Overmind();
 
         if (ent) {
-            if (ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+            if (ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
                 level.markedBuildables[level.numBuildablesForRemoval++] = ent;
             } else {
                 return IBE_ONEOVERMIND;
@@ -3089,7 +3089,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         }
 
         buildable_t otherBuildable = (buildable_t)entity.oldEnt->s.modelindex;
-        team_t otherTeam      = entity.oldEnt->buildableTeam;
+        team_t otherTeam = entity.oldEnt->buildableTeam;
 
         if (BuildablesIntersect(buildable, origin, otherBuildable, entity.oldEnt->s.origin)) {
             if (otherTeam != attr->team) {
@@ -3126,7 +3126,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         neighbor = nullptr;
 
         // assemble a list of closeby human buildable IDs
-        while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, PowerRelevantRange() ) ) ) {
+        while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, origin, PowerRelevantRange()))) {
             if (neighbor->s.eType != ET_BUILDABLE || neighbor->buildableTeam != TEAM_HUMANS) {
                 continue;
             }
@@ -3143,7 +3143,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         neighborNum = 0;
 
         // check for power
-        while (!PredictBuildablePower(buildable, origin) ) {
+        while (!PredictBuildablePower(buildable, origin)) {
             if (neighborNum == numNeighbors) {
                 // can't build due to unsolvable lack of power
                 return IBE_NOPOWERHERE;
@@ -3159,7 +3159,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
                 }
 
                 // check if marked for deconstruction
-                if (!neighbor->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+                if (!neighbor->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
                     continue;
                 }
 
@@ -3171,12 +3171,12 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
                 }
 
                 // check if already set for deconstruction
-                if (IsSetForDeconstruction(neighbor) ) {
+                if (IsSetForDeconstruction(neighbor)) {
                     continue;
                 }
 
                 // apply general replacement rules
-                if (BuildableReplacementChecks( (buildable_t) neighbor->s.modelindex, buildable) != IBE_NONE) {
+                if (BuildableReplacementChecks((buildable_t) neighbor->s.modelindex, buildable) != IBE_NONE) {
                     continue;
                 }
 
@@ -3206,7 +3206,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
     cost = std::max(0.0f, cost);
 
     // check if we can already afford the new buildable
-    if (G_CanAffordBuildPoints(attr->team, cost) ) {
+    if (G_CanAffordBuildPoints(attr->team, cost)) {
         return IBE_NONE;
     }
 
@@ -3222,17 +3222,17 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         }
 
         // check if available for deconstruction
-        if (!ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+        if (!ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
             continue;
         }
 
         // check if already set for deconstruction
-        if (IsSetForDeconstruction(ent) ) {
+        if (IsSetForDeconstruction(ent)) {
             continue;
         }
 
         // apply general replacement rules
-        if (BuildableReplacementChecks( (buildable_t) ent->s.modelindex, buildable) != IBE_NONE) {
+        if (BuildableReplacementChecks((buildable_t) ent->s.modelindex, buildable) != IBE_NONE) {
             continue;
         }
 
@@ -3254,7 +3254,7 @@ static itemBuildError_t PrepareBuildableReplacement(buildable_t buildable, vec3_
         cost = std::max(0.0f, cost);
 
         // check if we have enough resources now
-        if (G_CanAffordBuildPoints(attr->team, cost) ) {
+        if (G_CanAffordBuildPoints(attr->team, cost)) {
             return IBE_NONE;
         }
     }
@@ -3345,7 +3345,7 @@ itemBuildError_t G_CanBuild(gentity_t* ent, buildable_t buildable, int /*distanc
     invert = BG_Buildable(buildable)->invertNormal;
 
     // Can we build at this angle?
-    if (!(normal[2] >= minNormal || (invert && normal[2] <= -minNormal) ) ) {
+    if (!(normal[2] >= minNormal || (invert && normal[2] <= -minNormal))) {
         reason = IBE_NORMAL;
     }
 
@@ -3356,31 +3356,31 @@ itemBuildError_t G_CanBuild(gentity_t* ent, buildable_t buildable, int /*distanc
     contents = trap_PointContents(entity_origin, -1);
 
     // Prepare replacment of other buildables
-    if ( (tempReason = PrepareBuildableReplacement(buildable, origin) ) != IBE_NONE) {
+    if ((tempReason = PrepareBuildableReplacement(buildable, origin)) != IBE_NONE) {
         reason = tempReason;
 
-        if (reason == IBE_NOPOWERHERE && !G_AliveReactor() ) {
+        if (reason == IBE_NOPOWERHERE && !G_AliveReactor()) {
             reason = IBE_NOREACTOR;
-        } else if (reason == IBE_NOCREEP && !G_ActiveOvermind() ) {
+        } else if (reason == IBE_NOCREEP && !G_ActiveOvermind()) {
             reason = IBE_NOOVERMIND;
         }
     } else if (ent->client->pers.team == TEAM_ALIENS) {
         // Check for Overmind
         if (buildable != BA_A_OVERMIND) {
-            if (!G_ActiveOvermind() ) {
+            if (!G_ActiveOvermind()) {
                 reason = IBE_NOOVERMIND;
             }
         }
 
         // Check for creep
         if (BG_Buildable(buildable)->creepTest) {
-            if (!IsCreepHere(entity_origin) ) {
+            if (!IsCreepHere(entity_origin)) {
                 reason = IBE_NOCREEP;
             }
         }
 
         // Check surface permissions
-        if ( (tr1.surfaceFlags & (SURF_NOALIENBUILD | SURF_NOBUILD)) || (contents & (CONTENTS_NOALIENBUILD | CONTENTS_NOBUILD)) ) {
+        if ((tr1.surfaceFlags & (SURF_NOALIENBUILD | SURF_NOBUILD)) || (contents & (CONTENTS_NOALIENBUILD | CONTENTS_NOBUILD))) {
             reason = IBE_SURFACE;
         }
 
@@ -3390,7 +3390,7 @@ itemBuildError_t G_CanBuild(gentity_t* ent, buildable_t buildable, int /*distanc
         }
     } else if (ent->client->pers.team == TEAM_HUMANS) {
         // Check permissions
-        if ( (tr1.surfaceFlags & (SURF_NOHUMANBUILD | SURF_NOBUILD)) || (contents & (CONTENTS_NOHUMANBUILD | CONTENTS_NOBUILD)) ) {
+        if ((tr1.surfaceFlags & (SURF_NOHUMANBUILD | SURF_NOBUILD)) || (contents & (CONTENTS_NOHUMANBUILD | CONTENTS_NOBUILD))) {
             reason = IBE_SURFACE;
         }
 
@@ -3404,7 +3404,7 @@ itemBuildError_t G_CanBuild(gentity_t* ent, buildable_t buildable, int /*distanc
     if (BG_Buildable(buildable)->uniqueTest) {
         tempent = FindBuildable(buildable);
 
-        if (tempent && !tempent->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+        if (tempent && !tempent->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
             switch (buildable) {
             case BA_A_OVERMIND:
                 reason = IBE_ONEOVERMIND;
@@ -3579,7 +3579,7 @@ static gentity_t* Build(gentity_t* builder, buildable_t buildable, const vec3_t 
     BuildableSpawnCBSE(built, buildable);
 
     // Free existing buildables
-    G_FreeMarkedBuildables(builder, readable, sizeof(readable), buildnums, sizeof(buildnums) );
+    G_FreeMarkedBuildables(builder, readable, sizeof(readable), buildnums, sizeof(buildnums));
 
     // Spawn the buildable
     built->s.eType = ET_BUILDABLE;
@@ -3702,9 +3702,9 @@ static gentity_t* Build(gentity_t* builder, buildable_t buildable, const vec3_t 
     }
 
     built->r.contents = CONTENTS_BODY;
-    built->clipmask   = MASK_PLAYERSOLID;
-    built->target     = nullptr;
-    built->s.weapon   = attr->weapon;
+    built->clipmask = MASK_PLAYERSOLID;
+    built->target = nullptr;
+    built->s.weapon = attr->weapon;
 
     if (builder->client) {
         built->builtBy = builder->client->pers.namelog;
@@ -3749,13 +3749,13 @@ static gentity_t* Build(gentity_t* builder, buildable_t buildable, const vec3_t 
 
     if (builder->client) {
         // readable and the model name shouldn't need quoting
-        G_TeamCommand( (team_t) builder->client->pers.team,
-                       va("print_tr %s %s %s %s", (readable[0]) ?
-                          QQ(N_("$1$ ^2built^7 by $2$^7, ^3replacing^7 $3$\n") ) :
-                          QQ(N_("$1$ ^2built^7 by $2$$3$\n") ),
-                          Quote(BG_Buildable(built->s.modelindex)->humanName),
-                          Quote(builder->client->pers.netname),
-                          Quote(readable) ) );
+        G_TeamCommand((team_t) builder->client->pers.team,
+                      va("print_tr %s %s %s %s", (readable[0]) ?
+                         QQ(N_("$1$ ^2built^7 by $2$^7, ^3replacing^7 $3$\n")) :
+                         QQ(N_("$1$ ^2built^7 by $2$$3$\n")),
+                         Quote(BG_Buildable(built->s.modelindex)->humanName),
+                         Quote(builder->client->pers.netname),
+                         Quote(readable)));
         G_LogPrintf("Construct: %d %d %s%s: %s^7 is building "
                     "%s%s%s\n",
                     (int)(builder - g_entities),
@@ -3793,7 +3793,7 @@ bool G_BuildIfValid(gentity_t* ent, buildable_t buildable) {
     VectorNormalize(forward);
     dist = BG_Class(ent->client->ps.stats[STAT_CLASS])->buildDist * DotProduct(forward, aimDir);
 
-    switch (G_CanBuild(ent, buildable, dist, origin, normal, &groundEntNum) ) {
+    switch (G_CanBuild(ent, buildable, dist, origin, normal, &groundEntNum)) {
     case IBE_NONE:
         Build(ent, buildable, origin, normal, ent->s.apos.trBase, groundEntNum);
         G_ModifyBuildPoints(BG_Buildable(buildable)->team, -BG_Buildable(buildable)->buildPoints);
@@ -3902,7 +3902,7 @@ static gentity_t* FinishSpawningBuildable(gentity_t* ent, bool force) {
 
     if (tr.startsolid && !force) {
         G_Printf("^3G_FinishSpawningBuildable: %s startsolid at %s\n",
-                 built->classname, vtos(built->s.origin) );
+                 built->classname, vtos(built->s.origin));
         G_FreeEntity(built);
         return nullptr;
     }
@@ -3962,7 +3962,7 @@ void G_LayoutSave(const char* name) {
     gentity_t* ent;
     char* s;
 
-    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map) );
+    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map));
 
     if (!map[0]) {
         G_Printf("layoutsave: mapname is null\n");
@@ -4017,7 +4017,7 @@ int G_LayoutList(const char* map, char* list, int len) {
 
     Q_strcat(layouts, sizeof(layouts), S_BUILTIN_LAYOUT " ");
     numFiles = trap_FS_GetFileList(va("layouts/%s", map), ".dat",
-                                   fileList, sizeof(fileList) );
+                                   fileList, sizeof(fileList));
     filePtr = fileList;
 
     for (i = 0; i < numFiles; i++, filePtr += fileLen + 1) {
@@ -4029,7 +4029,7 @@ int G_LayoutList(const char* map, char* list, int len) {
         }
 
         // list is full, stop trying to add to it
-        if ( (listLen + fileLen) >= (int) sizeof(layouts) ) {
+        if ((listLen + fileLen) >= (int) sizeof(layouts)) {
             break;
         }
 
@@ -4069,20 +4069,20 @@ void G_LayoutSelect() {
     int cnt = 0;
     int layoutNum;
 
-    Q_strncpyz(layouts, g_layouts.string, sizeof(layouts) );
-    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map) );
+    Q_strncpyz(layouts, g_layouts.string, sizeof(layouts));
+    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map));
 
     // one time use cvar
     trap_Cvar_Set("g_layouts", "");
 
     // pick from list of default layouts if provided
     if (!layouts[0]) {
-        Q_strncpyz(layouts, g_defaultLayouts.string, sizeof(layouts) );
+        Q_strncpyz(layouts, g_defaultLayouts.string, sizeof(layouts));
     }
 
     // pick an included layout at random if no list has been provided
     if (!layouts[0] && g_layoutAuto.integer) {
-        G_LayoutList(map, layouts, sizeof(layouts) );
+        G_LayoutList(map, layouts, sizeof(layouts));
     }
 
     // no layout specified, use the map's builtin layout
@@ -4090,12 +4090,12 @@ void G_LayoutSelect() {
         return;
     }
 
-    Q_strncpyz(layouts2, layouts, sizeof(layouts2) );
+    Q_strncpyz(layouts2, layouts, sizeof(layouts2));
     layoutPtr = &layouts2[0];
     layouts[0] = '\0';
 
-    while (*(layout = COM_ParseExt(&layoutPtr, false)) ) {
-        if (!Q_stricmp(layout, S_BUILTIN_LAYOUT) ) {
+    while (*(layout = COM_ParseExt(&layoutPtr, false))) {
+        if (!Q_stricmp(layout, S_BUILTIN_LAYOUT)) {
             Q_strcat(layouts, sizeof(layouts), layout);
             Q_strcat(layouts, sizeof(layouts), " ");
             cnt++;
@@ -4119,11 +4119,11 @@ void G_LayoutSelect() {
     }
 
     layoutNum = (rand() % cnt) + 1;
-    Q_strncpyz(layouts2, layouts, sizeof(layouts2) );
+    Q_strncpyz(layouts2, layouts, sizeof(layouts2));
     layoutPtr = &layouts2[0];
 
     for (cnt = 0; *(layout = COM_ParseExt(&layoutPtr, false)) && cnt < layoutNum; cnt++) {
-        Q_strncpyz(level.layout, layout, sizeof(level.layout) );
+        Q_strncpyz(level.layout, layout, sizeof(level.layout));
     }
 
     G_Printf("Using layout \"%s\" from list (%s).\n", level.layout, layouts);
@@ -4165,11 +4165,11 @@ void G_LayoutLoad() {
     int i = 0;
     const buildableAttributes_t* attr;
 
-    if (!level.layout[0] || !Q_stricmp(level.layout, S_BUILTIN_LAYOUT) ) {
+    if (!level.layout[0] || !Q_stricmp(level.layout, S_BUILTIN_LAYOUT)) {
         return;
     }
 
-    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map) );
+    trap_Cvar_VariableStringBuffer("mapname", map, sizeof(map));
     len = trap_FS_FOpenFile(va("layouts/%s/%s.dat", map, level.layout), &f, FS_READ);
 
     if (len < 0) {
@@ -4208,7 +4208,7 @@ void G_LayoutLoad() {
                 G_Printf(S_WARNING "bad buildable name (%s) in layout."
                          " skipping\n", buildName);
             } else {
-                LayoutBuildItem( (buildable_t) buildable, origin, angles, origin2, angles2);
+                LayoutBuildItem((buildable_t) buildable, origin, angles, origin2, angles2);
                 level.team[attr->team].layoutBuildPoints += attr->buildPoints;
             }
         }
@@ -4344,9 +4344,9 @@ void G_BuildLogRevert(int id) {
             for (team = MAX_CLIENTS; team < level.num_entities; team++) {
                 ent = &g_entities[team];
 
-                if ( ( (ent->s.eType == ET_BUILDABLE && G_Alive(ent) ) ||
-                       (ent->s.eType == ET_GENERAL && ent->think == G_BuildLogRevertThink) ) &&
-                     ent->s.modelindex == log->modelindex) {
+                if (((ent->s.eType == ET_BUILDABLE && G_Alive(ent)) ||
+                     (ent->s.eType == ET_GENERAL && ent->think == G_BuildLogRevertThink)) &&
+                    ent->s.modelindex == log->modelindex) {
                     VectorSubtract(ent->s.pos.trBase, log->origin, dist);
 
                     if (VectorLengthSquared(dist) <= 2.0f) {
@@ -4395,7 +4395,7 @@ void G_BuildLogRevert(int id) {
     }
 
     for (team = TEAM_NONE + 1; team < NUM_TEAMS; ++team) {
-        G_AddMomentumGenericStep( (team_t) team, momentumChange[team]);
+        G_AddMomentumGenericStep((team_t) team, momentumChange[team]);
     }
 
     G_AddMomentumEnd();

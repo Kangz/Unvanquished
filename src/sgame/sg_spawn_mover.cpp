@@ -132,8 +132,8 @@ bool G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t
 
     // EF_MOVER_STOP will just stop when contacting another entity
     // instead of pushing it, but entities can still ride on top of it
-    if ( (pusher->s.eFlags & EF_MOVER_STOP) &&
-         check->s.groundEntityNum != pusher->s.number) {
+    if ((pusher->s.eFlags & EF_MOVER_STOP) &&
+        check->s.groundEntityNum != pusher->s.number) {
         return false;
     }
 
@@ -206,13 +206,13 @@ bool G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t
     // if it is ok to leave in the old position, do it
     // this is only relevent for riding entities, not pushed
     // Sliding trapdoors can cause this.
-    VectorCopy( (pushed_p - 1)->origin, check->s.pos.trBase);
+    VectorCopy((pushed_p - 1)->origin, check->s.pos.trBase);
 
     if (check->client) {
-        VectorCopy( (pushed_p - 1)->origin, check->client->ps.origin);
+        VectorCopy((pushed_p - 1)->origin, check->client->ps.origin);
     }
 
-    VectorCopy( (pushed_p - 1)->angles, check->s.apos.trBase);
+    VectorCopy((pushed_p - 1)->angles, check->s.apos.trBase);
     block = G_TestEntityPosition(check);
 
     if (!block) {
@@ -312,13 +312,13 @@ bool G_MoverPush(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** obsta
 
             // see if the ent's bbox is inside the pusher's final position
             // this does allow a fast moving object to pass through a thin entity...
-            if (!G_TestEntityPosition(check) ) {
+            if (!G_TestEntityPosition(check)) {
                 continue;
             }
         }
 
         // the entity needs to be pushed
-        if (G_TryPushingEntity(check, pusher, move, amove) ) {
+        if (G_TryPushingEntity(check, pusher, move, amove)) {
             continue;
         }
 
@@ -383,7 +383,7 @@ void G_MoverGroup(gentity_t* ent) {
         VectorSubtract(origin, part->r.currentOrigin, move);
         VectorSubtract(angles, part->r.currentAngles, amove);
 
-        if (!G_MoverPush(part, move, amove, &obstacle) ) {
+        if (!G_MoverPush(part, move, amove, &obstacle)) {
             break; // move was blocked
         }
     }
@@ -480,7 +480,7 @@ void SetMoverState(gentity_t* ent, moverState_t moverState, int time) {
         VectorCopy(ent->restingPosition, ent->s.pos.trBase);
         ent->s.pos.trType = TR_STATIONARY;
 
-        if (!Q_stricmp(ent->classname, "func_door") && (ent->names[0] || ent->takedamage) ) {
+        if (!Q_stricmp(ent->classname, "func_door") && (ent->names[0] || ent->takedamage)) {
             vec3_t mins, maxs;
             VectorAdd(ent->restingPosition, ent->r.mins, mins);
             VectorAdd(ent->restingPosition, ent->r.maxs, maxs);
@@ -492,7 +492,7 @@ void SetMoverState(gentity_t* ent, moverState_t moverState, int time) {
         VectorCopy(ent->activatedPosition, ent->s.pos.trBase);
         ent->s.pos.trType = TR_STATIONARY;
 
-        if (!Q_stricmp(ent->classname, "func_door") && (ent->names[0] || ent->takedamage) ) {
+        if (!Q_stricmp(ent->classname, "func_door") && (ent->names[0] || ent->takedamage)) {
             if (ent->obstacleHandle) {
                 trap_BotRemoveObstacle(ent->obstacleHandle);
                 ent->obstacleHandle = 0;
@@ -685,7 +685,7 @@ void Think_CloseModelDoor(gentity_t* ent) {
         }
 
         // test is this entity collides with this door
-        if (G_TestEntityPosition(check) ) {
+        if (G_TestEntityPosition(check)) {
             canClose = false;
         }
     }
@@ -871,12 +871,12 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 trap_AdjustAreaPortalState(ent, true);
             }
         } else if (ent->moverState == MOVER_POS2 &&
-                   !(groupState == MOVER_1TO2 || other == master) ) {
+                   !(groupState == MOVER_1TO2 || other == master)) {
             // if all the way up, just delay before coming down
             master->think = ReturnToPos1orApos1;
             master->nextthink = std::max(master->nextthink, level.time + (int) ent->config.wait.time);
         } else if (ent->moverState == MOVER_POS2 &&
-                   (groupState == MOVER_1TO2 || other == master) ) {
+                   (groupState == MOVER_1TO2 || other == master)) {
             // start moving 50 msec later, because if this was player-
             // triggered, level.time hasn't been advanced yet
             SetMoverState(ent, MOVER_2TO1, level.time + 50);
@@ -902,7 +902,7 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 partial = total;
             }
 
-            SetMoverState(ent, MOVER_1TO2, level.time - (total - partial) );
+            SetMoverState(ent, MOVER_1TO2, level.time - (total - partial));
 
             if (ent->sound1to2) {
                 G_AddEvent(ent, EV_GENERAL_SOUND, ent->sound1to2);
@@ -916,7 +916,7 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 partial = total;
             }
 
-            SetMoverState(ent, MOVER_2TO1, level.time - (total - partial) );
+            SetMoverState(ent, MOVER_2TO1, level.time - (total - partial));
 
             if (ent->sound2to1) {
                 G_AddEvent(ent, EV_GENERAL_SOUND, ent->sound2to1);
@@ -939,12 +939,12 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 trap_AdjustAreaPortalState(ent, true);
             }
         } else if (ent->moverState == ROTATOR_POS2 &&
-                   !(groupState == MOVER_1TO2 || other == master) ) {
+                   !(groupState == MOVER_1TO2 || other == master)) {
             // if all the way up, just delay before coming down
             master->think = ReturnToPos1orApos1;
             master->nextthink = std::max(master->nextthink, level.time + (int) ent->config.wait.time);
         } else if (ent->moverState == ROTATOR_POS2 &&
-                   (groupState == MOVER_1TO2 || other == master) ) {
+                   (groupState == MOVER_1TO2 || other == master)) {
             // start moving 50 msec later, because if this was player-
             // triggered, level.time hasn't been advanced yet
             SetMoverState(ent, ROTATOR_2TO1, level.time + 50);
@@ -970,7 +970,7 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 partial = total;
             }
 
-            SetMoverState(ent, ROTATOR_1TO2, level.time - (total - partial) );
+            SetMoverState(ent, ROTATOR_1TO2, level.time - (total - partial));
 
             if (ent->sound1to2) {
                 G_AddEvent(ent, EV_GENERAL_SOUND, ent->sound1to2);
@@ -984,7 +984,7 @@ void BinaryMover_act(gentity_t* ent, gentity_t* other, gentity_t* activator) {
                 partial = total;
             }
 
-            SetMoverState(ent, ROTATOR_2TO1, level.time - (total - partial) );
+            SetMoverState(ent, ROTATOR_2TO1, level.time - (total - partial));
 
             if (ent->sound2to1) {
                 G_AddEvent(ent, EV_GENERAL_SOUND, ent->sound2to1);
@@ -1105,9 +1105,9 @@ void InitMover(gentity_t* ent) {
     ent->act = BinaryMover_act;
     ent->reached = BinaryMover_reached;
 
-    if (G_SpawnString("group", "", &groupName) ) {
+    if (G_SpawnString("group", "", &groupName)) {
         ent->groupName = G_CopyString(groupName);
-    } else if (G_SpawnString("team", "", &groupName) ) {
+    } else if (G_SpawnString("team", "", &groupName)) {
         G_WarnAboutDeprecatedEntityField(ent, "group", "team", ENT_V_RENAMED);
         ent->groupName = G_CopyString(groupName);
     }
@@ -1166,9 +1166,9 @@ void InitRotator(gentity_t* ent) {
     ent->act = BinaryMover_act;
     ent->reached = BinaryMover_reached;
 
-    if (G_SpawnString("group", "", &groupName) ) {
+    if (G_SpawnString("group", "", &groupName)) {
         ent->groupName = G_CopyString(groupName);
-    } else if (G_SpawnString("team", "", &groupName) ) {
+    } else if (G_SpawnString("team", "", &groupName)) {
         G_WarnAboutDeprecatedEntityField(ent, "group", "team", ENT_V_RENAMED);
         ent->groupName = G_CopyString(groupName);
     }
@@ -1454,7 +1454,7 @@ void SP_func_door_rotating(gentity_t* self) {
     // leave out, so we'll tell him if he does.
     if (!self->rotatorAngle) {
         G_Printf("%s at %s with no rotatorAngle set.\n",
-                 self->classname, vtos(self->s.origin) );
+                 self->classname, vtos(self->s.origin));
 
         self->rotatorAngle = 90.0;
     }
@@ -1561,7 +1561,7 @@ void SP_func_door_model(gentity_t* self) {
     }
 
     // if the "noise" key is set, use a constant looping sound when moving
-    if (G_SpawnString("noise", "", &sound) ) {
+    if (G_SpawnString("noise", "", &sound)) {
         self->soundIndex = G_SoundIndex(sound);
     }
 
@@ -1584,7 +1584,7 @@ void SP_func_door_model(gentity_t* self) {
     VectorClear(self->s.apos.trDelta);
 
     self->s.misc = (int) self->animation[0]; // first frame
-    self->s.weapon = abs( (int) self->animation[1]); // number of frames
+    self->s.weapon = abs((int) self->animation[1]); // number of frames
 
     // must be at least one frame -- mapper has forgotten animation key
     if (self->s.weapon == 0) {
@@ -1595,7 +1595,7 @@ void SP_func_door_model(gentity_t* self) {
 
     trap_LinkEntity(self);
 
-    if (!(self->names[0] || self->config.health) ) { // FIXME wont work yet with class fallbacks
+    if (!(self->names[0] || self->config.health)) { // FIXME wont work yet with class fallbacks
         self->nextthink = level.time + FRAMETIME;
         self->think = Think_SpawnNewDoorTrigger;
     }
@@ -1622,7 +1622,7 @@ void Touch_Plat(gentity_t* ent, gentity_t* other, trace_t*) {
         return;
     }
 
-    if (!other->client || G_Dead(other) ) {
+    if (!other->client || G_Dead(other)) {
         return;
     }
 
@@ -1725,7 +1725,7 @@ void SP_func_plat(gentity_t* self) {
     // create second position
     trap_SetBrushModel(self, self->model);
 
-    if (!G_SpawnFloat("height", "0", &height) ) {
+    if (!G_SpawnFloat("height", "0", &height)) {
         height = (self->r.maxs[2] - self->r.mins[2]) - lip;
     }
 
@@ -1988,7 +1988,7 @@ void Think_SetupTrainTargets(gentity_t* self) {
 
     if (!self->nextPathSegment) {
         G_Printf("func_train at %s with an unfound target\n",
-                 vtos(self->r.absmin) );
+                 vtos(self->r.absmin));
         return;
     }
 
@@ -2001,7 +2001,7 @@ void Think_SetupTrainTargets(gentity_t* self) {
 
         if (!path->targetCount) {
             G_Printf("Train corner at %s without a target\n",
-                     vtos(path->s.origin) );
+                     vtos(path->s.origin));
             return;
         }
 
@@ -2015,10 +2015,10 @@ void Think_SetupTrainTargets(gentity_t* self) {
 
             if (!next) {
                 G_Printf("Train corner at %s without a referenced " S_PATH_CORNER "\n",
-                         vtos(path->s.origin) );
+                         vtos(path->s.origin));
                 return;
             }
-        } while (strcmp(next->classname, S_PATH_CORNER) );
+        } while (strcmp(next->classname, S_PATH_CORNER));
 
         path->nextPathSegment = next;
     }
@@ -2117,22 +2117,22 @@ void SP_func_static(gentity_t* self) {
 
     // check if this func_static has a colorgrading texture
     if (self->model[0] == '*' &&
-        G_SpawnString("gradingTexture", "", &gradingTexture) ) {
+        G_SpawnString("gradingTexture", "", &gradingTexture)) {
         G_SpawnFloat("gradingDistance", "250", &gradingDistance);
 
         G_GradingTextureIndex(va("%s %f %s", self->model + 1,
-                                 gradingDistance, gradingTexture) );
+                                 gradingDistance, gradingTexture));
     }
 
     // check if this func_static has a colorgrading texture
     if (self->model[0] == '*' &&
-        G_SpawnString("reverbEffect", "", &reverbEffect) ) {
+        G_SpawnString("reverbEffect", "", &reverbEffect)) {
         G_SpawnFloat("reverbDistance", "250", &reverbDistance);
         G_SpawnFloat("reverbIntensity", "1", &reverbIntensity);
 
         reverbIntensity = Com_Clamp(0.0f, 2.0f, reverbIntensity);
         G_ReverbEffectIndex(va("%s %f %s %f", self->model + 1,
-                               reverbDistance, reverbEffect, reverbIntensity) );
+                               reverbDistance, reverbEffect, reverbIntensity));
     }
 }
 
@@ -2258,7 +2258,7 @@ void SP_func_pendulum(gentity_t* self) {
 
     VectorCopy(self->s.angles, self->s.apos.trBase);
 
-    frequency = 1 / (M_PI * 2) * sqrt(g_gravity.value / (3 * length) );
+    frequency = 1 / (M_PI * 2) * sqrt(g_gravity.value / (3 * length));
     self->s.apos.trDuration = 1000 / frequency;
     self->s.apos.trTime = self->s.apos.trDuration * phase;
     self->s.apos.trType = TR_SINE;
@@ -2275,7 +2275,7 @@ void func_spawn_act(gentity_t* self, gentity_t*, gentity_t* activator) {
         trap_UnlinkEntity(self);
     } else {
         trap_LinkEntity(self);
-        if (!(self->spawnflags & 2) ) {
+        if (!(self->spawnflags & 2)) {
             G_KillBrushModel(self, activator);
         }
     }
@@ -2373,7 +2373,7 @@ void SP_func_destructable(gentity_t* self) {
     self->die = func_destructable_die;
     self->act = func_destructable_act;
 
-    if (!(self->spawnflags & 1) ) {
+    if (!(self->spawnflags & 1)) {
         trap_LinkEntity(self);
         self->takedamage = true;
     }

@@ -39,11 +39,11 @@ void CG_DrawField(float x, float y, int width, float cw, float ch, int value) {
     int frame;
     float charWidth, charHeight;
 
-    if (!(charWidth = cw) ) {
+    if (!(charWidth = cw)) {
         charWidth = CHAR_WIDTH;
     }
 
-    if (!(charHeight = ch) ) {
+    if (!(charHeight = ch)) {
         charHeight = CHAR_HEIGHT;
     }
 
@@ -109,9 +109,9 @@ void CG_MouseEvent(int dx, int dy) {
 void CG_MousePosEvent(int x, int y) {
     if (rocketInfo.keyCatcher & KEYCATCH_UI) {
         Rocket_MouseMove(x, y);
-    } else if ( (cg.predictedPlayerState.pm_type == PM_NORMAL ||
-                 cg.predictedPlayerState.pm_type == PM_SPECTATOR) &&
-                cg.showScores == false) {
+    } else if ((cg.predictedPlayerState.pm_type == PM_NORMAL ||
+                cg.predictedPlayerState.pm_type == PM_SPECTATOR) &&
+               cg.showScores == false) {
         CG_SetKeyCatcher(0);
     }
 }
@@ -121,7 +121,7 @@ void CG_KeyEvent(int key, bool down) {
         Rocket_ProcessKeyInput(key, down);
     } else if (cg.predictedPlayerState.pm_type == PM_NORMAL ||
                (cg.predictedPlayerState.pm_type == PM_SPECTATOR &&
-                cg.showScores == false) ) {
+                cg.showScores == false)) {
         CG_SetKeyCatcher(0);
     }
 }
@@ -159,7 +159,7 @@ for a few moments
 ==============
 */
 void CG_CenterPrint(const char* str, int, int) {
-    Q_strncpyz(cg.centerPrint, str, sizeof(cg.centerPrint) );
+    Q_strncpyz(cg.centerPrint, str, sizeof(cg.centerPrint));
     cg.centerPrintTime = cg.time;
 }
 
@@ -186,14 +186,14 @@ static void CG_DrawBeacon(cbeacon_t* b) {
     float angle;
 
     // Don't draw clamped beacons for tags, except for enemy players.
-    if (b->type == BCT_TAG && b->clamped && !( (b->flags & EF_BC_ENEMY) &&
-                                               (b->flags & EF_BC_TAG_PLAYER) ) ) {
+    if (b->type == BCT_TAG && b->clamped && !((b->flags & EF_BC_ENEMY) &&
+                                              (b->flags & EF_BC_TAG_PLAYER))) {
         return;
     }
 
     Color::Color color = b->color;
 
-    if (!(BG_Beacon(b->type)->flags & BCF_IMPORTANT) ) {
+    if (!(BG_Beacon(b->type)->flags & BCF_IMPORTANT)) {
         color.SetAlpha(color.Alpha() * cgs.bc.hudAlpha);
     } else {
         color.SetAlpha(color.Alpha() * cgs.bc.hudAlphaImportant);
@@ -205,7 +205,7 @@ static void CG_DrawBeacon(cbeacon_t* b) {
                           b->pos[1] - b->size/2,
                           b->size, b->size,
                           0, 0, 1, 1,
-                          CG_BeaconIcon(b) );
+                          CG_BeaconIcon(b));
 
     if (b->flags & EF_BC_DYING) {
         trap_R_DrawStretchPic(b->pos[0] - b->size/2 * 1.3,
@@ -221,7 +221,7 @@ static void CG_DrawBeacon(cbeacon_t* b) {
                               b->size * 1.5, b->size * 1.5,
                               0, 0, 1, 1,
                               cgs.media.beaconIconArrow,
-                              270.0 - (angle = atan2(b->clamp_dir[1], b->clamp_dir[0]) ) * 180 / M_PI);
+                              270.0 - (angle = atan2(b->clamp_dir[1], b->clamp_dir[0])) * 180 / M_PI);
     }
 
     if (b->type == BCT_TIMER) {
@@ -314,10 +314,10 @@ static void CG_Draw2D() {
 
     if (cg.zoomed) {
         Color::Color black = { 0.f, 0.f, 0.f, 0.5f };
-        trap_R_DrawStretchPic( (cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2), 0, cgs.glconfig.vidHeight, cgs.glconfig.vidHeight, 0, 0, 1, 1, cgs.media.scopeShader);
+        trap_R_DrawStretchPic((cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2), 0, cgs.glconfig.vidHeight, cgs.glconfig.vidHeight, 0, 0, 1, 1, cgs.media.scopeShader);
         trap_R_SetColor(black);
         trap_R_DrawStretchPic(0, 0, (cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2), cgs.glconfig.vidHeight, 0, 0, 1, 1, cgs.media.whiteShader);
-        trap_R_DrawStretchPic(cgs.glconfig.vidWidth - ( (cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2) ), 0, (cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2), cgs.glconfig.vidHeight, 0, 0, 1, 1, cgs.media.whiteShader);
+        trap_R_DrawStretchPic(cgs.glconfig.vidWidth - ((cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2)), 0, (cgs.glconfig.vidWidth / 2) - (cgs.glconfig.vidHeight / 2), cgs.glconfig.vidHeight, 0, 0, 1, 1, cgs.media.whiteShader);
         trap_R_ClearColor();
     }
 }
@@ -482,7 +482,7 @@ static void CG_DrawBinaryShadersFinalPhases() {
     float ss;
     char str[20];
     float f, l, u;
-    polyVert_t verts[4] ={
+    polyVert_t verts[4] = {
         { { 0, 0, 0 }, { 0, 0 }, { 255, 255, 255, 255 } },
         { { 0, 0, 0 }, { 1, 0 }, { 255, 255, 255, 255 } },
         { { 0, 0, 0 }, { 1, 1 }, { 255, 255, 255, 255 } },
@@ -504,10 +504,10 @@ static void CG_DrawBinaryShadersFinalPhases() {
 
     ss = sqrt(ss);
 
-    trap_Cvar_VariableStringBuffer("r_znear", str, sizeof(str) );
+    trap_Cvar_VariableStringBuffer("r_znear", str, sizeof(str));
     f = atof(str) + 0.01;
-    l = f * tan(DEG2RAD(cg.refdef.fov_x / 2) ) * ss;
-    u = f * tan(DEG2RAD(cg.refdef.fov_y / 2) ) * ss;
+    l = f * tan(DEG2RAD(cg.refdef.fov_x / 2)) * ss;
+    u = f * tan(DEG2RAD(cg.refdef.fov_y / 2)) * ss;
 
     VectorMA(cg.refdef.vieworg, f, cg.refdef.viewaxis[0], verts[0].xyz);
     VectorMA(verts[0].xyz, l, cg.refdef.viewaxis[1], verts[0].xyz);

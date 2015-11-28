@@ -132,10 +132,10 @@ NET
 #define NET_DISABLEMCAST    0x08
 
 // right type anyway || ( DUAL && proto enabled && ( other proto disabled || appropriate IPv6 pref ) )
-#define NET_IS_IPv4(type) ( (type) == NA_IP  || ( (type) == NA_IP_DUAL && (net_enabled->integer & NET_ENABLEV4) && ( (~net_enabled->integer & NET_ENABLEV6) || (~net_enabled->integer & NET_PRIOV6) ) ) )
-#define NET_IS_IPv6(type) ( (type) == NA_IP6 || ( (type) == NA_IP_DUAL && (net_enabled->integer & NET_ENABLEV6) && ( (~net_enabled->integer & NET_ENABLEV4) || (net_enabled->integer & NET_PRIOV6) ) ) )
+#define NET_IS_IPv4(type) ((type) == NA_IP  || ((type) == NA_IP_DUAL && (net_enabled->integer & NET_ENABLEV4) && ((~net_enabled->integer & NET_ENABLEV6) || (~net_enabled->integer & NET_PRIOV6))))
+#define NET_IS_IPv6(type) ((type) == NA_IP6 || ((type) == NA_IP_DUAL && (net_enabled->integer & NET_ENABLEV6) && ((~net_enabled->integer & NET_ENABLEV4) || (net_enabled->integer & NET_PRIOV6))))
 // if NA_IP_DUAL, get the preferred type (falling back on NA_IP)
-#define NET_TYPE(type)    (NET_IS_IPv4(type) ? NA_IP : NET_IS_IPv6(type) ? NA_IP6 : ( (type) == NA_IP_DUAL) ? NA_IP : (type) )
+#define NET_TYPE(type)    (NET_IS_IPv4(type) ? NA_IP : NET_IS_IPv6(type) ? NA_IP6 : ((type) == NA_IP_DUAL) ? NA_IP : (type))
 
 #define PACKET_BACKUP       32 // number of old messages that must be kept on client and
 // server for delta comrpession and ping estimation
@@ -376,13 +376,13 @@ void     Cmd_AddCommand(const char* cmd_name, xcommand_t function);
 
 void Cmd_RemoveCommand(const char* cmd_name);
 
-void Cmd_CommandCompletion(void (* callback)(const char* s) );
+void Cmd_CommandCompletion(void (* callback)(const char* s));
 
 typedef void ( * completionFunc_t )(char* args, int argNum);
 
 void Cmd_OnCompleteMatch(const char* s);
-void Cmd_AliasCompletion(void (* callback)(const char* s) );
-void Cmd_DelayCompletion(void (* callback)(const char* s) );
+void Cmd_AliasCompletion(void (* callback)(const char* s));
+void Cmd_DelayCompletion(void (* callback)(const char* s));
 
 void Cmd_SetCommandCompletionFunc(const char* command,
                                   completionFunc_t complete);
@@ -797,7 +797,7 @@ void CL_StartHunkUsers();
 
 // start all the client stuff using the hunk
 
-void Key_KeynameCompletion(void (* callback)(const char* s) );
+void Key_KeynameCompletion(void (* callback)(const char* s));
 
 // for keyname autocompletion
 

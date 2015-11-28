@@ -98,7 +98,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse numFrames <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "numFrames") ) {
+    if (Q_stricmp(token, "numFrames")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'numFrames' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -109,7 +109,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse numJoints <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "numJoints") ) {
+    if (Q_stricmp(token, "numJoints")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'numJoints' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -120,7 +120,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse frameRate <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "frameRate") ) {
+    if (Q_stricmp(token, "frameRate")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'frameRate' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -131,7 +131,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse numAnimatedComponents <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "numAnimatedComponents") ) {
+    if (Q_stricmp(token, "numAnimatedComponents")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'numAnimatedComponents' found '%s' in model '%s'\n", token,
                   name);
         return false;
@@ -143,14 +143,14 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse hierarchy {
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "hierarchy") ) {
+    if (Q_stricmp(token, "hierarchy")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'hierarchy' found '%s' in model '%s'\n", token, name);
         return false;
     }
 
     token = COM_ParseExt2(&buf_p, false);
 
-    if (Q_stricmp(token, "{") ) {
+    if (Q_stricmp(token, "{")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '{' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -160,7 +160,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
 
     for (i = 0, channel = anim->channels; i < anim->numChannels; i++, channel++) {
         token = COM_ParseExt2(&buf_p, true);
-        Q_strncpyz(channel->name, token, sizeof(channel->name) );
+        Q_strncpyz(channel->name, token, sizeof(channel->name));
 
         // ri.Printf(PRINT_ALL, "RE_RegisterAnimation: '%s' has channel '%s'\n", name, channel->name);
 
@@ -182,7 +182,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse }
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '}' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -190,14 +190,14 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse bounds {
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "bounds") ) {
+    if (Q_stricmp(token, "bounds")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'bounds' found '%s' in model '%s'\n", token, name);
         return false;
     }
 
     token = COM_ParseExt2(&buf_p, false);
 
-    if (Q_stricmp(token, "{") ) {
+    if (Q_stricmp(token, "{")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '{' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -208,7 +208,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip (
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '(' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -221,7 +221,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected ')' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -229,7 +229,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip (
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '(' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -242,7 +242,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected ')' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -251,7 +251,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse }
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '}' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -259,14 +259,14 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse baseframe {
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "baseframe") ) {
+    if (Q_stricmp(token, "baseframe")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'baseframe' found '%s' in model '%s'\n", token, name);
         return false;
     }
 
     token = COM_ParseExt2(&buf_p, false);
 
-    if (Q_stricmp(token, "{") ) {
+    if (Q_stricmp(token, "{")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '{' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -275,7 +275,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip (
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '(' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -288,7 +288,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected ')' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -296,7 +296,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip (
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '(' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -311,7 +311,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected ')' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -320,7 +320,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
     // parse }
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '}' found '%s' in model '%s'\n", token, name);
         return false;
     }
@@ -329,21 +329,21 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // parse frame <number> {
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "frame") ) {
+        if (Q_stricmp(token, "frame")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected 'baseframe' found '%s' in model '%s'\n", token, name);
             return false;
         }
 
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, va("%i", i) ) ) {
+        if (Q_stricmp(token, va("%i", i))) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '%i' found '%s' in model '%s'\n", i, token, name);
             return false;
         }
 
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "{") ) {
+        if (Q_stricmp(token, "{")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '{' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -358,7 +358,7 @@ static bool R_LoadMD5Anim(skelAnimation_t* skelAnim, void* buffer, const char* n
         // parse }
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "}") ) {
+        if (Q_stricmp(token, "}")) {
             ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: expected '}' found '%s' in model '%s'\n", token, name);
             return false;
         }
@@ -393,7 +393,7 @@ qhandle_t RE_RegisterAnimationIQM(const char* name, IQAnim_t* data) {
     for (hAnim = 1; hAnim < tr.numAnimations; hAnim++) {
         anim = tr.animations[hAnim];
 
-        if (!Q_stricmp(anim->name, name) ) {
+        if (!Q_stricmp(anim->name, name)) {
             if (anim->type == AT_BAD) {
                 return 0;
             }
@@ -403,13 +403,13 @@ qhandle_t RE_RegisterAnimationIQM(const char* name, IQAnim_t* data) {
     }
 
     // allocate a new model_t
-    if ( (anim = R_AllocAnimation() ) == nullptr) {
+    if ((anim = R_AllocAnimation()) == nullptr) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimationIQM: R_AllocAnimation() failed for '%s'\n", name);
         return 0;
     }
 
     // only set the name after the animation has been successfully allocated
-    Q_strncpyz(anim->name, name, sizeof(anim->name) );
+    Q_strncpyz(anim->name, name, sizeof(anim->name));
     anim->type = AT_IQM;
     anim->iqm = data;
 
@@ -444,7 +444,7 @@ qhandle_t RE_RegisterAnimation(const char* name) {
     for (hAnim = 1; hAnim < tr.numAnimations; hAnim++) {
         anim = tr.animations[hAnim];
 
-        if (!Q_stricmp(anim->name, name) ) {
+        if (!Q_stricmp(anim->name, name)) {
             if (anim->type == AT_BAD) {
                 return 0;
             }
@@ -454,13 +454,13 @@ qhandle_t RE_RegisterAnimation(const char* name) {
     }
 
     // allocate a new model_t
-    if ( (anim = R_AllocAnimation() ) == nullptr) {
+    if ((anim = R_AllocAnimation()) == nullptr) {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: R_AllocAnimation() failed for '%s'\n", name);
         return 0;
     }
 
     // only set the name after the animation has been successfully allocated
-    Q_strncpyz(anim->name, name, sizeof(anim->name) );
+    Q_strncpyz(anim->name, name, sizeof(anim->name));
 
     // make sure the render thread is stopped
     R_SyncRenderThread();
@@ -472,7 +472,7 @@ qhandle_t RE_RegisterAnimation(const char* name) {
         return 0;
     }
 
-    if (!Q_strnicmp( (const char*) buffer, "MD5Version", 10) ) {
+    if (!Q_strnicmp((const char*) buffer, "MD5Version", 10)) {
         loaded = R_LoadMD5Anim(anim, buffer, name);
     } else {
         ri.Printf(PRINT_WARNING, "RE_RegisterAnimation: unknown fileid for '%s'\n", name);
@@ -549,7 +549,7 @@ static void R_CullMD5(trRefEntity_t* ent) {
         }
     }
 
-    switch (R_CullLocalBox(ent->localBounds) ) {
+    switch (R_CullLocalBox(ent->localBounds)) {
     case CULL_IN:
         tr.pc.c_box_cull_md5_in++;
         ent->cull = CULL_IN;
@@ -606,7 +606,7 @@ void R_AddMD5Surfaces(trRefEntity_t* ent) {
     fogNum = R_FogWorldBox(ent->worldBounds);
 
     if (!r_vboModels->integer || !model->numVBOSurfaces ||
-        (!glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE) ) {
+        (!glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE)) {
         // finally add surfaces
         for (i = 0, surface = model->surfaces; i < model->numSurfaces; i++, surface++) {
             if (ent->e.customShader) {
@@ -642,7 +642,7 @@ void R_AddMD5Surfaces(trRefEntity_t* ent) {
 
             // don't add third_person objects if not viewing through a portal
             if (!personalModel) {
-                R_AddDrawSurf( (surfaceType_t*) surface, shader, -1, fogNum);
+                R_AddDrawSurf((surfaceType_t*) surface, shader, -1, fogNum);
             }
         }
     } else {
@@ -679,7 +679,7 @@ void R_AddMD5Surfaces(trRefEntity_t* ent) {
 
             // don't add third_person objects if not viewing through a portal
             if (!personalModel) {
-                R_AddDrawSurf( (surfaceType_t*) vboSurface, shader, -1, fogNum);
+                R_AddDrawSurf((surfaceType_t*) vboSurface, shader, -1, fogNum);
             }
         }
     }
@@ -712,11 +712,11 @@ void R_AddIQMInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     #if defined(USE_REFENTITY_NOSHADOWID)
 
     if (light->l.inverseShadows) {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID))) {
             return;
         }
     } else {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID))) {
             return;
         }
     }
@@ -729,7 +729,7 @@ void R_AddIQMInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     model = tr.currentModel->iqm;
 
     // do a quick AABB cull
-    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1]) ) {
+    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1])) {
         tr.pc.c_dlightSurfacesCulled += model->num_surfaces;
         return;
     }
@@ -771,7 +771,7 @@ void R_AddIQMInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
         }
 
         // skip all surfaces that don't matter for lighting only pass
-        if (shader->isSky || (!shader->interactLight && shader->noShadows) ) {
+        if (shader->isSky || (!shader->interactLight && shader->noShadows)) {
             continue;
         }
 
@@ -812,11 +812,11 @@ void R_AddMD5Interactions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     #if defined(USE_REFENTITY_NOSHADOWID)
 
     if (light->l.inverseShadows) {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID))) {
             return;
         }
     } else {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID))) {
             return;
         }
     }
@@ -829,7 +829,7 @@ void R_AddMD5Interactions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     model = tr.currentModel->md5;
 
     // do a quick AABB cull
-    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1]) ) {
+    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1])) {
         tr.pc.c_dlightSurfacesCulled += model->numSurfaces;
         return;
     }
@@ -845,7 +845,7 @@ void R_AddMD5Interactions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     cubeSideBits = R_CalcLightCubeSideBits(light, ent->worldBounds);
 
     if (!r_vboModels->integer || !model->numVBOSurfaces ||
-        (!glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE) ) {
+        (!glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE)) {
         // generate interactions with all surfaces
         for (i = 0, surface = model->surfaces; i < model->numSurfaces; i++, surface++) {
             if (ent->e.customShader) {
@@ -873,7 +873,7 @@ void R_AddMD5Interactions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
             }
 
             // skip all surfaces that don't matter for lighting only pass
-            if (shader->isSky || (!shader->interactLight && shader->noShadows) ) {
+            if (shader->isSky || (!shader->interactLight && shader->noShadows)) {
                 continue;
             }
 
@@ -918,7 +918,7 @@ void R_AddMD5Interactions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
             }
 
             // skip all surfaces that don't matter for lighting only pass
-            if (shader->isSky || (!shader->interactLight && shader->noShadows) ) {
+            if (shader->isSky || (!shader->interactLight && shader->noShadows)) {
                 continue;
             }
 
@@ -976,7 +976,7 @@ static bool IQMCheckSkeleton(refSkeleton_t* skel, model_t* model,
         modelNames = IQModel->jointNames;
         animNames = IQAnim->jointNames;
         for (i = 0; i < IQModel->num_joints; i++) {
-            if (Q_stricmp(modelNames, animNames) ) {
+            if (Q_stricmp(modelNames, animNames)) {
                 return false;
             }
             modelNames += strlen(modelNames) + 1;
@@ -1043,7 +1043,7 @@ int RE_CheckSkeleton(refSkeleton_t* skel, qhandle_t hModel, qhandle_t hAnim) {
 
         // check bone names
         for (i = 0, md5Bone = md5Model->bones, md5Channel = md5Animation->channels; i < md5Model->numBones; i++, md5Bone++, md5Channel++) {
-            if (Q_stricmp(md5Bone->name, md5Channel->name) ) {
+            if (Q_stricmp(md5Bone->name, md5Channel->name)) {
                 return false;
             }
 
@@ -1105,7 +1105,7 @@ static int IQMBuildSkeleton(refSkeleton_t* skel, skelAnimation_t* skelAnim,
         TransEndLerp(&skel->bones[i].t);
 
         #if defined(REFBONE_NAMES)
-        Q_strncpyz(skel->bones[i].name, anim->name, sizeof(skel->bones[i].name) );
+        Q_strncpyz(skel->bones[i].name, anim->name, sizeof(skel->bones[i].name));
         #endif
 
         skel->bones[i].parentIndex = anim->jointParents[i];
@@ -1201,20 +1201,20 @@ int RE_BuildSkeleton(refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int e
 
             // update quaternion rotation bits
             if (channel->componentsBits & COMPONENT_BIT_QX) {
-                ( (vec_t*) oldQuat) [0] = oldFrame->components[channel->componentsOffset + componentsApplied];
-                ( (vec_t*) newQuat) [0] = newFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) oldQuat) [0] = oldFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) newQuat) [0] = newFrame->components[channel->componentsOffset + componentsApplied];
                 componentsApplied++;
             }
 
             if (channel->componentsBits & COMPONENT_BIT_QY) {
-                ( (vec_t*) oldQuat) [1] = oldFrame->components[channel->componentsOffset + componentsApplied];
-                ( (vec_t*) newQuat) [1] = newFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) oldQuat) [1] = oldFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) newQuat) [1] = newFrame->components[channel->componentsOffset + componentsApplied];
                 componentsApplied++;
             }
 
             if (channel->componentsBits & COMPONENT_BIT_QZ) {
-                ( (vec_t*) oldQuat) [2] = oldFrame->components[channel->componentsOffset + componentsApplied];
-                ( (vec_t*) newQuat) [2] = newFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) oldQuat) [2] = oldFrame->components[channel->componentsOffset + componentsApplied];
+                ((vec_t*) newQuat) [2] = newFrame->components[channel->componentsOffset + componentsApplied];
             }
 
             QuatCalcW(oldQuat);
@@ -1249,7 +1249,7 @@ int RE_BuildSkeleton(refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int e
             skel->bones[i].t.scale = 1.0f;
 
             #if defined(REFBONE_NAMES)
-            Q_strncpyz(skel->bones[i].name, channel->name, sizeof(skel->bones[i].name) );
+            Q_strncpyz(skel->bones[i].name, channel->name, sizeof(skel->bones[i].name));
             #endif
         }
 

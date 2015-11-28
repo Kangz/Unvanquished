@@ -43,7 +43,7 @@ void LoadTGA(const char* name, byte** pic, int* width, int* height,
     //
     // load the file
     //
-    ri.FS_ReadFile( (char*) name, (void**) &buffer);
+    ri.FS_ReadFile((char*) name, (void**) &buffer);
 
     if (!buffer) {
         return;
@@ -81,7 +81,7 @@ void LoadTGA(const char* name, byte** pic, int* width, int* height,
         ri.Error(ERR_DROP, "LoadTGA: colormaps not supported (%s)", name);
     }
 
-    if ( (targa_header.pixel_size != 32 && targa_header.pixel_size != 24) && targa_header.image_type != 3) {
+    if ((targa_header.pixel_size != 32 && targa_header.pixel_size != 24) && targa_header.image_type != 3) {
         ri.FS_FreeFile(buffer);
         ri.Error(ERR_DROP, "LoadTGA: Only 32 or 24 bit images supported (no colormaps) (%s)", name);
     }

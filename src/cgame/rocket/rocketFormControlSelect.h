@@ -47,7 +47,7 @@ class CvarElementFormControlSelect : public Rocket::Controls::ElementFormControl
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Controls::ElementFormControlSelect::OnAttributeChange(changed_attributes);
 
-            if (changed_attributes.find("cvar") != changed_attributes.end() ) {
+            if (changed_attributes.find("cvar") != changed_attributes.end()) {
                 cvar = GetAttribute< Rocket::Core::String >("cvar", "");
                 UpdateValue();
             }
@@ -73,18 +73,18 @@ class CvarElementFormControlSelect : public Rocket::Controls::ElementFormControl
         virtual void ProcessEvent(Rocket::Core::Event &event) {
             Rocket::Controls::ElementFormControlSelect::ProcessEvent(event);
 
-            if (!cvar.Empty() ) {
+            if (!cvar.Empty()) {
                 if (owner == event.GetTargetElement() && event == "show") {
                     UpdateValue();
                 } else if (this == event.GetTargetElement() && event == "change") {
-                    Cvar::SetValue(cvar.CString(), GetValue().CString() );
+                    Cvar::SetValue(cvar.CString(), GetValue().CString());
                     Cvar::AddFlags(cvar.CString(), Cvar::USER_ARCHIVE);
                 }
             }
         }
 
         void UpdateValue() {
-            Rocket::Core::String value = Cvar::GetValue(cvar.CString() ).c_str();
+            Rocket::Core::String value = Cvar::GetValue(cvar.CString()).c_str();
 
             for (int i = 0; i < GetNumOptions(); ++i) {
                 Rocket::Controls::SelectOption* o = GetOption(i);

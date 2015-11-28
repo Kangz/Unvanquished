@@ -50,11 +50,11 @@ void R_AddBrushModelInteractions(trRefEntity_t* ent, trRefLight_t* light, intera
     #if defined(USE_REFENTITY_NOSHADOWID)
 
     if (light->l.inverseShadows) {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID))) {
             return;
         }
     } else {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID))) {
             return;
         }
     }
@@ -65,7 +65,7 @@ void R_AddBrushModelInteractions(trRefEntity_t* ent, trRefLight_t* light, intera
     bspModel = pModel->bsp;
 
     // do a quick AABB cull
-    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1]) ) {
+    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1])) {
         tr.pc.c_dlightSurfacesCulled += bspModel->numSurfaces;
         return;
     }
@@ -85,7 +85,7 @@ void R_AddBrushModelInteractions(trRefEntity_t* ent, trRefLight_t* light, intera
         surf = bspModel->firstSurface + i;
 
         // skip all surfaces that don't matter for lighting only pass
-        if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows) ) {
+        if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows)) {
             continue;
         }
 
@@ -141,7 +141,7 @@ float R_InterpolateLightGrid(world_t* w, int from[3], int to[3],
                 gp1 = w->lightGridData1 + x * gridStep[0] + y * gridStep[1] + z * gridStep[2];
                 gp2 = w->lightGridData2 + x * gridStep[0] + y * gridStep[1] + z * gridStep[2];
 
-                if (!(gp1->ambient[0] || gp1->ambient[1] || gp1->ambient[2]) ) {
+                if (!(gp1->ambient[0] || gp1->ambient[1] || gp1->ambient[2])) {
                     continue; // ignore samples in walls
                 }
 
@@ -298,7 +298,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent, vec3_t 
         VectorNormalize(ent->lightDir);
     }
 
-    if ( (ent->e.renderfx & RF_MINLIGHT) ) { // && VectorLength(ent->ambientLight) <= 0)
+    if ((ent->e.renderfx & RF_MINLIGHT)) { // && VectorLength(ent->ambientLight) <= 0)
         // give everything a minimum light add
         ent->ambientLight[0] += tr.identityLight * 0.125f;
         ent->ambientLight[1] += tr.identityLight * 0.125f;
@@ -316,7 +316,7 @@ void R_SetupLightOrigin(trRefLight_t* light) {
     vec3_t transformed;
 
     if (light->l.rlType == RL_DIRECTIONAL) {
-        if (!VectorCompare(light->l.center, vec3_origin) ) {
+        if (!VectorCompare(light->l.center, vec3_origin)) {
             MatrixTransformPoint(light->transformMatrix, light->l.center, transformed);
             VectorSubtract(transformed, light->l.origin, light->direction);
             VectorNormalize(light->direction);
@@ -366,7 +366,7 @@ void R_SetupLightLocalBounds(trRefLight_t* light) {
         // transform frustum from world space to local space
         R_CalcFrustumFarCorners(frustum, farCorners);
 
-        if (!VectorCompare(light->l.projStart, vec3_origin) ) {
+        if (!VectorCompare(light->l.projStart, vec3_origin)) {
             vec3_t nearCorners[4];
 
             // calculate the vertices defining the top area
@@ -456,7 +456,7 @@ void R_TessLight(const trRefLight_t* light, const Color::Color& color, bool use_
 
         R_CalcFrustumFarCorners(frustum, farCorners);
 
-        if (!VectorCompare(light->l.projStart, vec3_origin) ) {
+        if (!VectorCompare(light->l.projStart, vec3_origin)) {
             vec3_t nearCorners[4];
 
             // calculate the vertices defining the top area
@@ -626,8 +626,8 @@ void R_SetupLightFrustum(trRefLight_t* light) {
 
         R_TessLight(light);
 
-        memset(&data, 0, sizeof(data) );
-        data.xyz = (vec3_t*) ri.Hunk_AllocateTempMemory(tess.numVertexes * sizeof(*data.xyz) );
+        memset(&data, 0, sizeof(data));
+        data.xyz = (vec3_t*) ri.Hunk_AllocateTempMemory(tess.numVertexes * sizeof(*data.xyz));
 
         for (unsigned i = 0; i < tess.numVertexes; i++) {
             // transform to world space
@@ -808,7 +808,7 @@ bool R_AddLightInteraction(trRefLight_t* light, surfaceType_t* surface, shader_t
 
     // skip all surfaces that don't matter for lighting only pass
     if (surfaceShader) {
-        if (surfaceShader->isSky || (!surfaceShader->interactLight && surfaceShader->noShadows) ) {
+        if (surfaceShader->isSky || (!surfaceShader->interactLight && surfaceShader->noShadows)) {
             return false;
         }
     } else {
@@ -837,10 +837,10 @@ bool R_AddLightInteraction(trRefLight_t* light, surfaceType_t* surface, shader_t
     // update counters
     light->numInteractions++;
 
-    if (!(iaType & IA_LIGHT) ) {
+    if (!(iaType & IA_LIGHT)) {
         light->numShadowOnlyInteractions++;
     }
-    if (!(iaType & (IA_SHADOW | IA_SHADOWCLIP) ) ) {
+    if (!(iaType & (IA_SHADOW | IA_SHADOWCLIP))) {
         light->numLightOnlyInteractions++;
     }
 
@@ -877,20 +877,20 @@ compare function for qsort()
 */
 static int InteractionCompare(const void* a, const void* b) {
     // shader first
-    if ( ( (interaction_t*) a)->shaderNum < ( (interaction_t*) b)->shaderNum) {
+    if (((interaction_t*) a)->shaderNum < ((interaction_t*) b)->shaderNum) {
         return -1;
-    } else if ( ( (interaction_t*) a)->shaderNum > ( (interaction_t*) b)->shaderNum) {
+    } else if (((interaction_t*) a)->shaderNum > ((interaction_t*) b)->shaderNum) {
         return 1;
     }
 
     // then entity
-    if ( ( (interaction_t*) a)->entity == &tr.worldEntity && ( (interaction_t*) b)->entity != &tr.worldEntity) {
+    if (((interaction_t*) a)->entity == &tr.worldEntity && ((interaction_t*) b)->entity != &tr.worldEntity) {
         return -1;
-    } else if ( ( (interaction_t*) a)->entity != &tr.worldEntity && ( (interaction_t*) b)->entity == &tr.worldEntity) {
+    } else if (((interaction_t*) a)->entity != &tr.worldEntity && ((interaction_t*) b)->entity == &tr.worldEntity) {
         return 1;
-    } else if ( ( (interaction_t*) a)->entity < ( (interaction_t*) b)->entity) {
+    } else if (((interaction_t*) a)->entity < ((interaction_t*) b)->entity) {
         return -1;
-    } else if ( ( (interaction_t*) a)->entity > ( (interaction_t*) b)->entity) {
+    } else if (((interaction_t*) a)->entity > ((interaction_t*) b)->entity) {
         return 1;
     }
 
@@ -975,8 +975,8 @@ static int R_ClipEdgeToPlane(cplane_t plane, const vec3_t in_world1, const vec3_
     vec3_t intersect;
 
     // check edge to frustrum plane
-    int side1 = ( (DotProduct(plane.normal, in_world1) - plane.dist) >= 0.0);
-    int side2 = ( (DotProduct(plane.normal, in_world2) - plane.dist) >= 0.0);
+    int side1 = ((DotProduct(plane.normal, in_world1) - plane.dist) >= 0.0);
+    int side2 = ((DotProduct(plane.normal, in_world2) - plane.dist) >= 0.0);
 
     int sides = side1 | (side2 << 1);
 
@@ -1129,7 +1129,7 @@ void R_SetupLightScissor(trRefLight_t* light) {
 
         R_CalcFrustumFarCorners(frustum, farCorners);
 
-        if (!VectorCompare(light->l.projStart, vec3_origin) ) {
+        if (!VectorCompare(light->l.projStart, vec3_origin)) {
             vec3_t nearCorners[4];
 
             // calculate the vertices defining the top area
@@ -1347,7 +1347,7 @@ void R_SetupLightLOD(trRefLight_t* light) {
     // and use that as a criteria for selecting LOD
     radius = light->sphereRadius;
 
-    if ( (projectedRadius = R_ProjectRadius(radius, light->l.origin) ) != 0) {
+    if ((projectedRadius = R_ProjectRadius(radius, light->l.origin)) != 0) {
         lodscale = r_shadowLodScale->value;
 
         if (lodscale > 20) {

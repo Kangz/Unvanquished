@@ -46,7 +46,7 @@ void CG_LoadBeaconsConfig() {
     vh = cgs.glconfig.vidHeight;
     base = std::min(vw, vh);
 
-    memset(bc, 0, sizeof(beaconsConfig_t) );
+    memset(bc, 0, sizeof(beaconsConfig_t));
 
     bc->hudCenter[0] = vw / 2;
     bc->hudCenter[1] = vh / 2;
@@ -57,36 +57,36 @@ void CG_LoadBeaconsConfig() {
     }
 
     while (1) {
-        if (!trap_Parse_ReadToken(fd, &token) ) {
+        if (!trap_Parse_ReadToken(fd, &token)) {
             break;
         }
 
 #define READ_INT(x) \
-    else if (!Q_stricmp(token.string, #x) ) \
+    else if (!Q_stricmp(token.string, #x)) \
     { \
-        if (!PC_Int_Parse(fd, &bc->x) ) { \
+        if (!PC_Int_Parse(fd, &bc->x)) { \
             break; } \
     }
 
 #define READ_FLOAT(x) \
-    else if (!Q_stricmp(token.string, #x) ) \
+    else if (!Q_stricmp(token.string, #x)) \
     { \
-        if (!PC_Float_Parse(fd, &bc->x) ) { \
+        if (!PC_Float_Parse(fd, &bc->x)) { \
             break; } \
     }
 
 #define READ_FLOAT_S(x) \
-    else if (!Q_stricmp(token.string, #x) ) \
+    else if (!Q_stricmp(token.string, #x)) \
     { \
-        if (!PC_Float_Parse(fd, &bc->x) ) { \
+        if (!PC_Float_Parse(fd, &bc->x)) { \
             break; } \
         bc->x *= base; \
     }
 
 #define READ_COLOR(x) \
-    else if (!Q_stricmp(token.string, #x) ) \
+    else if (!Q_stricmp(token.string, #x)) \
     { \
-        if (!PC_Color_Parse(fd, &bc->x) ) { \
+        if (!PC_Color_Parse(fd, &bc->x)) { \
             break; } \
     }
 
@@ -111,10 +111,10 @@ void CG_LoadBeaconsConfig() {
         READ_FLOAT(minimapScale)
         READ_FLOAT(minimapAlpha)
 
-        else if (!Q_stricmp(token.string, "hudMargin") ) {
+        else if (!Q_stricmp(token.string, "hudMargin")) {
             float margin;
 
-            if (!PC_Float_Parse(fd, &margin) ) {
+            if (!PC_Float_Parse(fd, &margin)) {
                 break;
             }
 
@@ -124,10 +124,10 @@ void CG_LoadBeaconsConfig() {
             bc->hudRect[1][0] = vw - margin;
             bc->hudRect[0][1] = margin;
             bc->hudRect[1][1] = vh - margin;
-        } else if (!Q_stricmp(token.string, "highlightAngle") ) {
+        } else if (!Q_stricmp(token.string, "highlightAngle")) {
             float angle;
 
-            if (!PC_Float_Parse(fd, &angle) ) {
+            if (!PC_Float_Parse(fd, &angle)) {
                 break;
             }
 
@@ -159,8 +159,8 @@ static bool LoadExplicitBeacons() {
 
     // Find beacons and add them to cg.beacons.
     for (cg.beaconCount = 0, i = 0; i < cg.snap->entities.size(); i++) {
-        ent    = cg_entities + cg.snap->entities[i].number;
-        es     = &ent->currentState;
+        ent = cg_entities + cg.snap->entities[i].number;
+        es = &ent->currentState;
         beacon = &ent->beacon;
 
         if (es->eType != ET_BEACON) {
@@ -192,7 +192,7 @@ static bool LoadExplicitBeacons() {
         if (beacon->target && (targetCent = &cg_entities[beacon->target])->valid &&
             (targetES = &targetCent->currentState)->eType == ET_PLAYER) {
             vec3_t mins, maxs, center;
-            int pClass = ( (targetES->misc >> 8) & 0xFF); // TODO: Write function for this.
+            int pClass = ((targetES->misc >> 8) & 0xFF); // TODO: Write function for this.
 
             VectorCopy(targetCent->lerpOrigin, center);
             BG_ClassBoundingBox(pClass, mins, maxs, nullptr, nullptr, nullptr);
@@ -250,7 +250,7 @@ static bool LoadImplicitBeacons() {
             // Set location on exact center of target player entity.
             {
                 vec3_t mins, maxs, center;
-                int pClass = ( (es->misc >> 8) & 0xFF); // TODO: Write function for this.
+                int pClass = ((es->misc >> 8) & 0xFF); // TODO: Write function for this.
 
                 VectorCopy(ent->lerpOrigin, center);
                 BG_ClassBoundingBox(pClass, mins, maxs, nullptr, nullptr, nullptr);
@@ -261,9 +261,9 @@ static bool LoadImplicitBeacons() {
 
             // Add alpha fade at the borders of the sense range.
             beacon->alphaMod = Math::Clamp(
-                ( ( (float)ALIENSENSE_RANGE -
-                    Distance(cg.predictedPlayerState.origin, beacon->origin) ) /
-                  (ALIENSENSE_BORDER_FRAC * (float)ALIENSENSE_RANGE) ), 0.0f, 1.0f);
+                (((float)ALIENSENSE_RANGE -
+                  Distance(cg.predictedPlayerState.origin, beacon->origin)) /
+                 (ALIENSENSE_BORDER_FRAC * (float)ALIENSENSE_RANGE)), 0.0f, 1.0f);
 
             // A value of 0 means the target is out of range, don't create a beacon in that case.
             if (beacon->alphaMod == 0.0f) {
@@ -271,20 +271,20 @@ static bool LoadImplicitBeacons() {
             }
 
             // Prepare beacon to be added.
-            beacon->ctime     = ent->pvsEnterTime;
-            beacon->mtime     = cg.time;
-            beacon->type      = BCT_TAG;
-            beacon->data      = es->weapon;
+            beacon->ctime = ent->pvsEnterTime;
+            beacon->mtime = cg.time;
+            beacon->type = BCT_TAG;
+            beacon->data = es->weapon;
             beacon->ownerTeam = TEAM_ALIENS;
-            beacon->owner     = ENTITYNUM_NONE;
-            beacon->flags     = EF_BC_TAG_PLAYER | EF_BC_ENEMY;
-            beacon->target    = es->number;
+            beacon->owner = ENTITYNUM_NONE;
+            beacon->flags = EF_BC_TAG_PLAYER | EF_BC_ENEMY;
+            beacon->target = es->number;
 
             // Expire beacons on corpses.
             if (ent->currentState.eFlags & EF_DEAD) {
                 beacon->flags |= EF_BC_DYING;
 
-                if (!beacon->old || !(beacon->oldFlags & EF_BC_DYING) ) {
+                if (!beacon->old || !(beacon->oldFlags & EF_BC_DYING)) {
                     beacon->etime = cg.time + 1500; // TODO: Sync delay with explicit beacons.
                 }
 
@@ -331,14 +331,14 @@ static void MarkRelevantBeacons() {
         // Only tagged buildables are relevant so far.
         if (beacon->type != BCT_TAG ||
             (beacon->flags & EF_BC_TAG_PLAYER) ||
-            (beacon->flags & EF_BC_DYING) ) {
+            (beacon->flags & EF_BC_DYING)) {
             continue;
         }
 
         // Find a health source.
         if (tofind & 1) {
-            if ( (team == TEAM_ALIENS && beacon->data == BA_A_BOOSTER) ||
-                 (team == TEAM_HUMANS && beacon->data == BA_H_MEDISTAT) ) {
+            if ((team == TEAM_ALIENS && beacon->data == BA_A_BOOSTER) ||
+                (team == TEAM_HUMANS && beacon->data == BA_H_MEDISTAT)) {
                 if (ps->stats[STAT_HEALTH] < ps->stats[STAT_MAX_HEALTH] / 2) {
                     beacon->type = BCT_HEALTH;
                 }
@@ -349,7 +349,7 @@ static void MarkRelevantBeacons() {
         // Find an ammo source.
         if (tofind & 2) {
             if (team == TEAM_HUMANS && (beacon->data == BA_H_ARMOURY ||
-                                        (energy && (beacon->data == BA_H_REPEATER || beacon->data == BA_H_REACTOR) ) ) ) {
+                                        (energy && (beacon->data == BA_H_REPEATER || beacon->data == BA_H_REACTOR)))) {
                 if (lowammo) {
                     beacon->type = BCT_AMMO;
                 }
@@ -371,7 +371,7 @@ static void SetHighlightedBeacon() {
 
         // Set highlighted beacon to smallest angle below threshold.
         if (beacon->dot > cgs.bc.highlightAngle &&
-            (!cg.highlightedBeacon || beacon->dot > cg.highlightedBeacon->dot) ) {
+            (!cg.highlightedBeacon || beacon->dot > cg.highlightedBeacon->dot)) {
             cg.highlightedBeacon = beacon;
         }
     }
@@ -386,8 +386,8 @@ static team_t TargetTeam(const cbeacon_t* beacon) {
         return TEAM_NONE;
     }
 
-    if ( (beacon->ownerTeam == TEAM_ALIENS && beacon->flags & EF_BC_ENEMY) ||
-         (beacon->ownerTeam == TEAM_HUMANS && !(beacon->flags & EF_BC_ENEMY) ) ) {
+    if ((beacon->ownerTeam == TEAM_ALIENS && beacon->flags & EF_BC_ENEMY) ||
+        (beacon->ownerTeam == TEAM_HUMANS && !(beacon->flags & EF_BC_ENEMY))) {
         return TEAM_HUMANS;
     } else {
         return TEAM_ALIENS;
@@ -406,9 +406,9 @@ static void DrawBeacon(cbeacon_t* b) {
 
     // reset animations
     b->scale = 1.0;
-    alpha    = 1.0;
+    alpha = 1.0;
 
-    time_in   = cg.time - b->ctime; // time since creation
+    time_in = cg.time - b->ctime; // time since creation
     time_left = b->etime - cg.time; // time to expiration
 
     // check creation
@@ -416,7 +416,7 @@ static void DrawBeacon(cbeacon_t* b) {
         if (time_in > 1000) { // TODO: take time since entering the game into account
             b->old = true;
         } else {
-            if (ba->inSound && (b->type != BCT_TAG || (b->flags & EF_BC_ENEMY) ) ) {
+            if (ba->inSound && (b->type != BCT_TAG || (b->flags & EF_BC_ENEMY))) {
                 trap_S_StartLocalSound(ba->inSound, CHAN_LOCAL_SOUND);
             }
         }
@@ -425,7 +425,7 @@ static void DrawBeacon(cbeacon_t* b) {
     // check death
     if (b->old &&
         !(b->oldFlags & EF_BC_DYING) &&
-        (b->flags & EF_BC_DYING) ) {
+        (b->flags & EF_BC_DYING)) {
         if (ba->outSound) {
             trap_S_StartLocalSound(ba->outSound, CHAN_LOCAL_SOUND);
         }
@@ -581,21 +581,21 @@ static void DrawBeacon(cbeacon_t* b) {
 static void HandHLBeaconToUI() {
     cbeacon_t* beacon;
     beaconRocket_t* const br = &cg.beaconRocket;
-    bool showIcon     = false,
-         showName     = false,
-         showInfo     = false,
+    bool showIcon = false,
+         showName = false,
+         showInfo = false,
          showDistance = false,
-         showAge      = false,
-         showOwner    = false;
+         showAge = false,
+         showOwner = false;
 
-    if ( (beacon = cg.highlightedBeacon) ) {
+    if ((beacon = cg.highlightedBeacon)) {
         // icon
-        if ( (br->icon = CG_BeaconDescriptiveIcon(beacon) ) ) {
+        if ((br->icon = CG_BeaconDescriptiveIcon(beacon))) {
             showIcon = true;
         }
 
         // name
-        CG_BeaconName(beacon, br->name, sizeof(br->name) );
+        CG_BeaconName(beacon, br->name, sizeof(br->name));
         showName = true;
 
         // info
@@ -619,7 +619,7 @@ static void HandHLBeaconToUI() {
         // age
         if (beacon->type == BCT_TAG &&
             !(beacon->flags & EF_BC_TAG_PLAYER) &&
-            (beacon->flags & EF_BC_ENEMY) ) {
+            (beacon->flags & EF_BC_ENEMY)) {
             int age = cg.time - beacon->mtime;
 
             if (age < 1000) {
@@ -703,7 +703,7 @@ qhandle_t CG_BeaconIcon(const cbeacon_t* b) {
 qhandle_t CG_BeaconDescriptiveIcon(const cbeacon_t* b) {
     if (b->type == BCT_TAG) {
         if (b->flags & EF_BC_TAG_PLAYER) {
-            switch (TargetTeam(b) ) {
+            switch (TargetTeam(b)) {
             case TEAM_ALIENS:
                 return cg_classes[b->data].classIcon;
 
@@ -727,7 +727,7 @@ const char* CG_BeaconName(const cbeacon_t* b, char* out, size_t len) {
         return "b->type out of range";
     }
 
-    team_t ownTeam    = (team_t)cg.predictedPlayerState.persistant[PERS_TEAM];
+    team_t ownTeam = (team_t)cg.predictedPlayerState.persistant[PERS_TEAM];
     team_t beaconTeam = TargetTeam(b);
 
     switch (b->type) {
@@ -753,7 +753,7 @@ const char* CG_BeaconName(const cbeacon_t* b, char* out, size_t len) {
         const char* prefix, * suffix;
 
         if (ownTeam == TEAM_NONE) {
-            switch (TargetTeam(b) ) {
+            switch (TargetTeam(b)) {
             case TEAM_ALIENS:
                 prefix = "Alien";
                 break;

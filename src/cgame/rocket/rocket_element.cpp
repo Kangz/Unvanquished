@@ -60,7 +60,7 @@ void Rocket_SetElementDimensions(float x, float y) {
 }
 
 void Rocket_RegisterElement(const char* tag) {
-    Rocket::Core::Factory::RegisterElementInstancer(tag, new Rocket::Core::ElementInstancerGeneric< RocketElement >() )->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer(tag, new Rocket::Core::ElementInstancerGeneric< RocketElement >())->RemoveReference();
 }
 
 // reduces an rml string to a common format so two rml strings can be compared
@@ -86,7 +86,7 @@ static Rocket::Core::String ReduceRML(const Rocket::Core::String &rml) {
 
 static inline void Rocket_SetInnerRMLGuarded(Rocket::Core::Element* e, const Rocket::Core::String &newRML) {
     Rocket::Core::String newReducedRML = ReduceRML(newRML);
-    Rocket::Core::String oldReducedRML = ReduceRML(e->GetInnerRML() );
+    Rocket::Core::String oldReducedRML = ReduceRML(e->GetInnerRML());
 
     if (newReducedRML != oldReducedRML) {
         e->SetInnerRML(newRML);
@@ -96,7 +96,7 @@ static inline void Rocket_SetInnerRMLGuarded(Rocket::Core::Element* e, const Roc
 void Rocket_SetInnerRMLById(const char* name, const char* id, const char* RML, int parseFlags) {
     Rocket::Core::String newRML = parseFlags ? Rocket_QuakeToRML(RML, parseFlags) : RML;
 
-    if ( (!*name || !*id) && activeElement) {
+    if ((!*name || !*id) && activeElement) {
         Rocket_SetInnerRMLGuarded(activeElement, newRML);
     } else {
         Rocket::Core::ElementDocument* document = menuContext->GetDocument(name);
@@ -116,7 +116,7 @@ void Rocket_SetInnerRML(const char* RML, int parseFlags) {
 }
 
 void Rocket_GetAttribute(const char* name, const char* id, const char* attribute, char* out, int length) {
-    if ( (!*name || !*id) && activeElement) {
+    if ((!*name || !*id) && activeElement) {
         Q_strncpyz(out, activeElement->GetAttribute< Rocket::Core::String >(attribute, "").CString(), length);
     } else {
         Rocket::Core::ElementDocument* document = menuContext->GetDocument(name);
@@ -128,7 +128,7 @@ void Rocket_GetAttribute(const char* name, const char* id, const char* attribute
 }
 
 void Rocket_SetAttribute(const char* name, const char* id, const char* attribute, const char* value) {
-    if ( (!*name && !*id) && activeElement) {
+    if ((!*name && !*id) && activeElement) {
         activeElement->SetAttribute(attribute, value);
     } else {
         Rocket::Core::ElementDocument* document = name[0] ? menuContext->GetDocument(name) : menuContext->GetFocusElement()->GetOwnerDocument();
@@ -187,7 +187,7 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
         case ROCKET_FLOAT: {
             float* f = (float*) out;
 
-            if (len != sizeof(float) ) {
+            if (len != sizeof(float)) {
                 return;
             }
 
@@ -197,8 +197,8 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
                 float base_size = 0;
                 Rocket::Core::Element* parent = activeElement;
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetWidth() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetWidth()) != 0) {
                         *f = activeElement->ResolveProperty("width", base_size);
                         return;
                     }
@@ -209,8 +209,8 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
                 float base_size = 0;
                 Rocket::Core::Element* parent = activeElement;
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetHeight() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetHeight()) != 0) {
                         *f = activeElement->ResolveProperty("height", base_size);
                         return;
                     }
@@ -224,7 +224,7 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
         case ROCKET_INT: {
             int* i = (int*) out;
 
-            if (len != sizeof(int) ) {
+            if (len != sizeof(int)) {
                 return;
             }
 
@@ -233,9 +233,9 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
         }
 
         case ROCKET_COLOR: {
-            if (len == sizeof(Color::Color) ) {
+            if (len == sizeof(Color::Color)) {
                 Color::Color* outColor = (Color::Color*) out;
-                *outColor = Color::Adapt(property->Get<Rocket::Core::Colourb>() );
+                *outColor = Color::Adapt(property->Get<Rocket::Core::Colourb>());
             }
 
             return;
@@ -246,8 +246,8 @@ void Rocket_GetProperty(const char* name, void* out, int len, rocketVarType_t ty
 
 void Rocket_SetClass(const char* in, bool activate) {
     bool isSet = activeElement->IsClassSet(in);
-    if ( (activate && !isSet) || (!activate && isSet) ) {
-        activeElement->SetClass(in, static_cast<bool>(activate) );
+    if ((activate && !isSet) || (!activate && isSet)) {
+        activeElement->SetClass(in, static_cast<bool>(activate));
     }
 }
 
@@ -271,13 +271,13 @@ std::deque<ConsoleLine> RocketConsoleTextElement::lines;
 void Rocket_AddConsoleText(Str::StringRef text) {
     // HACK: Ugly way to force pre-engine-upgrade behavior. TODO: Make it work without this hack
     static char buffer[MAX_STRING_CHARS];
-    Q_strncpyz(buffer, text.c_str(), sizeof(buffer) );
+    Q_strncpyz(buffer, text.c_str(), sizeof(buffer));
 
-    if (!Q_stricmp("\n", buffer) ) {
+    if (!Q_stricmp("\n", buffer)) {
         return;
     }
 
-    RocketConsoleTextElement::lines.push_front(ConsoleLine(Rocket::Core::String(va("%s\n", buffer) ) ) );
+    RocketConsoleTextElement::lines.push_front(ConsoleLine(Rocket::Core::String(va("%s\n", buffer))));
 }
 
 void Rocket_RegisterProperty(const char* name, const char* defaultValue, bool inherited, bool force_layout, const char* parseAs) {

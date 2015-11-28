@@ -63,7 +63,7 @@ static void R_CullMDV(mdvModel_t* model, trRefEntity_t* ent) {
     // cull bounding sphere ONLY if this is not an upscaled entity
     if (!ent->e.nonNormalizedAxes) {
         if (ent->e.frame == ent->e.oldframe) {
-            switch (R_CullLocalPointAndRadius(newFrame->localOrigin, newFrame->radius) ) {
+            switch (R_CullLocalPointAndRadius(newFrame->localOrigin, newFrame->radius)) {
             case CULL_OUT:
                 tr.pc.c_sphere_cull_mdv_out++;
                 ent->cull = CULL_OUT;
@@ -105,7 +105,7 @@ static void R_CullMDV(mdvModel_t* model, trRefEntity_t* ent) {
         }
     }
 
-    switch (R_CullLocalBox(ent->localBounds) ) {
+    switch (R_CullLocalBox(ent->localBounds)) {
     case CULL_IN:
         tr.pc.c_box_cull_mdv_in++;
         ent->cull = CULL_IN;
@@ -148,7 +148,7 @@ int R_ComputeLOD(trRefEntity_t* ent) {
 
         radius = RadiusFromBounds(frame->bounds[0], frame->bounds[1]);
 
-        if ( (projectedRadius = R_ProjectRadius(radius, ent->e.origin) ) != 0) {
+        if ((projectedRadius = R_ProjectRadius(radius, ent->e.origin)) != 0) {
             lodscale = r_lodScale->value;
 
             if (lodscale > 20) {
@@ -200,7 +200,7 @@ static shader_t* GetMDVSurfaceShader(const trRefEntity_t* ent, mdvSurface_t* mdv
 
         for (j = 0; j < skin->numSurfaces; j++) {
             // the names have both been lowercased
-            if (!strcmp(skin->surfaces[j]->name, mdvSurface->name) ) {
+            if (!strcmp(skin->surfaces[j]->name, mdvSurface->name)) {
                 shader = skin->surfaces[j]->shader;
                 break;
             }
@@ -251,8 +251,8 @@ void R_AddMDVSurfaces(trRefEntity_t* ent) {
     // This will write directly into the entity structure, so
     // when the surfaces are rendered, they don't need to be
     // range checked again.
-    if ( (ent->e.frame >= tr.currentModel->mdv[lod]->numFrames)
-         || (ent->e.frame < 0) || (ent->e.oldframe >= tr.currentModel->mdv[lod]->numFrames) || (ent->e.oldframe < 0) ) {
+    if ((ent->e.frame >= tr.currentModel->mdv[lod]->numFrames)
+        || (ent->e.frame < 0) || (ent->e.oldframe >= tr.currentModel->mdv[lod]->numFrames) || (ent->e.oldframe < 0)) {
         ri.Printf(PRINT_DEVELOPER, "R_AddMDVSurfaces: no such frame %d to %d for '%s' (%d)\n",
                   ent->e.oldframe, ent->e.frame, tr.currentModel->name, tr.currentModel->mdv[lod]->numFrames);
         ent->e.frame = 0;
@@ -291,7 +291,7 @@ void R_AddMDVSurfaces(trRefEntity_t* ent) {
 
             // don't add third_person objects if not viewing through a portal
             if (!personalModel) {
-                R_AddDrawSurf( (surfaceType_t*) vboSurface, shader, -1, fogNum);
+                R_AddDrawSurf((surfaceType_t*) vboSurface, shader, -1, fogNum);
             }
         }
     } else {
@@ -302,7 +302,7 @@ void R_AddMDVSurfaces(trRefEntity_t* ent) {
 
             // don't add third_person objects if not viewing through a portal
             if (!personalModel) {
-                R_AddDrawSurf( (surfaceType_t*) mdvSurface, shader, -1, fogNum);
+                R_AddDrawSurf((surfaceType_t*) mdvSurface, shader, -1, fogNum);
             }
         }
     }
@@ -336,11 +336,11 @@ void R_AddMDVInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     #if defined(USE_REFENTITY_NOSHADOWID)
 
     if (light->l.inverseShadows) {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID != ent->e.noShadowID))) {
             return;
         }
     } else {
-        if ( (iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID) ) ) {
+        if ((iaType & IA_SHADOW) && (light->l.noShadowID && (light->l.noShadowID == ent->e.noShadowID))) {
             return;
         }
     }
@@ -356,7 +356,7 @@ void R_AddMDVInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
     model = tr.currentModel->mdv[lod];
 
     // do a quick AABB cull
-    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1]) ) {
+    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1])) {
         tr.pc.c_dlightSurfacesCulled += model->numSurfaces;
         return;
     }
@@ -386,7 +386,7 @@ void R_AddMDVInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
             shader = GetMDVSurfaceShader(ent, mdvSurface);
 
             // skip all surfaces that don't matter for lighting only pass
-            if (shader->isSky || (!shader->interactLight && shader->noShadows) ) {
+            if (shader->isSky || (!shader->interactLight && shader->noShadows)) {
                 continue;
             }
 
@@ -403,7 +403,7 @@ void R_AddMDVInteractions(trRefEntity_t* ent, trRefLight_t* light, interactionTy
             shader = GetMDVSurfaceShader(ent, mdvSurface);
 
             // skip all surfaces that don't matter for lighting only pass
-            if (shader->isSky || (!shader->interactLight && shader->noShadows) ) {
+            if (shader->isSky || (!shader->interactLight && shader->noShadows)) {
                 continue;
             }
 

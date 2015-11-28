@@ -87,7 +87,7 @@ void CG_AdjustFrom640(float* x, float* y, float* w, float* h) {
 
     // adjust for wide screens
     if (cgs.glconfig.vidWidth * 480 > cgs.glconfig.vidHeight * 640) {
-        *x += 0.5 * (cgs.glconfig.vidWidth - (cgs.glconfig.vidHeight * 640 / 480) );
+        *x += 0.5 * (cgs.glconfig.vidWidth - (cgs.glconfig.vidHeight * 640 / 480));
     }
 
     #endif
@@ -340,7 +340,7 @@ Color::Color CG_FadeColor(int startMsec, int totalMsec) {
 
     // fade out
     if (totalMsec - t < FADE_TIME) {
-        color.SetAlpha( (totalMsec - t) * 1.0 / FADE_TIME);
+        color.SetAlpha((totalMsec - t) * 1.0 / FADE_TIME);
     }
 
     return color;
@@ -452,7 +452,7 @@ CG_DrawSphere
 */
 void CG_DrawSphere(const vec3_t center, float radius, int customShader, const Color::Color& shaderRGBA) {
     static refEntity_t re; // static for proper alignment in QVMs
-    memset(&re, 0, sizeof(re) );
+    memset(&re, 0, sizeof(re));
 
     re.reType = RT_MODEL;
     re.hModel = cgs.media.sphereModel;
@@ -480,7 +480,7 @@ CG_DrawSphericalCone
 void CG_DrawSphericalCone(const vec3_t tip, const vec3_t rotation, float radius,
                           bool a240, int customShader, const Color::Color& shaderRGBA) {
     static refEntity_t re; // static for proper alignment in QVMs
-    memset(&re, 0, sizeof(re) );
+    memset(&re, 0, sizeof(re));
 
     re.reType = RT_MODEL;
     re.hModel = a240 ? cgs.media.sphericalCone240Model : cgs.media.sphericalCone64Model;
@@ -512,7 +512,7 @@ void CG_DrawRangeMarker(rangeMarker_t rmType, const vec3_t origin, float range, 
 
         pcsh = cgs.media.plainColorShader;
 
-        rgba.SetAlpha(rgba.Alpha() * Com_Clamp(0.0f, 1.0f, cg_rangeMarkerSurfaceOpacity.value) );
+        rgba.SetAlpha(rgba.Alpha() * Com_Clamp(0.0f, 1.0f, cg_rangeMarkerSurfaceOpacity.value));
 
         switch (rmType) {
         case RM_SPHERE:

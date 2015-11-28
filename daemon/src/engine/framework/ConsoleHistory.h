@@ -53,7 +53,7 @@ namespace Console {
             static Container lines;
             static std::mutex lines_mutex;
             static std::unique_lock<std::mutex> Lock() {
-                return std::unique_lock<std::mutex>{lines_mutex}
+                return std::unique_lock<std::mutex>{lines_mutex};
             }
 
             Container::size_type current_line;

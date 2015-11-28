@@ -82,13 +82,13 @@ namespace Console {
     }
 
     History::History()
-        : current_line(std::numeric_limits<Container::size_type>::max() ) {
+        : current_line(std::numeric_limits<Container::size_type>::max()) {
     }
 
     void History::Add(const Line& text) {
         auto lock = Lock();
 
-        if (lines.empty() || text != lines.back() ) {
+        if (lines.empty() || text != lines.back()) {
             lines.push_back(std::move(text));
         }
 
@@ -102,15 +102,15 @@ namespace Console {
     void History::PrevLine(Line& text) {
         auto lock = Lock();
 
-        if (lines.empty() ) {
+        if (lines.empty()) {
             return;
         }
 
-        if (!text.empty() && (current_line >= lines.size() || text != lines[current_line]) ) {
+        if (!text.empty() && (current_line >= lines.size() || text != lines[current_line])) {
             unfinished = text;
         }
 
-        if (current_line >= lines.size() ) {
+        if (current_line >= lines.size()) {
             current_line = lines.size() - 1;
         } else if (current_line > 0) {
             current_line--;

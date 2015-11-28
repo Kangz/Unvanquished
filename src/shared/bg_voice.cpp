@@ -67,7 +67,7 @@ static voice_t* BG_VoiceList() {
     voice_t* top = nullptr;
 
     numFiles = trap_FS_GetFileList("voice", ".voice", fileList,
-                                   sizeof(fileList) );
+                                   sizeof(fileList));
 
     if (numFiles < 1) {
         return nullptr;
@@ -75,13 +75,13 @@ static voice_t* BG_VoiceList() {
 
     // special case for default.voice.  this file is REQUIRED and will
     // always be loaded first in the event of overflow of voice definitions
-    if (!trap_FS_FOpenFile("voice/default.voice", nullptr, FS_READ) ) {
+    if (!trap_FS_FOpenFile("voice/default.voice", nullptr, FS_READ)) {
         Com_Printf("voice/default.voice missing, voice system disabled.\n");
         return nullptr;
     }
 
-    voices = (voice_t*) BG_Alloc(sizeof(voice_t) );
-    Q_strncpyz(voices->name, "default", sizeof(voices->name) );
+    voices = (voice_t*) BG_Alloc(sizeof(voice_t));
+    Q_strncpyz(voices->name, "default", sizeof(voices->name));
     voices->cmds = nullptr;
     voices->next = nullptr;
     count = 1;
@@ -94,7 +94,7 @@ static voice_t* BG_VoiceList() {
         fileLen = strlen(filePtr);
 
         // accounted for above
-        if (!Q_stricmp(filePtr, "default.voice") ) {
+        if (!Q_stricmp(filePtr, "default.voice")) {
             continue;
         }
 
@@ -105,7 +105,7 @@ static voice_t* BG_VoiceList() {
         }
 
         // trap_FS_GetFileList() buffer has overflowed
-        if (!trap_FS_FOpenFile(va("voice/%s", filePtr), nullptr, FS_READ) ) {
+        if (!trap_FS_FOpenFile(va("voice/%s", filePtr), nullptr, FS_READ)) {
             Com_Printf(S_WARNING "BG_VoiceList(): detected "
                        "an invalid .voice file \"%s\" in directory listing.  You have "
                        "probably named one or more .voice files with outrageously long "
@@ -120,10 +120,10 @@ static voice_t* BG_VoiceList() {
             break;
         }
 
-        voices->next = (voice_t*) BG_Alloc(sizeof(voice_t) );
+        voices->next = (voice_t*) BG_Alloc(sizeof(voice_t));
         voices = voices->next;
 
-        Q_strncpyz(voices->name, filePtr, sizeof(voices->name) );
+        Q_strncpyz(voices->name, filePtr, sizeof(voices->name));
         // strip extension
         voices->name[fileLen - 6] = '\0';
         voices->cmds = nullptr;
@@ -153,7 +153,7 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
                 BG_VoiceParseError(handle, "BG_VoiceParseTrack(): "
                                    "missing text attribute for track");
             }
-        } else if (!Q_stricmp(token.string, "team") ) {
+        } else if (!Q_stricmp(token.string, "team")) {
             foundToken = trap_Parse_ReadToken(handle, &token);
             found = false;
 
@@ -162,9 +162,9 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
                     voiceTrack->team = 0;
                 }
 
-                if (!Q_stricmp(token.string, "humans") ) {
+                if (!Q_stricmp(token.string, "humans")) {
                     voiceTrack->team |= 1 << TEAM_HUMANS;
-                } else if (!Q_stricmp(token.string, "aliens") ) {
+                } else if (!Q_stricmp(token.string, "aliens")) {
                     voiceTrack->team |= 1 << TEAM_ALIENS;
                 } else {
                     break;
@@ -179,7 +179,7 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "class") ) {
+        } else if (!Q_stricmp(token.string, "class")) {
             bool negate = false;
 
             foundToken = trap_Parse_ReadToken(handle, &token);
@@ -193,20 +193,20 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
                     voiceTrack->pClass = 0;
                 }
 
-                if (!Q_stricmp(token.string, "all") ) {
+                if (!Q_stricmp(token.string, "all")) {
                     modelno = PCL_ALL_CLASSES;
-                } else if (!Q_stricmp(token.string, "humans") ) {
+                } else if (!Q_stricmp(token.string, "humans")) {
                     modelno = PCL_HUMAN_CLASSES;
-                } else if (!Q_stricmp(token.string, "aliens") ) {
+                } else if (!Q_stricmp(token.string, "aliens")) {
                     modelno = PCL_ALIEN_CLASSES;
-                } else if (!Q_stricmp(token.string, "-") ) { // this must be outside quotation marks
+                } else if (!Q_stricmp(token.string, "-")) { // this must be outside quotation marks
                     negate = true;
                     modelno = 0;
                 } else {
                     model = BG_ClassModelConfigByName(token.string);
 
-                    if (model != BG_ClassModelConfigByName(nullptr) ) {
-                        modelno = 1 << (model - BG_ClassModelConfig(0) );
+                    if (model != BG_ClassModelConfigByName(nullptr)) {
+                        modelno = 1 << (model - BG_ClassModelConfig(0));
 
                         if (modelno <= 1) {
                             modelno = -1; // match failure
@@ -235,7 +235,7 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "text") ) {
+        } else if (!Q_stricmp(token.string, "text")) {
             if (foundText) {
                 BG_VoiceParseError(handle, "BG_VoiceParseTrack(): "
                                    "duplicate \"text\" definition for track");
@@ -253,14 +253,14 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
             if (strlen(token.string) >= MAX_SAY_TEXT) {
                 BG_VoiceParseError(handle, va("BG_VoiceParseTrack(): "
                                               "\"text\" value " "\"%s\" exceeds MAX_SAY_TEXT length",
-                                              token.string) );
+                                              token.string));
             }
 
             voiceTrack->text = (char*) BG_Alloc(strlen(token.string) + 1);
             Q_strncpyz(voiceTrack->text, token.string, strlen(token.string) + 1);
             foundToken = trap_Parse_ReadToken(handle, &token);
             continue;
-        } else if (!Q_stricmp(token.string, "enthusiasm") ) {
+        } else if (!Q_stricmp(token.string, "enthusiasm")) {
             foundToken = trap_Parse_ReadToken(handle, &token);
 
             if (token.type == TT_NUMBER) {
@@ -274,7 +274,7 @@ static bool BG_VoiceParseTrack(int handle, voiceTrack_t* voiceTrack) {
             continue;
         } else {
             BG_VoiceParseError(handle, va("BG_VoiceParseTrack():"
-                                          " unknown token \"%s\"", token.string) );
+                                          " unknown token \"%s\"", token.string));
         }
     }
 
@@ -292,7 +292,7 @@ static voiceTrack_t* BG_VoiceParseCommand(int handle) {
     voiceTrack_t* voiceTracks = nullptr;
     voiceTrack_t* top = nullptr;
 
-    while (trap_Parse_ReadToken(handle, &token) ) {
+    while (trap_Parse_ReadToken(handle, &token)) {
         if (!parsingTrack && token.string[0] == '}') {
             return top;
         }
@@ -304,19 +304,19 @@ static voiceTrack_t* BG_VoiceParseCommand(int handle) {
                 continue;
             } else {
                 BG_VoiceParseError(handle, va("BG_VoiceParseCommand(): "
-                                              "parse error at \"%s\"", token.string) );
+                                              "parse error at \"%s\"", token.string));
             }
         }
 
         if (top == nullptr) {
-            voiceTracks = (voiceTrack_t*) BG_Alloc(sizeof(voiceTrack_t) );
+            voiceTracks = (voiceTrack_t*) BG_Alloc(sizeof(voiceTrack_t));
             top = voiceTracks;
         } else {
-            voiceTracks->next = (voiceTrack_t*) BG_Alloc(sizeof(voiceTrack_t) );
+            voiceTracks->next = (voiceTrack_t*) BG_Alloc(sizeof(voiceTrack_t));
             voiceTracks = voiceTracks->next;
         }
 
-        if (!trap_FS_FOpenFile(token.string, nullptr, FS_READ) ) {
+        if (!trap_FS_FOpenFile(token.string, nullptr, FS_READ)) {
             int line;
             char filename[MAX_QPATH];
 
@@ -355,13 +355,13 @@ static voiceCmd_t* BG_VoiceParse(const char* name) {
     bool parsingCmd = false;
     int handle;
 
-    handle = trap_Parse_LoadSource(va("voice/%s.voice", name) );
+    handle = trap_Parse_LoadSource(va("voice/%s.voice", name));
 
     if (!handle) {
         return nullptr;
     }
 
-    while (trap_Parse_ReadToken(handle, &token) ) {
+    while (trap_Parse_ReadToken(handle, &token)) {
         if (parsingCmd) {
             if (token.string[0] == '{') {
                 voiceCmds->tracks = BG_VoiceParseCommand(handle);
@@ -388,14 +388,14 @@ static voiceCmd_t* BG_VoiceParse(const char* name) {
         }
 
         if (top == nullptr) {
-            voiceCmds = (voiceCmd_t*) BG_Alloc(sizeof(voiceCmd_t) );
+            voiceCmds = (voiceCmd_t*) BG_Alloc(sizeof(voiceCmd_t));
             top = voiceCmds;
         } else {
-            voiceCmds->next = (voiceCmd_t*) BG_Alloc(sizeof(voiceCmd_t) );
+            voiceCmds->next = (voiceCmd_t*) BG_Alloc(sizeof(voiceCmd_t));
             voiceCmds = voiceCmds->next;
         }
 
-        Q_strncpyz(voiceCmds->cmd, token.string, sizeof(voiceCmds->cmd) );
+        Q_strncpyz(voiceCmds->cmd, token.string, sizeof(voiceCmds->cmd));
         voiceCmds->next = nullptr;
         parsingCmd = true;
     }
@@ -446,7 +446,7 @@ void BG_PrintVoices(voice_t* voices, int debugLevel) {
 
     while (voice != nullptr) {
         if (debugLevel > 0) {
-            Com_Printf("voice %s\n", Quote(voice->name) );
+            Com_Printf("voice %s\n", Quote(voice->name));
         }
 
         voiceCmd = voice->cmds;
@@ -505,7 +505,7 @@ voice_t* BG_VoiceByName(voice_t* head, const char* name) {
     voice_t* v = head;
 
     while (v) {
-        if (!Q_stricmp(v->name, name) ) {
+        if (!Q_stricmp(v->name, name)) {
             return v;
         }
 
@@ -527,7 +527,7 @@ voiceCmd_t* BG_VoiceCmdFind(voiceCmd_t* head, const char* name, int* cmdNum) {
     while (vc) {
         i++;
 
-        if (!Q_stricmp(vc->cmd, name) ) {
+        if (!Q_stricmp(vc->cmd, name)) {
             *cmdNum = i;
             return vc;
         }
@@ -599,9 +599,9 @@ voiceTrack_t* BG_VoiceTrackFind(voiceTrack_t* head, int team,
 
     // find highest enthusiasm without going over
     while (vt) {
-        if ( (vt->team >= 0 && !(vt->team  & (1 << team) ) ) ||
-             (vt->pClass >= 0 && !(vt->pClass & (1 << class_) ) ) ||
-             vt->enthusiasm > enthusiasm) {
+        if ((vt->team >= 0 && !(vt->team  & (1 << team))) ||
+            (vt->pClass >= 0 && !(vt->pClass & (1 << class_))) ||
+            vt->enthusiasm > enthusiasm) {
             vt = vt->next;
             continue;
         }
@@ -631,9 +631,9 @@ voiceTrack_t* BG_VoiceTrackFind(voiceTrack_t* head, int team,
     while (vt) {
         j++;
 
-        if ( (vt->team >= 0 && !(vt->team  & (1 << team) ) ) ||
-             (vt->pClass >= 0 && !(vt->pClass & (1 << class_) ) ) ||
-             vt->enthusiasm != highestMatch) {
+        if ((vt->team >= 0 && !(vt->team  & (1 << team))) ||
+            (vt->pClass >= 0 && !(vt->pClass & (1 << class_))) ||
+            vt->enthusiasm != highestMatch) {
             vt = vt->next;
             continue;
         }

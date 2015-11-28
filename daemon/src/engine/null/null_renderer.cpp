@@ -222,11 +222,11 @@ const char* RE_ShaderNameFromHandle(qhandle_t) {
 }
 
 bool RE_BeginRegistration(glconfig_t* config, glconfig2_t* glconfig2) {
-    Com_Memset(config, 0, sizeof(glconfig_t) );
+    Com_Memset(config, 0, sizeof(glconfig_t));
     config->vidWidth = 640;
     config->vidHeight = 480;
     config->windowAspect = 1.0f;
-    Com_Memset(glconfig2, 0, sizeof(glconfig2_t) );
+    Com_Memset(glconfig2, 0, sizeof(glconfig2_t));
 
     return true;
 }
@@ -234,7 +234,7 @@ bool RE_BeginRegistration(glconfig_t* config, glconfig2_t* glconfig2) {
 refexport_t* GetRefAPI(int, refimport_t*) {
     static refexport_t re;
 
-    memset(&re, 0, sizeof(re) );
+    memset(&re, 0, sizeof(re));
 
     re.Shutdown = RE_Shutdown;
 

@@ -86,7 +86,7 @@ static float CG_Rocket_GetPoisonProgress() {
             time = cg.time;
         }
 
-        return 1 - ( ( (float)cg.time - time) / BOOST_TIME);
+        return 1 - (((float)cg.time - time) / BOOST_TIME);
     } else {
         time = -1;
         return 0;
@@ -127,11 +127,11 @@ static float CG_Rocket_GetPlayerAmmoProgress() {
 float CG_Rocket_FuelProgress() {
     int fuel;
 
-    if (!BG_InventoryContainsUpgrade(UP_JETPACK, cg.snap->ps.stats) ) {
+    if (!BG_InventoryContainsUpgrade(UP_JETPACK, cg.snap->ps.stats)) {
         return 0;
     }
 
-    fuel     = cg.snap->ps.stats[STAT_FUEL];
+    fuel = cg.snap->ps.stats[STAT_FUEL];
     return (float)fuel / (float)JETPACK_FUEL_MAX;
 }
 
@@ -146,7 +146,7 @@ typedef struct progressBarCmd_s {
     rocketElementType_t type;
 } progressBarCmd_t;
 
-static const progressBarCmd_t progressBarCmdList[] ={
+static const progressBarCmd_t progressBarCmdList[] = {
     { "ammo", &CG_Rocket_GetPlayerAmmoProgress, ELEMENT_HUMANS },
     { "btimer", &CG_Rocket_GetBuildTimerProgress, ELEMENT_BOTH },
     { "buildables", &CG_Rocket_GetBuildableLoadProgress, ELEMENT_LOADING },
@@ -164,7 +164,7 @@ static const progressBarCmd_t progressBarCmdList[] ={
 static const size_t progressBarCmdListCount = ARRAY_LEN(progressBarCmdList);
 
 static int progressBarCmdCmp(const void* a, const void* b) {
-    return Q_stricmp( (const char*) a, ( (progressBarCmd_t*) b)->command);
+    return Q_stricmp((const char*) a, ((progressBarCmd_t*) b)->command);
 }
 
 float CG_Rocket_ProgressBarValue(Str::StringRef name) {
@@ -173,7 +173,7 @@ float CG_Rocket_ProgressBarValue(Str::StringRef name) {
     // Get the progressbar command
     cmd = (progressBarCmd_t*) bsearch(name.c_str(), progressBarCmdList, progressBarCmdListCount, sizeof(progressBarCmd_t), progressBarCmdCmp);
 
-    if (cmd && CG_Rocket_IsCommandAllowed(cmd->type) ) {
+    if (cmd && CG_Rocket_IsCommandAllowed(cmd->type)) {
         return cmd->get();
     }
 

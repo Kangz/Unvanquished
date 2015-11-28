@@ -72,7 +72,7 @@ namespace Audio {
             return 0;
         }
 
-        if (!(size && count) ) {
+        if (!(size && count)) {
             // It's not an error, caller just wants zero bytes!
             errno = 0;
             return 0;

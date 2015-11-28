@@ -121,13 +121,13 @@ float CM_DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir) {
     CM_ProjectPointOntoVector(p, lp1, dir, proj);
 
     for (j = 0; j < 3; j++) {
-        if ( (proj[j] > lp1[j] && proj[j] > lp2[j]) || (proj[j] < lp1[j] && proj[j] < lp2[j]) ) {
+        if ((proj[j] > lp1[j] && proj[j] > lp2[j]) || (proj[j] < lp1[j] && proj[j] < lp2[j])) {
             break;
         }
     }
 
     if (j < 3) {
-        if (Q_fabs(proj[j] - lp1[j]) < Q_fabs(proj[j] - lp2[j]) ) {
+        if (Q_fabs(proj[j] - lp1[j]) < Q_fabs(proj[j] - lp2[j])) {
             VectorSubtract(p, lp1, t);
         } else {
             VectorSubtract(p, lp2, t);
@@ -341,7 +341,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
 
         b->checkcount = cm.checkcount;
 
-        if (!(b->contents & tw->contents) ) {
+        if (!(b->contents & tw->contents)) {
             continue;
         }
 
@@ -370,7 +370,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
 
         surface->checkcount = cm.checkcount;
 
-        if (!(surface->contents & tw->contents) ) {
+        if (!(surface->contents & tw->contents)) {
             continue;
         }
 
@@ -378,8 +378,8 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
             continue;
         }
 
-        if (!cm_noCurves.Get() ) {
-            if (surface->type == MST_PATCH && surface->sc && CM_PositionTestInSurfaceCollide(tw, surface->sc) ) {
+        if (!cm_noCurves.Get()) {
+            if (surface->type == MST_PATCH && surface->sc && CM_PositionTestInSurfaceCollide(tw, surface->sc)) {
                 tw->trace.startsolid = tw->trace.allsolid = true;
                 tw->trace.fraction = 0;
                 tw->trace.contents = surface->contents;
@@ -387,8 +387,8 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
             }
         }
 
-        if (cm.perPolyCollision || cm_forceTriangles.Get() ) {
-            if (surface->type == MST_TRIANGLE_SOUP && surface->sc && CM_PositionTestInSurfaceCollide(tw, surface->sc) ) {
+        if (cm.perPolyCollision || cm_forceTriangles.Get()) {
+            if (surface->type == MST_TRIANGLE_SOUP && surface->sc && CM_PositionTestInSurfaceCollide(tw, surface->sc)) {
                 tw->trace.startsolid = tw->trace.allsolid = true;
                 tw->trace.fraction = 0;
                 tw->trace.contents = surface->contents;
@@ -464,7 +464,7 @@ void CM_TestCapsuleInCapsule(traceWork_t* tw, clipHandle_t model) {
     }
 
     // if between cylinder up and lower bounds
-    if ( (top[2] >= p1[2] && top[2] <= p2[2]) || (bottom[2] >= p1[2] && bottom[2] <= p2[2]) ) {
+    if ((top[2] >= p1[2] && top[2] <= p2[2]) || (bottom[2] >= p1[2] && bottom[2] <= p2[2])) {
         // 2d coordinates
         top[2] = p1[2] = 0;
         // if the cylinders overlap
@@ -678,7 +678,7 @@ int CM_CheckFacetPlane(float* plane, vec3_t start, vec3_t end, float* enterFrac,
     d2 = DotProduct(end, plane) - plane[3];
 
     // if completely in front of face, no intersection with the entire facet
-    if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1) ) {
+    if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1)) {
         return false;
     }
 
@@ -731,7 +731,7 @@ void CM_TraceThroughSurfaceCollide(traceWork_t* tw, const cSurfaceCollide_t* sc)
     float bestplane[4] = { 0, 0, 0, 0 };
     vec3_t startp, endp;
 
-    if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], sc->bounds[0], sc->bounds[1]) ) {
+    if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], sc->bounds[0], sc->bounds[1])) {
         return;
     }
 
@@ -770,7 +770,7 @@ void CM_TraceThroughSurfaceCollide(traceWork_t* tw, const cSurfaceCollide_t* sc)
             VectorCopy(tw->end, endp);
         }
 
-        if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit) ) {
+        if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit)) {
             continue;
         }
 
@@ -811,7 +811,7 @@ void CM_TraceThroughSurfaceCollide(traceWork_t* tw, const cSurfaceCollide_t* sc)
                 VectorCopy(tw->end, endp);
             }
 
-            if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit) ) {
+            if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit)) {
                 break;
             }
 
@@ -862,7 +862,7 @@ void CM_TraceThroughSurface(traceWork_t* tw, cSurface_t* surface) {
         c_patch_traces++;
     }
 
-    if ( (cm.perPolyCollision || cm_forceTriangles.Get() ) && surface->type == MST_TRIANGLE_SOUP && surface->sc) {
+    if ((cm.perPolyCollision || cm_forceTriangles.Get()) && surface->type == MST_TRIANGLE_SOUP && surface->sc) {
         CM_TraceThroughSurfaceCollide(tw, surface->sc);
         c_trisoup_traces++;
     }
@@ -929,7 +929,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             }
 
             // if completely in front of face, no intersection with the entire brush
-            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1) ) {
+            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1)) {
                 return;
             }
 
@@ -1003,7 +1003,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             }
 
             // if completely in front of face, no intersection with the entire brush
-            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1) ) {
+            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1)) {
                 return;
             }
 
@@ -1066,7 +1066,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             }
 
             // if completely in front of face, no intersection with the entire brush
-            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1) ) {
+            if (d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1)) {
                 return;
             }
 
@@ -1152,7 +1152,7 @@ static void CM_ProximityToBrush(traceWork_t* tw, cbrush_t* brush) {
     traceWork_t tw2;
 
     // cheapish purely linear trace to test for intersection
-    Com_Memset(&tw2, 0, sizeof(tw2) );
+    Com_Memset(&tw2, 0, sizeof(tw2));
 
     tw2.trace.fraction = 1.0f;
     tw2.type = TT_CAPSULE;
@@ -1176,7 +1176,7 @@ static void CM_ProximityToBrush(traceWork_t* tw, cbrush_t* brush) {
         }
 
         if (tw->type == TT_BISPHERE) {
-            radius = tw->biSphere.startRadius + (sAtMin * (tw->biSphere.endRadius - tw->biSphere.startRadius) );
+            radius = tw->biSphere.startRadius + (sAtMin * (tw->biSphere.endRadius - tw->biSphere.startRadius));
         } else if (tw->type == TT_CAPSULE) {
             radius = tw->sphere.radius;
         } else if (tw->type == TT_AABB) {
@@ -1202,7 +1202,7 @@ static void CM_ProximityToSurface(traceWork_t* tw, cSurface_t* surface) {
     traceWork_t tw2;
 
     // cheapish purely linear trace to test for intersection
-    Com_Memset(&tw2, 0, sizeof(tw2) );
+    Com_Memset(&tw2, 0, sizeof(tw2));
 
     tw2.trace.fraction = 1.0f;
     tw2.type = TT_CAPSULE;
@@ -1243,7 +1243,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
 
         b->checkcount = cm.checkcount;
 
-        if (!(b->contents & tw->contents) ) {
+        if (!(b->contents & tw->contents)) {
             continue;
         }
 
@@ -1253,7 +1253,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
 
         b->collided = false;
 
-        if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], b->bounds[0], b->bounds[1]) ) {
+        if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], b->bounds[0], b->bounds[1])) {
             continue;
         }
 
@@ -1279,7 +1279,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
 
         surface->checkcount = cm.checkcount;
 
-        if (!(surface->contents & tw->contents) ) {
+        if (!(surface->contents & tw->contents)) {
             continue;
         }
 
@@ -1287,7 +1287,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
             continue;
         }
 
-        if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], surface->sc->bounds[0], surface->sc->bounds[1]) ) {
+        if (!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1], surface->sc->bounds[0], surface->sc->bounds[1])) {
             continue;
         }
 
@@ -1310,7 +1310,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
                 continue;
             }
 
-            if (!(b->contents & tw->contents) ) {
+            if (!(b->contents & tw->contents)) {
                 continue;
             }
 
@@ -1332,7 +1332,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
                 continue;
             }
 
-            if (!(surface->contents & tw->contents) ) {
+            if (!(surface->contents & tw->contents)) {
                 continue;
             }
 
@@ -1367,14 +1367,14 @@ void CM_TraceThroughSphere(traceWork_t* tw, vec3_t origin, float radius, vec3_t 
     VectorSubtract(start, origin, dir);
     l1 = VectorLengthSquared(dir);
 
-    if (l1 < Square(radius) ) {
+    if (l1 < Square(radius)) {
         tw->trace.fraction = 0;
         tw->trace.startsolid = true;
         // test for allsolid
         VectorSubtract(end, origin, dir);
         l1 = VectorLengthSquared(dir);
 
-        if (l1 < Square(radius) ) {
+        if (l1 < Square(radius)) {
             tw->trace.allsolid = true;
         }
 
@@ -1390,7 +1390,7 @@ void CM_TraceThroughSphere(traceWork_t* tw, vec3_t origin, float radius, vec3_t 
     l2 = VectorLengthSquared(v1);
 
     // if no intersection with the sphere and the end point is at least an epsilon away
-    if (l1 >= Square(radius) && l2 > Square(radius + SURFACE_CLIP_EPSILON) ) {
+    if (l1 >= Square(radius) && l2 > Square(radius + SURFACE_CLIP_EPSILON)) {
         return;
     }
 
@@ -1464,13 +1464,13 @@ void CM_TraceThroughVerticalCylinder(traceWork_t* tw, vec3_t origin, float radiu
         VectorSubtract(start2d, org2d, dir);
         l1 = VectorLengthSquared(dir);
 
-        if (l1 < Square(radius) ) {
+        if (l1 < Square(radius)) {
             tw->trace.fraction = 0;
             tw->trace.startsolid = true;
             VectorSubtract(end2d, org2d, dir);
             l1 = VectorLengthSquared(dir);
 
-            if (l1 < Square(radius) ) {
+            if (l1 < Square(radius)) {
                 tw->trace.allsolid = true;
             }
 
@@ -1487,7 +1487,7 @@ void CM_TraceThroughVerticalCylinder(traceWork_t* tw, vec3_t origin, float radiu
     l2 = VectorLengthSquared(v1);
 
     // if no intersection with the cylinder and the end point is at least an epsilon away
-    if (l1 >= Square(radius) && l2 > Square(radius + SURFACE_CLIP_EPSILON) ) {
+    if (l1 >= Square(radius) && l2 > Square(radius + SURFACE_CLIP_EPSILON)) {
         return;
     }
 
@@ -1792,7 +1792,7 @@ static void CM_Trace(trace_t* results, const vec3_t start, const vec3_t end, vec
     c_traces++; // for statistics, may be zeroed
 
     // fill in a default trace
-    Com_Memset(&tw, 0, sizeof(tw) );
+    Com_Memset(&tw, 0, sizeof(tw));
     tw.trace.fraction = 1; // assume it goes the entire distance until shown otherwise
     VectorCopy(origin, tw.modelOrigin);
     tw.type = type;
@@ -2044,7 +2044,7 @@ void CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t e
     VectorSubtract(end_l, origin, end_l);
 
     // rotate start and end into the models frame of reference
-    if (model != BOX_MODEL_HANDLE && (angles[0] || angles[1] || angles[2]) ) {
+    if (model != BOX_MODEL_HANDLE && (angles[0] || angles[1] || angles[2])) {
         rotated = true;
     } else {
         rotated = false;
@@ -2114,7 +2114,7 @@ void CM_BiSphereTrace(trace_t* results, const vec3_t start, const vec3_t end, fl
     c_traces++; // for statistics, may be zeroed
 
     // fill in a default trace
-    Com_Memset(&tw, 0, sizeof(tw) );
+    Com_Memset(&tw, 0, sizeof(tw));
     tw.trace.fraction = 1.0f; // assume it goes the entire distance until shown otherwise
     VectorCopy(vec3_origin, tw.modelOrigin);
     tw.type = TT_BISPHERE;
@@ -2281,7 +2281,7 @@ CM_DrawDebugSurface
 Called from the renderer
 ==================
 */
-void CM_DrawDebugSurface(void (* drawPoly)(int color, int numPoints, float* points) ) {
+void CM_DrawDebugSurface(void (* drawPoly)(int color, int numPoints, float* points)) {
     const cSurfaceCollide_t* pc;
     cFacet_t* facet;
     winding_t* w;

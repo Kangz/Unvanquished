@@ -44,7 +44,7 @@ delta_t;
 
 delta_t deltas[WP_NUM_WEAPONS][MAX_BONES];
 
-static const char* const cg_customSoundNames[MAX_CUSTOM_SOUNDS] ={
+static const char* const cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
     "*death1.wav",
     "*death2.wav",
     "*death3.wav",
@@ -81,7 +81,7 @@ sfxHandle_t CG_CustomSound(int clientNum, const char* soundName) {
     ci = &cgs.clientinfo[clientNum];
 
     for (i = 0; i < MAX_CUSTOM_SOUNDS && cg_customSoundNames[i]; i++) {
-        if (!strcmp(soundName, cg_customSoundNames[i]) ) {
+        if (!strcmp(soundName, cg_customSoundNames[i])) {
             return ci->sounds[i];
         }
     }
@@ -122,7 +122,7 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
         return false;
     }
 
-    if (len + 1 >= (int) sizeof(text) ) {
+    if (len + 1 >= (int) sizeof(text)) {
         CG_Printf("File %s is too long\n", filename);
         trap_FS_FCloseFile(f);
         return false;
@@ -158,21 +158,21 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
             if (!token) {
                 break;
             }
-            if (!Q_stricmp(token, "default") ) {
+            if (!Q_stricmp(token, "default")) {
                 ci->footsteps = FOOTSTEP_GENERAL;
-            } else if (!Q_stricmp(token, "flesh") ) {
+            } else if (!Q_stricmp(token, "flesh")) {
                 ci->footsteps = FOOTSTEP_FLESH;
-            } else if (!Q_stricmp(token, "metal") ) {
+            } else if (!Q_stricmp(token, "metal")) {
                 ci->footsteps = FOOTSTEP_METAL;
-            } else if (!Q_stricmp(token, "splash") ) {
+            } else if (!Q_stricmp(token, "splash")) {
                 ci->footsteps = FOOTSTEP_SPLASH;
-            } else if (!Q_stricmp(token, "none") ) {
+            } else if (!Q_stricmp(token, "none")) {
                 ci->footsteps = FOOTSTEP_NONE;
             } else {
                 CG_Printf("Bad footsteps parm in %s: %s\n", filename, token);
             }
             continue;
-        } else if (!Q_stricmp(token, "headoffset") ) {
+        } else if (!Q_stricmp(token, "headoffset")) {
             for (i = 0; i < 3; i++) {
                 token = COM_Parse2(&text_p);
 
@@ -184,7 +184,7 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "sex") ) {
+        } else if (!Q_stricmp(token, "sex")) {
             token = COM_Parse2(&text_p);
 
             if (!token) {
@@ -200,13 +200,13 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "fixedlegs") ) {
+        } else if (!Q_stricmp(token, "fixedlegs")) {
             ci->fixedlegs = true;
             continue;
-        } else if (!Q_stricmp(token, "fixedtorso") ) {
+        } else if (!Q_stricmp(token, "fixedtorso")) {
             ci->fixedtorso = true;
             continue;
-        } else if (!Q_stricmp(token, "modelScale") ) {
+        } else if (!Q_stricmp(token, "modelScale")) {
             token = COM_ParseExt2(&text_p, false);
 
             if (token) {
@@ -214,22 +214,22 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "torsoControlBone") ) {
+        } else if (!Q_stricmp(token, "torsoControlBone")) {
             token = COM_Parse2(&text_p);
 
             ci->torsoControlBone = trap_R_BoneIndex(ci->bodyModel, token);
             continue;
-        } else if (!Q_stricmp(token, "leftShoulder") ) {
+        } else if (!Q_stricmp(token, "leftShoulder")) {
             token = COM_Parse2(&text_p);
 
             ci->leftShoulderBone = trap_R_BoneIndex(ci->bodyModel, token);
             continue;
-        } else if (!Q_stricmp(token, "rightShoulder") ) {
+        } else if (!Q_stricmp(token, "rightShoulder")) {
             token = COM_Parse2(&text_p);
 
             ci->rightShoulderBone = trap_R_BoneIndex(ci->bodyModel, token);
             continue;
-        } else if (!Q_stricmp(token, "handBones") ) {
+        } else if (!Q_stricmp(token, "handBones")) {
             token = COM_Parse2(&text_p);
 
             if (token[0] != '{') {
@@ -250,7 +250,7 @@ static bool CG_ParseCharacterFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "legBones") ) {
+        } else if (!Q_stricmp(token, "legBones")) {
             token = COM_Parse2(&text_p);
 
             if (token[0] != '{') {
@@ -287,10 +287,10 @@ static bool CG_RegisterPlayerAnimation(clientInfo_t* ci, const char* modelName, 
     // special handling for human_(naked|light|medium)
     if (!Q_stricmp(modelName, "human_naked") ||
         !Q_stricmp(modelName, "human_light") ||
-        !Q_stricmp(modelName, "human_medium") ) {
-        Q_strncpyz(newModelName, "human_nobsuit_common", sizeof(newModelName) );
+        !Q_stricmp(modelName, "human_medium")) {
+        Q_strncpyz(newModelName, "human_nobsuit_common", sizeof(newModelName));
     } else {
-        Q_strncpyz(newModelName, modelName, sizeof(newModelName) );
+        Q_strncpyz(newModelName, modelName, sizeof(newModelName));
     }
 
     if (iqm) {
@@ -341,17 +341,17 @@ static bool CG_DeriveAnimationDelta(const char* modelName, weapon_t weapon, clie
     // special handling for human_(naked|light|medium)
     if (!Q_stricmp(modelName, "human_naked") ||
         !Q_stricmp(modelName, "human_light") ||
-        !Q_stricmp(modelName, "human_medium") ) {
-        Q_strncpyz(newModelName, "human_nobsuit_common", sizeof(newModelName) );
+        !Q_stricmp(modelName, "human_medium")) {
+        Q_strncpyz(newModelName, "human_nobsuit_common", sizeof(newModelName));
     } else {
-        Q_strncpyz(newModelName, modelName, sizeof(newModelName) );
+        Q_strncpyz(newModelName, modelName, sizeof(newModelName));
     }
 
     if (iqm) {
-        handle = trap_R_RegisterAnimation(va("models/players/%s/%s.iqm:%s_delta", newModelName, newModelName, BG_Weapon(weapon)->name) );
+        handle = trap_R_RegisterAnimation(va("models/players/%s/%s.iqm:%s_delta", newModelName, newModelName, BG_Weapon(weapon)->name));
 
     } else {
-        handle = trap_R_RegisterAnimation(va("models/players/%s/%s_delta.md5anim", newModelName, BG_Weapon(weapon)->name) );
+        handle = trap_R_RegisterAnimation(va("models/players/%s/%s_delta.md5anim", newModelName, BG_Weapon(weapon)->name));
     }
 
     if (!handle) {
@@ -402,7 +402,7 @@ static bool CG_ParseAnimationFile(const char* filename, clientInfo_t* ci) {
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", filename);
         trap_FS_FCloseFile(f);
         return false;
@@ -432,27 +432,27 @@ static bool CG_ParseAnimationFile(const char* filename, clientInfo_t* ci) {
             break;
         }
 
-        if (!Q_stricmp(token, "footsteps") ) {
+        if (!Q_stricmp(token, "footsteps")) {
             token = COM_Parse2(&text_p);
 
             if (!token) {
                 break;
             }
 
-            if (!Q_stricmp(token, "default") ) {
+            if (!Q_stricmp(token, "default")) {
                 ci->footsteps = FOOTSTEP_GENERAL;
-            } else if (!Q_stricmp(token, "flesh") ) {
+            } else if (!Q_stricmp(token, "flesh")) {
                 ci->footsteps = FOOTSTEP_FLESH;
-            } else if (!Q_stricmp(token, "none") ) {
+            } else if (!Q_stricmp(token, "none")) {
                 ci->footsteps = FOOTSTEP_NONE;
-            } else if (!Q_stricmp(token, "custom") ) {
+            } else if (!Q_stricmp(token, "custom")) {
                 ci->footsteps = FOOTSTEP_CUSTOM;
             } else {
                 CG_Printf("Bad footsteps parm in %s: %s\n", filename, token);
             }
 
             continue;
-        } else if (!Q_stricmp(token, "headoffset") ) {
+        } else if (!Q_stricmp(token, "headoffset")) {
             for (i = 0; i < 3; i++) {
                 token = COM_Parse2(&text_p);
 
@@ -464,7 +464,7 @@ static bool CG_ParseAnimationFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "sex") ) {
+        } else if (!Q_stricmp(token, "sex")) {
             token = COM_Parse2(&text_p);
 
             if (!token) {
@@ -480,13 +480,13 @@ static bool CG_ParseAnimationFile(const char* filename, clientInfo_t* ci) {
             }
 
             continue;
-        } else if (!Q_stricmp(token, "fixedlegs") ) {
+        } else if (!Q_stricmp(token, "fixedlegs")) {
             ci->fixedlegs = true;
             continue;
-        } else if (!Q_stricmp(token, "fixedtorso") ) {
+        } else if (!Q_stricmp(token, "fixedtorso")) {
             ci->fixedtorso = true;
             continue;
-        } else if (!Q_stricmp(token, "nonsegmented") ) {
+        } else if (!Q_stricmp(token, "nonsegmented")) {
             ci->nonsegmented = true;
             continue;
         }
@@ -760,7 +760,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
         // load the animations
         Com_sprintf(filename, sizeof(filename), "models/players/%s/character.cfg", modelName);
 
-        if (!CG_ParseCharacterFile(filename, ci) ) {
+        if (!CG_ParseCharacterFile(filename, ci)) {
             Com_Printf("Failed to load character file %s\n", filename);
             return false;
         }
@@ -769,7 +769,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
 
         // If model is not an alien, load human animations
         if (ci->gender != GENDER_NEUTER) {
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_IDLE, "idle", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_IDLE, "idle", true, false, false, iqm)) {
                 Com_Printf("Failed to load idle animation file %s\n", filename);
                 return false;
             }
@@ -787,104 +787,104 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
 
             // FIXME add death animations
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH1, "die", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH1, "die", false, false, false, iqm)) {
                 ci->animations[BOTH_DEATH1] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH2, "death2", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH2, "death2", false, false, false, iqm)) {
                 ci->animations[BOTH_DEATH2] = ci->animations[BOTH_DEATH1];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH3, "death3", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, BOTH_DEATH3, "death3", false, false, false, iqm)) {
                 ci->animations[BOTH_DEATH3] = ci->animations[BOTH_DEATH1];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_GESTURE, "gesture", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_GESTURE, "gesture", false, false, false, iqm)) {
                 ci->animations[TORSO_GESTURE] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_RALLY, "rally", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_RALLY, "rally", false, false, false, iqm)) {
                 ci->animations[TORSO_RALLY] = ci->animations[LEGS_IDLE];
             }
 
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK, "attack", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK, "attack", false, false, false, iqm)) {
                 ci->animations[TORSO_ATTACK] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK_BLASTER, "blaster_attack", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK_BLASTER, "blaster_attack", false, false, false, iqm)) {
                 ci->animations[TORSO_ATTACK_BLASTER] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK_PSAW, "psaw_attack", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_ATTACK_PSAW, "psaw_attack", false, false, false, iqm)) {
                 ci->animations[TORSO_ATTACK_BLASTER] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_STAND, "stand", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_STAND, "stand", true, false, false, iqm)) {
                 ci->animations[TORSO_STAND] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_STAND_BLASTER, "stand_blaster", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_STAND_BLASTER, "stand_blaster", true, false, false, iqm)) {
                 ci->animations[TORSO_STAND_BLASTER] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_IDLECR, "crouch", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_IDLECR, "crouch", false, false, false, iqm)) {
                 ci->animations[LEGS_IDLECR] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_WALKCR, "crouch_forward", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_WALKCR, "crouch_forward", true, false, false, iqm)) {
                 ci->animations[LEGS_WALKCR] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACKCR, "crouch_back", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACKCR, "crouch_back", true, false, false, iqm)) {
                 ci->animations[LEGS_BACKCR] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_WALK, "walk", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_WALK, "walk", true, false, false, iqm)) {
                 ci->animations[LEGS_WALK] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACKWALK, "walk_back", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACKWALK, "walk_back", true, false, false, iqm)) {
                 ci->animations[LEGS_BACKWALK] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_RUN, "run", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_RUN, "run", true, false, false, iqm)) {
                 ci->animations[LEGS_RUN] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACK, "run_back", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_BACK, "run_back", true, false, false, iqm)) {
                 ci->animations[LEGS_BACK] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_SWIM, "swim", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_SWIM, "swim", true, false, false, iqm)) {
                 ci->animations[LEGS_SWIM] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_JUMP, "jump", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_JUMP, "jump", false, false, false, iqm)) {
                 ci->animations[LEGS_JUMP] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_LAND, "land", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_LAND, "land", false, false, false, iqm)) {
                 ci->animations[LEGS_LAND] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_JUMPB, "jump_back", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_JUMPB, "jump_back", false, false, false, iqm)) {
                 ci->animations[LEGS_JUMPB] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_LANDB, "land_back", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_LANDB, "land_back", false, false, false, iqm)) {
                 ci->animations[LEGS_LANDB] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_TURN, "step", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, LEGS_TURN, "step", true, false, false, iqm)) {
                 ci->animations[LEGS_TURN] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_DROP, "drop", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_DROP, "drop", false, false, false, iqm)) {
                 ci->animations[TORSO_DROP] = ci->animations[LEGS_IDLE];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_RAISE, "raise", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, TORSO_RAISE, "raise", false, false, false, iqm)) {
                 ci->animations[TORSO_RAISE] = ci->animations[LEGS_IDLE];
             }
 
@@ -897,7 +897,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
                     j = WP_HBUILD;
                 }
 
-                if (!CG_RegisterPlayerAnimation(ci, modelName, i, va("%s_taunt", BG_Weapon(j)->name), false, false, false, iqm) ) {
+                if (!CG_RegisterPlayerAnimation(ci, modelName, i, va("%s_taunt", BG_Weapon(j)->name), false, false, false, iqm)) {
                     ci->animations[i] = ci->animations[TORSO_GESTURE];
                 }
             }
@@ -912,7 +912,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
 
         } else {
             // Load Alien animations
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_STAND, "stand", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_STAND, "stand", true, false, false, iqm)) {
                 Com_Printf("Failed to load standing animation file %s\n", filename);
                 return false;
             }
@@ -932,103 +932,103 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
 
             CG_RegisterPlayerAnimation(ci, modelName, NSPA_DEATH1, "die", false, false, false, iqm);
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_DEATH2, "die2", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_DEATH2, "die2", false, false, false, iqm)) {
                 ci->animations[NSPA_DEATH2] = ci->animations[NSPA_DEATH1];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_DEATH3, "die3", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_DEATH3, "die3", false, false, false, iqm)) {
                 ci->animations[NSPA_DEATH3] = ci->animations[NSPA_DEATH1];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_GESTURE, "gesture", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_GESTURE, "gesture", false, false, false, iqm)) {
                 ci->animations[NSPA_GESTURE] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK1, "attack", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK1, "attack", false, false, false, iqm)) {
                 ci->animations[NSPA_ATTACK1] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK2, "attack2", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK2, "attack2", false, false, false, iqm)) {
                 ci->animations[NSPA_ATTACK2] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK3, "attack3", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_ATTACK3, "attack3", false, false, false, iqm)) {
                 ci->animations[NSPA_ATTACK3] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUN, "run", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUN, "run", true, false, false, iqm)) {
                 ci->animations[NSPA_RUN] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNBACK, "run_backwards", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNBACK, "run_backwards", true, false, false, iqm)) {
                 ci->animations[NSPA_RUNBACK] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNLEFT, "run_left", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNLEFT, "run_left", true, false, false, iqm)) {
                 ci->animations[NSPA_RUNLEFT] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNRIGHT, "run_right", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_RUNRIGHT, "run_right", true, false, false, iqm)) {
                 ci->animations[NSPA_RUNRIGHT] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALK, "walk", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALK, "walk", true, false, false, iqm)) {
                 ci->animations[NSPA_WALK] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKBACK, "walk", true, true, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKBACK, "walk", true, true, false, iqm)) {
                 ci->animations[NSPA_WALKBACK] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKLEFT, "walk_left", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKLEFT, "walk_left", true, false, false, iqm)) {
                 ci->animations[NSPA_WALKLEFT] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKRIGHT, "walk_right", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_WALKRIGHT, "walk_right", true, false, false, iqm)) {
                 ci->animations[NSPA_WALKRIGHT] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_SWIM, "swim", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_SWIM, "swim", true, false, false, iqm)) {
                 ci->animations[NSPA_SWIM] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_JUMP, "jump", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_JUMP, "jump", false, false, false, iqm)) {
                 ci->animations[NSPA_JUMP] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_JUMPBACK, "jump_back", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_JUMPBACK, "jump_back", false, false, false, iqm)) {
                 ci->animations[NSPA_JUMPBACK] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_LAND, "land", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_LAND, "land", false, false, false, iqm)) {
                 ci->animations[NSPA_LAND] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_LANDBACK, "land_back", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_LANDBACK, "land_back", false, false, false, iqm)) {
                 ci->animations[NSPA_LANDBACK] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_TURN, "turn", true, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_TURN, "turn", true, false, false, iqm)) {
                 ci->animations[NSPA_TURN] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_PAIN1, "pain1", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_PAIN1, "pain1", false, false, false, iqm)) {
                 ci->animations[NSPA_PAIN1] = ci->animations[NSPA_STAND];
             }
 
-            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_PAIN2, "pain2", false, false, false, iqm) ) {
+            if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_PAIN2, "pain2", false, false, false, iqm)) {
                 ci->animations[NSPA_PAIN2] = ci->animations[NSPA_STAND];
             }
 
-            if (!Q_stricmp(modelName, "level4") ) {
-                if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_CHARGE, "charge", true, false, false, iqm) ) {
+            if (!Q_stricmp(modelName, "level4")) {
+                if (!CG_RegisterPlayerAnimation(ci, modelName, NSPA_CHARGE, "charge", true, false, false, iqm)) {
                     ci->animations[NSPA_CHARGE] = ci->animations[NSPA_STAND];
                 }
             }
         }
 
         // if any skins failed to load, return failure
-        if (!CG_RegisterClientSkin(ci, modelName, skinName) ) {
+        if (!CG_RegisterClientSkin(ci, modelName, skinName)) {
             Com_Printf("Failed to load skin file: %s : %s\n", modelName, skinName);
             return false;
         }
@@ -1040,7 +1040,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
     // load the animations
     Com_sprintf(filename, sizeof(filename), "models/players/%s/animation.cfg", modelName);
 
-    if (!CG_ParseAnimationFile(filename, ci) ) {
+    if (!CG_ParseAnimationFile(filename, ci)) {
         Com_Printf("Failed to load animation file %s\n", filename);
         return false;
     }
@@ -1081,7 +1081,7 @@ static bool CG_RegisterClientModelname(clientInfo_t* ci, const char* modelName, 
     }
 
     // if any skins failed to load, return failure
-    if (!CG_RegisterClientSkin(ci, modelName, skinName) ) {
+    if (!CG_RegisterClientSkin(ci, modelName, skinName)) {
         Com_Printf("Failed to load skin file: %s : %s\n", modelName, skinName);
         return false;
     }
@@ -1102,7 +1102,7 @@ static void CG_LoadClientInfo(clientInfo_t* ci) {
     const char* s;
     int clientNum;
 
-    if (!CG_RegisterClientModelname(ci, ci->modelName, ci->skinName) ) {
+    if (!CG_RegisterClientModelname(ci, ci->modelName, ci->skinName)) {
         CG_Error("CG_RegisterClientModelname( %s, %s ) failed", ci->modelName, ci->skinName);
     }
 
@@ -1117,7 +1117,7 @@ static void CG_LoadClientInfo(clientInfo_t* ci) {
         }
 
         // fanny about a bit with sounds that are missing
-        if (!CG_FileExists(va("sound/player/%s/%s", dir, s + 1) ) ) {
+        if (!CG_FileExists(va("sound/player/%s/%s", dir, s + 1))) {
             // file doesn't exist
 
             if (i == 11 || i == 8) { // fall or falling
@@ -1196,12 +1196,12 @@ static void CG_CopyClientInfoModel(clientInfo_t* from, clientInfo_t* to) {
     to->bodySkin = from->bodySkin;
     to->md5 = from->md5;
 
-    memcpy(to->animations, from->animations, sizeof(to->animations) );
-    memcpy(to->sounds, from->sounds, sizeof(to->sounds) );
-    memcpy(to->customFootsteps, from->customFootsteps, sizeof(to->customFootsteps) );
-    memcpy(to->customMetalFootsteps, from->customMetalFootsteps, sizeof(to->customMetalFootsteps) );
-    memcpy(to->legBones, from->legBones, sizeof(to->legBones) );
-    memcpy(to->handBones, from->handBones, sizeof(to->legBones) );
+    memcpy(to->animations, from->animations, sizeof(to->animations));
+    memcpy(to->sounds, from->sounds, sizeof(to->sounds));
+    memcpy(to->customFootsteps, from->customFootsteps, sizeof(to->customFootsteps));
+    memcpy(to->customMetalFootsteps, from->customMetalFootsteps, sizeof(to->customMetalFootsteps));
+    memcpy(to->legBones, from->legBones, sizeof(to->legBones));
+    memcpy(to->handBones, from->handBones, sizeof(to->legBones));
 }
 
 /*
@@ -1226,7 +1226,7 @@ static int CG_GetCorpseNum(class_t class_) {
         }
 
         if (!Q_stricmp(modelName, match->modelName) &&
-            !Q_stricmp(skinName, match->skinName) ) {
+            !Q_stricmp(skinName, match->skinName)) {
             // this clientinfo is identical, so use its handles
             return i;
         }
@@ -1253,7 +1253,7 @@ static bool CG_ScanForExistingClientInfo(clientInfo_t* ci) {
         }
 
         if (!Q_stricmp(ci->modelName, match->modelName) &&
-            !Q_stricmp(ci->skinName, match->skinName) ) {
+            !Q_stricmp(ci->skinName, match->skinName)) {
             // this clientinfo is identical, so use its handles
             CG_CopyClientInfoModel(match, ci);
 
@@ -1277,16 +1277,16 @@ void CG_PrecacheClientInfo(class_t class_, const char* model, const char* skin) 
     ci = &cgs.corpseinfo[class_];
 
     // the old value
-    memset(&newInfo, 0, sizeof(newInfo) );
+    memset(&newInfo, 0, sizeof(newInfo));
 
     // model
-    Q_strncpyz(newInfo.modelName, model, sizeof(newInfo.modelName) );
+    Q_strncpyz(newInfo.modelName, model, sizeof(newInfo.modelName));
 
     // modelName did not include a skin name
     if (!skin) {
-        Q_strncpyz(newInfo.skinName, "default", sizeof(newInfo.skinName) );
+        Q_strncpyz(newInfo.skinName, "default", sizeof(newInfo.skinName));
     } else {
-        Q_strncpyz(newInfo.skinName, skin, sizeof(newInfo.skinName) );
+        Q_strncpyz(newInfo.skinName, skin, sizeof(newInfo.skinName));
     }
 
     newInfo.infoValid = true;
@@ -1308,20 +1308,20 @@ static void CG_StatusMessages(clientInfo_t* new_, clientInfo_t* old) {
         return;
     }
 
-    if (strcmp(new_->name, old->name) ) {
+    if (strcmp(new_->name, old->name)) {
         CG_Printf(_("%s^7 renamed to %s\n"), old->name, new_->name);
     }
 
     if (old->team != new_->team) {
         if (new_->team == TEAM_NONE) {
             CG_Printf(_("%s^7 left the %s\n"), new_->name,
-                      BG_TeamNamePlural(old->team) );
+                      BG_TeamNamePlural(old->team));
         } else if (old->team == TEAM_NONE) {
             CG_Printf(_("%s^7 joined the %s\n"), new_->name,
-                      BG_TeamNamePlural(new_->team) );
+                      BG_TeamNamePlural(new_->team));
         } else {
             CG_Printf(_("%s^7 left the %s and joined the %s\n"),
-                      new_->name, BG_TeamNamePlural(old->team), BG_TeamNamePlural(new_->team) );
+                      new_->name, BG_TeamNamePlural(old->team), BG_TeamNamePlural(new_->team));
         }
     }
 }
@@ -1343,12 +1343,12 @@ void CG_NewClientInfo(int clientNum) {
     configstring = CG_ConfigString(clientNum + CS_PLAYERS);
 
     if (!configstring[0]) {
-        memset(ci, 0, sizeof(*ci) );
+        memset(ci, 0, sizeof(*ci));
         return; // player just left
     }
 
     // the old value
-    memset(&newInfo, 0, sizeof(newInfo) );
+    memset(&newInfo, 0, sizeof(newInfo));
 
     // grab our own ignoreList
     if (clientNum == cg.predictedPlayerState.clientNum) {
@@ -1358,7 +1358,7 @@ void CG_NewClientInfo(int clientNum) {
 
     // isolate the player's name
     v = Info_ValueForKey(configstring, "n");
-    Q_strncpyz(newInfo.name, v, sizeof(newInfo.name) );
+    Q_strncpyz(newInfo.name, v, sizeof(newInfo.name));
 
     // team
     v = Info_ValueForKey(configstring, "t");
@@ -1366,22 +1366,22 @@ void CG_NewClientInfo(int clientNum) {
 
     // model
     v = Info_ValueForKey(configstring, "model");
-    Q_strncpyz(newInfo.modelName, v, sizeof(newInfo.modelName) );
+    Q_strncpyz(newInfo.modelName, v, sizeof(newInfo.modelName));
 
     slash = strchr(newInfo.modelName, '/');
 
     if (!slash) {
         // modelName didn not include a skin name
-        Q_strncpyz(newInfo.skinName, "default", sizeof(newInfo.skinName) );
+        Q_strncpyz(newInfo.skinName, "default", sizeof(newInfo.skinName));
     } else {
-        Q_strncpyz(newInfo.skinName, slash + 1, sizeof(newInfo.skinName) );
+        Q_strncpyz(newInfo.skinName, slash + 1, sizeof(newInfo.skinName));
         // truncate modelName
         *slash = 0;
     }
 
     // voice
     v = Info_ValueForKey(configstring, "v");
-    Q_strncpyz(newInfo.voice, v, sizeof(newInfo.voice) );
+    Q_strncpyz(newInfo.voice, v, sizeof(newInfo.voice));
 
     CG_StatusMessages(&newInfo, ci);
 
@@ -1391,7 +1391,7 @@ void CG_NewClientInfo(int clientNum) {
 
     // scan for an existing clientinfo that matches this modelname
     // so we can avoid loading checks if possible
-    if (!CG_ScanForExistingClientInfo(ci) ) {
+    if (!CG_ScanForExistingClientInfo(ci)) {
         CG_LoadClientInfo(ci);
     }
 }
@@ -1455,7 +1455,7 @@ static void CG_SetLerpFrameAnimation(clientInfo_t* ci, lerpFrame_t* lf, int newA
 
         // TODO: blend through two blendings!
 
-        if ( (lf->blendlerp <= 0.0f) ) {
+        if ((lf->blendlerp <= 0.0f)) {
             lf->blendlerp = 1.0f;
         } else {
             lf->blendlerp = 1.0f - lf->blendlerp; // use old blending for smooth blending between two blended animations
@@ -1466,7 +1466,7 @@ static void CG_SetLerpFrameAnimation(clientInfo_t* ci, lerpFrame_t* lf, int newA
         // Com_Printf(_("new: %i old %i\n"), newAnimation,lf->old_animationNumber);
 
         if (lf->old_animation->handle && oldSkeleton.numBones == skel->numBones) {
-            if (!trap_R_BuildSkeleton(&oldSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin) ) {
+            if (!trap_R_BuildSkeleton(&oldSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin)) {
                 CG_Printf("Can't blend skeleton\n");
                 return;
             }
@@ -1545,7 +1545,7 @@ static void CG_RunCorpseLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, int newAnim
     CG_BlendLerpFrame(lf);
 
     if (lf->animation) {
-        if (!trap_R_BuildSkeleton(&legsSkeleton, lf->animation->handle, anim->numFrames - 1, anim->numFrames - 1, 0, lf->animation->clearOrigin) ) {
+        if (!trap_R_BuildSkeleton(&legsSkeleton, lf->animation->handle, anim->numFrames - 1, anim->numFrames - 1, 0, lf->animation->clearOrigin)) {
             CG_Printf("Can't build lf->skeleton\n");
         }
     }
@@ -1688,13 +1688,13 @@ static void CG_PlayerMD5AlienAnimation(centity_t* cent) {
     ci = &cgs.clientinfo[clientNum];
 
     // If we are attacking/taunting, and in motion, allow blending the two skeletons
-    if ( ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) >= NSPA_ATTACK1 &&
-           (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) <= NSPA_ATTACK3) ||
-         (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == NSPA_GESTURE) {
+    if (((cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) >= NSPA_ATTACK1 &&
+         (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) <= NSPA_ATTACK3) ||
+        (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == NSPA_GESTURE) {
         blend.type = SK_RELATIVE; // Tell game to blend
 
-        if ( (cent->pe.nonseg.animationNumber & ~ANIM_TOGGLEBIT) <= NSPA_TURN &&
-             (cent->pe.nonseg.animationNumber & ~ANIM_TOGGLEBIT) != NSPA_GESTURE) {
+        if ((cent->pe.nonseg.animationNumber & ~ANIM_TOGGLEBIT) <= NSPA_TURN &&
+            (cent->pe.nonseg.animationNumber & ~ANIM_TOGGLEBIT) != NSPA_GESTURE) {
             cent->pe.legs = cent->pe.nonseg;
         }
     } else {
@@ -1784,9 +1784,9 @@ static void CG_SwingAngles(float destination, float swingTolerance, float clampT
     swing = AngleSubtract(destination, *angle);
 
     if (swing > clampTolerance) {
-        *angle = AngleMod(destination - (clampTolerance - 1) );
+        *angle = AngleMod(destination - (clampTolerance - 1));
     } else if (swing < -clampTolerance) {
-        *angle = AngleMod(destination + (clampTolerance - 1) );
+        *angle = AngleMod(destination + (clampTolerance - 1));
     }
 }
 
@@ -1845,8 +1845,8 @@ static void CG_PlayerAngles(centity_t* cent, const vec3_t srcAngles,
     // --------- yaw -------------
 
     // allow yaw to drift a bit
-    if ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) != LEGS_IDLE ||
-         (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND) {
+    if ((cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) != LEGS_IDLE ||
+        (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND) {
         // if not standing still, always point all in the same direction
         cent->pe.torso.yawing = true; // always center
         cent->pe.torso.pitching = true; // always center
@@ -1977,9 +1977,9 @@ static void CG_PlayerWWSmoothing(centity_t* cent, vec3_t in[3], vec3_t out[3]) {
     vec3_t inAxis[3], lastAxis[3], outAxis[3];
 
     // set surfNormal
-    if (!(es->eFlags & EF_WALLCLIMB) ) {
+    if (!(es->eFlags & EF_WALLCLIMB)) {
         VectorCopy(refNormal, surfNormal);
-    } else if (!(es->eFlags & EF_WALLCLIMBCEILING) ) {
+    } else if (!(es->eFlags & EF_WALLCLIMBCEILING)) {
         VectorCopy(es->angles2, surfNormal);
     } else {
         VectorCopy(ceilingNormal, surfNormal);
@@ -1987,10 +1987,10 @@ static void CG_PlayerWWSmoothing(centity_t* cent, vec3_t in[3], vec3_t out[3]) {
 
     AxisCopy(in, inAxis);
 
-    if (!VectorCompare(surfNormal, cent->pe.lastNormal) ) {
+    if (!VectorCompare(surfNormal, cent->pe.lastNormal)) {
         // special case: moving from the ceiling to the floor
         if (VectorCompare(ceilingNormal, cent->pe.lastNormal) &&
-            VectorCompare(refNormal, surfNormal) ) {
+            VectorCompare(refNormal, surfNormal)) {
             VectorCopy(in[1], rotAxis);
             rotAngle = 180.0f;
         } else {
@@ -1999,7 +1999,7 @@ static void CG_PlayerWWSmoothing(centity_t* cent, vec3_t in[3], vec3_t out[3]) {
                        DotProduct(inAxis[1], lastAxis[1]) +
                        DotProduct(inAxis[2], lastAxis[2]);
 
-            rotAngle = RAD2DEG(acos( (rotAngle - 1.0f) / 2.0f) );
+            rotAngle = RAD2DEG(acos((rotAngle - 1.0f) / 2.0f));
 
             CrossProduct(lastAxis[0], inAxis[0], temp);
             VectorCopy(temp, rotAxis);
@@ -2028,7 +2028,7 @@ static void CG_PlayerWWSmoothing(centity_t* cent, vec3_t in[3], vec3_t out[3]) {
     for (i = MAXSMOOTHS - 1; i >= 0; i--) {
         // if this op has time remaining, perform it
         if (cg.time < cent->pe.sList[i].time + MODEL_WWSMOOTHTIME) {
-            stLocal = 1.0f - ( ( (cent->pe.sList[i].time + MODEL_WWSMOOTHTIME) - cg.time) / MODEL_WWSMOOTHTIME);
+            stLocal = 1.0f - (((cent->pe.sList[i].time + MODEL_WWSMOOTHTIME) - cg.time) / MODEL_WWSMOOTHTIME);
             sFraction = -(cos(stLocal * M_PI) + 1.0f) / 2.0f;
 
             RotatePointAroundVector(outAxis[0], cent->pe.sList[i].rotAxis,
@@ -2068,14 +2068,14 @@ static void CG_PlayerNonSegAxis(centity_t* cent, vec3_t srcAngles, vec3_t nonSeg
     localAngles[ROLL] = 0.0f;
 
     // set surfNormal
-    if (!(es->eFlags & EF_WALLCLIMBCEILING) ) {
+    if (!(es->eFlags & EF_WALLCLIMBCEILING)) {
         VectorCopy(es->angles2, surfNormal);
     } else {
         VectorCopy(ceilingNormal, surfNormal);
     }
 
     // make sure that WW transitions don't cause the swing stuff to go nuts
-    if (!VectorCompare(surfNormal, cent->pe.lastNormal) ) {
+    if (!VectorCompare(surfNormal, cent->pe.lastNormal)) {
         // stop CG_SwingAngles having an eppy
         cent->pe.nonseg.yawAngle = localAngles[YAW];
         cent->pe.nonseg.yawing = false;
@@ -2084,7 +2084,7 @@ static void CG_PlayerNonSegAxis(centity_t* cent, vec3_t srcAngles, vec3_t nonSeg
     // --------- yaw -------------
 
     // allow yaw to drift a bit
-    if ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) != NSPA_STAND) {
+    if ((cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) != NSPA_STAND) {
         // if not standing still, always point all in the same direction
         cent->pe.nonseg.yawing = true; // always center
     }
@@ -2172,7 +2172,7 @@ static void CG_JetpackAnimation(centity_t* cent, int* old, int* now, float* back
                 oldSkeleton = jetpackSkeleton;
 
                 if (lf->old_animation != nullptr && lf->old_animation->handle) {
-                    if (!trap_R_BuildSkeleton(&oldSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin) ) {
+                    if (!trap_R_BuildSkeleton(&oldSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin)) {
                         CG_Printf("Can't build old jetpack skeleton\n");
                         return;
                     }
@@ -2228,12 +2228,12 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
     int held, publicFlags;
     entityState_t* es = &cent->currentState;
 
-    held        = es->modelindex;
+    held = es->modelindex;
     publicFlags = es->modelindex2;
 
     // jetpack model and effects
-    if (held & (1 << UP_JETPACK) ) {
-        memset(&jetpack, 0, sizeof(jetpack) );
+    if (held & (1 << UP_JETPACK)) {
+        memset(&jetpack, 0, sizeof(jetpack));
         VectorCopy(torso->lightingOrigin, jetpack.lightingOrigin);
         jetpack.renderfx = torso->renderfx;
 
@@ -2254,11 +2254,11 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
         if (publicFlags & PF_JETPACK_ACTIVE) {
             // spawn ps if necessary
             if (cent->jetPackState != JPS_ACTIVE) {
-                if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+                if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
                     CG_DestroyParticleSystem(&cent->jetPackPS[0]);
                 }
 
-                if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+                if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
                     CG_DestroyParticleSystem(&cent->jetPackPS[1]);
                 }
 
@@ -2275,7 +2275,7 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
 
             // Add flash tag (?)
             {
-                memset(&flash, 0, sizeof(flash) );
+                memset(&flash, 0, sizeof(flash));
                 VectorCopy(torso->lightingOrigin, flash.lightingOrigin);
                 flash.renderfx = torso->renderfx;
 
@@ -2292,25 +2292,25 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
             }
 
             // attach ps
-            if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+            if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
                 CG_SetAttachmentTag(&cent->jetPackPS[0]->attachment, &jetpack, jetpack.hModel, "nozzle.R");
                 CG_SetAttachmentCent(&cent->jetPackPS[0]->attachment, cent);
                 CG_AttachToTag(&cent->jetPackPS[0]->attachment);
             }
 
-            if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+            if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
                 CG_SetAttachmentTag(&cent->jetPackPS[1]->attachment, &jetpack, jetpack.hModel, "nozzle.L");
                 CG_SetAttachmentCent(&cent->jetPackPS[1]->attachment, cent);
                 CG_AttachToTag(&cent->jetPackPS[1]->attachment);
             }
         } else {
-            if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+            if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
                 // disable jetpack ps when not thrusting anymore
                 CG_DestroyParticleSystem(&cent->jetPackPS[0]);
                 cent->jetPackState = JPS_INACTIVE;
             }
 
-            if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+            if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
                 // disable jetpack ps when not thrusting anymore
                 CG_DestroyParticleSystem(&cent->jetPackPS[1]);
                 cent->jetPackState = JPS_INACTIVE;
@@ -2318,13 +2318,13 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
         }
     } else {
         // disable jetpack ps when not carrying it anymore
-        if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+        if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
             // disable jetpack ps when not thrusting anymore
             CG_DestroyParticleSystem(&cent->jetPackPS[0]);
             cent->jetPackState = JPS_INACTIVE;
         }
 
-        if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+        if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
             // disable jetpack ps when not thrusting anymore
             CG_DestroyParticleSystem(&cent->jetPackPS[1]);
             cent->jetPackState = JPS_INACTIVE;
@@ -2332,8 +2332,8 @@ static void CG_PlayerUpgrades(centity_t* cent, refEntity_t* torso) {
     }
 
     // battery pack
-    if (held & (1 << UP_RADAR) ) {
-        memset(&radar, 0, sizeof(radar) );
+    if (held & (1 << UP_RADAR)) {
+        memset(&radar, 0, sizeof(radar));
         VectorCopy(torso->lightingOrigin, radar.lightingOrigin);
         radar.renderfx = torso->renderfx;
 
@@ -2388,7 +2388,7 @@ static void CG_PlayerFloatSprite(centity_t* cent, qhandle_t shader) {
         rf = 0;
     }
 
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
     VectorCopy(cent->lerpOrigin, ent.origin);
     ent.origin[2] += 48;
     ent.reType = RT_SPRITE;
@@ -2518,7 +2518,7 @@ static void CG_PlayerSplash(centity_t* cent, class_t class_) {
     // this won't handle moving water brushes, but they wouldn't draw right anyway...
     contents = trap_CM_PointContents(end, 0);
 
-    if (!(contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA) ) ) {
+    if (!(contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA))) {
         return;
     }
 
@@ -2528,7 +2528,7 @@ static void CG_PlayerSplash(centity_t* cent, class_t class_) {
     // if the head isn't out of liquid, don't make a mark
     contents = trap_CM_PointContents(start, 0);
 
-    if (contents & (CONTENTS_SOLID | CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA) ) {
+    if (contents & (CONTENTS_SOLID | CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA)) {
         return;
     }
 
@@ -2621,7 +2621,7 @@ int CG_LightFromDirection(vec3_t point, vec3_t direction) {
         result[0] = ambientLight[0];
         result[1] = ambientLight[1];
         result[2] = ambientLight[2];
-        return (int)( (float)(result[0] + result[1] + result[2]) / 3.0f);
+        return (int)((float)(result[0] + result[1] + result[2]) / 3.0f);
     }
 
     j = (ambientLight[0] + incoming * directedLight[0]);
@@ -2648,7 +2648,7 @@ int CG_LightFromDirection(vec3_t point, vec3_t direction) {
 
     result[2] = j;
 
-    return (int)( (float)(result[0] + result[1] + result[2]) / 3.0f);
+    return (int)((float)(result[0] + result[1] + result[2]) / 3.0f);
 }
 
 /*
@@ -2667,7 +2667,7 @@ int CG_AmbientLight(vec3_t point) {
     result[0] = ambientLight[0];
     result[1] = ambientLight[1];
     result[2] = ambientLight[2];
-    return (int)( (float)(result[0] + result[1] + result[2]) / 3.0f);
+    return (int)((float)(result[0] + result[1] + result[2]) / 3.0f);
 }
 
 #define TRACE_DEPTH    32.0f
@@ -2687,7 +2687,7 @@ void CG_Player(centity_t* cent) {
     int clientNum;
     int renderfx;
     entityState_t* es = &cent->currentState;
-    class_t class_ = (class_t) ( (es->misc >> 8) & 0xFF);
+    class_t class_ = (class_t) ((es->misc >> 8) & 0xFF);
     float scale;
     vec3_t tempAxis[3], tempAxis2[3];
     vec3_t angles;
@@ -2720,7 +2720,7 @@ void CG_Player(centity_t* cent) {
 
     if (es->eFlags & EF_DEAD) {
         altShaderIndex = CG_ALTSHADER_DEAD;
-    } else if (!(es->eFlags & EF_B_POWERED) ) {
+    } else if (!(es->eFlags & EF_B_POWERED)) {
         altShaderIndex = CG_ALTSHADER_UNPOWERED;
     } else {
         altShaderIndex = CG_ALTSHADER_DEFAULT;
@@ -2743,11 +2743,11 @@ void CG_Player(centity_t* cent) {
     }
 
     if (ci->md5) {
-        memset(&body, 0, sizeof(body) );
+        memset(&body, 0, sizeof(body));
     } else {
-        memset(&legs, 0, sizeof(legs) );
-        memset(&torso, 0, sizeof(torso) );
-        memset(&head, 0, sizeof(head) );
+        memset(&legs, 0, sizeof(legs));
+        memset(&torso, 0, sizeof(torso));
+        memset(&head, 0, sizeof(head));
     }
 
     VectorCopy(cent->lerpAngles, angles);
@@ -2755,7 +2755,7 @@ void CG_Player(centity_t* cent) {
 
     // rotate lerpAngles to floor
     if (es->eFlags & EF_WALLCLIMB &&
-        BG_RotateAxis(es->angles2, tempAxis, tempAxis2, true, es->eFlags & EF_WALLCLIMBCEILING) ) {
+        BG_RotateAxis(es->angles2, tempAxis, tempAxis2, true, es->eFlags & EF_WALLCLIMBCEILING)) {
         AxisToAngles(tempAxis2, angles);
     } else {
         VectorCopy(cent->lerpAngles, angles);
@@ -2782,7 +2782,7 @@ void CG_Player(centity_t* cent) {
         AxisCopy(body.axis, tempAxis);
 
         // rotate the legs axis to back to the wall
-        if (es->eFlags & EF_WALLCLIMB && BG_RotateAxis(es->angles2, body.axis, tempAxis, false, es->eFlags & EF_WALLCLIMBCEILING) ) {
+        if (es->eFlags & EF_WALLCLIMB && BG_RotateAxis(es->angles2, body.axis, tempAxis, false, es->eFlags & EF_WALLCLIMBCEILING)) {
             AxisCopy(tempAxis, body.axis);
         }
 
@@ -2802,8 +2802,8 @@ void CG_Player(centity_t* cent) {
         CG_PlayerSprites(cent);
 
         // add the shadow
-        if ( (es->number == cg.snap->ps.clientNum && cg.renderingThirdPerson) ||
-             es->number != cg.snap->ps.clientNum) {
+        if ((es->number == cg.snap->ps.clientNum && cg.renderingThirdPerson) ||
+            es->number != cg.snap->ps.clientNum) {
             CG_PlayerShadow(cent, class_);
         }
 
@@ -2826,7 +2826,7 @@ void CG_Player(centity_t* cent) {
         BG_ClassBoundingBox(class_, mins, maxs, nullptr, nullptr, nullptr);
 
         // move the origin closer into the wall with a CapTrace
-        if (es->eFlags & EF_WALLCLIMB && !(es->eFlags & EF_DEAD) && !(cg.intermissionStarted) ) {
+        if (es->eFlags & EF_WALLCLIMB && !(es->eFlags & EF_DEAD) && !(cg.intermissionStarted)) {
             vec3_t start, end;
             trace_t tr;
 
@@ -2895,7 +2895,7 @@ void CG_Player(centity_t* cent) {
             }
 
             // HACK: Stop taunt from clipping through the body.
-            if ( (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) >= TORSO_GESTURE_BLASTER && (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) <= TORSO_GESTURE_CKIT) {
+            if ((cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) >= TORSO_GESTURE_BLASTER && (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) <= TORSO_GESTURE_CKIT) {
                 quat_t rot;
                 QuatFromAngles(rot, 15, 0, 0);
                 QuatMultiply0(body.skeleton.bones[33].t.rot, rot);
@@ -2922,7 +2922,7 @@ void CG_Player(centity_t* cent) {
             QuatMultiply0(body.skeleton.bones[ci->rightShoulderBone].t.rot, rotation);
 
             // Relationships are emphirically derived. They will probably need to be changed upon changes to the human model
-            QuatFromAngles(rotation, cent->lerpAngles[0], cent->lerpAngles[0] < 0 ? -cent->lerpAngles[0] / 9 : -cent->lerpAngles[0] / (8 - (5 * (cent->lerpAngles[0] / 90) ) ), 0);
+            QuatFromAngles(rotation, cent->lerpAngles[0], cent->lerpAngles[0] < 0 ? -cent->lerpAngles[0] / 9 : -cent->lerpAngles[0] / (8 - (5 * (cent->lerpAngles[0] / 90))), 0);
             QuatMultiply0(body.skeleton.bones[ci->leftShoulderBone].t.rot, rotation);
         } else {
             body.skeleton = legsSkeleton;
@@ -2957,7 +2957,7 @@ void CG_Player(centity_t* cent) {
 
     // rotate the legs axis to back to the wall
     if (es->eFlags & EF_WALLCLIMB &&
-        BG_RotateAxis(es->angles2, legs.axis, tempAxis, false, es->eFlags & EF_WALLCLIMBCEILING) ) {
+        BG_RotateAxis(es->angles2, legs.axis, tempAxis, false, es->eFlags & EF_WALLCLIMBCEILING)) {
         AxisCopy(tempAxis, legs.axis);
     }
 
@@ -2978,8 +2978,8 @@ void CG_Player(centity_t* cent) {
     CG_PlayerSprites(cent);
 
     // add the shadow
-    if ( (es->number == cg.snap->ps.clientNum && cg.renderingThirdPerson) ||
-         es->number != cg.snap->ps.clientNum) {
+    if ((es->number == cg.snap->ps.clientNum && cg.renderingThirdPerson) ||
+        es->number != cg.snap->ps.clientNum) {
         CG_PlayerShadow(cent, class_);
     }
 
@@ -3006,7 +3006,7 @@ void CG_Player(centity_t* cent) {
     VectorCopy(legs.origin, legs.oldorigin); // don't positionally lerp at all
 
     // move the origin closer into the wall with a CapTrace
-    if (es->eFlags & EF_WALLCLIMB && !(es->eFlags & EF_DEAD) && !(cg.intermissionStarted) ) {
+    if (es->eFlags & EF_WALLCLIMB && !(es->eFlags & EF_DEAD) && !(cg.intermissionStarted)) {
         vec3_t start, end, mins, maxs;
         trace_t tr;
 
@@ -3063,7 +3063,7 @@ void CG_Player(centity_t* cent) {
         //
         torso.hModel = ci->torsoModel;
 
-        if (held & (1 << UP_LIGHTARMOUR) ) {
+        if (held & (1 << UP_LIGHTARMOUR)) {
             torso.customSkin = cgs.media.larmourTorsoSkin;
         } else {
             torso.customSkin = ci->torsoSkin;
@@ -3120,15 +3120,15 @@ void CG_Player(centity_t* cent) {
 finish_up:
     // sanity check that particle systems are stopped when dead
     if (es->eFlags & EF_DEAD) {
-        if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+        if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
             CG_DestroyParticleSystem(&cent->muzzlePS);
         }
 
-        if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+        if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
             CG_DestroyParticleSystem(&cent->jetPackPS[0]);
         }
 
-        if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+        if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
             CG_DestroyParticleSystem(&cent->jetPackPS[1]);
         }
     }
@@ -3151,7 +3151,7 @@ void CG_Corpse(centity_t* cent) {
     vec3_t origin, liveZ, deadZ, deadMax;
     float scale;
 
-    corpseNum = CG_GetCorpseNum( (class_t) es->clientNum);
+    corpseNum = CG_GetCorpseNum((class_t) es->clientNum);
 
     if (corpseNum < 0 || corpseNum >= MAX_CLIENTS) {
         CG_Error("Bad corpseNum on corpse entity: %d", corpseNum);
@@ -3165,9 +3165,9 @@ void CG_Corpse(centity_t* cent) {
         return;
     }
 
-    memset(&legs, 0, sizeof(legs) );
-    memset(&torso, 0, sizeof(torso) );
-    memset(&head, 0, sizeof(head) );
+    memset(&legs, 0, sizeof(legs));
+    memset(&torso, 0, sizeof(torso));
+    memset(&head, 0, sizeof(head));
 
     VectorCopy(cent->lerpOrigin, origin);
     BG_ClassBoundingBox(es->clientNum, liveZ, nullptr, nullptr, deadZ, deadMax);
@@ -3192,32 +3192,32 @@ void CG_Corpse(centity_t* cent) {
         legs.oldframe = legs.frame = torso.oldframe = torso.frame = 0;
     } else if (ci->md5) {
         if (ci->gender == GENDER_NEUTER) {
-            memset(&cent->pe.nonseg, 0, sizeof(lerpFrame_t) );
+            memset(&cent->pe.nonseg, 0, sizeof(lerpFrame_t));
             CG_RunCorpseLerpFrame(ci, &cent->pe.nonseg, NSPA_DEATH1);
             legs.oldframe = cent->pe.nonseg.oldFrame;
             legs.frame = cent->pe.nonseg.frame;
             legs.backlerp = cent->pe.nonseg.backlerp;
         } else {
-            memset(&cent->pe.legs, 0, sizeof(lerpFrame_t) );
+            memset(&cent->pe.legs, 0, sizeof(lerpFrame_t));
             CG_RunCorpseLerpFrame(ci, &cent->pe.legs, BOTH_DEATH1);
             legs.oldframe = cent->pe.legs.oldFrame;
             legs.frame = cent->pe.legs.frame;
             legs.backlerp = cent->pe.legs.backlerp;
         }
     } else if (!ci->nonsegmented) {
-        memset(&cent->pe.legs, 0, sizeof(lerpFrame_t) );
+        memset(&cent->pe.legs, 0, sizeof(lerpFrame_t));
         CG_RunPlayerLerpFrame(ci, &cent->pe.legs, es->legsAnim, nullptr, 1);
         legs.oldframe = cent->pe.legs.oldFrame;
         legs.frame = cent->pe.legs.frame;
         legs.backlerp = cent->pe.legs.backlerp;
 
-        memset(&cent->pe.torso, 0, sizeof(lerpFrame_t) );
+        memset(&cent->pe.torso, 0, sizeof(lerpFrame_t));
         CG_RunPlayerLerpFrame(ci, &cent->pe.torso, es->torsoAnim, nullptr, 1);
         torso.oldframe = cent->pe.torso.oldFrame;
         torso.frame = cent->pe.torso.frame;
         torso.backlerp = cent->pe.torso.backlerp;
     } else {
-        memset(&cent->pe.nonseg, 0, sizeof(lerpFrame_t) );
+        memset(&cent->pe.nonseg, 0, sizeof(lerpFrame_t));
         CG_RunPlayerLerpFrame(ci, &cent->pe.nonseg, es->legsAnim, nullptr, 1);
         legs.oldframe = cent->pe.nonseg.oldFrame;
         legs.frame = cent->pe.nonseg.frame;
@@ -3344,19 +3344,19 @@ void CG_ResetPlayerEntity(centity_t* cent) {
     VectorCopy(cent->lerpOrigin, cent->rawOrigin);
     VectorCopy(cent->lerpAngles, cent->rawAngles);
 
-    memset(&cent->pe.legs, 0, sizeof(cent->pe.legs) );
+    memset(&cent->pe.legs, 0, sizeof(cent->pe.legs));
     cent->pe.legs.yawAngle = cent->rawAngles[YAW];
     cent->pe.legs.yawing = false;
     cent->pe.legs.pitchAngle = 0;
     cent->pe.legs.pitching = false;
 
-    memset(&cent->pe.torso, 0, sizeof(cent->pe.torso) );
+    memset(&cent->pe.torso, 0, sizeof(cent->pe.torso));
     cent->pe.torso.yawAngle = cent->rawAngles[YAW];
     cent->pe.torso.yawing = false;
     cent->pe.torso.pitchAngle = cent->rawAngles[PITCH];
     cent->pe.torso.pitching = false;
 
-    memset(&cent->pe.nonseg, 0, sizeof(cent->pe.nonseg) );
+    memset(&cent->pe.nonseg, 0, sizeof(cent->pe.nonseg));
     cent->pe.nonseg.yawAngle = cent->rawAngles[YAW];
     cent->pe.nonseg.yawing = false;
     cent->pe.nonseg.pitchAngle = cent->rawAngles[PITCH];
@@ -3381,7 +3381,7 @@ void CG_PlayerDisconnect(vec3_t org) {
 
     ps = CG_SpawnNewParticleSystem(cgs.media.disconnectPS);
 
-    if (CG_IsParticleSystemValid(&ps) ) {
+    if (CG_IsParticleSystemValid(&ps)) {
         CG_SetAttachmentPoint(&ps->attachment, org);
         CG_AttachToPoint(&ps->attachment);
     }
@@ -3408,7 +3408,7 @@ centity_t* CG_GetLocation(vec3_t origin) {
             continue;
         }
 
-        if (!trap_R_inPVS(origin, eloc->lerpOrigin) ) {
+        if (!trap_R_inPVS(origin, eloc->lerpOrigin)) {
             continue;
         }
 
@@ -3429,7 +3429,7 @@ centity_t* CG_GetPlayerLocation() {
 void CG_InitClasses() {
     int i;
 
-    Com_Memset(cg_classes, 0, sizeof(cg_classes) );
+    Com_Memset(cg_classes, 0, sizeof(cg_classes));
 
     for (i = PCL_NONE + 1; i < PCL_NUM_CLASSES; i++) {
         const char* icon = BG_Class(i)->icon;

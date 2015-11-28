@@ -132,7 +132,7 @@ namespace Color {
      * T must have a proper specialization of ColorAdaptor
      */
     template<class T>
-    auto Adapt(const T &object)->decltype(ColorAdaptor<T>::Adapt(object) )
+    auto Adapt(const T &object)->decltype(ColorAdaptor<T>::Adapt(object))
     {
         return ColorAdaptor<T>::Adapt(object);
     }
@@ -179,19 +179,19 @@ namespace Color {
 
             template<class T, class = std::enable_if<T::is_color> >
             BasicColor(const T& adaptor) :
-                red(ConvertComponent<T>(adaptor.Red()   ) ),
-                green(ConvertComponent<T>(adaptor.Green() ) ),
-                blue(ConvertComponent<T>(adaptor.Blue()  ) ),
-                alpha(ConvertComponent<T>(adaptor.Alpha() ) ) {
+                red(ConvertComponent<T>(adaptor.Red())),
+                green(ConvertComponent<T>(adaptor.Green())),
+                blue(ConvertComponent<T>(adaptor.Blue())),
+                alpha(ConvertComponent<T>(adaptor.Alpha())) {
             }
 
 
             template<class T, class = std::enable_if<T::is_color> >
             BasicColor& operator=(const T& adaptor) {
-                red   = ConvertComponent<T>(adaptor.Red()   );
-                green = ConvertComponent<T>(adaptor.Green() );
-                blue  = ConvertComponent<T>(adaptor.Blue()  );
-                alpha = ConvertComponent<T>(adaptor.Alpha() );
+                red = ConvertComponent<T>(adaptor.Red());
+                green = ConvertComponent<T>(adaptor.Green());
+                blue = ConvertComponent<T>(adaptor.Blue());
+                alpha = ConvertComponent<T>(adaptor.Alpha());
 
                 return *this;
             }
@@ -206,7 +206,7 @@ namespace Color {
             }
 
             void ToArray(component_type* output) const {
-                memcpy(output, ToArray(), ArrayBytes() );
+                memcpy(output, ToArray(), ArrayBytes());
             }
 
             // Size of the memory location returned by ToArray() in bytes
@@ -305,7 +305,7 @@ namespace Color {
                    ComponentType(a.Green() * (1 - factor) + b.Green() * factor),
                    ComponentType(a.Blue()  * (1 - factor) + b.Blue()  * factor),
                    ComponentType(a.Alpha() * (1 - factor) + b.Alpha() * factor),
-        }
+        };
     }
 
     namespace detail {
@@ -432,8 +432,8 @@ namespace Color {
         private:
 
             const char* begin = nullptr;
-            const char* end   = nullptr;
-            TokenType type  = INVALID;
+            const char* end = nullptr;
+            TokenType type = INVALID;
             ::Color::Color color;
 
     };
@@ -468,13 +468,13 @@ namespace Color {
             }
 
             TokenIterator& operator++() {
-                token = NextToken(token.End() );
+                token = NextToken(token.End());
                 return *this;
             }
 
             TokenIterator operator++(int) {
                 auto copy = *this;
-                token = NextToken(token.End() );
+                token = NextToken(token.End());
                 return copy;
             }
 

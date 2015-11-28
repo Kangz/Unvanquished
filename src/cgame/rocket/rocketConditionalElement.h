@@ -44,16 +44,16 @@ class RocketConditionalElement : public Rocket::Core::Element {
 
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("cvar") != changed_attributes.end() ) {
+            if (changed_attributes.find("cvar") != changed_attributes.end()) {
                 cvar = GetAttribute< Rocket::Core::String >("cvar", "");
-                cvar_value = Cvar::GetValue(cvar.CString() ).c_str();
+                cvar_value = Cvar::GetValue(cvar.CString()).c_str();
             }
 
-            if (changed_attributes.find("condition") != changed_attributes.end() ) {
-                ParseCondition(GetAttribute< Rocket::Core::String >("condition", "") );
+            if (changed_attributes.find("condition") != changed_attributes.end()) {
+                ParseCondition(GetAttribute< Rocket::Core::String >("condition", ""));
             }
 
-            if (changed_attributes.find("value") != changed_attributes.end() ) {
+            if (changed_attributes.find("value") != changed_attributes.end()) {
                 Rocket::Core::String attrib = GetAttribute< Rocket::Core::String >("value", "");
                 char* end = nullptr;
                 // Check if float
@@ -63,7 +63,7 @@ class RocketConditionalElement : public Rocket::Core::Element {
                 if (end) {
                     // is integer
                     if (static_cast< int >(floatVal) == floatVal) {
-                        value.Set(static_cast< int >(floatVal) );
+                        value.Set(static_cast< int >(floatVal));
                     } else {
                         value.Set(floatVal);
                     }
@@ -78,18 +78,18 @@ class RocketConditionalElement : public Rocket::Core::Element {
         }
 
         virtual void OnUpdate() {
-            if (dirty_value || (!cvar.Empty() && cvar_value != Cvar::GetValue(cvar.CString() ).c_str() ) ) {
-                if (IsConditionValid() ) {
-                    if (!IsVisible() ) {
+            if (dirty_value || (!cvar.Empty() && cvar_value != Cvar::GetValue(cvar.CString()).c_str())) {
+                if (IsConditionValid()) {
+                    if (!IsVisible()) {
                         SetProperty("display", "block");
                     }
                 } else {
-                    if (IsVisible() ) {
+                    if (IsVisible()) {
                         SetProperty("display", "none");
                     }
                 }
 
-                cvar_value = Cvar::GetValue(cvar.CString() ).c_str();
+                cvar_value = Cvar::GetValue(cvar.CString()).c_str();
 
                 if (dirty_value) {
                     dirty_value = false;
@@ -139,15 +139,15 @@ class RocketConditionalElement : public Rocket::Core::Element {
         return one != two; }
 
         bool IsConditionValid() {
-            switch (value.GetType() ) {
+            switch (value.GetType()) {
             case Rocket::Core::Variant::INT:
-                Compare(atoi(Cvar::GetValue(cvar.CString() ).c_str() ), value.Get<int>() );
+                Compare(atoi(Cvar::GetValue(cvar.CString()).c_str()), value.Get<int>());
 
             case Rocket::Core::Variant::FLOAT:
-                Compare(atof(Cvar::GetValue(cvar.CString() ).c_str() ), value.Get<float>() );
+                Compare(atof(Cvar::GetValue(cvar.CString()).c_str()), value.Get<float>());
 
             default:
-                Compare(Cvar::GetValue(cvar.CString() ), value.Get< Rocket::Core::String >().CString() );
+                Compare(Cvar::GetValue(cvar.CString()), value.Get< Rocket::Core::String >().CString());
             }
 
             // Should never reach
@@ -155,17 +155,17 @@ class RocketConditionalElement : public Rocket::Core::Element {
         }
 
         bool IsConditionValidLatched() {
-            std::string str = Cvar::GetValue(cvar.CString() );
-            if (!str.empty() ) {
-                switch (value.GetType() ) {
+            std::string str = Cvar::GetValue(cvar.CString());
+            if (!str.empty()) {
+                switch (value.GetType()) {
                 case Rocket::Core::Variant::INT:
-                    Compare(atoi(str.c_str() ), value.Get<int>() );
+                    Compare(atoi(str.c_str()), value.Get<int>());
 
                 case Rocket::Core::Variant::FLOAT:
-                    Compare(atof(str.c_str() ), value.Get<float>() );
+                    Compare(atof(str.c_str()), value.Get<float>());
 
                 default:
-                    Compare(str, value.Get< Rocket::Core::String >().CString() );
+                    Compare(str, value.Get< Rocket::Core::String >().CString());
                 }
             }
 

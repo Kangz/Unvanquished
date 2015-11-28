@@ -67,11 +67,11 @@ class RocketDataSelect : public Rocket::Controls::ElementFormControlDataSelect, 
 
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             ElementFormControlDataSelect::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("source") != changed_attributes.end() ) {
+            if (changed_attributes.find("source") != changed_attributes.end()) {
                 Rocket::Core::String dataSource = GetAttribute<Rocket::Core::String>("source", "");
                 unsigned int pos = dataSource.Find(".");
                 dsName = dataSource.Substring(0, pos);
-                tableName =  dataSource.Substring(pos + 1, dataSource.Length() );
+                tableName = dataSource.Substring(pos + 1, dataSource.Length());
             }
         }
 
@@ -79,7 +79,7 @@ class RocketDataSelect : public Rocket::Controls::ElementFormControlDataSelect, 
             extern std::queue< RocketEvent_t* > eventQueue;
 
             if (event.GetTargetElement() == owner && event == "show") {
-                eventQueue.push(new RocketEvent_t(this, Rocket::Core::String(1024, "setDataSelectValue %s %s", dsName.CString(), tableName.CString() ) ) );
+                eventQueue.push(new RocketEvent_t(this, Rocket::Core::String(1024, "setDataSelectValue %s %s", dsName.CString(), tableName.CString())));
             }
         }
 
@@ -92,11 +92,11 @@ class RocketDataSelect : public Rocket::Controls::ElementFormControlDataSelect, 
                 selection = GetSelection();
 
                 // dispatch event so cgame knows about it
-                eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("setDS %s %s %d", dsName.CString(), tableName.CString(), selection) ) ) );
+                eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("setDS %s %s %d", dsName.CString(), tableName.CString(), selection))));
 
                 // dispatch event so rocket knows about it
                 Rocket::Core::Dictionary parameters;
-                parameters.Set("index", va("%d", selection) );
+                parameters.Set("index", va("%d", selection));
                 parameters.Set("datasource", dsName);
                 parameters.Set("table", tableName);
                 DispatchEvent("rowselect", parameters);

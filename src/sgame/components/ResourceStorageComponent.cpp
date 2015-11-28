@@ -13,7 +13,7 @@ void ResourceStorageComponent::HandlePrepareNetCode() {
 
 void ResourceStorageComponent::HandleDie(gentity_t* killer, meansOfDeath_t meansOfDeath) {
     // TODO: Add TeamComponent and/or Utility::Team.
-    team_t team           = entity.oldEnt->buildableTeam;
+    team_t team = entity.oldEnt->buildableTeam;
     float storedFraction = GetStoredFraction();
 
     // Removes some of the owner's team's build points, proportional to the amount this structure

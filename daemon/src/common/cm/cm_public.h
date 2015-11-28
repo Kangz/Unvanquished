@@ -88,4 +88,4 @@ int      CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t proj
                           int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (* drawPoly)(int color, int numPoints, float* points) );
+void CM_DrawDebugSurface(void (* drawPoly)(int color, int numPoints, float* points));

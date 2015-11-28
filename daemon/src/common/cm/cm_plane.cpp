@@ -50,7 +50,7 @@ CM_ResetPlaneCounts
 */
 
 void CM_ResetPlaneCounts() {
-    memset(planeHashTable, 0, sizeof(planeHashTable) );
+    memset(planeHashTable, 0, sizeof(planeHashTable));
     numPlanes = 0;
     numFacets = 0;
 }
@@ -222,7 +222,7 @@ int CM_FindPlane2(float plane[4], bool* flipped) {
         h = (hash + i) & (PLANE_HASHES - 1);
 
         for (p = planeHashTable[h]; p; p = p->hashChain) {
-            if (CM_PlaneEqual(p, plane, flipped) ) {
+            if (CM_PlaneEqual(p, plane, flipped)) {
                 return p - planes;
             }
         }
@@ -244,7 +244,7 @@ int CM_FindPlane(const float* p1, const float* p2, const float* p3) {
     cPlane_t* p;
     int hash, h;
 
-    if (!CM_PlaneFromPoints(plane, p1, p2, p3) ) {
+    if (!CM_PlaneFromPoints(plane, p1, p2, p3)) {
         return -1;
     }
 
@@ -427,13 +427,13 @@ void CM_AddFacetBevels(cFacet_t* facet) {
             }
 
             // if it's the surface plane
-            if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped) ) {
+            if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped)) {
                 continue;
             }
 
             // see if the plane is already present
             for (i = 0; i < facet->numBorders; i++) {
-                if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped) ) {
+                if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped)) {
                     break;
                 }
             }
@@ -505,13 +505,13 @@ void CM_AddFacetBevels(cFacet_t* facet) {
                 }
 
                 // if it's the surface plane
-                if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped) ) {
+                if (CM_PlaneEqual(&planes[facet->surfacePlane], plane, &flipped)) {
                     continue;
                 }
 
                 // see if the plane is already present
                 for (i = 0; i < facet->numBorders; i++) {
-                    if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped) ) {
+                    if (CM_PlaneEqual(&planes[facet->borderPlanes[i]], plane, &flipped)) {
                         break;
                     }
                 }

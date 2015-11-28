@@ -43,10 +43,10 @@ static void CG_ParseScores() {
         cg.numScores = MAX_CLIENTS;
     }
 
-    cg.teamScores[0] = atoi(CG_Argv(1) );
-    cg.teamScores[1] = atoi(CG_Argv(2) );
+    cg.teamScores[0] = atoi(CG_Argv(1));
+    cg.teamScores[1] = atoi(CG_Argv(2));
 
-    memset(cg.scores, 0, sizeof(cg.scores) );
+    memset(cg.scores, 0, sizeof(cg.scores));
 
     if (cg_debugRandom.integer) {
         CG_Printf("cg.numScores: %d\n", cg.numScores);
@@ -54,12 +54,12 @@ static void CG_ParseScores() {
 
     for (i = 0; i < cg.numScores; i++) {
         //
-        cg.scores[i].client = atoi(CG_Argv(i * 6 + 3) );
-        cg.scores[i].score = atoi(CG_Argv(i * 6 + 4) );
-        cg.scores[i].ping = atoi(CG_Argv(i * 6 + 5) );
-        cg.scores[i].time = atoi(CG_Argv(i * 6 + 6) );
-        cg.scores[i].weapon = (weapon_t) atoi(CG_Argv(i * 6 + 7) );
-        cg.scores[i].upgrade = (upgrade_t) atoi(CG_Argv(i * 6 + 8) );
+        cg.scores[i].client = atoi(CG_Argv(i * 6 + 3));
+        cg.scores[i].score = atoi(CG_Argv(i * 6 + 4));
+        cg.scores[i].ping = atoi(CG_Argv(i * 6 + 5));
+        cg.scores[i].time = atoi(CG_Argv(i * 6 + 6));
+        cg.scores[i].weapon = (weapon_t) atoi(CG_Argv(i * 6 + 7));
+        cg.scores[i].upgrade = (upgrade_t) atoi(CG_Argv(i * 6 + 8));
 
         if (cg.scores[i].client < 0 || cg.scores[i].client >= MAX_CLIENTS) {
             cg.scores[i].client = 0;
@@ -87,7 +87,7 @@ static void CG_ParseTeamInfo() {
     count = trap_Argc();
 
     for (i = 1; i < count; ++i) { // i is also incremented when writing into cgs.clientinfo
-        client = atoi(CG_Argv(i) );
+        client = atoi(CG_Argv(i));
 
         if (client < 0 || client >= MAX_CLIENTS) {
             CG_Printf("[skipnotify]CG_ParseTeamInfo: bad client number: %d\n", client);
@@ -99,13 +99,13 @@ static void CG_ParseTeamInfo() {
             return;
         }
 
-        cgs.clientinfo[client].location       = atoi(CG_Argv(++i) );
-        cgs.clientinfo[client].health         = atoi(CG_Argv(++i) );
-        cgs.clientinfo[client].curWeaponClass = atoi(CG_Argv(++i) );
-        cgs.clientinfo[client].credit         = atoi(CG_Argv(++i) );
+        cgs.clientinfo[client].location = atoi(CG_Argv(++i));
+        cgs.clientinfo[client].health = atoi(CG_Argv(++i));
+        cgs.clientinfo[client].curWeaponClass = atoi(CG_Argv(++i));
+        cgs.clientinfo[client].credit = atoi(CG_Argv(++i));
 
         if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_ALIENS) {
-            cgs.clientinfo[client].upgrade = atoi(CG_Argv(++i) );
+            cgs.clientinfo[client].upgrade = atoi(CG_Argv(++i));
         }
     }
 
@@ -125,18 +125,18 @@ void CG_ParseServerinfo() {
 
     info = CG_ConfigString(CS_SERVERINFO);
 
-    cgs.timelimit          = atoi(Info_ValueForKey(info, "timelimit") );
-    cgs.maxclients         = atoi(Info_ValueForKey(info, "sv_maxclients") );
-    cgs.powerReactorRange  = atoi(Info_ValueForKey(info, "g_powerReactorRange") );
-    cgs.powerRepeaterRange = atoi(Info_ValueForKey(info, "g_powerRepeaterRange") );
-    cgs.momentumHalfLife = atof(Info_ValueForKey(info, "g_momentumHalfLife") );
-    cgs.unlockableMinTime  = atof(Info_ValueForKey(info, "g_unlockableMinTime") );
+    cgs.timelimit = atoi(Info_ValueForKey(info, "timelimit"));
+    cgs.maxclients = atoi(Info_ValueForKey(info, "sv_maxclients"));
+    cgs.powerReactorRange = atoi(Info_ValueForKey(info, "g_powerReactorRange"));
+    cgs.powerRepeaterRange = atoi(Info_ValueForKey(info, "g_powerRepeaterRange"));
+    cgs.momentumHalfLife = atof(Info_ValueForKey(info, "g_momentumHalfLife"));
+    cgs.unlockableMinTime = atof(Info_ValueForKey(info, "g_unlockableMinTime"));
 
-    Q_strncpyz(cgs.mapname, Info_ValueForKey(info, "mapname"), sizeof(cgs.mapname) );
+    Q_strncpyz(cgs.mapname, Info_ValueForKey(info, "mapname"), sizeof(cgs.mapname));
 
     // pass some of these to UI
-    trap_Cvar_Set("ui_momentumHalfLife", va("%f", cgs.momentumHalfLife) );
-    trap_Cvar_Set("ui_unlockableMinTime", va("%f", cgs.unlockableMinTime) );
+    trap_Cvar_Set("ui_momentumHalfLife", va("%f", cgs.momentumHalfLife));
+    trap_Cvar_Set("ui_unlockableMinTime", va("%f", cgs.unlockableMinTime));
 }
 
 /*
@@ -162,8 +162,8 @@ Called on load to set the initial values from configure strings
 ================
 */
 void CG_SetConfigValues() {
-    cgs.levelStartTime = atoi(CG_ConfigString(CS_LEVEL_START_TIME) );
-    cg.warmupTime = atoi(CG_ConfigString(CS_WARMUP) );
+    cgs.levelStartTime = atoi(CG_ConfigString(CS_LEVEL_START_TIME));
+    cg.warmupTime = atoi(CG_ConfigString(CS_WARMUP));
 }
 
 /*
@@ -224,7 +224,7 @@ static void CG_ConfigStringModified() {
     // update the config string state with the new data, keeping in sync
     // with the config strings in the engine.
     // The engine already checked the inputs
-    num = atoi(CG_Argv(1) );
+    num = atoi(CG_Argv(1));
     cgs.gameState[num] = CG_Argv(2);
 
     // look up the individual string that was modified
@@ -262,10 +262,10 @@ static void CG_ConfigStringModified() {
         cgs.voteModified[num - CS_VOTE_NO] = true;
     } else if (num >= CS_VOTE_STRING && num < CS_VOTE_STRING + NUM_TEAMS) {
         Q_strncpyz(cgs.voteString[num - CS_VOTE_STRING], str,
-                   sizeof(cgs.voteString[num - CS_VOTE_STRING]) );
+                   sizeof(cgs.voteString[num - CS_VOTE_STRING]));
     } else if (num >= CS_VOTE_CALLER && num < CS_VOTE_CALLER + NUM_TEAMS) {
         Q_strncpyz(cgs.voteCaller[num - CS_VOTE_CALLER], str,
-                   sizeof(cgs.voteCaller[num - CS_VOTE_CALLER]) );
+                   sizeof(cgs.voteCaller[num - CS_VOTE_CALLER]));
     } else if (num == CS_INTERMISSION) {
         cg.intermissionStarted = atoi(str);
         if (cg.intermissionStarted) {
@@ -279,7 +279,7 @@ static void CG_ConfigStringModified() {
     } else if (num >= CS_GRADING_TEXTURES && num < CS_GRADING_TEXTURES + MAX_GRADING_TEXTURES) {
         CG_RegisterGrading(num - CS_GRADING_TEXTURES, str);
     } else if (num >= CS_PARTICLE_SYSTEMS && num < CS_PARTICLE_SYSTEMS + MAX_GAME_PARTICLE_SYSTEMS) {
-        cgs.gameParticleSystems[num - CS_PARTICLE_SYSTEMS] = CG_RegisterParticleSystem( (char*) str);
+        cgs.gameParticleSystems[num - CS_PARTICLE_SYSTEMS] = CG_RegisterParticleSystem((char*) str);
     } else if (num >= CS_SOUNDS && num < CS_SOUNDS + MAX_SOUNDS) {
         if (str[0] != '*') {
             // player specific sounds don't register here
@@ -630,14 +630,14 @@ void CG_Menu(int menuType, int arg) {
     case MN_A_INFEST:
         trap_Cvar_Set("ui_currentClass",
                       va("%d %d", cg.snap->ps.stats[STAT_CLASS],
-                         cg.snap->ps.persistant[PERS_CREDIT]) );
+                         cg.snap->ps.persistant[PERS_CREDIT]));
 
         menu = ROCKETMENU_ALIENEVOLVE;
         break;
 
     case MN_A_CANTEVOLVE:
         shortMsg = va(_("You cannot evolve into a %s"),
-                      _(BG_ClassModelConfig(arg)->humanName) );
+                      _(BG_ClassModelConfig(arg)->humanName));
         break;
 
     case MN_A_EVOLVEWALLWALK:
@@ -650,17 +650,17 @@ void CG_Menu(int menuType, int arg) {
 
     case MN_A_CLASSNOTSPAWN:
         shortMsg = va(_("You cannot spawn as a %s"),
-                      _(BG_ClassModelConfig(arg)->humanName) );
+                      _(BG_ClassModelConfig(arg)->humanName));
         break;
 
     case MN_A_CLASSNOTALLOWED:
         shortMsg = va(_("The %s is not allowed"),
-                      _(BG_ClassModelConfig(arg)->humanName) );
+                      _(BG_ClassModelConfig(arg)->humanName));
         break;
 
     case MN_A_CLASSLOCKED:
         shortMsg = va(_("The %s has not been unlocked yet"),
-                      _(BG_ClassModelConfig(arg)->humanName) );
+                      _(BG_ClassModelConfig(arg)->humanName));
         break;
 
     default:
@@ -706,15 +706,15 @@ static void CG_Say(const char* name, int clientNum, saymode_t mode, const char* 
         if (cg_chatTeamPrefix.integer) {
             Com_sprintf(prefix, sizeof(prefix), "[%s%c^*] ",
                         Color::CString(tcolor),
-                        toupper(*(BG_TeamName(ci->team) ) ) );
+                        toupper(*(BG_TeamName(ci->team))));
         }
 
-        if (Com_ClientListContains(&cgs.ignoreList, clientNum) ) {
+        if (Com_ClientListContains(&cgs.ignoreList, clientNum)) {
             ignore = S_SKIPNOTIFY;
         }
 
-        if ( (mode == SAY_TEAM || mode == SAY_AREA) &&
-             cg.snap->ps.pm_type != PM_INTERMISSION) {
+        if ((mode == SAY_TEAM || mode == SAY_AREA) &&
+            cg.snap->ps.pm_type != PM_INTERMISSION) {
             int locationNum;
 
             if (clientNum == cg.snap->ps.clientNum) {
@@ -751,7 +751,7 @@ static void CG_Say(const char* name, int clientNum, saymode_t mode, const char* 
         Q_strcat(prefix, sizeof(prefix), "* ");
     }
 
-    const char* color = Color::CString(UI_GetChatColour(mode, team) );
+    const char* color = Color::CString(UI_GetChatColour(mode, team));
 
     switch (mode) {
     case SAY_ALL:
@@ -898,18 +898,18 @@ static void CG_ParseVoice() {
     }
 
     if (trap_Argc() == 6) {
-        Q_strncpyz(sayText, CG_Argv(5), sizeof(sayText) );
+        Q_strncpyz(sayText, CG_Argv(5), sizeof(sayText));
     }
 
-    clientNum = atoi(CG_Argv(1) );
+    clientNum = atoi(CG_Argv(1));
 
     if (clientNum < 0 || clientNum >= MAX_CLIENTS) {
         return;
     }
 
-    vChan = (voiceChannel_t) atoi(CG_Argv(2) );
+    vChan = (voiceChannel_t) atoi(CG_Argv(2));
 
-    if ( (unsigned) vChan >= VOICE_CHAN_NUM_CHANS) {
+    if ((unsigned) vChan >= VOICE_CHAN_NUM_CHANS) {
         return;
     }
 
@@ -924,7 +924,7 @@ static void CG_ParseVoice() {
         return;
     }
 
-    track = CG_VoiceTrack(ci->voice, atoi(CG_Argv(3) ), atoi(CG_Argv(4) ) );
+    track = CG_VoiceTrack(ci->voice, atoi(CG_Argv(3)), atoi(CG_Argv(4)));
 
     // keep track of how long the player will be speaking
     // assume it takes 3s to say "*unintelligible gibberish*"
@@ -936,9 +936,9 @@ static void CG_ParseVoice() {
 
     if (!sayText[0]) {
         if (track) {
-            Q_strncpyz(sayText, track->text, sizeof(sayText) );
+            Q_strncpyz(sayText, track->text, sizeof(sayText));
         } else {
-            Q_strncpyz(sayText, "*unintelligible gibberish*", sizeof(sayText) );
+            Q_strncpyz(sayText, "*unintelligible gibberish*", sizeof(sayText));
         }
     }
 
@@ -972,7 +972,7 @@ static void CG_ParseVoice() {
     }
 
     // don't play audio track for lamers
-    if (Com_ClientListContains(&cgs.ignoreList, clientNum) ) {
+    if (Com_ClientListContains(&cgs.ignoreList, clientNum)) {
         return;
     }
 
@@ -1017,7 +1017,7 @@ CG_CenterPrint_Delay_f
 void CG_CenterPrint_Delay_f() {
     char cmd[MAX_STRING_CHARS];
 
-    Com_sprintf(cmd, sizeof(cmd), "delay %s lcp %s", Quote(CG_Argv(1) ), Quote(CG_Argv(2) ) );
+    Com_sprintf(cmd, sizeof(cmd), "delay %s lcp %s", Quote(CG_Argv(1)), Quote(CG_Argv(2)));
     trap_SendConsoleCommand(cmd);
 }
 
@@ -1038,7 +1038,7 @@ CG_CenterPrintTR_Delay_f
 void CG_CenterPrintTR_Delay_f() {
     char cmd[MAX_STRING_CHARS];
 
-    Com_sprintf(cmd, sizeof(cmd), "delay %s lcp %s", Quote(CG_Argv(1) ), Quote(TranslateText_Internal(false, 2) ) );
+    Com_sprintf(cmd, sizeof(cmd), "delay %s lcp %s", Quote(CG_Argv(1)), Quote(TranslateText_Internal(false, 2)));
     trap_SendConsoleCommand(cmd);
 }
 
@@ -1048,7 +1048,7 @@ CG_Print_f
 =================
 */
 static void CG_Print_f() {
-    CG_Printf("%s", CG_Argv(1) );
+    CG_Printf("%s", CG_Argv(1));
 }
 
 /*
@@ -1057,11 +1057,11 @@ CG_PrintTR_f
 =================
 */
 static void CG_PrintTR_f() {
-    Com_Printf("%s", TranslateText_Internal(false, 1) );
+    Com_Printf("%s", TranslateText_Internal(false, 1));
 }
 
 static void CG_PrintTR_plural_f() {
-    Com_Printf("%s", TranslateText_Internal(true, 1) );
+    Com_Printf("%s", TranslateText_Internal(true, 1));
 }
 
 /*
@@ -1073,10 +1073,10 @@ static void CG_Chat_f() {
     char id[3];
     char mode[3];
 
-    trap_Argv(1, id, sizeof(id) );
-    trap_Argv(2, mode, sizeof(mode) );
+    trap_Argv(1, id, sizeof(id));
+    trap_Argv(2, mode, sizeof(mode));
 
-    CG_Say(nullptr, atoi(id), (saymode_t) atoi(mode), CG_Argv(3) );
+    CG_Say(nullptr, atoi(id), (saymode_t) atoi(mode), CG_Argv(3));
 }
 
 /*
@@ -1088,10 +1088,10 @@ static void CG_AdminChat_f() {
     char name[MAX_NAME_LENGTH];
     char mode[3];
 
-    trap_Argv(1, name, sizeof(name) );
-    trap_Argv(2, mode, sizeof(mode) );
+    trap_Argv(1, name, sizeof(name));
+    trap_Argv(2, mode, sizeof(mode));
 
-    CG_Say(name, -1, (saymode_t) atoi(mode), CG_Argv(3) );
+    CG_Say(name, -1, (saymode_t) atoi(mode), CG_Argv(3));
 }
 
 /*
@@ -1102,9 +1102,9 @@ CG_ServerMenu_f
 static void CG_ServerMenu_f() {
     if (!cg.demoPlayback) {
         if (trap_Argc() == 2) {
-            CG_Menu(atoi(CG_Argv(1) ), 0);
+            CG_Menu(atoi(CG_Argv(1)), 0);
         } else if (trap_Argc() == 3) {
-            CG_Menu(atoi(CG_Argv(1) ), atoi(CG_Argv(2) ) );
+            CG_Menu(atoi(CG_Argv(1)), atoi(CG_Argv(2)));
         }
     }
 }
@@ -1135,11 +1135,11 @@ static void CG_VCommand() {
 
     recurse = 1;
 
-    trap_Argv(1, cmd, sizeof(cmd) );
+    trap_Argv(1, cmd, sizeof(cmd));
 
-    if (!Q_stricmp(cmd, "grenade") ) {
+    if (!Q_stricmp(cmd, "grenade")) {
         trap_SendClientCommand(cg_cmdGrenadeThrown.string);
-    } else if (!Q_stricmp(cmd, "needhealth") ) {
+    } else if (!Q_stricmp(cmd, "needhealth")) {
         trap_SendClientCommand(cg_cmdNeedHealth.string);
     }
 
@@ -1157,7 +1157,7 @@ static void CG_GameCmds_f() {
     which would result in trap_RemoveCommand( "quit" ), which would be really bad
     */
     for (i = 1; i < c; i++) {
-        trap_AddCommand(CG_Argv(i) );
+        trap_AddCommand(CG_Argv(i));
     }
 }
 
@@ -1185,7 +1185,7 @@ static void CG_PmoveParams_f() {
     }
 }
 
-static const consoleCommand_t svcommands[] ={ // sorting: use 'sort -f'
+static const consoleCommand_t svcommands[] = { // sorting: use 'sort -f'
     { "achat", CG_AdminChat_f          },
     { "chat", CG_Chat_f               },
     { "cmds", CG_GameCmds_f           },

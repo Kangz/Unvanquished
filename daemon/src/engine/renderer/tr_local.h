@@ -285,7 +285,7 @@ static INLINE link_t* StackTop(link_t* l) {
 static INLINE void StackPush(link_t* sentinel, void* data) {
     link_t* l;
 
-    l = (link_t*) Com_Allocate(sizeof(*l) );
+    l = (link_t*) Com_Allocate(sizeof(*l));
     InitLink(l, data);
 
     InsertLink(l, sentinel);
@@ -325,7 +325,7 @@ static INLINE bool QueueEmpty(link_t* l) {
 static INLINE void EnQueue(link_t* sentinel, void* data) {
     link_t* l;
 
-    l = (link_t*) Com_Allocate(sizeof(*l) );
+    l = (link_t*) Com_Allocate(sizeof(*l));
     InitLink(l, data);
 
     InsertLink(l, sentinel);
@@ -596,7 +596,7 @@ enum {
 };
 
 // must match order of ATTR_INDEX enums
-static const char* const attributeNames[] ={
+static const char* const attributeNames[] = {
     "attr_Position",
     "attr_TexCoord0",
     "attr_QTangent",
@@ -1066,8 +1066,8 @@ struct shaderCommands_s;
 
 typedef enum {
     CT_FRONT_SIDED = 0,
-    CT_TWO_SIDED   = 1,
-    CT_BACK_SIDED  = 2
+    CT_TWO_SIDED = 1,
+    CT_BACK_SIDED = 2
 } cullType_t;
 
 // reverse the cull operation
@@ -1512,16 +1512,16 @@ typedef struct drawSurf_s {
     uint64_t sort;
 
     inline int index() const {
-        return int ( (sort & SORT_INDEX_MASK) );
+        return int ((sort & SORT_INDEX_MASK));
     }
     inline int entityNum() const {
-        return int ( (sort >> SORT_ENTITYNUM_SHIFT) & SORT_ENTITYNUM_MASK) - 1;
+        return int ((sort >> SORT_ENTITYNUM_SHIFT) & SORT_ENTITYNUM_MASK) - 1;
     }
     inline int fogNum() const {
-        return int ( (sort >> SORT_FOGNUM_SHIFT) & SORT_FOGNUM_MASK);
+        return int ((sort >> SORT_FOGNUM_SHIFT) & SORT_FOGNUM_MASK);
     }
     inline int lightmapNum() const {
-        return int ( (sort >> SORT_LIGHTMAP_SHIFT) & SORT_LIGHTMAP_MASK) - 1;
+        return int ((sort >> SORT_LIGHTMAP_SHIFT) & SORT_LIGHTMAP_MASK) - 1;
     }
     inline int shaderNum() const {
         return int (sort >> SORT_SHADER_SHIFT);
@@ -3121,7 +3121,7 @@ void     GLimp_Shutdown();
 void     GLimp_EndFrame();
 void     GLimp_HandleCvars();
 
-bool GLimp_SpawnRenderThread(void (* function)() );
+bool GLimp_SpawnRenderThread(void (* function)());
 void     GLimp_ShutdownRenderThread();
 void* GLimp_RendererSleep();
 void     GLimp_FrontEndSleep();

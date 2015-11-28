@@ -27,7 +27,7 @@ trGlobals_t tr;
 
 // convert from our coordinate system (looking down X)
 // to OpenGL's coordinate system (looking down -Z)
-const matrix_t quakeToOpenGLMatrix ={
+const matrix_t quakeToOpenGLMatrix = {
     0, 0, -1, 0,
     -1, 0, 0, 0,
     0, 1, 0, 0,
@@ -240,7 +240,7 @@ void R_TBNtoQtangents(const vec3_t tangent, const vec3_t binormal,
         VectorNegate(tangent2, tangent2);
     }
 
-    if ( (trace = tangent2[0] + binormal2[1] + normal2[2]) > 0.0f) {
+    if ((trace = tangent2[0] + binormal2[1] + normal2[2]) > 0.0f) {
         trace += 1.0f;
         scale = 0.5f * Q_rsqrt(trace);
 
@@ -658,7 +658,7 @@ void R_RotateEntityForLight(const trRefEntity_t* ent, const trRefLight_t* light,
     float axisLength;
 
     if (ent->e.reType != RT_MODEL) {
-        Com_Memset(orientation, 0, sizeof(*orientation) );
+        Com_Memset(orientation, 0, sizeof(*orientation));
 
         orientation->axis[0][0] = 1;
         orientation->axis[1][1] = 1;
@@ -740,7 +740,7 @@ Sets up the modelview matrix for a given viewParm
 void R_RotateForViewer() {
     matrix_t transformMatrix;
 
-    Com_Memset(&tr.orientation, 0, sizeof(tr.orientation) );
+    Com_Memset(&tr.orientation, 0, sizeof(tr.orientation));
     tr.orientation.axis[0][0] = 1;
     tr.orientation.axis[1][1] = 1;
     tr.orientation.axis[2][2] = 1;
@@ -870,7 +870,7 @@ static void R_SetupUnprojection() {
     MatrixInverse(unprojectMatrix);
 
     MatrixMultiplyTranslation(unprojectMatrix, -1.0, -1.0, -1.0);
-    MatrixMultiplyScale(unprojectMatrix, 2.0 * Q_recip( (float) glConfig.vidWidth), 2.0 * Q_recip( (float) glConfig.vidHeight), 2.0);
+    MatrixMultiplyScale(unprojectMatrix, 2.0 * Q_recip((float) glConfig.vidWidth), 2.0 * Q_recip((float) glConfig.vidHeight), 2.0);
 }
 
 /*
@@ -1034,7 +1034,7 @@ static void R_SetupSplitFrustums() {
     for (i = 1; i <= (r_parallelShadowSplits->integer + 1); i++) {
         float si = i / (float)(r_parallelShadowSplits->integer + 1);
 
-        zFar = 1.005f * lambda * (tr.viewParms.zNear * powf(ratio, si) ) + (1 - lambda) * (tr.viewParms.zNear + (tr.viewParms.zFar - tr.viewParms.zNear) * si);
+        zFar = 1.005f * lambda * (tr.viewParms.zNear * powf(ratio, si)) + (1 - lambda) * (tr.viewParms.zNear + (tr.viewParms.zFar - tr.viewParms.zNear) * si);
 
         if (i <= r_parallelShadowSplits->integer) {
             tr.viewParms.parallelSplitDistances[i - 1] = zFar;
@@ -1047,7 +1047,7 @@ static void R_SetupSplitFrustums() {
         tr.viewParms.frustums[i][FRUSTUM_FAR].dist = DotProduct(planeOrigin, tr.viewParms.frustums[i][FRUSTUM_FAR].normal);
         SetPlaneSignbits(&tr.viewParms.frustums[i][FRUSTUM_FAR]);
 
-        if (i <= (r_parallelShadowSplits->integer) ) {
+        if (i <= (r_parallelShadowSplits->integer)) {
             zNear = zFar - (zFar * 0.005f);
             tr.viewParms.frustums[i + 1][FRUSTUM_NEAR].type = PLANE_NON_AXIAL;
             VectorCopy(tr.viewParms.orientation.axis[0], tr.viewParms.frustums[i + 1][FRUSTUM_NEAR].normal);
@@ -1110,14 +1110,14 @@ void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane) {
     vec4_t plane4;
 
     if (!surfType) {
-        Com_Memset(plane, 0, sizeof(*plane) );
+        Com_Memset(plane, 0, sizeof(*plane));
         plane->normal[0] = 1;
         return;
     }
 
     switch (*surfType) {
     case SF_FACE:
-        *plane = ( (srfSurfaceFace_t*) surfType)->plane;
+        *plane = ((srfSurfaceFace_t*) surfType)->plane;
         return;
 
     case SF_TRIANGLES:
@@ -1138,7 +1138,7 @@ void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane) {
         return;
 
     default:
-        Com_Memset(plane, 0, sizeof(*plane) );
+        Com_Memset(plane, 0, sizeof(*plane));
         plane->normal[0] = 1;
         return;
     }
@@ -1365,9 +1365,9 @@ static bool SurfIsOffscreen(const drawSurf_t* drawSurf) {
 
         for (j = 0; j < 3; j++) {
             if (clip[j] >= clip[3]) {
-                pointFlags |= (1 << (j * 2) );
+                pointFlags |= (1 << (j * 2));
             } else if (clip[j] <= -clip[3]) {
-                pointFlags |= (1 << (j * 2 + 1) );
+                pointFlags |= (1 << (j * 2 + 1));
             }
         }
 
@@ -1404,7 +1404,7 @@ static bool SurfIsOffscreen(const drawSurf_t* drawSurf) {
         R_QtangentsToTBN(tess.verts[tess.indexes[i]].qtangents,
                          qtangent, qbinormal, qnormal);
 
-        if ( (dot = DotProduct(normal, qnormal) ) >= 0) {
+        if ((dot = DotProduct(normal, qnormal)) >= 0) {
             numTriangles--;
         }
     }
@@ -1415,11 +1415,11 @@ static bool SurfIsOffscreen(const drawSurf_t* drawSurf) {
 
     // mirrors can early out at this point, since we don't do a fade over distance
     // with them (although we could)
-    if (IsMirror(drawSurf) ) {
+    if (IsMirror(drawSurf)) {
         return false;
     }
 
-    if (shortest > (tess.surfaceShader->portalRange * tess.surfaceShader->portalRange) ) {
+    if (shortest > (tess.surfaceShader->portalRange * tess.surfaceShader->portalRange)) {
         return true;
     }
 
@@ -1449,7 +1449,7 @@ static bool R_MirrorViewBySurface(drawSurf_t* drawSurf) {
     }
 
     // trivially reject portal/mirror
-    if (SurfIsOffscreen(drawSurf) ) {
+    if (SurfIsOffscreen(drawSurf)) {
         return false;
     }
 
@@ -1459,7 +1459,7 @@ static bool R_MirrorViewBySurface(drawSurf_t* drawSurf) {
     newParms = tr.viewParms;
     newParms.isPortal = true;
 
-    if (!R_GetPortalOrientations(drawSurf, &surface, &camera, newParms.pvsOrigin, &newParms.isMirror) ) {
+    if (!R_GetPortalOrientations(drawSurf, &surface, &camera, newParms.pvsOrigin, &newParms.isMirror)) {
         return false; // bad portal, no portalentity
     }
 
@@ -1606,7 +1606,7 @@ static void R_SortDrawSurfs() {
         }
 
         // if the mirror was completely clipped away, we may need to check another surface
-        if (R_MirrorViewBySurface(drawSurf) ) {
+        if (R_MirrorViewBySurface(drawSurf)) {
             // this is a debug option to see exactly what is being mirrored
             if (r_portalOnly->integer) {
                 return;
@@ -1642,7 +1642,7 @@ void R_AddEntitySurfaces() {
         // we don't want the hacked weapon position showing in
         // mirrors, because the true body position will already be drawn
         //
-        if ( (ent->e.renderfx & RF_FIRST_PERSON) && (tr.viewParms.isPortal || tr.viewParms.isMirror) ) {
+        if ((ent->e.renderfx & RF_FIRST_PERSON) && (tr.viewParms.isPortal || tr.viewParms.isMirror)) {
             continue;
         }
 
@@ -1656,12 +1656,12 @@ void R_AddEntitySurfaces() {
             // self blood sprites, talk balloons, etc should not be drawn in the primary
             // view.  We can't just do this check for all entities, because md3
             // entities may still want to cast shadows from them
-            if ( (ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
+            if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
                 continue;
             }
 
             shader = R_GetShaderByHandle(ent->e.customShader);
-            R_AddDrawSurf(&entitySurface, shader, -1, R_SpriteFogNum(ent) );
+            R_AddDrawSurf(&entitySurface, shader, -1, R_SpriteFogNum(ent));
             break;
 
         case RT_MODEL:
@@ -1691,7 +1691,7 @@ void R_AddEntitySurfaces() {
                     break;
 
                 case MOD_BAD: // null model axis
-                    if ( (ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
+                    if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
                         break;
                     }
 
@@ -1739,7 +1739,7 @@ void R_AddEntityInteractions(trRefLight_t* light) {
         }
         if (light->restrictInteractionFirst >= 0 &&
             (i < light->restrictInteractionFirst ||
-             i > light->restrictInteractionLast) ) {
+             i > light->restrictInteractionLast)) {
             iaType = (interactionType_t) (iaType & (~IA_SHADOW));
         }
 
@@ -1756,7 +1756,7 @@ void R_AddEntityInteractions(trRefLight_t* light) {
         // we don't want the hacked weapon position showing in
         // mirrors, because the true body position will already be drawn
         //
-        if ( (ent->e.renderfx & RF_FIRST_PERSON) && (tr.viewParms.isPortal || tr.viewParms.isMirror) ) {
+        if ((ent->e.renderfx & RF_FIRST_PERSON) && (tr.viewParms.isPortal || tr.viewParms.isMirror)) {
             continue;
         }
 
@@ -1866,7 +1866,7 @@ void R_AddLightInteractions() {
         light = tr.currentLight = &tr.refdef.lights[i];
 
         if (light->isStatic) {
-            if (!r_staticLight->integer || ( (r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity) ) {
+            if (!r_staticLight->integer || ((r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity)) {
                 light->cull = CULL_OUT;
                 continue;
             }
@@ -1907,7 +1907,7 @@ void R_AddLightInteractions() {
             }
 
             // look if we have to draw the light including its interactions
-            switch (R_CullLocalBox(light->localBounds) ) {
+            switch (R_CullLocalBox(light->localBounds)) {
             case CULL_IN:
             default:
                 tr.pc.c_box_cull_light_in++;
@@ -1942,7 +1942,7 @@ void R_AddLightInteractions() {
             R_SetupLightLocalBounds(light);
 
             // look if we have to draw the light including its interactions
-            switch (R_CullLocalBox(light->localBounds) ) {
+            switch (R_CullLocalBox(light->localBounds)) {
             case CULL_IN:
             default:
                 tr.pc.c_box_cull_light_in++;
@@ -1969,7 +1969,7 @@ void R_AddLightInteractions() {
 
             // ignore if not in visible bounds
             if (!BoundsIntersect
-                    (light->worldBounds[0], light->worldBounds[1], tr.viewParms.visBounds[0], tr.viewParms.visBounds[1]) ) {
+                    (light->worldBounds[0], light->worldBounds[1], tr.viewParms.visBounds[0], tr.viewParms.visBounds[1])) {
                 light->cull = CULL_OUT;
                 continue;
             }
@@ -2028,7 +2028,7 @@ void R_AddLightBoundsToVisBounds() {
         light = tr.currentLight = &tr.refdef.lights[i];
 
         if (light->isStatic) {
-            if (!r_staticLight->integer || ( (r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity) ) {
+            if (!r_staticLight->integer || ((r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity)) {
                 continue;
             }
         } else {
@@ -2063,7 +2063,7 @@ void R_AddLightBoundsToVisBounds() {
             }
 
             // look if we have to draw the light including its interactions
-            switch (R_CullLocalBox(light->localBounds) ) {
+            switch (R_CullLocalBox(light->localBounds)) {
             case CULL_IN:
             default:
                 break;
@@ -2091,7 +2091,7 @@ void R_AddLightBoundsToVisBounds() {
             R_SetupLightLocalBounds(light);
 
             // look if we have to draw the light including its interactions
-            switch (R_CullLocalBox(light->localBounds) ) {
+            switch (R_CullLocalBox(light->localBounds)) {
             case CULL_IN:
             default:
                 break;

@@ -72,8 +72,8 @@ can then be moved around
 void CG_TestModel_f() {
     vec3_t angles;
 
-    memset(&cg.testModelEntity, 0, sizeof(cg.testModelEntity) );
-    memset(&cg.testModelBarrelEntity, 0, sizeof(cg.testModelBarrelEntity) );
+    memset(&cg.testModelEntity, 0, sizeof(cg.testModelEntity));
+    memset(&cg.testModelBarrelEntity, 0, sizeof(cg.testModelBarrelEntity));
 
     if (trap_Argc() < 2) {
         return;
@@ -88,7 +88,7 @@ void CG_TestModel_f() {
     cg.testModelBarrelEntity.hModel = trap_R_RegisterModel(cg.testModelBarrelName);
 
     if (trap_Argc() == 3) {
-        cg.testModelEntity.backlerp = atof(CG_Argv(2) );
+        cg.testModelEntity.backlerp = atof(CG_Argv(2));
         cg.testModelEntity.frame = 1;
         cg.testModelEntity.oldframe = 0;
     }
@@ -292,8 +292,8 @@ void CG_OffsetThirdPersonView() {
     // Unless in demo, PLAYING in third person, or in dead-third-person cam, allow the player
     // to control camera position offsets using the mouse position.
     if (cg.demoPlayback ||
-        ( (cg.snap->ps.pm_flags & PMF_FOLLOW) &&
-          (cg.predictedPlayerState.stats[STAT_HEALTH] > 0) ) ) {
+        ((cg.snap->ps.pm_flags & PMF_FOLLOW) &&
+         (cg.predictedPlayerState.stats[STAT_HEALTH] > 0))) {
         // Collect our input values from the mouse.
         cmdNum = trap_GetCurrentCmdNumber();
         trap_GetUserCmd(cmdNum, &cmd);
@@ -344,7 +344,7 @@ void CG_OffsetThirdPersonView() {
 
         if (!(cg.snap->ps.stats[STAT_STATE] & SS_WALLCLIMBING) ||
             !BG_RotateAxis(cg.snap->ps.grapplePoint, axis, rotaxis, false,
-                           cg.snap->ps.eFlags & EF_WALLCLIMBCEILING) ) {
+                           cg.snap->ps.eFlags & EF_WALLCLIMBCEILING)) {
             AxisCopy(axis, rotaxis);
         }
 
@@ -431,7 +431,7 @@ void CG_OffsetShoulderView() {
 
     // If someone is playing like this, the rest is already taken care of
     // so just get the firstperson effects and leave.
-    if (!cg.demoPlayback && !(cg.snap->ps.pm_flags & PMF_FOLLOW) ) {
+    if (!cg.demoPlayback && !(cg.snap->ps.pm_flags & PMF_FOLLOW)) {
         CG_OffsetFirstPersonView();
         return;
     }
@@ -453,7 +453,7 @@ void CG_OffsetShoulderView() {
     // Handle pitch.
     rotationAngles[PITCH] = mousePitch;
 
-    rotationAngles[PITCH] = AngleNormalize180(rotationAngles[PITCH] + AngleNormalize180(cg.refdefViewAngles[PITCH]) );
+    rotationAngles[PITCH] = AngleNormalize180(rotationAngles[PITCH] + AngleNormalize180(cg.refdefViewAngles[PITCH]));
 
     if (rotationAngles [PITCH] < -90.0f) {
         rotationAngles [PITCH] = -90.0f;
@@ -472,7 +472,7 @@ void CG_OffsetShoulderView() {
 
     if (!(cg.snap->ps.stats[STAT_STATE] & SS_WALLCLIMBING) ||
         !BG_RotateAxis(cg.snap->ps.grapplePoint, axis, rotaxis, false,
-                       cg.snap->ps.eFlags & EF_WALLCLIMBCEILING) ) {
+                       cg.snap->ps.eFlags & EF_WALLCLIMBCEILING)) {
         AxisCopy(axis, rotaxis);
     }
 
@@ -639,9 +639,9 @@ void CG_OffsetFirstPersonView() {
 #define LEVEL3_FEEDBACK 20.0f
 
     // provide some feedback for pouncing
-    if ( (cg.predictedPlayerState.weapon == WP_ALEVEL3 ||
-          cg.predictedPlayerState.weapon == WP_ALEVEL3_UPG) &&
-         cg.predictedPlayerState.stats[STAT_MISC] > 0) {
+    if ((cg.predictedPlayerState.weapon == WP_ALEVEL3 ||
+         cg.predictedPlayerState.weapon == WP_ALEVEL3_UPG) &&
+        cg.predictedPlayerState.stats[STAT_MISC] > 0) {
         float fraction1, fraction2;
         vec3_t forward;
 
@@ -794,7 +794,7 @@ static int CG_CalcFov() {
     trap_GetUserCmd(cmdNum - 1, &oldcmd);
 
     // switch follow modes if necessary: cycle between free -> follow -> third-person follow
-    if (usercmdButtonPressed(cmd.buttons, BUTTON_USE_HOLDABLE) && !usercmdButtonPressed(oldcmd.buttons, BUTTON_USE_HOLDABLE) ) {
+    if (usercmdButtonPressed(cmd.buttons, BUTTON_USE_HOLDABLE) && !usercmdButtonPressed(oldcmd.buttons, BUTTON_USE_HOLDABLE)) {
         if (cg.snap->ps.pm_flags & PMF_FOLLOW) {
             if (!cg.chaseFollow) {
                 cg.chaseFollow = true;
@@ -809,12 +809,12 @@ static int CG_CalcFov() {
 
     if (cg.predictedPlayerState.pm_type == PM_INTERMISSION ||
         (cg.snap->ps.persistant[PERS_SPECSTATE] != SPECTATOR_NOT) ||
-        (cg.renderingThirdPerson) ) {
+        (cg.renderingThirdPerson)) {
         // if in intermission or third person, use a fixed value
         fov_y = BASE_FOV_Y;
     } else {
         // don't lock the fov globally - we need to be able to change it
-        if ( (attribFov = trap_Cvar_VariableIntegerValue(BG_Class(cg.predictedPlayerState.stats[STAT_CLASS])->fovCvar) ) ) {
+        if ((attribFov = trap_Cvar_VariableIntegerValue(BG_Class(cg.predictedPlayerState.stats[STAT_CLASS])->fovCvar))) {
             if (attribFov < 80) {
                 attribFov = 80;
             } else if (attribFov >= 140) {
@@ -833,10 +833,10 @@ static int CG_CalcFov() {
         }
 
         if (cg.spawnTime > (cg.time - FOVWARPTIME) &&
-            BG_ClassHasAbility(cg.predictedPlayerState.stats[STAT_CLASS], SCA_FOVWARPS) ) {
+            BG_ClassHasAbility(cg.predictedPlayerState.stats[STAT_CLASS], SCA_FOVWARPS)) {
             float fraction = (float)(cg.time - cg.spawnTime) / FOVWARPTIME;
 
-            fov_y = MAX_FOV_WARP_Y - ( (MAX_FOV_WARP_Y - fov_y) * fraction);
+            fov_y = MAX_FOV_WARP_Y - ((MAX_FOV_WARP_Y - fov_y) * fraction);
         }
 
         // account for zooms
@@ -885,14 +885,14 @@ static int CG_CalcFov() {
         }
     }
 
-    y = cg.refdef.height / tan(0.5f * DEG2RAD(fov_y) );
+    y = cg.refdef.height / tan(0.5f * DEG2RAD(fov_y));
     fov_x = atan2(cg.refdef.width, y);
     fov_x = 2.0f * RAD2DEG(fov_x);
 
     // warp if underwater
     contents = CG_PointContents(cg.refdef.vieworg, -1);
 
-    if (contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA) ) {
+    if (contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA)) {
         phase = cg.time / 1000.0f * WAVE_FREQUENCY * M_PI * 2.0f;
         v = WAVE_AMPLITUDE * sin(phase);
         fov_x += v;
@@ -1012,7 +1012,7 @@ static void CG_smoothWWTransitions(playerState_t* ps, const vec3_t in, vec3_t ou
     AnglesToAxis(in, inAxis);
 
     // if we are moving from one surface to another smooth the transition
-    if (!VectorCompareEpsilon(surfNormal, cg.lastNormal, 0.01f) ) {
+    if (!VectorCompareEpsilon(surfNormal, cg.lastNormal, 0.01f)) {
         AnglesToAxis(cg.lastVangles, lastAxis);
 
         rotAngle = DotProduct(inAxis[0], lastAxis[0]) +
@@ -1023,7 +1023,7 @@ static void CG_smoothWWTransitions(playerState_t* ps, const vec3_t in, vec3_t ou
         if (rotAngle < -0.9999f) {
             rotAngle = 180.0f;
         } else {
-            rotAngle = RAD2DEG(acos( (rotAngle - 1.0f) / 2.0f) );
+            rotAngle = RAD2DEG(acos((rotAngle - 1.0f) / 2.0f));
         }
 
         CrossProduct(lastAxis[0], inAxis[0], temp);
@@ -1047,7 +1047,7 @@ static void CG_smoothWWTransitions(playerState_t* ps, const vec3_t in, vec3_t ou
 
         // if this op has time remaining, perform it
         if (cg.time < cg.sList[i].time + smoothTime) {
-            stLocal = 1.0f - ( ( (cg.sList[i].time + smoothTime) - cg.time) / smoothTime);
+            stLocal = 1.0f - (((cg.sList[i].time + smoothTime) - cg.time) / smoothTime);
             sFraction = -(cos(stLocal * M_PI) + 1.0f) / 2.0f;
 
             RotatePointAroundVector(outAxis[0], cg.sList[i].rotAxis,
@@ -1099,8 +1099,8 @@ static void CG_smoothWJTransitions(playerState_t* ps, const vec3_t in, vec3_t ou
     for (i = MAXSMOOTHS - 1; i >= 0; i--) {
         // if this op has time remaining, perform it
         if (cg.time < cg.sList[i].time + cg_wwSmoothTime.integer) {
-            stLocal = ( (cg.sList[i].time + cg_wwSmoothTime.integer) - cg.time) / cg_wwSmoothTime.integer;
-            sFraction = 1.0f - ( (cos(stLocal * M_PI * 2.0f) + 1.0f) / 2.0f);
+            stLocal = ((cg.sList[i].time + cg_wwSmoothTime.integer) - cg.time) / cg_wwSmoothTime.integer;
+            sFraction = 1.0f - ((cos(stLocal * M_PI * 2.0f) + 1.0f) / 2.0f);
 
             RotatePointAroundVector(outAxis[0], cg.sList[i].rotAxis,
                                     inAxis[0], sFraction * cg.sList[i].rotAngle);
@@ -1214,7 +1214,7 @@ static void CG_ChooseCgradingEffectAndFade(const playerState_t* ps, qhandle_t* e
     bool playing = team == TEAM_HUMANS || team == TEAM_ALIENS;
 
     // the player has spawned once and is dead or in the intermission
-    if (cg_spawnEffects.integer && (health <= 0 || (playing && cg.snap->ps.persistant[PERS_SPECSTATE] != SPECTATOR_NOT) ) ) {
+    if (cg_spawnEffects.integer && (health <= 0 || (playing && cg.snap->ps.persistant[PERS_SPECSTATE] != SPECTATOR_NOT))) {
         *effect = cgs.media.desaturatedCgrade;
         *fade = 1.0;
         *fadeRate = 0.004;
@@ -1271,7 +1271,7 @@ static void CG_AddColorGradingEffects(const playerState_t* ps) {
     }
 
     // Instant cgrading effects have the priority
-    if (CG_InstantCgradingEffectAndFade(ps, &instantEffect, &instantFade) ) {
+    if (CG_InstantCgradingEffectAndFade(ps, &instantEffect, &instantFade)) {
         finalEffect = instantEffect;
         finalFade = instantFade;
     } else {
@@ -1424,7 +1424,7 @@ Sets cg.refdef view values
 static int CG_CalcViewValues() {
     playerState_t* ps;
 
-    memset(&cg.refdef, 0, sizeof(cg.refdef) );
+    memset(&cg.refdef, 0, sizeof(cg.refdef));
 
     // calculate size of 3D view
     CG_CalcVrect();
@@ -1447,7 +1447,7 @@ static int CG_CalcViewValues() {
     }
 
     cg.bobcycle = (ps->bobCycle & 128) >> 7;
-    cg.bobfracsin = fabs(sin( (ps->bobCycle & 127) / 127.0 * M_PI) );
+    cg.bobfracsin = fabs(sin((ps->bobCycle & 127) / 127.0 * M_PI));
     cg.xyspeed = sqrt(ps->velocity[0] * ps->velocity[0] +
                       ps->velocity[1] * ps->velocity[1]);
 
@@ -1458,9 +1458,9 @@ static int CG_CalcViewValues() {
 
     VectorCopy(ps->origin, cg.refdef.vieworg);
 
-    if (BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLCLIMBER) ) {
+    if (BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLCLIMBER)) {
         CG_smoothWWTransitions(ps, ps->viewangles, cg.refdefViewAngles);
-    } else if (BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLJUMPER) ) {
+    } else if (BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLJUMPER)) {
         CG_smoothWJTransitions(ps, ps->viewangles, cg.refdefViewAngles);
     } else {
         VectorCopy(ps->viewangles, cg.refdefViewAngles);
@@ -1468,8 +1468,8 @@ static int CG_CalcViewValues() {
 
     // clumsy logic, but it needs to be this way around because the CS propagation
     // delay screws things up otherwise
-    if (!BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLJUMPER) ) {
-        if (!(ps->stats[STAT_STATE] & SS_WALLCLIMBING) ) {
+    if (!BG_ClassHasAbility(ps->stats[STAT_CLASS], SCA_WALLJUMPER)) {
+        if (!(ps->stats[STAT_STATE] & SS_WALLCLIMBING)) {
             VectorSet(cg.lastNormal, 0.0f, 0.0f, 1.0f);
         }
     }
@@ -1610,7 +1610,7 @@ bool CG_CullPointAndRadius(const vec3_t pt, vec_t radius) {
     for (i = 0; i < 4; i++) {
         frust = &frustum[i];
 
-        if ( (DotProduct(pt, frust->normal) - frust->dist) < -radius) {
+        if ((DotProduct(pt, frust->normal) - frust->dist) < -radius) {
             return true;
         }
     }
@@ -1645,7 +1645,7 @@ void CG_DrawActiveFrame(int serverTime, bool demoPlayback) {
 
     // if we haven't received any snapshots yet, all
     // we can draw is the information screen
-    if (!cg.snap || (cg.snap->snapFlags & SNAPFLAG_NOT_ACTIVE) ) {
+    if (!cg.snap || (cg.snap->snapFlags & SNAPFLAG_NOT_ACTIVE)) {
         return;
     }
 
@@ -1666,7 +1666,7 @@ void CG_DrawActiveFrame(int serverTime, bool demoPlayback) {
 
     // decide on third person view
     cg.renderingThirdPerson = (cg_thirdPerson.integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0) ||
-                               (cg.chaseFollow && cg.snap->ps.pm_flags & PMF_FOLLOW) );
+                               (cg.chaseFollow && cg.snap->ps.pm_flags & PMF_FOLLOW));
 
     // update speedometer
     CG_AddSpeed();
@@ -1697,7 +1697,7 @@ void CG_DrawActiveFrame(int serverTime, bool demoPlayback) {
     }
 
     cg.refdef.time = cg.time;
-    memcpy(cg.refdef.areamask, cg.snap->areamask, sizeof(cg.refdef.areamask) );
+    memcpy(cg.refdef.areamask, cg.snap->areamask, sizeof(cg.refdef.areamask));
 
     // remove expired console lines
     if (cg.consoleLines[0].time + cg_consoleLatency.integer < cg.time && cg_consoleLatency.integer > 0) {
@@ -1722,13 +1722,13 @@ void CG_DrawActiveFrame(int serverTime, bool demoPlayback) {
 
     if (cg_timescale.value != cg_timescaleFadeEnd.value) {
         if (cg_timescale.value < cg_timescaleFadeEnd.value) {
-            cg_timescale.value += cg_timescaleFadeSpeed.value * ( (float) cg.frametime) / 1000;
+            cg_timescale.value += cg_timescaleFadeSpeed.value * ((float) cg.frametime) / 1000;
 
             if (cg_timescale.value > cg_timescaleFadeEnd.value) {
                 cg_timescale.value = cg_timescaleFadeEnd.value;
             }
         } else {
-            cg_timescale.value -= cg_timescaleFadeSpeed.value * ( (float) cg.frametime) / 1000;
+            cg_timescale.value -= cg_timescaleFadeSpeed.value * ((float) cg.frametime) / 1000;
 
             if (cg_timescale.value < cg_timescaleFadeEnd.value) {
                 cg_timescale.value = cg_timescaleFadeEnd.value;
@@ -1736,7 +1736,7 @@ void CG_DrawActiveFrame(int serverTime, bool demoPlayback) {
         }
 
         if (cg_timescaleFadeSpeed.value) {
-            trap_Cvar_Set("timescale", va("%f", cg_timescale.value) );
+            trap_Cvar_Set("timescale", va("%f", cg_timescale.value));
         }
     }
 

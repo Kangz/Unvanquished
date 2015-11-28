@@ -182,7 +182,7 @@ void CG_CheckPlayerstateEvents(playerState_t* ps, playerState_t* ops) {
             // or the server told us to play another event instead of a predicted event we already issued
             // or something the server told us changed our prediction causing a different event
             (i > ops->eventSequence - MAX_EVENTS && ps->events[i & (MAX_EVENTS - 1)] !=
-             ops->events[i & (MAX_EVENTS - 1)]) ) {
+             ops->events[i & (MAX_EVENTS - 1)])) {
             event = ps->events[i & (MAX_EVENTS - 1)];
 
             cent->currentState.event = event;

@@ -62,54 +62,54 @@ static const char* DisplayAspectString(int w, int h) {
 }
 
 static void CG_Rocket_DFResolution(int handle, const char* data) {
-    int w = atoi(Info_ValueForKey(data, "1") );
-    int h = atoi(Info_ValueForKey(data, "2") );
+    int w = atoi(Info_ValueForKey(data, "1"));
+    int h = atoi(Info_ValueForKey(data, "2"));
 
     if (w == -1 || h == -1) {
         Rocket_DataFormatterFormattedData(handle, "Custom", false);
         return;
     }
-    char* aspectRatio = BG_strdup(DisplayAspectString(w, h) );
+    char* aspectRatio = BG_strdup(DisplayAspectString(w, h));
     Rocket_DataFormatterFormattedData(handle, va("%dx%d ( %s )", w, h, aspectRatio), false);
     BG_Free(aspectRatio);
 }
 
 static void CG_Rocket_DFServerPing(int handle, const char* data) {
     const char* str = Info_ValueForKey(data, "1");
-    Rocket_DataFormatterFormattedData(handle, *str && std::isdigit(*str) ? va("%s ms", Info_ValueForKey(data, "1") ) : "", false);
+    Rocket_DataFormatterFormattedData(handle, *str && std::isdigit(*str) ? va("%s ms", Info_ValueForKey(data, "1")) : "", false);
 }
 
 static void CG_Rocket_DFServerPlayers(int handle, const char* data) {
     char max[4];
-    Q_strncpyz(max, Info_ValueForKey(data, "3"), sizeof(max) );
+    Q_strncpyz(max, Info_ValueForKey(data, "3"), sizeof(max));
     Rocket_DataFormatterFormattedData(handle, va("%s + (%s) / %s", Info_ValueForKey(data, "1"), Info_ValueForKey(data, "2"), max), true);
 }
 
 static void CG_Rocket_DFPlayerName(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, va("<div class=\"playername\">%s</div>", CG_Rocket_QuakeToRML(cgs.clientinfo[atoi(Info_ValueForKey(data, "1") )].name) ), false);
+    Rocket_DataFormatterFormattedData(handle, va("<div class=\"playername\">%s</div>", CG_Rocket_QuakeToRML(cgs.clientinfo[atoi(Info_ValueForKey(data, "1"))].name)), false);
 }
 
 static void CG_Rocket_DFUpgradeName(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, BG_Upgrade(atoi(Info_ValueForKey(data, "1") ) )->humanName, true);
+    Rocket_DataFormatterFormattedData(handle, BG_Upgrade(atoi(Info_ValueForKey(data, "1")))->humanName, true);
 }
 
 static void CG_Rocket_DFVotePlayer(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, va("<button onClick=\"Events.pushevent('exec set ui_dialogCvar1 %s;exec rocket ui/dialogs/editplayer.rml load; exec rocket editplayer show', event)\">vote/moderate</button>", cgs.clientinfo[atoi(Info_ValueForKey(data, "1") )].name), false);
+    Rocket_DataFormatterFormattedData(handle, va("<button onClick=\"Events.pushevent('exec set ui_dialogCvar1 %s;exec rocket ui/dialogs/editplayer.rml load; exec rocket editplayer show', event)\">vote/moderate</button>", cgs.clientinfo[atoi(Info_ValueForKey(data, "1"))].name), false);
 }
 
 static void CG_Rocket_DFVoteMap(int handle, const char* data) {
-    int mapIndex = atoi(Info_ValueForKey(data, "1") );
+    int mapIndex = atoi(Info_ValueForKey(data, "1"));
     if (mapIndex < rocketInfo.data.mapCount) {
         Rocket_DataFormatterFormattedData(handle, va("<button onClick=\"Events.pushevent('exec set ui_dialogCvar1 %s;hide maps;exec rocket ui/dialogs/mapdialog.rml load; exec rocket mapdialog show', event)\" class=\"maps\"><div class=\"levelname\">%s</div> <img class=\"levelshot\"src='/meta/%s/%s'/><div class=\"hovertext\">Start Vote</div> </button>", rocketInfo.data.mapList[mapIndex].mapLoadName, CG_Rocket_QuakeToRML(rocketInfo.data.mapList[mapIndex].mapName), rocketInfo.data.mapList[mapIndex].mapLoadName, rocketInfo.data.mapList[mapIndex].mapLoadName), false);
     }
 }
 
 static void CG_Rocket_DFWeaponName(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, BG_Weapon(atoi(Info_ValueForKey(data, "1") ) )->humanName, true);
+    Rocket_DataFormatterFormattedData(handle, BG_Weapon(atoi(Info_ValueForKey(data, "1")))->humanName, true);
 }
 
 static void CG_Rocket_DFClassName(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, BG_Class(atoi(Info_ValueForKey(data, "1") ) )->name, true);
+    Rocket_DataFormatterFormattedData(handle, BG_Class(atoi(Info_ValueForKey(data, "1")))->name, true);
 }
 
 static void CG_Rocket_DFServerLabel(int handle, const char* data) {
@@ -118,7 +118,7 @@ static void CG_Rocket_DFServerLabel(int handle, const char* data) {
 }
 
 static void CG_Rocket_DFCMArmouryBuyWeapon(int handle, const char* data) {
-    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1") );
+    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1"));
     const char* Class = "";
     const char* Icon = "";
     const char* action = "";
@@ -127,12 +127,12 @@ static void CG_Rocket_DFCMArmouryBuyWeapon(int handle, const char* data) {
     weapon_t currentweapon = BG_PrimaryWeapon(ps->stats);
     credits += BG_Weapon(currentweapon)->price;
 
-    if (BG_InventoryContainsWeapon(weapon, cg.predictedPlayerState.stats) ) {
+    if (BG_InventoryContainsWeapon(weapon, cg.predictedPlayerState.stats)) {
         Class = "active";
-        action =  va("onClick='Cmd.exec(\"sell %s\")'", BG_Weapon(weapon)->name);
+        action = va("onClick='Cmd.exec(\"sell %s\")'", BG_Weapon(weapon)->name);
         // Check mark icon. UTF-8 encoding of \uf00c
         Icon = "<icon class=\"current\">\xEF\x80\x8C</icon>";
-    } else if (!BG_WeaponUnlocked(weapon) || BG_WeaponDisabled(weapon) ) {
+    } else if (!BG_WeaponUnlocked(weapon) || BG_WeaponDisabled(weapon)) {
         Class = "locked";
         // Padlock icon. UTF-8 encoding of \uf023
         Icon = "<icon>\xEF\x80\xA3</icon>";
@@ -143,26 +143,26 @@ static void CG_Rocket_DFCMArmouryBuyWeapon(int handle, const char* data) {
         Icon = "<icon>\xEF\x83\x96</icon>";
     } else {
         Class = "available";
-        action =  va("onClick='Cmd.exec(\"buy +%s\")'", BG_Weapon(weapon)->name);
+        action = va("onClick='Cmd.exec(\"buy +%s\")'", BG_Weapon(weapon)->name);
     }
 
     Rocket_DataFormatterFormattedData(handle, va("<button class='armourybuy %s' onMouseover='Events.pushevent(\"setDS armouryBuyList weapons %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_weapons[weapon].ammoIcon)), false);
 }
 
 static void CG_Rocket_DFCMArmouryBuyUpgrade(int handle, const char* data) {
-    upgrade_t upgrade = (upgrade_t) atoi(Info_ValueForKey(data, "1") );
+    upgrade_t upgrade = (upgrade_t) atoi(Info_ValueForKey(data, "1"));
     const char* Class = "";
     const char* Icon = "";
     const char* action = "";
     playerState_t* ps = &cg.snap->ps;
     int credits = ps->persistant[PERS_CREDIT];
 
-    if (BG_InventoryContainsUpgrade(upgrade, cg.predictedPlayerState.stats) ) {
+    if (BG_InventoryContainsUpgrade(upgrade, cg.predictedPlayerState.stats)) {
         Class = "active";
-        action =  va("onClick='Cmd.exec(\"sell %s\")'", BG_Upgrade(upgrade)->name);
+        action = va("onClick='Cmd.exec(\"sell %s\")'", BG_Upgrade(upgrade)->name);
         // Check mark icon. UTF-8 encoding of \uf00c
         Icon = "<icon class=\"current\">\xEF\x80\x8C</icon>";
-    } else if (!BG_UpgradeUnlocked(upgrade) || BG_UpgradeDisabled(upgrade) ) {
+    } else if (!BG_UpgradeUnlocked(upgrade) || BG_UpgradeDisabled(upgrade)) {
         Class = "locked";
         // Padlock icon. UTF-8 encoding of \uf023
         Icon = "<icon>\xEF\x80\xA3</icon>";
@@ -173,14 +173,14 @@ static void CG_Rocket_DFCMArmouryBuyUpgrade(int handle, const char* data) {
         Icon = "<icon>\xEF\x83\x96</icon>";
     } else {
         Class = "available";
-        action =  va("onClick='Cmd.exec(\"buy +%s\")'", BG_Upgrade(upgrade)->name);
+        action = va("onClick='Cmd.exec(\"buy +%s\")'", BG_Upgrade(upgrade)->name);
     }
 
     Rocket_DataFormatterFormattedData(handle, va("<button class='armourybuy %s' onMouseover='Events.pushevent(\"setDS armouryBuyList upgrades %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_upgrades[upgrade].upgradeIcon)), false);
 }
 
 static void CG_Rocket_DFGWeaponDamage(int handle, const char* data) {
-    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1") );
+    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1"));
     int width = 0;
 
     switch (weapon) {
@@ -233,7 +233,7 @@ static void CG_Rocket_DFGWeaponDamage(int handle, const char* data) {
 }
 
 static void CG_Rocket_DFGWeaponRateOfFire(int handle, const char* data) {
-    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1") );
+    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1"));
     int width = 0;
 
     switch (weapon) {
@@ -286,7 +286,7 @@ static void CG_Rocket_DFGWeaponRateOfFire(int handle, const char* data) {
 }
 
 static void CG_Rocket_DFGWeaponRange(int handle, const char* data) {
-    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1") );
+    weapon_t weapon = (weapon_t) atoi(Info_ValueForKey(data, "1"));
     int width = 0;
 
     switch (weapon) {
@@ -339,7 +339,7 @@ static void CG_Rocket_DFGWeaponRange(int handle, const char* data) {
 }
 
 static void CG_Rocket_DFLevelShot(int handle, const char* data) {
-    Rocket_DataFormatterFormattedData(handle, va("<img class=\"levelshot\" src=\"/levelshots/%s\"/>", Info_ValueForKey(data, "1") ), false);
+    Rocket_DataFormatterFormattedData(handle, va("<img class=\"levelshot\" src=\"/levelshots/%s\"/>", Info_ValueForKey(data, "1")), false);
 }
 
 static score_t* ScoreFromClientNum(int clientNum) {
@@ -355,9 +355,9 @@ static score_t* ScoreFromClientNum(int clientNum) {
 }
 
 static void CG_Rocket_DFGearOrReady(int handle, const char* data) {
-    int clientNum = atoi(Info_ValueForKey(data, "1") );
+    int clientNum = atoi(Info_ValueForKey(data, "1"));
     if (cg.intermissionStarted) {
-        if (CG_ClientIsReady(clientNum) ) {
+        if (CG_ClientIsReady(clientNum)) {
             Rocket_DataFormatterFormattedData(handle, "[check]", true);
         } else {
             Rocket_DataFormatterFormattedData(handle, "", false);
@@ -367,11 +367,11 @@ static void CG_Rocket_DFGearOrReady(int handle, const char* data) {
         const char* rml = "";
 
         if (s && s->team == cg.predictedPlayerState.persistant[PERS_TEAM] && s->weapon != WP_NONE) {
-            rml = va("<img src='/%s'/>", CG_GetShaderNameFromHandle(cg_weapons[s->weapon].weaponIcon) );
+            rml = va("<img src='/%s'/>", CG_GetShaderNameFromHandle(cg_weapons[s->weapon].weaponIcon));
         }
 
         if (s && s->team == cg.predictedPlayerState.persistant[PERS_TEAM] && s->team == TEAM_HUMANS && s->upgrade != UP_NONE) {
-            rml = va("%s<img src='/%s'/>", rml, CG_GetShaderNameFromHandle(cg_upgrades[s->upgrade].upgradeIcon) );
+            rml = va("%s<img src='/%s'/>", rml, CG_GetShaderNameFromHandle(cg_upgrades[s->upgrade].upgradeIcon));
         }
 
         Rocket_DataFormatterFormattedData(handle, rml, false);
@@ -379,7 +379,7 @@ static void CG_Rocket_DFGearOrReady(int handle, const char* data) {
 }
 
 static void CG_Rocket_DFCMAlienBuildables(int handle, const char* data) {
-    buildable_t buildable = (buildable_t) atoi(Info_ValueForKey(data, "1") );
+    buildable_t buildable = (buildable_t) atoi(Info_ValueForKey(data, "1"));
     const char* Class = "";
     const char* Icon = "";
     const char* action = "";
@@ -388,7 +388,7 @@ static void CG_Rocket_DFCMAlienBuildables(int handle, const char* data) {
     value = cg.snap->ps.persistant[PERS_BP];
     valueMarked = cg.snap->ps.persistant[PERS_MARKEDBP];
 
-    if (BG_BuildableDisabled(buildable) || !BG_BuildableUnlocked(buildable) ) {
+    if (BG_BuildableDisabled(buildable) || !BG_BuildableUnlocked(buildable)) {
         Class = "locked";
         // Padlock icon. UTF-8 encoding of \uf023
         Icon = "<icon>\xEF\x80\xA3</icon>";
@@ -401,11 +401,11 @@ static void CG_Rocket_DFCMAlienBuildables(int handle, const char* data) {
         action = va("onClick='Cmd.exec(\"build %s\") Events.pushevent(\"hide %s\", event)'", BG_Buildable(buildable)->name, rocketInfo.menu[ROCKETMENU_ALIENBUILD].id);
     }
 
-    Rocket_DataFormatterFormattedData(handle, va("<button class='%s' onMouseover='Events.pushevent(\"setDS alienBuildList default %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_buildables[buildable].buildableIcon) ), false);
+    Rocket_DataFormatterFormattedData(handle, va("<button class='%s' onMouseover='Events.pushevent(\"setDS alienBuildList default %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_buildables[buildable].buildableIcon)), false);
 }
 
 static void CG_Rocket_DFCMHumanBuildables(int handle, const char* data) {
-    buildable_t buildable = (buildable_t) atoi(Info_ValueForKey(data, "1") );
+    buildable_t buildable = (buildable_t) atoi(Info_ValueForKey(data, "1"));
     const char* Class = "";
     const char* Icon = "";
     const char* action = "";
@@ -414,7 +414,7 @@ static void CG_Rocket_DFCMHumanBuildables(int handle, const char* data) {
     value = cg.snap->ps.persistant[PERS_BP];
     valueMarked = cg.snap->ps.persistant[PERS_MARKEDBP];
 
-    if (BG_BuildableDisabled(buildable) || !BG_BuildableUnlocked(buildable) ) {
+    if (BG_BuildableDisabled(buildable) || !BG_BuildableUnlocked(buildable)) {
         Class = "locked";
         // Padlock icon. UTF-8 encoding of \uf023
         Icon = "<icon>\xEF\x80\xA3</icon>";
@@ -427,11 +427,11 @@ static void CG_Rocket_DFCMHumanBuildables(int handle, const char* data) {
         action = va("onClick='Cmd.exec(\"build %s\") Events.pushevent(\"hide %s\", event)'", BG_Buildable(buildable)->name, rocketInfo.menu[ROCKETMENU_HUMANBUILD].id);
     }
 
-    Rocket_DataFormatterFormattedData(handle, va("<button class='%s' onMouseover='Events.pushevent(\"setDS humanBuildList default %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_buildables[buildable].buildableIcon) ), false);
+    Rocket_DataFormatterFormattedData(handle, va("<button class='%s' onMouseover='Events.pushevent(\"setDS humanBuildList default %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_buildables[buildable].buildableIcon)), false);
 }
 
 static void CG_Rocket_DFCMAlienEvolve(int handle, const char* data) {
-    class_t alienClass = (class_t) atoi(Info_ValueForKey(data, "1") );
+    class_t alienClass = (class_t) atoi(Info_ValueForKey(data, "1"));
     const char* Class = "";
     const char* Icon = "";
     const char* action = "";
@@ -441,7 +441,7 @@ static void CG_Rocket_DFCMAlienEvolve(int handle, const char* data) {
         Class = "active";
         // Check mark icon. UTF-8 encoding of \uf00c
         Icon = "<icon class=\"current\">\xEF\x80\x8C</icon>";
-    } else if (!BG_ClassUnlocked(alienClass) || BG_ClassDisabled(alienClass) ) {
+    } else if (!BG_ClassUnlocked(alienClass) || BG_ClassDisabled(alienClass)) {
         Class = "locked";
         // Padlock icon. UTF-8 encoding of \uf023
         Icon = "<icon>\xEF\x80\xA3</icon>";
@@ -452,14 +452,14 @@ static void CG_Rocket_DFCMAlienEvolve(int handle, const char* data) {
         Icon = "<icon>\xEF\x83\x96</icon>";
     } else {
         Class = "available";
-        action =  va("onClick='Cmd.exec(\"class %s\") Events.pushevent(\"hide %s\", event)'", BG_Class(alienClass)->name, rocketInfo.menu[ROCKETMENU_ALIENEVOLVE].id);
+        action = va("onClick='Cmd.exec(\"class %s\") Events.pushevent(\"hide %s\", event)'", BG_Class(alienClass)->name, rocketInfo.menu[ROCKETMENU_ALIENEVOLVE].id);
     }
 
     Rocket_DataFormatterFormattedData(handle, va("<button class='alienevo %s' onMouseover='Events.pushevent(\"setDS alienEvolveList alienClasss %s\", event)' %s>%s<img src='/%s'/></button>", Class, Info_ValueForKey(data, "2"), action, Icon, CG_GetShaderNameFromHandle(cg_classes[alienClass].classIcon)), false);
 }
 
 static void CG_Rocket_DFCMBeacons(int handle, const char* data) {
-    beaconType_t bct = (beaconType_t)atoi(Info_ValueForKey(data, "1") );
+    beaconType_t bct = (beaconType_t)atoi(Info_ValueForKey(data, "1"));
     const beaconAttributes_t* ba;
     const char* icon, * action;
 
@@ -480,7 +480,7 @@ typedef struct {
     void (* exec)(int handle, const char* data);
 } dataFormatterCmd_t;
 
-static const dataFormatterCmd_t dataFormatterCmdList[] ={
+static const dataFormatterCmd_t dataFormatterCmdList[] = {
     { "ClassName", &CG_Rocket_DFClassName },
     { "CMAlienBuildables", &CG_Rocket_DFCMAlienBuildables },
     { "CMAlienEvolve", &CG_Rocket_DFCMAlienEvolve },
@@ -507,14 +507,14 @@ static const dataFormatterCmd_t dataFormatterCmdList[] ={
 static const size_t dataFormatterCmdListCount = ARRAY_LEN(dataFormatterCmdList);
 
 static int dataFormatterCmdCmp(const void* a, const void* b) {
-    return Q_stricmp( (const char*) a, ( (dataFormatterCmd_t*) b)->name);
+    return Q_stricmp((const char*) a, ((dataFormatterCmd_t*) b)->name);
 }
 
 void CG_Rocket_FormatData(int handle) {
     static char name[200], data[BIG_INFO_STRING];
     dataFormatterCmd_t* cmd;
 
-    Rocket_DataFormatterRawData(handle, name, sizeof(name), data, sizeof(data) );
+    Rocket_DataFormatterRawData(handle, name, sizeof(name), data, sizeof(data));
 
     cmd = (dataFormatterCmd_t*) bsearch(name, dataFormatterCmdList, dataFormatterCmdListCount, sizeof(dataFormatterCmd_t), dataFormatterCmdCmp);
 

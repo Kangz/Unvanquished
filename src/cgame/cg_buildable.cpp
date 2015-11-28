@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "cg_local.h"
 
-static const char* const cg_buildableSoundNames[MAX_BUILDABLE_ANIMATIONS] ={
+static const char* const cg_buildableSoundNames[MAX_BUILDABLE_ANIMATIONS] = {
     "idle1.wav",
     "idle2.wav",
     "powerdown.wav",
@@ -180,7 +180,7 @@ void CG_AlienBuildableExplosion(vec3_t origin, vec3_t dir) {
     // particle system
     ps = CG_SpawnNewParticleSystem(cgs.media.alienBuildableDestroyedPS);
 
-    if (CG_IsParticleSystemValid(&ps) ) {
+    if (CG_IsParticleSystemValid(&ps)) {
         CG_SetAttachmentPoint(&ps->attachment, origin);
         CG_SetParticleSystemNormal(ps, dir);
         CG_AttachToPoint(&ps->attachment);
@@ -223,13 +223,13 @@ void CG_HumanBuildableExplosion(buildable_t buildable, vec3_t origin, vec3_t dir
     trap_S_StartSound(origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.humanBuildableExplosion);
     explosion = CG_SpawnNewParticleSystem(cgs.media.humanBuildableDestroyedPS);
 
-    if (CG_IsParticleSystemValid(&nova) ) {
+    if (CG_IsParticleSystemValid(&nova)) {
         CG_SetAttachmentPoint(&nova->attachment, origin);
         CG_SetParticleSystemNormal(nova, dir);
         CG_AttachToPoint(&nova->attachment);
     }
 
-    if (CG_IsParticleSystemValid(&explosion) ) {
+    if (CG_IsParticleSystemValid(&explosion)) {
         CG_SetAttachmentPoint(&explosion->attachment, origin);
         CG_SetParticleSystemNormal(explosion, dir);
         CG_AttachToPoint(&explosion->attachment);
@@ -298,8 +298,8 @@ static void CG_OnFire(centity_t* cent) {
         return;
     }
 
-    if (!(es->eFlags & EF_B_ONFIRE) ) {
-        if (CG_IsParticleSystemValid(&cent->buildableStatusPS) ) {
+    if (!(es->eFlags & EF_B_ONFIRE)) {
+        if (CG_IsParticleSystemValid(&cent->buildableStatusPS)) {
             CG_DestroyParticleSystem(&cent->buildableStatusPS);
         }
 
@@ -308,7 +308,7 @@ static void CG_OnFire(centity_t* cent) {
 
     switch (team) {
     case TEAM_ALIENS:
-        if (!CG_IsParticleSystemValid(&cent->buildableStatusPS) ) {
+        if (!CG_IsParticleSystemValid(&cent->buildableStatusPS)) {
             cent->buildableStatusPS = CG_SpawnNewParticleSystem(cgs.media.alienBuildableBurnPS);
         }
         break;
@@ -318,7 +318,7 @@ static void CG_OnFire(centity_t* cent) {
         return;
     }
 
-    if (CG_IsParticleSystemValid(&cent->buildableStatusPS) ) {
+    if (CG_IsParticleSystemValid(&cent->buildableStatusPS)) {
         CG_SetAttachmentCent(&cent->buildableStatusPS->attachment, cent);
         CG_AttachToCent(&cent->buildableStatusPS->attachment);
     }
@@ -351,7 +351,7 @@ static bool CG_ParseBuildableAnimationFile(const char* filename, buildable_t bui
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         trap_FS_FCloseFile(f);
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", filename);
         return false;
@@ -448,7 +448,7 @@ static bool CG_ParseBuildableSoundFile(const char* filename, buildable_t buildab
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         trap_FS_FCloseFile(f);
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", filename);
         return false;
@@ -546,7 +546,7 @@ void CG_InitBuildables() {
     buildableAnimNumber_t anim;
     fileHandle_t f;
 
-    memset(cg_buildables, 0, sizeof(cg_buildables) );
+    memset(cg_buildables, 0, sizeof(cg_buildables));
 
     // default sounds
     for (j = BANIM_NONE + 1; j < MAX_BUILDABLE_ANIMATIONS; j++) {
@@ -562,7 +562,7 @@ void CG_InitBuildables() {
     cg.buildablesFraction = 0.0f;
 
     for (buildable = (buildable_t)(BA_NONE + 1); buildable < BA_NUM_BUILDABLES;
-         buildable = (buildable_t)(buildable + 1) ) {
+         buildable = (buildable_t)(buildable + 1)) {
         buildableInfo_t* bi = &cg_buildables[buildable];
         bool iqm = false;
 
@@ -572,12 +572,12 @@ void CG_InitBuildables() {
 
         if (cg_highPolyBuildableModels.integer &&
             (bi->models[0] = trap_R_RegisterModel(va("models/buildables/%s/%s.iqm",
-                                                     buildableName, buildableName) ) ) ) {
+                                                     buildableName, buildableName)))) {
             bi->md5 = true;
-            iqm     = true;
+            iqm = true;
         } else if (cg_highPolyBuildableModels.integer &&
                    (bi->models[0] = trap_R_RegisterModel(va("models/buildables/%s/%s.md5mesh",
-                                                            buildableName, buildableName) ) ) ) {
+                                                            buildableName, buildableName)))) {
             bi->md5 = true;
         } else {
             bi->md5 = false;
@@ -594,7 +594,7 @@ void CG_InitBuildables() {
         // If an md5mesh is found, register md5anims
         if (bi->md5) {
             for (anim = (buildableAnimNumber_t)(BANIM_NONE + 1); anim < MAX_BUILDABLE_ANIMATIONS;
-                 anim = (buildableAnimNumber_t)(anim + 1) ) {
+                 anim = (buildableAnimNumber_t)(anim + 1)) {
                 const char* animName = GetAnimationName(buildable, anim);
 
                 if (!animName) {
@@ -604,7 +604,7 @@ void CG_InitBuildables() {
 
                 if (!CG_RegisterBuildableAnimation(bi, buildableName, anim, animName,
                                                    IsLooped(buildable, anim),
-                                                   IsReversed(buildable, anim), false, iqm) ) {
+                                                   IsReversed(buildable, anim), false, iqm)) {
                     Com_Printf(S_ERROR "Failed to load animation '%s' for buildable '%s' and "
                                "animation slot #%d.", animName, buildableName, anim);
                 }
@@ -613,7 +613,7 @@ void CG_InitBuildables() {
                  // animation.cfg
             Com_sprintf(filename, sizeof(filename), "models/buildables/%s/animation.cfg", buildableName);
 
-            if (!CG_ParseBuildableAnimationFile(filename, (buildable_t) buildable) ) {
+            if (!CG_ParseBuildableAnimationFile(filename, (buildable_t) buildable)) {
                 Com_Printf(S_WARNING "failed to load animation file %s\n", filename);
             }
         }
@@ -621,7 +621,7 @@ void CG_InitBuildables() {
         // sound.cfg
         Com_sprintf(filename, sizeof(filename), "sound/buildables/%s/sound.cfg", buildableName);
 
-        if (!CG_ParseBuildableSoundFile(filename, (buildable_t) buildable) ) {
+        if (!CG_ParseBuildableSoundFile(filename, (buildable_t) buildable)) {
             Com_Printf(S_WARNING "failed to load sound file %s\n", filename);
         }
 
@@ -648,7 +648,7 @@ void CG_InitBuildables() {
         }
 
         // icon
-        if ( (buildableIcon = BG_Buildable(buildable)->icon) ) {
+        if ((buildableIcon = BG_Buildable(buildable)->icon)) {
             cg_buildables[buildable].buildableIcon = trap_R_RegisterShader(buildableIcon, RSF_DEFAULT);
         }
 
@@ -781,7 +781,7 @@ static void CG_SetBuildableLerpFrameAnimation(buildable_t buildable, lerpFrame_t
             oldbSkeleton = bSkeleton;
 
             if (lf->old_animation != nullptr && lf->old_animation->handle) {
-                if (!trap_R_BuildSkeleton(&oldbSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin) ) {
+                if (!trap_R_BuildSkeleton(&oldbSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin)) {
                     CG_Printf("Can't build old buildable bSkeleton\n");
                     return;
                 }
@@ -834,7 +834,7 @@ cg.time should be between oldFrameTime and frameTime after exit
 static void CG_RunBuildableLerpFrame(centity_t* cent) {
     buildable_t buildable = (buildable_t) cent->currentState.modelindex;
     lerpFrame_t* lf = &cent->lerpFrame;
-    buildableAnimNumber_t newAnimation = (buildableAnimNumber_t) (cent->buildableAnim & ~(ANIM_TOGGLEBIT | ANIM_FORCEBIT) );
+    buildableAnimNumber_t newAnimation = (buildableAnimNumber_t) (cent->buildableAnim & ~(ANIM_TOGGLEBIT | ANIM_FORCEBIT));
 
     // see if the animation sequence is switching
     if (newAnimation != lf->animationNumber || !lf->animation) {
@@ -888,7 +888,7 @@ static void CG_BuildableAnimation(centity_t* cent, int* old, int* now, float* ba
     }
 
     // display the first frame of the construction anim if not yet spawned
-    if (!(es->eFlags & EF_B_SPAWNED) ) {
+    if (!(es->eFlags & EF_B_SPAWNED)) {
         animation_t* anim = &cg_buildables[es->modelindex].animations[BANIM_CONSTRUCT];
 
         // Change the animation in the lerpFrame so that md5s will use it too.
@@ -907,7 +907,7 @@ static void CG_BuildableAnimation(centity_t* cent, int* old, int* now, float* ba
         // ensure that an animation is triggered once the buildable has spawned
         cent->oldBuildableAnim = BANIM_NONE;
     } else {
-        if ( (cent->oldBuildableAnim ^ es->legsAnim) & ANIM_TOGGLEBIT) {
+        if ((cent->oldBuildableAnim ^ es->legsAnim) & ANIM_TOGGLEBIT) {
             if (cg_debugAnim.integer) {
                 CG_Printf("%d->%d l:%d t:%d %s(%d)\n",
                           cent->oldBuildableAnim, cent->buildableAnim,
@@ -960,7 +960,7 @@ static void CG_PositionAndOrientateBuildable(const vec3_t angles, const vec3_t i
     VectorCopy(normal, outAxis[2]);
     ProjectPointOnPlane(outAxis[0], forward, outAxis[2]);
 
-    if (!VectorNormalize(outAxis[0]) ) {
+    if (!VectorNormalize(outAxis[0])) {
         AngleVectors(angles, nullptr, nullptr, forward);
         ProjectPointOnPlane(outAxis[0], forward, outAxis[2]);
         VectorNormalize(outAxis[0]);
@@ -997,7 +997,7 @@ static void CG_DrawBuildableRangeMarker(buildable_t buildable, const vec3_t orig
     float range;
     Color::Color rgba;
 
-    if (CG_GetBuildableRangeMarkerProperties(buildable, &rmType, &range, rgba) ) {
+    if (CG_GetBuildableRangeMarkerProperties(buildable, &rmType, &range, rgba)) {
         vec3_t localOrigin;
 
         rgba.SetAlpha(opacity);
@@ -1035,7 +1035,7 @@ void CG_GhostBuildable(int buildableInfo) {
 
     ps = &cg.predictedPlayerState;
 
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
 
     BG_BuildableBoundingBox(buildable, mins, maxs);
 
@@ -1225,31 +1225,31 @@ static void CG_BuildableParticleEffects(centity_t* cent) {
     int health = es->generic1;
     float healthFrac = (float) health / BG_Buildable(es->modelindex)->health;
 
-    if (!(es->eFlags & EF_B_SPAWNED) ) {
+    if (!(es->eFlags & EF_B_SPAWNED)) {
         return;
     }
 
     if (team == TEAM_HUMANS) {
-        if (healthFrac < 0.33f && !CG_IsParticleSystemValid(&cent->buildablePS) ) {
+        if (healthFrac < 0.33f && !CG_IsParticleSystemValid(&cent->buildablePS)) {
             cent->buildablePS = CG_SpawnNewParticleSystem(cgs.media.humanBuildableDamagedPS);
 
-            if (CG_IsParticleSystemValid(&cent->buildablePS) ) {
+            if (CG_IsParticleSystemValid(&cent->buildablePS)) {
                 CG_SetAttachmentCent(&cent->buildablePS->attachment, cent);
                 CG_AttachToCent(&cent->buildablePS->attachment);
             }
-        } else if (healthFrac >= 0.33f && CG_IsParticleSystemValid(&cent->buildablePS) ) {
+        } else if (healthFrac >= 0.33f && CG_IsParticleSystemValid(&cent->buildablePS)) {
             CG_DestroyParticleSystem(&cent->buildablePS);
         }
     } else if (team == TEAM_ALIENS) {
-        if (healthFrac < 0.33f && !CG_IsParticleSystemValid(&cent->buildablePS) ) {
+        if (healthFrac < 0.33f && !CG_IsParticleSystemValid(&cent->buildablePS)) {
             cent->buildablePS = CG_SpawnNewParticleSystem(cgs.media.alienBuildableDamagedPS);
 
-            if (CG_IsParticleSystemValid(&cent->buildablePS) ) {
+            if (CG_IsParticleSystemValid(&cent->buildablePS)) {
                 CG_SetAttachmentCent(&cent->buildablePS->attachment, cent);
                 CG_SetParticleSystemNormal(cent->buildablePS, es->origin2);
                 CG_AttachToCent(&cent->buildablePS->attachment);
             }
-        } else if (healthFrac >= 0.33f && CG_IsParticleSystemValid(&cent->buildablePS) ) {
+        } else if (healthFrac >= 0.33f && CG_IsParticleSystemValid(&cent->buildablePS)) {
             CG_DestroyParticleSystem(&cent->buildablePS);
         }
     }
@@ -1275,118 +1275,118 @@ void CG_BuildableStatusParse(const char* filename, buildStat_t* bs) {
     }
 
     while (1) {
-        if (!trap_Parse_ReadToken(handle, &token) ) {
+        if (!trap_Parse_ReadToken(handle, &token)) {
             break;
         }
 
-        if (!Q_stricmp(token.string, "frameShader") ) {
-            if (PC_String_Parse(handle, &s) ) {
+        if (!Q_stricmp(token.string, "frameShader")) {
+            if (PC_String_Parse(handle, &s)) {
                 bs->frameShader = trap_R_RegisterShader(s,
                                                         RSF_DEFAULT);
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "overlayShader") ) {
-            if (PC_String_Parse(handle, &s) ) {
+        } else if (!Q_stricmp(token.string, "overlayShader")) {
+            if (PC_String_Parse(handle, &s)) {
                 bs->overlayShader = trap_R_RegisterShader(s,
                                                           RSF_DEFAULT);
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "noPowerShader") ) {
-            if (PC_String_Parse(handle, &s) ) {
+        } else if (!Q_stricmp(token.string, "noPowerShader")) {
+            if (PC_String_Parse(handle, &s)) {
                 bs->noPowerShader = trap_R_RegisterShader(s,
                                                           RSF_DEFAULT);
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "markedShader") ) {
-            if (PC_String_Parse(handle, &s) ) {
+        } else if (!Q_stricmp(token.string, "markedShader")) {
+            if (PC_String_Parse(handle, &s)) {
                 bs->markedShader = trap_R_RegisterShader(s,
                                                          RSF_DEFAULT);
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthSevereColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "healthSevereColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->healthSevereColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthHighColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "healthHighColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->healthHighColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthElevatedColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "healthElevatedColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->healthElevatedColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthGuardedColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "healthGuardedColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->healthGuardedColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthLowColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "healthLowColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->healthLowColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "foreColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "foreColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->foreColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "backColor") ) {
-            if (PC_Color_Parse(handle, &c) ) {
+        } else if (!Q_stricmp(token.string, "backColor")) {
+            if (PC_Color_Parse(handle, &c)) {
                 bs->backColor = c;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "frameHeight") ) {
-            if (PC_Int_Parse(handle, &i) ) {
+        } else if (!Q_stricmp(token.string, "frameHeight")) {
+            if (PC_Int_Parse(handle, &i)) {
                 bs->frameHeight = i;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "frameWidth") ) {
-            if (PC_Int_Parse(handle, &i) ) {
+        } else if (!Q_stricmp(token.string, "frameWidth")) {
+            if (PC_Int_Parse(handle, &i)) {
                 bs->frameWidth = i;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "healthPadding") ) {
-            if (PC_Int_Parse(handle, &i) ) {
+        } else if (!Q_stricmp(token.string, "healthPadding")) {
+            if (PC_Int_Parse(handle, &i)) {
                 bs->healthPadding = i;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "overlayHeight") ) {
-            if (PC_Int_Parse(handle, &i) ) {
+        } else if (!Q_stricmp(token.string, "overlayHeight")) {
+            if (PC_Int_Parse(handle, &i)) {
                 bs->overlayHeight = i;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "overlayWidth") ) {
-            if (PC_Int_Parse(handle, &i) ) {
+        } else if (!Q_stricmp(token.string, "overlayWidth")) {
+            if (PC_Int_Parse(handle, &i)) {
                 bs->overlayWidth = i;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "verticalMargin") ) {
-            if (PC_Float_Parse(handle, &f) ) {
+        } else if (!Q_stricmp(token.string, "verticalMargin")) {
+            if (PC_Float_Parse(handle, &f)) {
                 bs->verticalMargin = f;
             }
 
             continue;
-        } else if (!Q_stricmp(token.string, "horizontalMargin") ) {
-            if (PC_Float_Parse(handle, &f) ) {
+        } else if (!Q_stricmp(token.string, "horizontalMargin")) {
+            if (PC_Float_Parse(handle, &f)) {
                 bs->horizontalMargin = f;
             }
 
@@ -1510,7 +1510,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
     anim = es->torsoAnim & ~(ANIM_FORCEBIT | ANIM_TOGGLEBIT);
 
     if (es->modelindex == BA_A_BARRICADE &&
-        (anim == BANIM_DESTROYED || !(es->eFlags & EF_B_SPAWNED) ) ) {
+        (anim == BANIM_DESTROYED || !(es->eFlags & EF_B_SPAWNED))) {
         maxs[2] = (int)(maxs[2] * BARRICADE_SHRINKPROP);
     }
 
@@ -1518,7 +1518,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
 
     // center point
     origin[2] += mins[2];
-    origin[2] += (std::abs(mins[2]) + std::abs(maxs[2]) ) / 2;
+    origin[2] += (std::abs(mins[2]) + std::abs(maxs[2])) / 2;
 
     entNum = cg.predictedPlayerState.clientNum;
 
@@ -1560,7 +1560,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
 
             if (tr.entityNum < MAX_CLIENTS || (hit->eType == ET_BUILDABLE &&
                                                (!(es->eFlags & EF_B_SPAWNED) ||
-                                                BG_Buildable(hit->modelindex)->transparentTest) ) ) {
+                                                BG_Buildable(hit->modelindex)->transparentTest))) {
                 entNum = tr.entityNum;
                 VectorCopy(tr.endpos, trOrigin);
             } else {
@@ -1581,7 +1581,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
     // Fade up
     if (cent->buildableStatus.visible) {
         if (cent->buildableStatus.lastTime + STATUS_FADE_TIME > cg.time) {
-            color.SetAlpha( (float)(cg.time - cent->buildableStatus.lastTime) / STATUS_FADE_TIME);
+            color.SetAlpha((float)(cg.time - cent->buildableStatus.lastTime) / STATUS_FADE_TIME);
         }
     }
 
@@ -1624,7 +1624,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
 
     // calculate health bar size
     {
-        health     = es->generic1;
+        health = es->generic1;
         healthFrac = (float)health / (float)attr->health;
 
         if (health > 0 && healthFrac < 0.01f) {
@@ -1638,15 +1638,15 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
 
     // calculate power consumption bar size
     if (showPower) {
-        totalPower     = Q_clamp(es->clientNum, 0, POWER_DISPLAY_MAX);
-        powerUsage     = BG_Buildable(es->modelindex)->powerConsumption;
+        totalPower = Q_clamp(es->clientNum, 0, POWER_DISPLAY_MAX);
+        powerUsage = BG_Buildable(es->modelindex)->powerConsumption;
 
         totalPowerFrac = (float)totalPower / (float)POWER_DISPLAY_MAX;
         powerUsageFrac = (float)powerUsage / (float)POWER_DISPLAY_MAX;
     }
 
     // draw elements
-    if (CG_WorldToScreen(origin, &x, &y) ) {
+    if (CG_WorldToScreen(origin, &x, &y)) {
         float picH = bs->frameHeight;
         float picW = bs->frameWidth;
         float picX = x;
@@ -1658,7 +1658,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
 
         // this is fudged to get the width/height in the cfg to be more realistic
         scale = (picH / d) * 3;
-        pad   = bs->healthPadding * scale;
+        pad = bs->healthPadding * scale;
 
         powered = es->eFlags & EF_B_POWERED;
         marked = es->eFlags & EF_B_MARKED;
@@ -1681,7 +1681,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
         // draw bar frames
         if (bs->frameShader) {
             frameColor = bs->backColor;
-            frameColor.SetAlpha(color.Alpha() );
+            frameColor.SetAlpha(color.Alpha());
             trap_R_SetColor(frameColor);
 
             if (showMineEfficiency || showStoredBP) {
@@ -1712,7 +1712,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
             barH = (0.5f * picH) - pad;
 
             Color::Color barColor = DepletionColorFade(mineEfficiencyFrac, bs);
-            barColor.SetAlpha(color.Alpha() );
+            barColor.SetAlpha(color.Alpha());
 
             trap_R_SetColor(barColor);
             CG_DrawPic(barX, barY, barW, barH, cgs.media.whiteShader);
@@ -1729,14 +1729,14 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
             float barX, barY, barW, barH;
             // float buildPoints = (float)cg.predictedPlayerState.persistant[ PERS_BP ];
 
-            barX = picX + (showMineEfficiency ? ( (0.5f * picW) + (0.5f * pad) ) : pad);
+            barX = picX + (showMineEfficiency ? ((0.5f * picW) + (0.5f * pad)) : pad);
             barY = picY - (0.5f * picH) + pad;
-            barW = ( (showMineEfficiency ? 0.5f : 1.0f) * picW * storedBPFrac) -
-                   ( (showMineEfficiency ? 1.5f : 2.0f) * pad);
+            barW = ((showMineEfficiency ? 0.5f : 1.0f) * picW * storedBPFrac) -
+                   ((showMineEfficiency ? 1.5f : 2.0f) * pad);
             barH = (0.5f * picH) - pad;
 
             Color::Color barColor = HealthColorFade(1.0f - storedBPFrac, bs);
-            barColor.SetAlpha(color.Alpha() );
+            barColor.SetAlpha(color.Alpha());
 
             trap_R_SetColor(barColor);
             CG_DrawPic(barX, barY, barW, barH, cgs.media.whiteShader);
@@ -1772,7 +1772,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
             barW = picW * healthFrac - (bs->healthPadding * 2.0f * scale);
 
             Color::Color barColor = HealthColorFade(healthFrac, bs);
-            barColor.SetAlpha(color.Alpha() );
+            barColor.SetAlpha(color.Alpha());
 
             trap_R_SetColor(barColor);
             CG_DrawPic(barX, barY, barW, barH, cgs.media.whiteShader);
@@ -1796,7 +1796,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
                     barColor = DepletionColorFade(totalPowerFrac, bs);
                 } else {                                                                        barColor = bs->healthSevereColor;
                 }
-                barColor.SetAlpha(color.Alpha() );
+                barColor.SetAlpha(color.Alpha());
 
                 trap_R_SetColor(barColor);
                 CG_DrawPic(barX, barY, barW, barH, cgs.media.whiteShader);
@@ -1861,7 +1861,7 @@ static void CG_BuildableStatusDisplay(centity_t* cent) {
                 healthPoints = 1;
             }
 
-            nX = picX + (picW * 0.5f) - 2.0f - ( (subH * 4) * 0.5f);
+            nX = picX + (picW * 0.5f) - 2.0f - ((subH * 4) * 0.5f);
 
             if (healthPoints > 999) {
                 nX -= 0.0f;
@@ -1963,7 +1963,7 @@ void CG_DrawBuildableStatus() {
         cent = &cg_entities[cg.snap->entities[i].number];
         es = &cent->currentState;
 
-        if (es->eType == ET_BUILDABLE && CG_PlayerIsBuilder( (buildable_t) es->modelindex) ) {
+        if (es->eType == ET_BUILDABLE && CG_PlayerIsBuilder((buildable_t) es->modelindex)) {
             buildableList[buildables++] = cg.snap->entities[i].number;
         }
     }
@@ -1995,7 +1995,7 @@ void CG_Buildable(centity_t* cent) {
     float rotAngle, scale;
     int health;
     buildable_t buildable = (buildable_t)es->modelindex;
-    const buildableAttributes_t* ba  = BG_Buildable(buildable);
+    const buildableAttributes_t* ba = BG_Buildable(buildable);
     const buildableModelConfig_t* bmc = BG_BuildableModelConfig(buildable);
     team_t team = ba->team;
 
@@ -2006,18 +2006,18 @@ void CG_Buildable(centity_t* cent) {
 
     // if set to invisible, skip
     if (es->eFlags & EF_NODRAW) {
-        if (CG_IsParticleSystemValid(&cent->buildablePS) ) {
+        if (CG_IsParticleSystemValid(&cent->buildablePS)) {
             CG_DestroyParticleSystem(&cent->buildablePS);
         }
 
-        if (CG_IsParticleSystemValid(&cent->buildableStatusPS) ) {
+        if (CG_IsParticleSystemValid(&cent->buildableStatusPS)) {
             CG_DestroyParticleSystem(&cent->buildableStatusPS);
         }
 
         return;
     }
 
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
 
     VectorCopy(es->origin2, surfNormal);
 
@@ -2067,7 +2067,7 @@ void CG_Buildable(centity_t* cent) {
     ent.hModel = cg_buildables[es->modelindex].models[0];
     ent.shaderTime = cent->currentState.time / 1000.0f;
 
-    if (!(es->eFlags & EF_B_SPAWNED) ) {
+    if (!(es->eFlags & EF_B_SPAWNED)) {
         sfxHandle_t prebuildSound = cgs.media.humanBuildablePrebuild;
 
         if (team == TEAM_HUMANS) {
@@ -2117,7 +2117,7 @@ void CG_Buildable(centity_t* cent) {
         CG_StartShadowCaster(ent.lightingOrigin, mins, maxs);
     }
 
-    if (CG_PlayerIsBuilder( (buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number) ) {
+    if (CG_PlayerIsBuilder((buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number)) {
         ent.customShader = cgs.media.redBuildShader;
     }
 
@@ -2137,7 +2137,7 @@ void CG_Buildable(centity_t* cent) {
             vec3_t p1, p2;
             float yaw, pitch, roll;
 
-            yaw   = es->angles2[YAW] - es->angles[YAW];
+            yaw = es->angles2[YAW] - es->angles[YAW];
             pitch = es->angles2[PITCH];
 
             // TODO: Access bones by name instead of by number.
@@ -2152,8 +2152,8 @@ void CG_Buildable(centity_t* cent) {
 
             // The roll of Bone_barrel is the mgturret's barrel roll.
             if (es->modelindex == BA_H_MGTURRET) {
-                roll  = Q_clamp( (1.0f / MGTURRET_ATTACK_PERIOD) *
-                                 120.0f * (cg.time - cent->muzzleFlashTime), 0.0f, 120.0f);
+                roll = Q_clamp((1.0f / MGTURRET_ATTACK_PERIOD) *
+                               120.0f * (cg.time - cent->muzzleFlashTime), 0.0f, 120.0f);
 
                 QuatFromAngles(rotation, 0, 0, roll);
                 QuatMultiply0(ent.skeleton.bones[3].t.rot, rotation);
@@ -2194,8 +2194,8 @@ void CG_Buildable(centity_t* cent) {
                 Q_crandom(&randSeed);
 
                 angles[PITCH] = Q_crandom(&randSeed) * OVERMIND_IDLE_ANGLE;
-                angles[YAW]   = Q_crandom(&randSeed) * OVERMIND_IDLE_ANGLE;
-                angles[ROLL]  = 0.0f;
+                angles[YAW] = Q_crandom(&randSeed) * OVERMIND_IDLE_ANGLE;
+                angles[ROLL] = 0.0f;
             } else {
                 // HACK: Fixed offset for eye height.
                 // TODO: Retrieve eye origin from skeleton.
@@ -2209,8 +2209,8 @@ void CG_Buildable(centity_t* cent) {
 
                 // Transform into relative angles.
                 angles[PITCH] -= es->angles[PITCH];
-                angles[YAW]   -= (es->angles[YAW] - 180.0f);
-                angles[ROLL]  = 0;
+                angles[YAW] -= (es->angles[YAW] - 180.0f);
+                angles[ROLL] = 0;
 
                 // Limit angles.
                 if (angles[PITCH] < -180.0f) {
@@ -2220,13 +2220,13 @@ void CG_Buildable(centity_t* cent) {
                     angles[PITCH] -= 360.0f;
                 }
                 if (angles[YAW]   < -180.0f) {
-                    angles[YAW]   += 360.0f;
+                    angles[YAW] += 360.0f;
                 }
                 if (angles[YAW]   >  180.0f) {
-                    angles[YAW]   -= 360.0f;
+                    angles[YAW] -= 360.0f;
                 }
                 angles[PITCH] = Math::Clamp(angles[PITCH], -OVERMIND_EYE_CLAMP, OVERMIND_EYE_CLAMP);
-                angles[YAW]   = Math::Clamp(angles[YAW], -OVERMIND_EYE_CLAMP, OVERMIND_EYE_CLAMP);
+                angles[YAW] = Math::Clamp(angles[YAW], -OVERMIND_EYE_CLAMP, OVERMIND_EYE_CLAMP);
             }
 
             // Smooth out movement.
@@ -2247,7 +2247,7 @@ void CG_Buildable(centity_t* cent) {
 
     if (es->generic1 <= 0) {
         ent.altShaderIndex = CG_ALTSHADER_DEAD;
-    } else if (!(es->eFlags & EF_B_POWERED) ) {
+    } else if (!(es->eFlags & EF_B_POWERED)) {
         ent.altShaderIndex = CG_ALTSHADER_UNPOWERED;
     }
 
@@ -2256,14 +2256,14 @@ void CG_Buildable(centity_t* cent) {
 
     CrossProduct(surfNormal, refNormal, xNormal);
     VectorNormalize(xNormal);
-    rotAngle = RAD2DEG(acos(DotProduct(surfNormal, refNormal) ) );
+    rotAngle = RAD2DEG(acos(DotProduct(surfNormal, refNormal)));
 
     // MD3 turret special treatment part 1. TODO: Remove.
     if (cg_buildables[es->modelindex].models[1]) {
         static refEntity_t turretBarrel; // static for proper alignment in QVMs
         vec3_t flatAxis[3];
 
-        memset(&turretBarrel, 0, sizeof(turretBarrel) );
+        memset(&turretBarrel, 0, sizeof(turretBarrel));
 
         turretBarrel.hModel = cg_buildables[es->modelindex].models[1];
 
@@ -2291,7 +2291,7 @@ void CG_Buildable(centity_t* cent) {
             turretBarrel.nonNormalizedAxes = false;
         }
 
-        if (CG_PlayerIsBuilder( (buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number) ) {
+        if (CG_PlayerIsBuilder((buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number)) {
             turretBarrel.customShader = cgs.media.redBuildShader;
         }
 
@@ -2305,7 +2305,7 @@ void CG_Buildable(centity_t* cent) {
         vec3_t flatAxis[3];
         vec3_t swivelAngles;
 
-        memset(&turretTop, 0, sizeof(turretTop) );
+        memset(&turretTop, 0, sizeof(turretTop));
 
         VectorCopy(es->angles2, swivelAngles);
         swivelAngles[PITCH] = 0.0f;
@@ -2336,7 +2336,7 @@ void CG_Buildable(centity_t* cent) {
             turretTop.nonNormalizedAxes = false;
         }
 
-        if (CG_PlayerIsBuilder( (buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number) ) {
+        if (CG_PlayerIsBuilder((buildable_t) es->modelindex) && CG_BuildableRemovalPending(es->number)) {
             turretTop.customShader = cgs.media.redBuildShader;
         }
 
@@ -2351,21 +2351,21 @@ void CG_Buildable(centity_t* cent) {
         // muzzle flash
         if (wi->wim[WPM_PRIMARY].muzzleParticleSystem) {
             // spawn muzzle ps if necessary
-            if (!CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+            if (!CG_IsParticleSystemValid(&cent->muzzlePS)) {
                 cent->muzzlePS = CG_SpawnNewParticleSystem(wi->wim[WPM_PRIMARY].muzzleParticleSystem);
             }
 
             // update muzzle ps position
-            if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+            if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
                 if (cg_buildables[es->modelindex].md5) {
                     switch (es->modelindex) {
                     case BA_H_ROCKETPOD: {
-                        const static char left[]  = "left", right[] = "right";
+                        const static char left[] = "left", right[] = "right";
                         int num = (cent->muzzleFlashTime / ROCKETPOD_ATTACK_PERIOD) % 6;
                         const char* side = (num % 2 == 0) ? left : right;
                         num = (num % 3) + 1;
                         CG_SetAttachmentTag(&cent->muzzlePS->attachment, &ent, ent.hModel,
-                                            va("Bone_fire_%s_%d", side, num) );
+                                            va("Bone_fire_%s_%d", side, num));
                         break;
                     }
 
@@ -2399,12 +2399,12 @@ void CG_Buildable(centity_t* cent) {
         }
     } else { // Not firing.
              // Destroy active muzzle PS.
-        if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+        if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
             CG_DestroyParticleSystem(&cent->muzzlePS);
         }
 
         // Play lockon sound if applicable.
-        if (es->generic1 > 0 && (es->eFlags & EF_B_LOCKON) ) {
+        if (es->generic1 > 0 && (es->eFlags & EF_B_LOCKON)) {
             trap_S_AddLoopingSound(es->number, cent->lerpOrigin, vec3_origin,
                                    cgs.media.rocketpodLockonSound);
         }
@@ -2412,7 +2412,7 @@ void CG_Buildable(centity_t* cent) {
 
     health = es->generic1;
 
-    if (health < cent->lastBuildableHealth && (es->eFlags & EF_B_SPAWNED) ) {
+    if (health < cent->lastBuildableHealth && (es->eFlags & EF_B_SPAWNED)) {
         if (cent->lastBuildableDamageSoundTime + BUILDABLE_SOUND_PERIOD < cg.time) {
             if (team == TEAM_HUMANS) {
                 int i = rand() % 4;

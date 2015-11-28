@@ -51,7 +51,7 @@ void Rocket_RegisterDataSource(const char* name) {
 static RocketDataGrid* FindDataSource(const char* name) {
     StringGridMap_t::iterator it = dataSourceMap.find(name);
 
-    if (it == dataSourceMap.end() ) {
+    if (it == dataSourceMap.end()) {
         return nullptr;
     }
 

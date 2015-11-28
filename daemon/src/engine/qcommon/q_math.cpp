@@ -519,7 +519,7 @@ float LerpAngle(float from, float to, float frac) {
         to += 360;
     }
 
-    return (from + frac * (to - from) );
+    return (from + frac * (to - from));
 }
 
 /*
@@ -533,7 +533,7 @@ float AngleSubtract(float a1, float a2) {
     float a = a1 - a2;
 
 
-    return a - 360.0f * floor( (a + 180.0f) / 360.0f);
+    return a - 360.0f * floor((a + 180.0f) / 360.0f);
 }
 
 void AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3) {
@@ -543,7 +543,7 @@ void AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3) {
 }
 
 float AngleMod(float a) {
-    return ( (360.0 / 65536) * ( (int)(a * (65536 / 360.0) ) & 65535) );
+    return ((360.0 / 65536) * ((int)(a * (65536 / 360.0)) & 65535));
 }
 
 /*
@@ -554,7 +554,7 @@ float AngleMod(float a) {
  * =================
  */
 float AngleNormalize360(float angle) {
-    return (360.0 / 65536) * ( (int)(angle * (65536 / 360.0) ) & 65535);
+    return (360.0 / 65536) * ((int)(angle * (65536 / 360.0)) & 65535);
 }
 
 /*
@@ -606,7 +606,7 @@ float AngleBetweenVectors(const vec3_t a, const vec3_t b) {
     // this results in:
     //
     // angle = acos( (a * b) / (|a| * |b|) )
-    return RAD2DEG(acos(DotProduct(a, b) / (alen * blen) ) );
+    return RAD2DEG(acos(DotProduct(a, b) / (alen * blen)));
 }
 
 // ============================================================
@@ -792,11 +792,11 @@ bool BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t ori
 float BoundsMaxExtent(const vec3_t mins, const vec3_t maxs) {
     float result = Q_fabs(mins[0]);
 
-    result = std::max(result, Q_fabs(mins[1]) );
-    result = std::max(result, Q_fabs(mins[2]) );
-    result = std::max(result, Q_fabs(maxs[0]) );
-    result = std::max(result, Q_fabs(maxs[1]) );
-    result = std::max(result, Q_fabs(maxs[2]) );
+    result = std::max(result, Q_fabs(mins[1]));
+    result = std::max(result, Q_fabs(mins[2]));
+    result = std::max(result, Q_fabs(maxs[0]));
+    result = std::max(result, Q_fabs(maxs[1]));
+    result = std::max(result, Q_fabs(maxs[2]));
 
     return result;
 }
@@ -831,7 +831,7 @@ vec_t VectorNormalize(vec3_t v) {
 void VectorNormalizeFast(vec3_t v) {
     float ilength;
 
-    ilength = Q_rsqrt(DotProduct(v, v) );
+    ilength = Q_rsqrt(DotProduct(v, v));
 
     VectorScale(v, ilength, v);
 }
@@ -1147,9 +1147,9 @@ vec_t DistanceBetweenLineSegmentsSquared(const vec3_t sP0, const vec3_t sP1,
         tN = tD;
 
         // recompute sN for this edge
-        if ( (-d + b) < 0.0) {
+        if ((-d + b) < 0.0) {
             sN = 0;
-        } else if ( (-d + b) > a) {
+        } else if ((-d + b) > a) {
             sN = sD;
         } else {
             sN = (-d + b);
@@ -1187,13 +1187,13 @@ void ProjectPointOntoVectorBounded(vec3_t point, vec3_t vStart, vec3_t vEnd, vec
 
     // check bounds
     for (j = 0; j < 3; j++) {
-        if ( (vProj[j] > vStart[j] && vProj[j] > vEnd[j]) || (vProj[j] < vStart[j] && vProj[j] < vEnd[j]) ) {
+        if ((vProj[j] > vStart[j] && vProj[j] > vEnd[j]) || (vProj[j] < vStart[j] && vProj[j] < vEnd[j])) {
             break;
         }
     }
 
     if (j < 3) {
-        if (Q_fabs(vProj[j] - vStart[j]) < Q_fabs(vProj[j] - vEnd[j]) ) {
+        if (Q_fabs(vProj[j] - vStart[j]) < Q_fabs(vProj[j] - vEnd[j])) {
             VectorCopy(vStart, vProj);
         } else {
             VectorCopy(vEnd, vProj);
@@ -1213,13 +1213,13 @@ float DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2) {
     ProjectPointOntoVector(p, lp1, lp2, proj);
 
     for (j = 0; j < 3; j++) {
-        if ( (proj[j] > lp1[j] && proj[j] > lp2[j]) || (proj[j] < lp1[j] && proj[j] < lp2[j]) ) {
+        if ((proj[j] > lp1[j] && proj[j] > lp2[j]) || (proj[j] < lp1[j] && proj[j] < lp2[j])) {
             break;
         }
     }
 
     if (j < 3) {
-        if (Q_fabs(proj[j] - lp1[j]) < Q_fabs(proj[j] - lp2[j]) ) {
+        if (Q_fabs(proj[j] - lp1[j]) < Q_fabs(proj[j] - lp2[j])) {
             VectorSubtract(p, lp1, t);
         } else {
             VectorSubtract(p, lp2, t);
@@ -2707,14 +2707,14 @@ void QuatFromAngles(quat_t q, vec_t pitch, vec_t yaw, vec_t roll) {
     static float sr, sp, sy, cr, cp, cy;
 
     // static to help MS compiler fp bugs
-    sp = sin(DEG2RAD(pitch) );
-    cp = cos(DEG2RAD(pitch) );
+    sp = sin(DEG2RAD(pitch));
+    cp = cos(DEG2RAD(pitch));
 
-    sy = sin(DEG2RAD(yaw) );
-    cy = cos(DEG2RAD(yaw) );
+    sy = sin(DEG2RAD(yaw));
+    cy = cos(DEG2RAD(yaw));
 
-    sr = sin(DEG2RAD(roll) );
-    cr = cos(DEG2RAD(roll) );
+    sr = sin(DEG2RAD(roll));
+    cr = cos(DEG2RAD(roll));
 
     q[0] = sr * cp * cy - cr * sp * sy; // x
     q[1] = cr * sp * cy + sr * cp * sy; // y
@@ -2737,7 +2737,7 @@ void QuatFromMatrix(quat_t q, const matrix_t m) {
 
     if (m[0] + m[5] + m[10] > 0.0f) {
         t = m[0] + m[5] + m[10] + 1.0f;
-        s = (1.0f / sqrtf(t) ) * 0.5f;
+        s = (1.0f / sqrtf(t)) * 0.5f;
 
         q[3] = s * t;
         q[2] = (m[1] - m[4]) * s;
@@ -2745,7 +2745,7 @@ void QuatFromMatrix(quat_t q, const matrix_t m) {
         q[0] = (m[6] - m[9]) * s;
     } else if (m[0] > m[5] && m[0] > m[10]) {
         t = m[0] - m[5] - m[10] + 1.0f;
-        s = (1.0f / sqrtf(t) ) * 0.5f;
+        s = (1.0f / sqrtf(t)) * 0.5f;
 
         q[0] = s * t;
         q[1] = (m[1] + m[4]) * s;
@@ -2753,7 +2753,7 @@ void QuatFromMatrix(quat_t q, const matrix_t m) {
         q[3] = (m[6] - m[9]) * s;
     } else if (m[5] > m[10]) {
         t = -m[0] + m[5] - m[10] + 1.0f;
-        s = (1.0f / sqrtf(t) ) * 0.5f;
+        s = (1.0f / sqrtf(t)) * 0.5f;
 
         q[1] = s * t;
         q[0] = (m[1] + m[4]) * s;
@@ -2761,7 +2761,7 @@ void QuatFromMatrix(quat_t q, const matrix_t m) {
         q[2] = (m[6] + m[9]) * s;
     } else {
         t = -m[0] - m[5] + m[10] + 1.0f;
-        s = (1.0f / sqrtf(t) ) * 0.5f;
+        s = (1.0f / sqrtf(t)) * 0.5f;
 
         q[2] = s * t;
         q[3] = (m[1] - m[4]) * s;
@@ -2842,9 +2842,9 @@ void QuatToAngles(const quat_t q, vec3_t angles) {
     q2[2] = q[2] * q[2];
     q2[3] = q[3] * q[3];
 
-    angles[PITCH] = RAD2DEG(asin(-2 * (q[2] * q[0] - q[3] * q[1]) ) );
-    angles[YAW] = RAD2DEG(atan2(2 * (q[2] * q[3] + q[0] * q[1]), (q2[2] - q2[3] - q2[0] + q2[1]) ) );
-    angles[ROLL] = RAD2DEG(atan2(2 * (q[3] * q[0] + q[2] * q[1]), (-q2[2] - q2[3] + q2[0] + q2[1]) ) );
+    angles[PITCH] = RAD2DEG(asin(-2 * (q[2] * q[0] - q[3] * q[1])));
+    angles[YAW] = RAD2DEG(atan2(2 * (q[2] * q[3] + q[0] * q[1]), (q2[2] - q2[3] - q2[0] + q2[1])));
+    angles[ROLL] = RAD2DEG(atan2(2 * (q[3] * q[0] + q[2] * q[1]), (-q2[2] - q2[3] + q2[0] + q2[1])));
 }
 
 void QuatMultiply0(quat_t qa, const quat_t qb) {
@@ -2904,10 +2904,10 @@ void QuatSlerp(const quat_t from, const quat_t to, float frac, quat_t out) {
         QuatCopy(to, to1);
     }
 
-    if ( (1.0 - cosom) > 0) {
+    if ((1.0 - cosom) > 0) {
         omega = acos(cosom);
         sinom = sin(omega);
-        scale0 = sin( (1.0 - frac) * omega) / sinom;
+        scale0 = sin((1.0 - frac) * omega) / sinom;
         scale1 = sin(frac * omega) / sinom;
     } else {
         scale0 = 1.0 - frac;
@@ -2939,7 +2939,7 @@ void QuatSlerp(const quat_t from, const quat_t to, float frac, quat_t out) {
         return;
     }
 
-    if (QuatCompare(from, to) ) {
+    if (QuatCompare(from, to)) {
         QuatCopy(from, out);
         return;
     }
@@ -2947,12 +2947,12 @@ void QuatSlerp(const quat_t from, const quat_t to, float frac, quat_t out) {
     cosom = from[0] * to[0] + from[1] * to[1] + from[2] * to[2] + from[3] * to[3];
     absCosom = fabs(cosom);
 
-    if ( (1.0f - absCosom) > 1e-6f) {
+    if ((1.0f - absCosom) > 1e-6f) {
         sinSqr = 1.0f - absCosom * absCosom;
         sinom = 1.0f / sqrt(sinSqr);
         omega = atan2(sinSqr * sinom, absCosom);
 
-        scale0 = sin( (1.0f - frac) * omega) * sinom;
+        scale0 = sin((1.0f - frac) * omega) * sinom;
         scale1 = sin(frac * omega) * sinom;
     } else {
         scale0 = 1.0f - frac;
@@ -3008,7 +3008,7 @@ void TransInit(transform_t* t) {
 
 // copy a transform
 void TransCopy(const transform_t* in, transform_t* out) {
-    Com_Memcpy(out, in, sizeof(transform_t) );
+    Com_Memcpy(out, in, sizeof(transform_t));
 }
 
 // apply a transform to a point
@@ -3158,7 +3158,7 @@ void TransAddWeight(float weight, const transform_t* a, transform_t* out) {
     }
 
     VectorMA(out->trans, weight, a->trans, out->trans);
-    out->scale      += a->scale      * weight;
+    out->scale += a->scale      * weight;
 }
 void TransEndLerp(transform_t* t) {
     QuatNormalize(t->rot);

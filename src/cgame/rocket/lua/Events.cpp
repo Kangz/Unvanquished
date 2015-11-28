@@ -60,7 +60,7 @@ namespace Rocket {
 
                 Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
                 for (size_t i = 0; i < list.size(); ++i) {
-                    Rocket_AddEvent(new RocketEvent_t(list[i]) );
+                    Rocket_AddEvent(new RocketEvent_t(list[i]));
                 }
 
                 return 0;
@@ -77,7 +77,7 @@ namespace Rocket {
 
                 Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
                 for (size_t i = 0; i < list.size(); ++i) {
-                    Rocket_AddEvent(new RocketEvent_t(*event, list[i]) );
+                    Rocket_AddEvent(new RocketEvent_t(*event, list[i]));
                 }
 
                 return 0;
@@ -94,21 +94,21 @@ namespace Rocket {
 
                 Rocket::Core::StringUtilities::ExpandString(list, cmds, ';');
                 for (size_t i = 0; i < list.size(); ++i) {
-                    Rocket_AddEvent(new RocketEvent_t(element, list[i]) );
+                    Rocket_AddEvent(new RocketEvent_t(element, list[i]));
                 }
 
                 return 0;
             }
 
-            RegType<Events> EventsMethods[] ={
+            RegType<Events> EventsMethods[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg EventsGetters[] ={
+            luaL_Reg EventsGetters[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg EventsSetters[] ={
+            luaL_Reg EventsSetters[] = {
                 { NULL, NULL },
             };
 

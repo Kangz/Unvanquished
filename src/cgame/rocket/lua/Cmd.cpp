@@ -57,15 +57,15 @@ namespace Rocket {
             }
 
 
-            RegType<Cmd> CmdMethods[] ={
+            RegType<Cmd> CmdMethods[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg CmdGetters[] ={
+            luaL_Reg CmdGetters[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg CmdSetters[] ={
+            luaL_Reg CmdSetters[] = {
                 { NULL, NULL },
             };
 

@@ -88,7 +88,7 @@ WRITE_STRING
 ===============
 */
 static INLINE void WRITE_STRING(const char* s) {
-    Com_Memcpy(&buffer[bufIndex], s, strlen(s) );
+    Com_Memcpy(&buffer[bufIndex], s, strlen(s));
     bufIndex += strlen(s);
 }
 
@@ -98,10 +98,10 @@ WRITE_4BYTES
 ===============
 */
 static INLINE void WRITE_4BYTES(int x) {
-    buffer[bufIndex + 0] = (byte)( (x >> 0) & 0xFF);
-    buffer[bufIndex + 1] = (byte)( (x >> 8) & 0xFF);
-    buffer[bufIndex + 2] = (byte)( (x >> 16) & 0xFF);
-    buffer[bufIndex + 3] = (byte)( (x >> 24) & 0xFF);
+    buffer[bufIndex + 0] = (byte)((x >> 0) & 0xFF);
+    buffer[bufIndex + 1] = (byte)((x >> 8) & 0xFF);
+    buffer[bufIndex + 2] = (byte)((x >> 16) & 0xFF);
+    buffer[bufIndex + 3] = (byte)((x >> 24) & 0xFF);
     bufIndex += 4;
 }
 
@@ -111,8 +111,8 @@ WRITE_2BYTES
 ===============
 */
 static INLINE void WRITE_2BYTES(int x) {
-    buffer[bufIndex + 0] = (byte)( (x >> 0) & 0xFF);
-    buffer[bufIndex + 1] = (byte)( (x >> 8) & 0xFF);
+    buffer[bufIndex + 0] = (byte)((x >> 0) & 0xFF);
+    buffer[bufIndex + 1] = (byte)((x >> 8) & 0xFF);
     bufIndex += 2;
 }
 
@@ -308,7 +308,7 @@ bool CL_OpenAVIForWriting(const char* fileName) {
         return false;
     }
 
-    Com_Memset(&afd, 0, sizeof(aviFileData_t) );
+    Com_Memset(&afd, 0, sizeof(aviFileData_t));
 
     // Don't start if a framerate has not been chosen
     if (cl_aviFrameRate->integer <= 0) {
@@ -316,11 +316,11 @@ bool CL_OpenAVIForWriting(const char* fileName) {
         return false;
     }
 
-    if ( (afd.f = FS_FOpenFileWrite(fileName) ) <= 0) {
+    if ((afd.f = FS_FOpenFileWrite(fileName)) <= 0) {
         return false;
     }
 
-    if ( (afd.idxF = FS_FOpenFileWrite(va("%s" INDEX_FILE_EXTENSION, fileName) ) ) <= 0) {
+    if ((afd.idxF = FS_FOpenFileWrite(va("%s" INDEX_FILE_EXTENSION, fileName))) <= 0) {
         FS_FCloseFile(afd.f);
         return false;
     }
@@ -342,7 +342,7 @@ bool CL_OpenAVIForWriting(const char* fileName) {
     // Allocate a bit more space for the capture buffer to account for possible
     // padding at the end of pixel lines, and padding for alignment
 #define MAX_PACK_LEN 16
-    afd.cBuffer = (byte*) Z_Malloc( (afd.width * 3 + MAX_PACK_LEN - 1) * afd.height + MAX_PACK_LEN - 1);
+    afd.cBuffer = (byte*) Z_Malloc((afd.width * 3 + MAX_PACK_LEN - 1) * afd.height + MAX_PACK_LEN - 1);
     // raw avi files have pixel lines start on 4-byte boundaries
     afd.eBuffer = (byte*) Z_Malloc(PAD(afd.width * 3, AVI_LINE_PADDING) * afd.height);
 
@@ -358,16 +358,16 @@ bool CL_OpenAVIForWriting(const char* fileName) {
     if (afd.a.rate % afd.frameRate) {
         int suggestRate = afd.frameRate;
 
-        while ( (afd.a.rate % suggestRate) && suggestRate >= 1) {
+        while ((afd.a.rate % suggestRate) && suggestRate >= 1) {
             suggestRate--;
         }
 
         Com_Printf(S_WARNING "cl_aviFrameRate is not a divisor of the audio rate, suggest %d\n", suggestRate);
     }
 
-    if (!Cvar_VariableIntegerValue("s_initsound") ) {
+    if (!Cvar_VariableIntegerValue("s_initsound")) {
         afd.audio = false;
-    } else if (Q_stricmp(Cvar_VariableString("s_backend"), "OpenAL") ) {
+    } else if (Q_stricmp(Cvar_VariableString("s_backend"), "OpenAL")) {
         if (afd.a.bits == 16 && afd.a.channels == 2) {
             afd.audio = true;
         } else {
@@ -415,7 +415,7 @@ static bool CL_CheckFileSize(int bytesToAdd) {
         CL_CloseAVI();
 
         // ...And open a new one
-        CL_OpenAVIForWriting(va("%s_", afd.fileName) );
+        CL_OpenAVIForWriting(va("%s_", afd.fileName));
 
         return true;
     }
@@ -439,7 +439,7 @@ void CL_WriteAVIVideoFrame(const byte* imageBuffer, int size) {
     }
 
     // Chunk header + contents + padding
-    if (CL_CheckFileSize(8 + size + 2) ) {
+    if (CL_CheckFileSize(8 + size + 2)) {
         return;
     }
 
@@ -512,7 +512,7 @@ bool CL_CloseAVI() {
     // Write index
 
     // Open the temp index file
-    if ( (indexSize = FS_FOpenFileRead(idxFileName, &afd.idxF, true) ) <= 0) {
+    if ((indexSize = FS_FOpenFileRead(idxFileName, &afd.idxF, true)) <= 0) {
         FS_FCloseFile(afd.f);
         return false;
     }

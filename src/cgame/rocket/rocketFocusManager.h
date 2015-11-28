@@ -49,14 +49,14 @@ class RocketFocusManager : public Rocket::Core::EventListener {
 
             if (context) {
                 for (int i = 0; i < context->GetNumDocuments(); ++i) {
-                    if (context->GetDocument(i)->IsVisible() ) {
+                    if (context->GetDocument(i)->IsVisible()) {
                         anyVisible = true;
                         break;
                     }
                 }
             }
 
-            if (anyVisible && !(rocketInfo.keyCatcher & KEYCATCH_UI) ) {
+            if (anyVisible && !(rocketInfo.keyCatcher & KEYCATCH_UI)) {
                 trap_Key_ClearCmdButtons();
                 trap_Key_ClearStates();
                 CG_SetKeyCatcher(KEYCATCH_UI);
@@ -68,11 +68,11 @@ class RocketFocusManager : public Rocket::Core::EventListener {
     private:
         // Checks if parents are visible as well
         bool IsTreeVisible(Rocket::Core::Element* element) {
-            if (element && element->IsVisible() ) {
+            if (element && element->IsVisible()) {
                 Rocket::Core::Element* parent = element;
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if (!parent->IsVisible() ) {
+                while ((parent = parent->GetParentNode())) {
+                    if (!parent->IsVisible()) {
                         return false;
                     }
                 }

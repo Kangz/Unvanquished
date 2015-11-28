@@ -36,8 +36,8 @@ int  trap_FS_Write(const void* buffer, int len, fileHandle_t f);
 void trap_FS_FCloseFile(fileHandle_t f);
 
 #define PARSE(text, token) \
-    (token) = COM_Parse(&(text) ); \
-    if (!*(token) ) \
+    (token) = COM_Parse(&(text)); \
+    if (!*(token)) \
     { \
         break; \
     }
@@ -193,7 +193,7 @@ int LCANNON_CHARGE_TIME_WARN;
 int LCANNON_CHARGE_AMMO;
 
 // MUST BE ALPHABETICALLY SORTED!
-static configVar_t bg_configVars[] ={
+static configVar_t bg_configVars[] = {
     {"b_reactor_powerRadius", FLOAT, false, &REACTOR_BASESIZE},
     {"b_reactor_zapAttackDamage", INTEGER, false, &REACTOR_ATTACK_DAMAGE},
     {"b_reactor_zapAttackRange", FLOAT, false, &REACTOR_ATTACK_RANGE},
@@ -361,11 +361,11 @@ bool BG_ReadWholeFile(const char* filename, char* buffer, int size) {
 }
 
 static team_t ParseTeam(const char* token) {
-    if (!Q_strnicmp(token, "alien", 5) ) { // alien(s)
+    if (!Q_strnicmp(token, "alien", 5)) { // alien(s)
         return TEAM_ALIENS;
-    } else if (!Q_strnicmp(token, "human", 5) ) { // human(s)
+    } else if (!Q_strnicmp(token, "human", 5)) { // human(s)
         return TEAM_HUMANS;
-    } else if (!Q_stricmp(token, "none") ) {
+    } else if (!Q_stricmp(token, "none")) {
         return TEAM_NONE;
     } else {
         Com_Printf(S_ERROR "unknown team value '%s'\n", token);
@@ -393,21 +393,21 @@ static int ParseSlotList(const char** text) {
             return slots;
         }
 
-        if (!Q_stricmp(token, "head") ) {
+        if (!Q_stricmp(token, "head")) {
             slots |= SLOT_HEAD;
-        } else if (!Q_stricmp(token, "torso") ) {
+        } else if (!Q_stricmp(token, "torso")) {
             slots |= SLOT_TORSO;
-        } else if (!Q_stricmp(token, "arms") ) {
+        } else if (!Q_stricmp(token, "arms")) {
             slots |= SLOT_ARMS;
-        } else if (!Q_stricmp(token, "legs") ) {
+        } else if (!Q_stricmp(token, "legs")) {
             slots |= SLOT_LEGS;
-        } else if (!Q_stricmp(token, "backpack") ) {
+        } else if (!Q_stricmp(token, "backpack")) {
             slots |= SLOT_BACKPACK;
-        } else if (!Q_stricmp(token, "weapon") ) {
+        } else if (!Q_stricmp(token, "weapon")) {
             slots |= SLOT_WEAPON;
-        } else if (!Q_stricmp(token, "sidearm") ) {
+        } else if (!Q_stricmp(token, "sidearm")) {
             slots |= SLOT_SIDEARM;
-        } else if (!Q_stricmp(token, "grenade") ) {
+        } else if (!Q_stricmp(token, "grenade")) {
             slots |= SLOT_GRENADE;
         } else {
             Com_Printf(S_ERROR "unknown slot '%s'\n", token);
@@ -418,19 +418,19 @@ static int ParseSlotList(const char** text) {
 }
 
 static int ParseClipmask(const char* token) {
-    if (!Q_stricmp(token, "MASK_ALL") ) {
+    if (!Q_stricmp(token, "MASK_ALL")) {
         return MASK_ALL;
-    } else if (!Q_stricmp(token, "MASK_SOLID") ) {
+    } else if (!Q_stricmp(token, "MASK_SOLID")) {
         return MASK_SOLID;
-    } else if (!Q_stricmp(token, "MASK_PLAYERSOLID") ) {
+    } else if (!Q_stricmp(token, "MASK_PLAYERSOLID")) {
         return MASK_PLAYERSOLID;
-    } else if (!Q_stricmp(token, "MASK_DEADSOLID") ) {
+    } else if (!Q_stricmp(token, "MASK_DEADSOLID")) {
         return MASK_DEADSOLID;
-    } else if (!Q_stricmp(token, "MASK_WATER") ) {
+    } else if (!Q_stricmp(token, "MASK_WATER")) {
         return MASK_WATER;
-    } else if (!Q_stricmp(token, "MASK_OPAQUE") ) {
+    } else if (!Q_stricmp(token, "MASK_OPAQUE")) {
         return MASK_OPAQUE;
-    } else if (!Q_stricmp(token, "MASK_SHOT") ) {
+    } else if (!Q_stricmp(token, "MASK_SHOT")) {
         return MASK_SHOT;
     } else {
         Com_Printf(S_ERROR "unknown clipmask value '%s'\n", token);
@@ -439,19 +439,19 @@ static int ParseClipmask(const char* token) {
 }
 
 static trType_t ParseTrajectoryType(const char* token) {
-    if (!Q_stricmp(token, "TR_STATIONARY") ) {
+    if (!Q_stricmp(token, "TR_STATIONARY")) {
         return TR_STATIONARY;
-    } else if (!Q_stricmp(token, "TR_INTERPOLATE") ) {
+    } else if (!Q_stricmp(token, "TR_INTERPOLATE")) {
         return TR_INTERPOLATE;
-    } else if (!Q_stricmp(token, "TR_LINEAR") ) {
+    } else if (!Q_stricmp(token, "TR_LINEAR")) {
         return TR_LINEAR;
-    } else if (!Q_stricmp(token, "TR_LINEAR_STOP") ) {
+    } else if (!Q_stricmp(token, "TR_LINEAR_STOP")) {
         return TR_LINEAR_STOP;
-    } else if (!Q_stricmp(token, "TR_SINE") ) {
+    } else if (!Q_stricmp(token, "TR_SINE")) {
         return TR_SINE;
-    } else if (!Q_stricmp(token, "TR_GRAVITY") ) {
+    } else if (!Q_stricmp(token, "TR_GRAVITY")) {
         return TR_GRAVITY;
-    } else if (!Q_stricmp(token, "TR_BUOYANCY") ) {
+    } else if (!Q_stricmp(token, "TR_BUOYANCY")) {
         return TR_BUOYANCY;
     } else {
         Com_Printf(S_ERROR "unknown trajectory value '%s'\n", token);
@@ -533,7 +533,7 @@ void BG_ParseBuildableAttributeFile(const char* filename, buildableAttributes_t*
         UNLOCKTHRESHOLD = 1 << 13
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -542,59 +542,59 @@ void BG_ParseBuildableAttributeFile(const char* filename, buildableAttributes_t*
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "humanName") ) {
+        if (!Q_stricmp(token, "humanName")) {
             PARSE(text, token);
 
             ba->humanName = BG_strdup(token);
 
             defined |= HUMANNAME;
-        } else if (!Q_stricmp(token, "description") ) {
+        } else if (!Q_stricmp(token, "description")) {
             PARSE(text, token);
 
             ba->info = BG_strdup(token);
 
             defined |= DESCRIPTION;
-        } else if (!Q_stricmp(token, "icon") ) {
+        } else if (!Q_stricmp(token, "icon")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ba->icon = nullptr;
             } else {
                 ba->icon = BG_strdup(token);
             }
 
             defined |= ICON;
-        } else if (!Q_stricmp(token, "buildPoints") ) {
+        } else if (!Q_stricmp(token, "buildPoints")) {
             PARSE(text, token);
 
             ba->buildPoints = atoi(token);
 
             defined |= BUILDPOINTS;
-        } else if (!Q_stricmp(token, "powerConsumption") ) {
+        } else if (!Q_stricmp(token, "powerConsumption")) {
             PARSE(text, token);
 
             ba->powerConsumption = atoi(token);
 
             defined |= POWERCONSUMPTION;
-        } else if (!Q_stricmp(token, "health") ) {
+        } else if (!Q_stricmp(token, "health")) {
             PARSE(text, token);
 
             ba->health = atoi(token);
 
             defined |= HEALTH;
-        } else if (!Q_stricmp(token, "regen") ) {
+        } else if (!Q_stricmp(token, "regen")) {
             PARSE(text, token);
 
             ba->regenRate = atoi(token);
-        } else if (!Q_stricmp(token, "splashDamage") ) {
+        } else if (!Q_stricmp(token, "splashDamage")) {
             PARSE(text, token);
 
             ba->splashDamage = atoi(token);
-        } else if (!Q_stricmp(token, "splashRadius") ) {
+        } else if (!Q_stricmp(token, "splashRadius")) {
             PARSE(text, token);
 
             ba->splashRadius = atoi(token);
-        } else if (!Q_stricmp(token, "weapon") ) {
+        } else if (!Q_stricmp(token, "weapon")) {
             PARSE(text, token);
 
             ba->weapon = BG_WeaponNumberByName(token);
@@ -602,92 +602,92 @@ void BG_ParseBuildableAttributeFile(const char* filename, buildableAttributes_t*
             if (!ba->weapon) {
                 Com_Printf(S_ERROR "unknown weapon name '%s'\n", token);
             }
-        } else if (!Q_stricmp(token, "meansOfDeath") ) {
+        } else if (!Q_stricmp(token, "meansOfDeath")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "alienBuildable") ) {
+            if (!Q_stricmp(token, "alienBuildable")) {
                 ba->meansOfDeath = MOD_ASPAWN;
-            } else if (!Q_stricmp(token, "humanBuildable") ) {
+            } else if (!Q_stricmp(token, "humanBuildable")) {
                 ba->meansOfDeath = MOD_HSPAWN;
             } else {
                 Com_Printf(S_ERROR "unknown meanOfDeath value '%s'\n", token);
             }
 
             defined |= DEATHMOD;
-        } else if (!Q_stricmp(token, "team") ) {
+        } else if (!Q_stricmp(token, "team")) {
             PARSE(text, token);
 
             ba->team = ParseTeam(token);
 
             defined |= TEAM;
-        } else if (!Q_stricmp(token, "buildWeapon") ) {
+        } else if (!Q_stricmp(token, "buildWeapon")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "alien") ) {
-                ba->buildWeapon = (weapon_t) ( (1 << WP_ABUILD) | (1 << WP_ABUILD2) );
-            } else if (!Q_stricmp(token, "human") ) {
+            if (!Q_stricmp(token, "alien")) {
+                ba->buildWeapon = (weapon_t) ((1 << WP_ABUILD) | (1 << WP_ABUILD2));
+            } else if (!Q_stricmp(token, "human")) {
                 ba->buildWeapon = (weapon_t) (1 << WP_HBUILD);
             } else {
                 Com_Printf(S_ERROR "unknown buildWeapon value '%s'\n", token);
             }
 
             defined |= BUILDWEAPON;
-        } else if (!Q_stricmp(token, "buildTime") ) {
+        } else if (!Q_stricmp(token, "buildTime")) {
             PARSE(text, token);
 
             ba->buildTime = atoi(token);
 
             defined |= BUILDTIME;
-        } else if (!Q_stricmp(token, "usable") ) {
+        } else if (!Q_stricmp(token, "usable")) {
             ba->usable = true;
-        } else if (!Q_stricmp(token, "minNormal") ) {
+        } else if (!Q_stricmp(token, "minNormal")) {
             PARSE(text, token);
 
             ba->minNormal = atof(token);
             defined |= NORMAL;
-        } else if (!Q_stricmp(token, "allowInvertNormal") ) {
+        } else if (!Q_stricmp(token, "allowInvertNormal")) {
             ba->invertNormal = true;
-        } else if (!Q_stricmp(token, "needsCreep") ) {
+        } else if (!Q_stricmp(token, "needsCreep")) {
             ba->creepTest = true;
-        } else if (!Q_stricmp(token, "creepSize") ) {
+        } else if (!Q_stricmp(token, "creepSize")) {
             PARSE(text, token);
 
             ba->creepSize = atoi(token);
-        } else if (!Q_stricmp(token, "transparentTest") ) {
+        } else if (!Q_stricmp(token, "transparentTest")) {
             ba->transparentTest = true;
-        } else if (!Q_stricmp(token, "unique") ) {
+        } else if (!Q_stricmp(token, "unique")) {
             ba->uniqueTest = true;
-        } else if (!Q_stricmp(token, "unlockThreshold") ) {
+        } else if (!Q_stricmp(token, "unlockThreshold")) {
             PARSE(text, token);
 
             ba->unlockThreshold = atoi(token);
             defined |= UNLOCKTHRESHOLD;
-        } else if ( (var = BG_FindConfigVar(va("b_%s_%s", ba->name, token) ) ) != nullptr) {
+        } else if ((var = BG_FindConfigVar(va("b_%s_%s", ba->name, token))) != nullptr) {
             BG_ParseConfigVar(var, &text, filename);
         } else {
             Com_Printf(S_ERROR "%s: unknown token '%s'\n", filename, token);
         }
     }
 
-    if (!(defined & HUMANNAME) ) {
+    if (!(defined & HUMANNAME)) {
         token = "humanName";
-    } else if (!(defined & DESCRIPTION) ) {
+    } else if (!(defined & DESCRIPTION)) {
         token = "description";
-    } else if (!(defined & BUILDPOINTS) ) {
+    } else if (!(defined & BUILDPOINTS)) {
         token = "buildPoints";
-    } else if (!(defined & ICON) ) {
+    } else if (!(defined & ICON)) {
         token = "icon";
-    } else if (!(defined & HEALTH) ) {
+    } else if (!(defined & HEALTH)) {
         token = "health";
-    } else if (!(defined & DEATHMOD) ) {
+    } else if (!(defined & DEATHMOD)) {
         token = "meansOfDeath";
-    } else if (!(defined & TEAM) ) {
+    } else if (!(defined & TEAM)) {
         token = "team";
-    } else if (!(defined & BUILDWEAPON) ) {
+    } else if (!(defined & BUILDWEAPON)) {
         token = "buildWeapon";
-    } else if (!(defined & BUILDTIME) ) {
+    } else if (!(defined & BUILDTIME)) {
         token = "buildTime";
-    } else if (!(defined & NORMAL) ) {
+    } else if (!(defined & NORMAL)) {
         token = "minNormal";
     }
 
@@ -719,7 +719,7 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
         MODEL_ROTATION = 1 << 7
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -729,7 +729,7 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "model") ) {
+        if (!Q_stricmp(token, "model")) {
             int index = 0;
 
             PARSE(text, token);
@@ -744,10 +744,10 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
 
             PARSE(text, token);
 
-            Q_strncpyz(bc->models[index], token, sizeof(bc->models[0]) );
+            Q_strncpyz(bc->models[index], token, sizeof(bc->models[0]));
 
             defined |= MODEL;
-        } else if (!Q_stricmp(token, "modelScale") ) {
+        } else if (!Q_stricmp(token, "modelScale")) {
             float scale;
 
             PARSE(text, token);
@@ -761,7 +761,7 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
             bc->modelScale = scale;
 
             defined |= MODELSCALE;
-        } else if (!Q_stricmp(token, "modelRotation") ) {
+        } else if (!Q_stricmp(token, "modelRotation")) {
             PARSE(text, token);
             bc->modelRotation[0] = atof(token);
             PARSE(text, token);
@@ -770,7 +770,7 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
             bc->modelRotation[2] = atof(token);
 
             defined |= MODEL_ROTATION;
-        } else if (!Q_stricmp(token, "mins") ) {
+        } else if (!Q_stricmp(token, "mins")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -780,7 +780,7 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
             }
 
             defined |= MINS;
-        } else if (!Q_stricmp(token, "maxs") ) {
+        } else if (!Q_stricmp(token, "maxs")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -790,19 +790,19 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
             }
 
             defined |= MAXS;
-        } else if (!Q_stricmp(token, "zOffset") ) {
+        } else if (!Q_stricmp(token, "zOffset")) {
             PARSE(text, token);
 
             bc->zOffset = atof(token);
 
             defined |= ZOFFSET;
-        } else if (!Q_stricmp(token, "oldScale") ) {
+        } else if (!Q_stricmp(token, "oldScale")) {
             PARSE(text, token);
 
             bc->oldScale = atof(token);
 
             defined |= OLDSCALE;
-        } else if (!Q_stricmp(token, "oldOffset") ) {
+        } else if (!Q_stricmp(token, "oldOffset")) {
             PARSE(text, token);
 
             bc->oldOffset = atof(token);
@@ -813,15 +813,15 @@ void BG_ParseBuildableModelFile(const char* filename, buildableModelConfig_t* bc
         }
     }
 
-    if (!(defined & MODEL) ) {
+    if (!(defined & MODEL)) {
         token = "model";
-    } else if (!(defined & MODELSCALE) ) {
+    } else if (!(defined & MODELSCALE)) {
         token = "modelScale";
-    } else if (!(defined & MINS) ) {
+    } else if (!(defined & MINS)) {
         token = "mins";
-    } else if (!(defined & MAXS) ) {
+    } else if (!(defined & MAXS)) {
         token = "maxs";
-    } else if (!(defined & ZOFFSET) ) {
+    } else if (!(defined & ZOFFSET)) {
         token = "zOffset";
     } else {                                                                                                                                                                                                                                                                                   token = "";
     }
@@ -874,7 +874,7 @@ void BG_ParseClassAttributeFile(const char* filename, classAttributes_t* ca) {
         STAMINASTOPRESTORE = 1 << 24
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -883,136 +883,136 @@ void BG_ParseClassAttributeFile(const char* filename, classAttributes_t* ca) {
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "description") ) {
+        if (!Q_stricmp(token, "description")) {
             PARSE(text, token);
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ca->info = "";
             } else {
                 ca->info = BG_strdup(token);
             }
             defined |= INFO;
-        } else if (!Q_stricmp(token, "icon") ) {
+        } else if (!Q_stricmp(token, "icon")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ca->icon = nullptr;
             } else {
                 ca->icon = BG_strdup(token);
             }
 
             defined |= ICON;
-        } else if (!Q_stricmp(token, "fovCvar") ) {
+        } else if (!Q_stricmp(token, "fovCvar")) {
             PARSE(text, token);
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ca->fovCvar = "";
             } else {
                 ca->fovCvar = BG_strdup(token);
             }
             defined |= FOVCVAR;
-        } else if (!Q_stricmp(token, "team") ) {
+        } else if (!Q_stricmp(token, "team")) {
             PARSE(text, token);
             ca->team = ParseTeam(token);
             defined |= TEAM;
-        } else if (!Q_stricmp(token, "health") ) {
+        } else if (!Q_stricmp(token, "health")) {
             PARSE(text, token);
             ca->health = atoi(token);
             defined |= HEALTH;
-        } else if (!Q_stricmp(token, "fallDamage") ) {
+        } else if (!Q_stricmp(token, "fallDamage")) {
             PARSE(text, token);
             ca->fallDamage = atof(token);
             defined |= FALLDAMAGE;
-        } else if (!Q_stricmp(token, "regen") ) {
+        } else if (!Q_stricmp(token, "regen")) {
             PARSE(text, token);
             ca->regenRate = atof(token);
             defined |= REGEN;
-        } else if (!Q_stricmp(token, "wallClimber") ) {
+        } else if (!Q_stricmp(token, "wallClimber")) {
             ca->abilities |= SCA_WALLCLIMBER;
-        } else if (!Q_stricmp(token, "takesFallDamage") ) {
+        } else if (!Q_stricmp(token, "takesFallDamage")) {
             ca->abilities |= SCA_TAKESFALLDAMAGE;
-        } else if (!Q_stricmp(token, "fovWarps") ) {
+        } else if (!Q_stricmp(token, "fovWarps")) {
             ca->abilities |= SCA_FOVWARPS;
-        } else if (!Q_stricmp(token, "alienSense") ) {
+        } else if (!Q_stricmp(token, "alienSense")) {
             ca->abilities |= SCA_ALIENSENSE;
-        } else if (!Q_stricmp(token, "canUseLadders") ) {
+        } else if (!Q_stricmp(token, "canUseLadders")) {
             ca->abilities |= SCA_CANUSELADDERS;
-        } else if (!Q_stricmp(token, "wallJumper") ) {
+        } else if (!Q_stricmp(token, "wallJumper")) {
             ca->abilities |= SCA_WALLJUMPER;
-        } else if (!Q_stricmp(token, "buildDistance") ) {
+        } else if (!Q_stricmp(token, "buildDistance")) {
             PARSE(text, token);
             ca->buildDist = atof(token);
-        } else if (!Q_stricmp(token, "fov") ) {
+        } else if (!Q_stricmp(token, "fov")) {
             PARSE(text, token);
             ca->fov = atoi(token);
             defined |= FOV;
-        } else if (!Q_stricmp(token, "bob") ) {
+        } else if (!Q_stricmp(token, "bob")) {
             PARSE(text, token);
             ca->bob = atof(token);
-        } else if (!Q_stricmp(token, "bobCycle") ) {
+        } else if (!Q_stricmp(token, "bobCycle")) {
             PARSE(text, token);
             ca->bobCycle = atof(token);
-        } else if (!Q_stricmp(token, "stepTime") ) {
+        } else if (!Q_stricmp(token, "stepTime")) {
             PARSE(text, token);
             ca->steptime = atoi(token);
             defined |= STEPTIME;
-        } else if (!Q_stricmp(token, "speed") ) {
+        } else if (!Q_stricmp(token, "speed")) {
             PARSE(text, token);
             ca->speed = atof(token);
             defined |= SPEED;
-        } else if (!Q_stricmp(token, "acceleration") ) {
+        } else if (!Q_stricmp(token, "acceleration")) {
             PARSE(text, token);
             ca->acceleration = atof(token);
             defined |= ACCELERATION;
-        } else if (!Q_stricmp(token, "airAcceleration") ) {
+        } else if (!Q_stricmp(token, "airAcceleration")) {
             PARSE(text, token);
             ca->airAcceleration = atof(token);
             defined |= AIRACCELERATION;
-        } else if (!Q_stricmp(token, "friction") ) {
+        } else if (!Q_stricmp(token, "friction")) {
             PARSE(text, token);
             ca->friction = atof(token);
             defined |= FRICTION;
-        } else if (!Q_stricmp(token, "stopSpeed") ) {
+        } else if (!Q_stricmp(token, "stopSpeed")) {
             PARSE(text, token);
             ca->stopSpeed = atof(token);
             defined |= STOPSPEED;
-        } else if (!Q_stricmp(token, "jumpMagnitude") ) {
+        } else if (!Q_stricmp(token, "jumpMagnitude")) {
             PARSE(text, token);
             ca->jumpMagnitude = atof(token);
             defined |= JUMPMAGNITUDE;
-        } else if (!Q_stricmp(token, "cost") ) {
+        } else if (!Q_stricmp(token, "cost")) {
             PARSE(text, token);
             ca->cost = atoi(token);
             defined |= COST;
-        } else if (!Q_stricmp(token, "sprintMod") ) {
+        } else if (!Q_stricmp(token, "sprintMod")) {
             PARSE(text, token);
             ca->sprintMod = atof(token);
             defined |= SPRINTMOD;
-        } else if (!Q_stricmp(token, "unlockThreshold") ) {
+        } else if (!Q_stricmp(token, "unlockThreshold")) {
             PARSE(text, token);
             ca->unlockThreshold = atoi(token);
             defined |= UNLOCKTHRESHOLD;
-        } else if ( (var = BG_FindConfigVar(va("c_%s_%s", ca->name, token) ) ) != nullptr) {
+        } else if ((var = BG_FindConfigVar(va("c_%s_%s", ca->name, token))) != nullptr) {
             BG_ParseConfigVar(var, &text, filename);
-        } else if (!Q_stricmp(token, "mass") ) {
+        } else if (!Q_stricmp(token, "mass")) {
             PARSE(text, token);
             ca->mass = atoi(token);
             defined |= MASS;
-        } else if (!Q_stricmp(token, "staminaJumpCost") ) {
+        } else if (!Q_stricmp(token, "staminaJumpCost")) {
             PARSE(text, token);
             ca->staminaJumpCost = atoi(token);
             defined |= STAMINAJUMPCOST;
-        } else if (!Q_stricmp(token, "staminaSprintCost") ) {
+        } else if (!Q_stricmp(token, "staminaSprintCost")) {
             PARSE(text, token);
             ca->staminaSprintCost = atoi(token);
             defined |= STAMINASPRINTCOST;
-        } else if (!Q_stricmp(token, "staminaJogRestore") ) {
+        } else if (!Q_stricmp(token, "staminaJogRestore")) {
             PARSE(text, token);
             ca->staminaJogRestore = atoi(token);
             defined |= STAMINAJOGRESTORE;
-        } else if (!Q_stricmp(token, "staminaWalkRestore") ) {
+        } else if (!Q_stricmp(token, "staminaWalkRestore")) {
             PARSE(text, token);
             ca->staminaWalkRestore = atoi(token);
             defined |= STAMINAWALKRESTORE;
-        } else if (!Q_stricmp(token, "staminaStopRestore") ) {
+        } else if (!Q_stricmp(token, "staminaStopRestore")) {
             PARSE(text, token);
             ca->staminaStopRestore = atoi(token);
             defined |= STAMINASTOPRESTORE;
@@ -1023,37 +1023,37 @@ void BG_ParseClassAttributeFile(const char* filename, classAttributes_t* ca) {
 
     // check for missing mandatory fields
     {
-        if (!(defined & INFO) ) {
+        if (!(defined & INFO)) {
             token = "description";
-        } else if (!(defined & FOVCVAR) ) {
+        } else if (!(defined & FOVCVAR)) {
             token = "fovCvar";
-        } else if (!(defined & TEAM) ) {
+        } else if (!(defined & TEAM)) {
             token = "team";
-        } else if (!(defined & HEALTH) ) {
+        } else if (!(defined & HEALTH)) {
             token = "health";
-        } else if (!(defined & FALLDAMAGE) ) {
+        } else if (!(defined & FALLDAMAGE)) {
             token = "fallDamage";
-        } else if (!(defined & REGEN) ) {
+        } else if (!(defined & REGEN)) {
             token = "regen";
-        } else if (!(defined & FOV) ) {
+        } else if (!(defined & FOV)) {
             token = "fov";
-        } else if (!(defined & STEPTIME) ) {
+        } else if (!(defined & STEPTIME)) {
             token = "stepTime";
-        } else if (!(defined & SPEED) ) {
+        } else if (!(defined & SPEED)) {
             token = "speed";
-        } else if (!(defined & ACCELERATION) ) {
+        } else if (!(defined & ACCELERATION)) {
             token = "acceleration";
-        } else if (!(defined & AIRACCELERATION) ) {
+        } else if (!(defined & AIRACCELERATION)) {
             token = "airAcceleration";
-        } else if (!(defined & FRICTION) ) {
+        } else if (!(defined & FRICTION)) {
             token = "friction";
-        } else if (!(defined & STOPSPEED) ) {
+        } else if (!(defined & STOPSPEED)) {
             token = "stopSpeed";
-        } else if (!(defined & JUMPMAGNITUDE) ) {
+        } else if (!(defined & JUMPMAGNITUDE)) {
             token = "jumpMagnitude";
-        } else if (!(defined & ICON) ) {
+        } else if (!(defined & ICON)) {
             token = "icon";
-        } else if (!(defined & COST) ) {
+        } else if (!(defined & COST)) {
             token = "cost";
         } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            token = nullptr;
         }
@@ -1065,17 +1065,17 @@ void BG_ParseClassAttributeFile(const char* filename, classAttributes_t* ca) {
 
     // check for missing mandatory fields for the human team
     if (ca->team == TEAM_HUMANS) {
-        if (!(defined & SPRINTMOD) ) {
+        if (!(defined & SPRINTMOD)) {
             token = "sprintMod";
-        } else if (!(defined & STAMINAJUMPCOST) ) {
+        } else if (!(defined & STAMINAJUMPCOST)) {
             token = "staminaJumpCost";
-        } else if (!(defined & STAMINASPRINTCOST) ) {
+        } else if (!(defined & STAMINASPRINTCOST)) {
             token = "staminaSprintCost";
-        } else if (!(defined & STAMINAJOGRESTORE) ) {
+        } else if (!(defined & STAMINAJOGRESTORE)) {
             token = "staminaJogRestore";
-        } else if (!(defined & STAMINAWALKRESTORE) ) {
+        } else if (!(defined & STAMINAWALKRESTORE)) {
             token = "staminaWalkRestore";
-        } else if (!(defined & STAMINASTOPRESTORE) ) {
+        } else if (!(defined & STAMINASTOPRESTORE)) {
             token = "staminaStopRestore";
         } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  token = nullptr;
         }
@@ -1099,7 +1099,7 @@ bool BG_NonSegModel(const char* filename) {
     char* token;
     char text[20000];
 
-    if (!BG_ReadWholeFile(filename, text, sizeof(text) ) ) {
+    if (!BG_ReadWholeFile(filename, text, sizeof(text))) {
         return false;
     }
 
@@ -1115,7 +1115,7 @@ bool BG_NonSegModel(const char* filename) {
             break;
         }
 
-        if (!Q_stricmp(token, "nonsegmented") ) {
+        if (!Q_stricmp(token, "nonsegmented")) {
             return true;
         }
     }
@@ -1153,7 +1153,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
         SHOULDEROFFSETS = 1 << 14
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -1163,38 +1163,38 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "model") ) {
+        if (!Q_stricmp(token, "model")) {
             PARSE(text, token);
 
             // Allow spectator to have an empty model
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 cc->modelName[0] = '\0';
             } else {
-                Q_strncpyz(cc->modelName, token, sizeof(cc->modelName) );
+                Q_strncpyz(cc->modelName, token, sizeof(cc->modelName));
             }
 
             defined |= MODEL;
-        } else if (!Q_stricmp(token, "skin") ) {
+        } else if (!Q_stricmp(token, "skin")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 cc->skinName[0] = '\0';
             } else {
-                Q_strncpyz(cc->skinName, token, sizeof(cc->skinName) );
+                Q_strncpyz(cc->skinName, token, sizeof(cc->skinName));
             }
 
             defined |= SKIN;
-        } else if (!Q_stricmp(token, "hud") ) {
+        } else if (!Q_stricmp(token, "hud")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 cc->hudName[0] = '\0';
             } else {
-                Q_strncpyz(cc->hudName, token, sizeof(cc->hudName) );
+                Q_strncpyz(cc->hudName, token, sizeof(cc->hudName));
             }
 
             defined |= HUD;
-        } else if (!Q_stricmp(token, "modelScale") ) {
+        } else if (!Q_stricmp(token, "modelScale")) {
             float scale;
 
             PARSE(text, token);
@@ -1208,7 +1208,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             cc->modelScale = scale;
 
             defined |= MODELSCALE;
-        } else if (!Q_stricmp(token, "shadowScale") ) {
+        } else if (!Q_stricmp(token, "shadowScale")) {
             float scale;
 
             PARSE(text, token);
@@ -1222,7 +1222,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             cc->shadowScale = scale;
 
             defined |= SHADOWSCALE;
-        } else if (!Q_stricmp(token, "mins") ) {
+        } else if (!Q_stricmp(token, "mins")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1232,7 +1232,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= MINS;
-        } else if (!Q_stricmp(token, "maxs") ) {
+        } else if (!Q_stricmp(token, "maxs")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1242,7 +1242,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= MAXS;
-        } else if (!Q_stricmp(token, "deadMins") ) {
+        } else if (!Q_stricmp(token, "deadMins")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1252,7 +1252,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= DEADMINS;
-        } else if (!Q_stricmp(token, "deadMaxs") ) {
+        } else if (!Q_stricmp(token, "deadMaxs")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1262,7 +1262,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= DEADMAXS;
-        } else if (!Q_stricmp(token, "crouchMaxs") ) {
+        } else if (!Q_stricmp(token, "crouchMaxs")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1272,31 +1272,31 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= CROUCHMAXS;
-        } else if (!Q_stricmp(token, "viewheight") ) {
+        } else if (!Q_stricmp(token, "viewheight")) {
             PARSE(text, token);
 
             cc->viewheight = atoi(token);
 
             defined |= VIEWHEIGHT;
-        } else if (!Q_stricmp(token, "crouchViewheight") ) {
+        } else if (!Q_stricmp(token, "crouchViewheight")) {
             PARSE(text, token);
 
             cc->crouchViewheight = atoi(token);
 
             defined |= CVIEWHEIGHT;
-        } else if (!Q_stricmp(token, "zOffset") ) {
+        } else if (!Q_stricmp(token, "zOffset")) {
             PARSE(text, token);
 
             cc->zOffset = atof(token);
 
             defined |= ZOFFSET;
-        } else if (!Q_stricmp(token, "name") ) {
+        } else if (!Q_stricmp(token, "name")) {
             PARSE(text, token);
 
             cc->humanName = BG_strdup(token);
 
             defined |= NAME;
-        } else if (!Q_stricmp(token, "shoulderOffsets") ) {
+        } else if (!Q_stricmp(token, "shoulderOffsets")) {
             int i;
 
             for (i = 0; i <= 2; i++) {
@@ -1306,7 +1306,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             }
 
             defined |= SHOULDEROFFSETS;
-        } else if (!Q_stricmp(token, "useNavMesh") ) {
+        } else if (!Q_stricmp(token, "useNavMesh")) {
             const classModelConfig_t* model;
 
             PARSE(text, token);
@@ -1314,7 +1314,7 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
             model = BG_ClassModelConfigByName(token);
 
             if (model && *model->modelName) {
-                cc->navMeshClass = (class_t) (model - BG_ClassModelConfig(PCL_NONE) );
+                cc->navMeshClass = (class_t) (model - BG_ClassModelConfig(PCL_NONE));
             } else {
                 Com_Printf(S_ERROR "%s: unknown or yet-unloaded player model '%s'\n", filename, token);
             }
@@ -1323,35 +1323,35 @@ void BG_ParseClassModelFile(const char* filename, classModelConfig_t* cc) {
         }
     }
 
-    if (!(defined & MODEL) ) {
+    if (!(defined & MODEL)) {
         token = "model";
-    } else if (!(defined & SKIN) ) {
+    } else if (!(defined & SKIN)) {
         token = "skin";
-    } else if (!(defined & HUD) ) {
+    } else if (!(defined & HUD)) {
         token = "hud";
-    } else if (!(defined & MODELSCALE) ) {
+    } else if (!(defined & MODELSCALE)) {
         token = "modelScale";
-    } else if (!(defined & SHADOWSCALE) ) {
+    } else if (!(defined & SHADOWSCALE)) {
         token = "shadowScale";
-    } else if (!(defined & MINS) ) {
+    } else if (!(defined & MINS)) {
         token = "mins";
-    } else if (!(defined & MAXS) ) {
+    } else if (!(defined & MAXS)) {
         token = "maxs";
-    } else if (!(defined & DEADMINS) ) {
+    } else if (!(defined & DEADMINS)) {
         token = "deadMins";
-    } else if (!(defined & DEADMAXS) ) {
+    } else if (!(defined & DEADMAXS)) {
         token = "deadMaxs";
-    } else if (!(defined & CROUCHMAXS) ) {
+    } else if (!(defined & CROUCHMAXS)) {
         token = "crouchMaxs";
-    } else if (!(defined & VIEWHEIGHT) ) {
+    } else if (!(defined & VIEWHEIGHT)) {
         token = "viewheight";
-    } else if (!(defined & CVIEWHEIGHT) ) {
+    } else if (!(defined & CVIEWHEIGHT)) {
         token = "crouchViewheight";
-    } else if (!(defined & ZOFFSET) ) {
+    } else if (!(defined & ZOFFSET)) {
         token = "zOffset";
-    } else if (!(defined & NAME) ) {
+    } else if (!(defined & NAME)) {
         token = "name";
-    } else if (!(defined & SHOULDEROFFSETS) ) {
+    } else if (!(defined & SHOULDEROFFSETS)) {
         token = "shoulderOffsets";
     } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        token = "";
     }
@@ -1385,7 +1385,7 @@ void BG_ParseWeaponAttributeFile(const char* filename, weaponAttributes_t* wa) {
         UNLOCKTHRESHOLD = 1 << 7
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -1395,111 +1395,111 @@ void BG_ParseWeaponAttributeFile(const char* filename, weaponAttributes_t* wa) {
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "humanName") ) {
+        if (!Q_stricmp(token, "humanName")) {
             PARSE(text, token);
 
             wa->humanName = BG_strdup(token);
 
             defined |= NAME;
-        } else if (!Q_stricmp(token, "description") ) {
+        } else if (!Q_stricmp(token, "description")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 wa->info = "";
             } else {
                 wa->info = BG_strdup(token);
             }
 
             defined |= INFO;
-        } else if (!Q_stricmp(token, "usedSlots") ) {
+        } else if (!Q_stricmp(token, "usedSlots")) {
             wa->slots = ParseSlotList(&text);
-        } else if (!Q_stricmp(token, "price") ) {
+        } else if (!Q_stricmp(token, "price")) {
             PARSE(text, token);
 
             wa->price = atoi(token);
 
             defined |= PRICE;
-        } else if (!Q_stricmp(token, "infiniteAmmo") ) {
+        } else if (!Q_stricmp(token, "infiniteAmmo")) {
             wa->infiniteAmmo = true;
 
             defined |= AMMO;
-        } else if (!Q_stricmp(token, "maxAmmo") ) {
+        } else if (!Q_stricmp(token, "maxAmmo")) {
             PARSE(text, token);
 
             wa->maxAmmo = atoi(token);
 
             defined |= AMMO;
-        } else if (!Q_stricmp(token, "maxClips") ) {
+        } else if (!Q_stricmp(token, "maxClips")) {
             PARSE(text, token);
 
             wa->maxClips = atoi(token);
-        } else if (!Q_stricmp(token, "usesEnergy") ) {
+        } else if (!Q_stricmp(token, "usesEnergy")) {
             wa->usesEnergy = true;
-        } else if (!Q_stricmp(token, "primaryAttackRate") ) {
+        } else if (!Q_stricmp(token, "primaryAttackRate")) {
             PARSE(text, token);
 
             wa->repeatRate1 = atoi(token);
 
             defined |= RATE;
-        } else if (!Q_stricmp(token, "secondaryAttackRate") ) {
+        } else if (!Q_stricmp(token, "secondaryAttackRate")) {
             PARSE(text, token);
 
             wa->repeatRate2 = atoi(token);
-        } else if (!Q_stricmp(token, "tertiaryAttackRate") ) {
+        } else if (!Q_stricmp(token, "tertiaryAttackRate")) {
             PARSE(text, token);
 
             wa->repeatRate3 = atoi(token);
-        } else if (!Q_stricmp(token, "reloadTime") ) {
+        } else if (!Q_stricmp(token, "reloadTime")) {
             PARSE(text, token);
 
             wa->reloadTime = atoi(token);
-        } else if (!Q_stricmp(token, "knockbackScale") ) {
+        } else if (!Q_stricmp(token, "knockbackScale")) {
             PARSE(text, token);
 
             wa->knockbackScale = atof(token);
-        } else if (!Q_stricmp(token, "hasAltMode") ) {
+        } else if (!Q_stricmp(token, "hasAltMode")) {
             wa->hasAltMode = true;
-        } else if (!Q_stricmp(token, "hasThirdMode") ) {
+        } else if (!Q_stricmp(token, "hasThirdMode")) {
             wa->hasThirdMode = true;
-        } else if (!Q_stricmp(token, "isPurchasable") ) {
+        } else if (!Q_stricmp(token, "isPurchasable")) {
             wa->purchasable = true;
-        } else if (!Q_stricmp(token, "isLongRanged") ) {
+        } else if (!Q_stricmp(token, "isLongRanged")) {
             wa->longRanged = true;
-        } else if (!Q_stricmp(token, "canZoom") ) {
+        } else if (!Q_stricmp(token, "canZoom")) {
             wa->canZoom = true;
-        } else if (!Q_stricmp(token, "zoomFov") ) {
+        } else if (!Q_stricmp(token, "zoomFov")) {
             PARSE(text, token);
 
             wa->zoomFov = atof(token);
-        } else if (!Q_stricmp(token, "team") ) {
+        } else if (!Q_stricmp(token, "team")) {
             PARSE(text, token);
 
             wa->team = ParseTeam(token);
 
             defined |= TEAM;
-        } else if (!Q_stricmp(token, "unlockThreshold") ) {
+        } else if (!Q_stricmp(token, "unlockThreshold")) {
             PARSE(text, token);
 
             wa->unlockThreshold = atoi(token);
             defined |= UNLOCKTHRESHOLD;
-        } else if ( (var = BG_FindConfigVar(va("w_%s_%s", wa->name, token) ) ) != nullptr) {
+        } else if ((var = BG_FindConfigVar(va("w_%s_%s", wa->name, token))) != nullptr) {
             BG_ParseConfigVar(var, &text, filename);
         } else {
             Com_Printf(S_ERROR "%s: unknown token '%s'\n", filename, token);
         }
     }
 
-    if (!(defined & NAME) ) {
+    if (!(defined & NAME)) {
         token = "humanName";
-    } else if (!(defined & INFO) ) {
+    } else if (!(defined & INFO)) {
         token = "description";
-    } else if (!(defined & PRICE) ) {
+    } else if (!(defined & PRICE)) {
         token = "price";
-    } else if (!(defined & RATE) ) {
+    } else if (!(defined & RATE)) {
         token = "primaryAttackRate";
-    } else if (!(defined & AMMO) ) {
+    } else if (!(defined & AMMO)) {
         token = "maxAmmo or infiniteAmmo";
-    } else if (!(defined & TEAM) ) {
+    } else if (!(defined & TEAM)) {
         token = "team";
     } else {                                                                                                                                                                                                                                                                                                                                                                 token = "";
     }
@@ -1532,7 +1532,7 @@ void BG_ParseUpgradeAttributeFile(const char* filename, upgradeAttributes_t* ua)
         UNLOCKTHRESHOLD = 1 << 6
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -1542,71 +1542,71 @@ void BG_ParseUpgradeAttributeFile(const char* filename, upgradeAttributes_t* ua)
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "humanName") ) {
+        if (!Q_stricmp(token, "humanName")) {
             PARSE(text, token);
 
             ua->humanName = BG_strdup(token);
 
             defined |= NAME;
-        } else if (!Q_stricmp(token, "description") ) {
+        } else if (!Q_stricmp(token, "description")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ua->info = "";
             } else {
                 ua->info = BG_strdup(token);
             }
 
             defined |= INFO;
-        } else if (!Q_stricmp(token, "usedSlots") ) {
+        } else if (!Q_stricmp(token, "usedSlots")) {
             ua->slots = ParseSlotList(&text);
-        } else if (!Q_stricmp(token, "icon") ) {
+        } else if (!Q_stricmp(token, "icon")) {
             PARSE(text, token);
 
-            if (!Q_stricmp(token, "null") ) {
+            if (!Q_stricmp(token, "null")) {
                 ua->icon = nullptr;
             } else {
                 ua->icon = BG_strdup(token);
             }
 
             defined |= ICON;
-        } else if (!Q_stricmp(token, "price") ) {
+        } else if (!Q_stricmp(token, "price")) {
             PARSE(text, token);
 
             ua->price = atoi(token);
 
             defined |= PRICE;
-        } else if (!Q_stricmp(token, "team") ) {
+        } else if (!Q_stricmp(token, "team")) {
             PARSE(text, token);
 
             ua->team = ParseTeam(token);
 
             defined |= TEAM;
-        } else if (!Q_stricmp(token, "isPurchasable") ) {
+        } else if (!Q_stricmp(token, "isPurchasable")) {
             ua->purchasable = true;
-        } else if (!Q_stricmp(token, "isUsable") ) {
+        } else if (!Q_stricmp(token, "isUsable")) {
             ua->usable = true;
-        } else if (!Q_stricmp(token, "unlockThreshold") ) {
+        } else if (!Q_stricmp(token, "unlockThreshold")) {
             PARSE(text, token);
 
             ua->unlockThreshold = atoi(token);
             defined |= UNLOCKTHRESHOLD;
-        } else if ( (var = BG_FindConfigVar(va("u_%s_%s", ua->name, token) ) ) != nullptr) {
+        } else if ((var = BG_FindConfigVar(va("u_%s_%s", ua->name, token))) != nullptr) {
             BG_ParseConfigVar(var, &text, filename);
         } else {
             Com_Printf(S_ERROR "%s: unknown token '%s'\n", filename, token);
         }
     }
 
-    if (!(defined & NAME) ) {
+    if (!(defined & NAME)) {
         token = "humanName";
-    } else if (!(defined & INFO) ) {
+    } else if (!(defined & INFO)) {
         token = "description";
-    } else if (!(defined & PRICE) ) {
+    } else if (!(defined & PRICE)) {
         token = "price";
-    } else if (!(defined & ICON) ) {
+    } else if (!(defined & ICON)) {
         token = "icon";
-    } else if (!(defined & TEAM) ) {
+    } else if (!(defined & TEAM)) {
         token = "team";
     } else {                                                                                                                                                                                                                                                                             token = "";
     }
@@ -1651,7 +1651,7 @@ void BG_ParseMissileAttributeFile(const char* filename, missileAttributes_t* ma)
         LOCATIONAL_DAMAGE     = 1 << 15
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -1660,62 +1660,62 @@ void BG_ParseMissileAttributeFile(const char* filename, missileAttributes_t* ma)
     while (1) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "pointAgainstWorld") ) {
+        if (!Q_stricmp(token, "pointAgainstWorld")) {
             ma->pointAgainstWorld = true;
             defined |= POINT_AGAINST_WORLD;
-        } else if (!Q_stricmp(token, "damage") ) {
+        } else if (!Q_stricmp(token, "damage")) {
             PARSE(text, token);
             ma->damage = atoi(token);
             defined |= DAMAGE;
-        } else if (!Q_stricmp(token, "meansOfDeath") ) {
+        } else if (!Q_stricmp(token, "meansOfDeath")) {
             PARSE(text, token);
             ma->meansOfDeath = BG_MeansOfDeathByName(token);
             defined |= MEANS_OF_DEATH;
-        } else if (!Q_stricmp(token, "splashDamage") ) {
+        } else if (!Q_stricmp(token, "splashDamage")) {
             PARSE(text, token);
             ma->splashDamage = atoi(token);
             defined |= SPLASH_DAMAGE;
-        } else if (!Q_stricmp(token, "splashRadius") ) {
+        } else if (!Q_stricmp(token, "splashRadius")) {
             PARSE(text, token);
             ma->splashRadius = atoi(token);
             defined |= SPLASH_RADIUS;
-        } else if (!Q_stricmp(token, "splashMeansOfDeath") ) {
+        } else if (!Q_stricmp(token, "splashMeansOfDeath")) {
             PARSE(text, token);
             ma->splashMeansOfDeath = BG_MeansOfDeathByName(token);
             defined |= SPLASH_MEANS_OF_DEATH;
-        } else if (!Q_stricmp(token, "clipmask") ) {
+        } else if (!Q_stricmp(token, "clipmask")) {
             PARSE(text, token);
             ma->clipmask = ParseClipmask(token);
             defined |= CLIPMASK;
-        } else if (!Q_stricmp(token, "size") ) {
+        } else if (!Q_stricmp(token, "size")) {
             PARSE(text, token);
             ma->size = atoi(token);
             defined |= SIZE;
-        } else if (!Q_stricmp(token, "trajectory") ) {
+        } else if (!Q_stricmp(token, "trajectory")) {
             PARSE(text, token);
             ma->trajectoryType = ParseTrajectoryType(token);
             defined |= TRAJECTORY;
-        } else if (!Q_stricmp(token, "speed") ) {
+        } else if (!Q_stricmp(token, "speed")) {
             PARSE(text, token);
             ma->speed = atoi(token);
             defined |= SPEED;
-        } else if (!Q_stricmp(token, "lag") ) {
+        } else if (!Q_stricmp(token, "lag")) {
             PARSE(text, token);
             ma->lag = atof(token);
             defined |= LAG;
-        } else if (!Q_stricmp(token, "bounceFull") ) {
+        } else if (!Q_stricmp(token, "bounceFull")) {
             ma->flags |= EF_BOUNCE;
             defined |= BOUNCE_FULL;
-        } else if (!Q_stricmp(token, "bounceHalf") ) {
+        } else if (!Q_stricmp(token, "bounceHalf")) {
             ma->flags |= EF_BOUNCE_HALF;
             defined |= BOUNCE_HALF;
-        } else if (!Q_stricmp(token, "bounceNoSound") ) {
+        } else if (!Q_stricmp(token, "bounceNoSound")) {
             ma->flags |= EF_NO_BOUNCE_SOUND;
             defined |= BOUNCE_NO_SOUND;
-        } else if (!Q_stricmp(token, "doKnockback") ) {
+        } else if (!Q_stricmp(token, "doKnockback")) {
             ma->doKnockback = true;
             defined |= KNOCKBACK;
-        } else if (!Q_stricmp(token, "doLocationalDamage") ) {
+        } else if (!Q_stricmp(token, "doLocationalDamage")) {
             ma->doLocationalDamage = true;
             defined |= LOCATIONAL_DAMAGE;
         }
@@ -1729,17 +1729,17 @@ void BG_ParseMissileAttributeFile(const char* filename, missileAttributes_t* ma)
         }*/
     }
 
-    if (!(defined & DAMAGE) ) {
+    if (!(defined & DAMAGE)) {
         token = "damage";
-    } else if (!(defined & MEANS_OF_DEATH) ) {
+    } else if (!(defined & MEANS_OF_DEATH)) {
         token = "meansOfDeath";
-    } else if (!(defined & CLIPMASK) ) {
+    } else if (!(defined & CLIPMASK)) {
         token = "clipmask";
-    } else if (!(defined & SIZE) ) {
+    } else if (!(defined & SIZE)) {
         token = "size";
-    } else if (!(defined & TRAJECTORY) ) {
+    } else if (!(defined & TRAJECTORY)) {
         token = "trajectory";
-    } else if (!(defined & SPEED) ) {
+    } else if (!(defined & SPEED)) {
         token = "speed";
     } else {                                                                                                                                                                                                                                                                                                                                                                                                         token = "";
     }
@@ -1794,7 +1794,7 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
         IMPACT_FLIGHTDIR = 1 << 24
     };
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -1803,19 +1803,19 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
     while (true) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "model") ) {
+        if (!Q_stricmp(token, "model")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->model = trap_R_RegisterModel(token);
             #endif
             defined |= MODEL;
-        } else if (!Q_stricmp(token, "modelScale") ) {
+        } else if (!Q_stricmp(token, "modelScale")) {
             PARSE(text, token);
 
             ma->modelScale = atof(token);
 
             defined |= MODEL_SCALE;
-        } else if (!Q_stricmp(token, "modelRotation") ) {
+        } else if (!Q_stricmp(token, "modelRotation")) {
             PARSE(text, token);
             ma->modelRotation[0] = atof(token);
             PARSE(text, token);
@@ -1824,23 +1824,23 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
             ma->modelRotation[2] = atof(token);
 
             defined |= MODEL_ROTATION;
-        } else if (!Q_stricmp(token, "sound") ) {
+        } else if (!Q_stricmp(token, "sound")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->sound = trap_S_RegisterSound(token, false);
             #endif
             defined |= SOUND;
-        } else if (!Q_stricmp(token, "dlight") ) {
+        } else if (!Q_stricmp(token, "dlight")) {
             PARSE(text, token);
             ma->dlight = atof(token);
             defined |= DLIGHT;
             ma->usesDlight = true;
-        } else if (!Q_stricmp(token, "dlightIntensity") ) {
+        } else if (!Q_stricmp(token, "dlightIntensity")) {
             PARSE(text, token);
             ma->dlightIntensity = atof(token);
             defined |= DLIGHT_INTENSITY;
             ma->usesDlight = true;
-        } else if (!Q_stricmp(token, "dlightColor") ) {
+        } else if (!Q_stricmp(token, "dlightColor")) {
             PARSE(text, token);
             ma->dlightColor[0] = atof(token);
             PARSE(text, token);
@@ -1849,86 +1849,86 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
             ma->dlightColor[2] = atof(token);
             defined |= DLIGHT_COLOR;
             ma->usesDlight = true;
-        } else if (!Q_stricmp(token, "renderfx") ) {
+        } else if (!Q_stricmp(token, "renderfx")) {
             PARSE(text, token);
             ma->renderfx = atoi(token);
             defined |= RENDERFX;
-        } else if (!Q_stricmp(token, "sprite") ) {
+        } else if (!Q_stricmp(token, "sprite")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->sprite = trap_R_RegisterShader(token, RSF_SPRITE);
             #endif
             defined |= SPRITE;
             ma->usesSprite = true;
-        } else if (!Q_stricmp(token, "spriteSize") ) {
+        } else if (!Q_stricmp(token, "spriteSize")) {
             PARSE(text, token);
             ma->spriteSize = atoi(token);
             defined |= SPRITE_SIZE;
             ma->usesSprite = true;
-        } else if (!Q_stricmp(token, "spriteCharge") ) {
+        } else if (!Q_stricmp(token, "spriteCharge")) {
             PARSE(text, token);
             ma->spriteCharge = atof(token);
             defined |= SPRITE_CHARGE;
             ma->usesSprite = true;
-        } else if (!Q_stricmp(token, "particleSystem") ) {
+        } else if (!Q_stricmp(token, "particleSystem")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->particleSystem = CG_RegisterParticleSystem(token);
             #endif
             defined |= PARTICLE_SYSTEM;
-        } else if (!Q_stricmp(token, "trailSystem") ) {
+        } else if (!Q_stricmp(token, "trailSystem")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->trailSystem = CG_RegisterTrailSystem(token);
             #endif
             defined |= TRAIL_SYSTEM;
-        } else if (!Q_stricmp(token, "rotates") ) {
+        } else if (!Q_stricmp(token, "rotates")) {
             ma->rotates = true;
             defined |= ROTATES;
-        } else if (!Q_stricmp(token, "animStartFrame") ) {
+        } else if (!Q_stricmp(token, "animStartFrame")) {
             PARSE(text, token);
             ma->animStartFrame = atoi(token);
             defined |= ANIM_START_FRAME;
             ma->usesAnim = true;
-        } else if (!Q_stricmp(token, "animNumFrames") ) {
+        } else if (!Q_stricmp(token, "animNumFrames")) {
             PARSE(text, token);
             ma->animNumFrames = atoi(token);
             defined |= ANIM_NUM_FRAMES;
             ma->usesAnim = true;
-        } else if (!Q_stricmp(token, "animFrameRate") ) {
+        } else if (!Q_stricmp(token, "animFrameRate")) {
             PARSE(text, token);
             ma->animFrameRate = atoi(token);
             defined |= ANIM_FRAME_RATE;
             ma->usesAnim = true;
-        } else if (!Q_stricmp(token, "animLooping") ) {
+        } else if (!Q_stricmp(token, "animLooping")) {
             ma->animLooping = true;
             defined |= ANIM_LOOPING;
             ma->usesAnim = true;
-        } else if (!Q_stricmp(token, "alwaysImpact") ) {
+        } else if (!Q_stricmp(token, "alwaysImpact")) {
             ma->alwaysImpact = true;
             defined |= ALWAYS_IMPACT;
-        } else if (!Q_stricmp(token, "impactParticleSystem") ) {
+        } else if (!Q_stricmp(token, "impactParticleSystem")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->impactParticleSystem = CG_RegisterParticleSystem(token);
             #endif
             defined |= IMPACT_PARTICLE;
-        } else if (!Q_stricmp(token, "impactFlightDir") ) {
+        } else if (!Q_stricmp(token, "impactFlightDir")) {
             ma->impactFlightDirection = true;
             defined |= IMPACT_FLIGHTDIR;
-        } else if (!Q_stricmp(token, "impactMark") ) {
+        } else if (!Q_stricmp(token, "impactMark")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ma->impactMark = trap_R_RegisterShader(token, RSF_DEFAULT);
             #endif
             defined |= IMPACT_MARK;
             ma->usesImpactMark = true;
-        } else if (!Q_stricmp(token, "impactMarkSize") ) {
+        } else if (!Q_stricmp(token, "impactMarkSize")) {
             PARSE(text, token);
             ma->impactMarkSize = atoi(token);
             defined |= IMPACT_MARK_SIZE;
             ma->usesImpactMark = true;
-        } else if (!Q_stricmp(token, "impactSound") ) {
+        } else if (!Q_stricmp(token, "impactSound")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             index = atoi(token);
@@ -1940,7 +1940,7 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
             }
             #endif
             defined |= IMPACT_SOUND;
-        } else if (!Q_stricmp(token, "impactFleshSound") ) {
+        } else if (!Q_stricmp(token, "impactFleshSound")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             index = atoi(token);
@@ -1962,7 +1962,7 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
     // check sprite data set for completeness
     if (ma->usesSprite && (
             !(defined & SPRITE) ||
-            !(defined & SPRITE_SIZE) ) ) {
+            !(defined & SPRITE_SIZE))) {
         ma->usesSprite = false;
         Com_Printf(S_ERROR "Not all mandatory sprite vars defined in %s\n", filename);
     }
@@ -1971,7 +1971,7 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
     if (ma->usesAnim && (
             !(defined & ANIM_START_FRAME) ||
             !(defined & ANIM_NUM_FRAMES) ||
-            !(defined & ANIM_FRAME_RATE) ) ) {
+            !(defined & ANIM_FRAME_RATE))) {
         ma->usesAnim = false;
         Com_Printf(S_ERROR "Not all mandatory animation vars defined in %s\n", filename);
     }
@@ -1980,7 +1980,7 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
     if (ma->usesDlight && (
             !(defined & DLIGHT) ||
             !(defined & DLIGHT_INTENSITY) ||
-            !(defined & DLIGHT_COLOR) ) ) {
+            !(defined & DLIGHT_COLOR))) {
         ma->usesDlight = false;
         Com_Printf(S_ERROR "Not all mandatory dlight vars defined in %s\n", filename);
     }
@@ -1988,13 +1988,13 @@ void BG_ParseMissileDisplayFile(const char* filename, missileAttributes_t* ma) {
     // check impactMark data set for completeness
     if (ma->usesImpactMark && (
             !(defined & IMPACT_MARK) ||
-            !(defined & IMPACT_MARK_SIZE) ) ) {
+            !(defined & IMPACT_MARK_SIZE))) {
         ma->usesImpactMark = false;
         Com_Printf(S_ERROR "Not all mandatory impactMark vars defined in %s\n", filename);
     }
 
     // default values
-    if (!(defined & MODEL_SCALE) ) {
+    if (!(defined & MODEL_SCALE)) {
         ma->modelScale = 1.0f;
     }
 }
@@ -2014,7 +2014,7 @@ void BG_ParseBeaconAttributeFile(const char* filename, beaconAttributes_t* ba) {
     int index;
     #endif
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return;
     }
 
@@ -2023,10 +2023,10 @@ void BG_ParseBeaconAttributeFile(const char* filename, beaconAttributes_t* ba) {
     while (true) {
         PARSE(text, token);
 
-        if (!Q_stricmp(token, "humanName") ) {
+        if (!Q_stricmp(token, "humanName")) {
             PARSE(text, token);
             ba->humanName = BG_strdup(token);
-        } else if (!Q_stricmp(token, "text") ) {
+        } else if (!Q_stricmp(token, "text")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             index = atoi(token);
@@ -2039,12 +2039,12 @@ void BG_ParseBeaconAttributeFile(const char* filename, beaconAttributes_t* ba) {
                 ba->text[index] = BG_strdup(token);
             }
             #endif
-        } else if (!Q_stricmp(token, "desc") ) {
+        } else if (!Q_stricmp(token, "desc")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ba->desc = BG_strdup(token);
             #endif
-        } else if (!Q_stricmp(token, "icon") ) {
+        } else if (!Q_stricmp(token, "icon")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             index = atoi(token);
@@ -2057,7 +2057,7 @@ void BG_ParseBeaconAttributeFile(const char* filename, beaconAttributes_t* ba) {
                 ba->icon[0][index] = trap_R_RegisterShader(token, RSF_DEFAULT);
             }
             #endif
-        } else if (!Q_stricmp(token, "hlIcon") ) {
+        } else if (!Q_stricmp(token, "hlIcon")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             index = atoi(token);
@@ -2070,17 +2070,17 @@ void BG_ParseBeaconAttributeFile(const char* filename, beaconAttributes_t* ba) {
                 ba->icon[1][index] = trap_R_RegisterShader(token, RSF_DEFAULT);
             }
             #endif
-        } else if (!Q_stricmp(token, "inSound") ) {
+        } else if (!Q_stricmp(token, "inSound")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ba->inSound = trap_S_RegisterSound(token, false);
             #endif
-        } else if (!Q_stricmp(token, "outSound") ) {
+        } else if (!Q_stricmp(token, "outSound")) {
             PARSE(text, token);
             #ifdef BUILD_CGAME
             ba->outSound = trap_S_RegisterSound(token, false);
             #endif
-        } else if (!Q_stricmp(token, "decayTime") ) {
+        } else if (!Q_stricmp(token, "decayTime")) {
             PARSE(text, token);
             ba->decayTime = atoi(token);
         }

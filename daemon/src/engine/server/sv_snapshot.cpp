@@ -146,7 +146,7 @@ static void SV_WriteSnapshotToClient(client_t* client, msg_t* msg) {
         // client is asking for a retransmit
         oldframe = nullptr;
         lastframe = 0;
-    } else if (client->netchan.outgoingSequence - client->deltaMessage >= (PACKET_BACKUP - 3) ) {
+    } else if (client->netchan.outgoingSequence - client->deltaMessage >= (PACKET_BACKUP - 3)) {
         // client hasn't gotten a good message through in a long time
         Com_DPrintf("%s^7: Delta request from out of date packet.\n", client->name);
         oldframe = nullptr;
@@ -291,7 +291,7 @@ static void SV_AddEntToSnapshot(sharedEntity_t* clientEnt, svEntity_t* svEnt, sh
     }
 
     if (gEnt->r.snapshotCallback) {
-        if (!gvm.GameSnapshotCallback(gEnt->s.number, clientEnt->s.number) ) {
+        if (!gvm.GameSnapshotCallback(gEnt->s.number, clientEnt->s.number)) {
             return;
         }
     }
@@ -378,11 +378,11 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
         // entities can be flagged to be sent to only a given mask of clients
         if (ent->r.svFlags & SVF_CLIENTMASK) {
             if (frame->ps.clientNum >= 32) {
-                if (~ent->r.hiMask & (1 << (frame->ps.clientNum - 32) ) ) {
+                if (~ent->r.hiMask & (1 << (frame->ps.clientNum - 32))) {
                     continue;
                 }
             } else {
-                if (~ent->r.loMask & (1 << frame->ps.clientNum) ) {
+                if (~ent->r.loMask & (1 << frame->ps.clientNum)) {
                     continue;
                 }
             }
@@ -402,8 +402,8 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
         }
 
         // send entity if the client is in range
-        if ( (ent->r.svFlags & SVF_CLIENTS_IN_RANGE) &&
-             Distance(ent->s.origin, playerEnt->s.origin) <= ent->r.clientRadius) {
+        if ((ent->r.svFlags & SVF_CLIENTS_IN_RANGE) &&
+            Distance(ent->s.origin, playerEnt->s.origin) <= ent->r.clientRadius) {
             SV_AddEntToSnapshot(playerEnt, svEnt, ent, eNums);
             continue;
         }
@@ -412,7 +412,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
 
         // Gordon: just check origin for being in pvs, ignore bmodel extents
         if (ent->r.svFlags & SVF_IGNOREBMODELEXTENTS) {
-            if (bitvector[ent->r.originCluster >> 3] & (1 << (ent->r.originCluster & 7) ) ) {
+            if (bitvector[ent->r.originCluster >> 3] & (1 << (ent->r.originCluster & 7))) {
                 SV_AddEntToSnapshot(playerEnt, svEnt, ent, eNums);
             }
 
@@ -421,10 +421,10 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
 
         // ignore if not touching a PV leaf
         // check area
-        if (!CM_AreasConnected(clientarea, ent->r.areanum) ) {
+        if (!CM_AreasConnected(clientarea, ent->r.areanum)) {
             // doors can legally straddle two areas, so
             // we may need to check another one
-            if (!CM_AreasConnected(clientarea, ent->r.areanum2) ) {
+            if (!CM_AreasConnected(clientarea, ent->r.areanum2)) {
                 continue;
             }
         }
@@ -439,7 +439,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
         for (i = 0; i < std::min(std::max(0, ent->r.numClusters), MAX_ENT_CLUSTERS); i++) {
             l = ent->r.clusternums[i];
 
-            if (bitvector[l >> 3] & (1 << (l & 7) ) ) {
+            if (bitvector[l >> 3] & (1 << (l & 7))) {
                 break;
             }
         }
@@ -449,7 +449,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
         if (i == ent->r.numClusters) {
             if (ent->r.lastCluster) {
                 for (; l <= ent->r.lastCluster; l++) {
-                    if (bitvector[l >> 3] & (1 << (l & 7) ) ) {
+                    if (bitvector[l >> 3] & (1 << (l & 7))) {
                         break;
                     }
                 }
@@ -503,7 +503,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
                         continue;
                     }
 
-                    if (!(ment->r.linked) ) {
+                    if (!(ment->r.linked)) {
                         continue;
                     }
 
@@ -586,7 +586,7 @@ static void SV_BuildClientSnapshot(client_t* client) {
 
     // clear everything in this snapshot
     entityNumbers.numSnapshotEntities = 0;
-    Com_Memset(frame->areabits, 0, sizeof(frame->areabits) );
+    Com_Memset(frame->areabits, 0, sizeof(frame->areabits));
 
     // show_bug.cgi?id=62
     frame->num_entities = 0;
@@ -636,7 +636,7 @@ static void SV_BuildClientSnapshot(client_t* client) {
     // now that all viewpoint's areabits have been OR'd together, invert
     // all of them to make it a mask vector, which is what the renderer wants
     for (i = 0; i < MAX_MAP_AREA_BYTES / 4; i++) {
-        ( (int*) frame->areabits) [i] = ( (int*) frame->areabits) [i] ^ -1;
+        ((int*) frame->areabits) [i] = ((int*) frame->areabits) [i] ^ -1;
     }
 
     // copy the entity states out
@@ -727,7 +727,7 @@ void SV_SendMessageToClient(msg_t* msg, client_t* client) {
     // TTimo - show_bug.cgi?id=491
     // added sv_lanForceRate check
     if (client->netchan.remoteAddress.type == NA_LOOPBACK ||
-        (sv_lanForceRate->integer && Sys_IsLANAddress(client->netchan.remoteAddress) ) ) {
+        (sv_lanForceRate->integer && Sys_IsLANAddress(client->netchan.remoteAddress))) {
         client->nextSnapshotTime = svs.time - 1;
         return;
     }
@@ -773,7 +773,7 @@ void SV_SendClientIdle(client_t* client) {
     byte msg_buf[MAX_MSGLEN];
     msg_t msg;
 
-    MSG_Init(&msg, msg_buf, sizeof(msg_buf) );
+    MSG_Init(&msg, msg_buf, sizeof(msg_buf));
     msg.allowoverflow = true;
 
     // NOTE, MRE: all server->client messages now acknowledge
@@ -832,11 +832,11 @@ void SV_SendClientSnapshot(client_t* client) {
 
     // bots need to have their snapshots built, but
     // those are queried directly without needing to be sent
-    if (SV_IsBot(client) ) {
+    if (SV_IsBot(client)) {
         return;
     }
 
-    MSG_Init(&msg, msg_buf, sizeof(msg_buf) );
+    MSG_Init(&msg, msg_buf, sizeof(msg_buf));
     msg.allowoverflow = true;
 
     // NOTE, MRE: all server->client messages now acknowledge
@@ -897,7 +897,7 @@ void SV_SendClientMessages() {
 
         // RF, needed to insert this otherwise bots would cause error drops in sv_net_chan.c:
         // --> "netchan queue is not properly initialized in SV_Netchan_TransmitNextFragment\n"
-        if (SV_IsBot(c) ) {
+        if (SV_IsBot(c)) {
             continue;
         }
 

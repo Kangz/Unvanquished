@@ -86,7 +86,7 @@ static void CG_LoadCustomCrosshairs() {
         return;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", cg_crosshairFile.string);
         trap_FS_FCloseFile(f);
         return;
@@ -106,10 +106,10 @@ static void CG_LoadCustomCrosshairs() {
             break;
         }
 
-        if ( (weapon = BG_WeaponNumberByName(token) ) ) {
+        if ((weapon = BG_WeaponNumberByName(token))) {
             token = COM_Parse(&text_p);
 
-            if (!Q_stricmp(token, "crosshair") ) {
+            if (!Q_stricmp(token, "crosshair")) {
                 token = COM_Parse(&text_p);
 
                 if (!token) {
@@ -123,7 +123,7 @@ static void CG_LoadCustomCrosshairs() {
                 }
 
                 continue;
-            } else if (!Q_stricmp(token, "crosshairIndicator") ) {
+            } else if (!Q_stricmp(token, "crosshairIndicator")) {
                 token = COM_Parse(&text_p);
 
                 if (!token) {
@@ -137,7 +137,7 @@ static void CG_LoadCustomCrosshairs() {
                 }
 
                 continue;
-            } else if (!Q_stricmp(token, "crosshairSize") ) {
+            } else if (!Q_stricmp(token, "crosshairSize")) {
                 int size;
 
                 token = COM_Parse(&text_p);
@@ -176,7 +176,7 @@ Precaches upgrades
 void CG_InitUpgrades() {
     int i;
 
-    Com_Memset(cg_upgrades, 0, sizeof(cg_upgrades) );
+    Com_Memset(cg_upgrades, 0, sizeof(cg_upgrades));
 
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
         CG_RegisterUpgrade(i);
@@ -214,7 +214,7 @@ static bool CG_ParseWeaponAnimationFile(const char* filename, weaponInfo_t* wi) 
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", filename);
         trap_FS_FCloseFile(f);
         return false;
@@ -283,7 +283,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
 
         if (!*token) {
             return false;
-        } else if (!Q_stricmp(token, "muzzleParticleSystem") ) {
+        } else if (!Q_stricmp(token, "muzzleParticleSystem")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -297,7 +297,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             }
 
             continue;
-        } else if (!Q_stricmp(token, "impactParticleSystem") ) {
+        } else if (!Q_stricmp(token, "impactParticleSystem")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -311,7 +311,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             }
 
             continue;
-        } else if (!Q_stricmp(token, "impactMark") ) {
+        } else if (!Q_stricmp(token, "impactMark")) {
             int size = 0;
 
             token = COM_Parse(text_p);
@@ -341,7 +341,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             }
 
             continue;
-        } else if (!Q_stricmp(token, "impactSound") ) {
+        } else if (!Q_stricmp(token, "impactSound")) {
             int index = 0;
 
             token = COM_Parse(text_p);
@@ -367,7 +367,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->impactSound[index] = trap_S_RegisterSound(token, false);
 
             continue;
-        } else if (!Q_stricmp(token, "impactFleshSound") ) {
+        } else if (!Q_stricmp(token, "impactFleshSound")) {
             int index = 0;
 
             token = COM_Parse(text_p);
@@ -393,11 +393,11 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->impactFleshSound[index] = trap_S_RegisterSound(token, false);
 
             continue;
-        } else if (!Q_stricmp(token, "alwaysImpact") ) {
+        } else if (!Q_stricmp(token, "alwaysImpact")) {
             wim->alwaysImpact = true;
 
             continue;
-        } else if (!Q_stricmp(token, "flashDLight") ) {
+        } else if (!Q_stricmp(token, "flashDLight")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -407,7 +407,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->flashDlight = atof(token);
 
             continue;
-        } else if (!Q_stricmp(token, "flashDLightInt") ) {
+        } else if (!Q_stricmp(token, "flashDLightInt")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -417,7 +417,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->flashDlightIntensity = atof(token);
 
             continue;
-        } else if (!Q_stricmp(token, "flashDLightColor") ) {
+        } else if (!Q_stricmp(token, "flashDLightColor")) {
             for (i = 0; i < 3; i++) {
                 token = COM_Parse(text_p);
 
@@ -429,11 +429,11 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             }
 
             continue;
-        } else if (!Q_stricmp(token, "continuousFlash") ) {
+        } else if (!Q_stricmp(token, "continuousFlash")) {
             wim->continuousFlash = true;
 
             continue;
-        } else if (!Q_stricmp(token, "firingSound") ) {
+        } else if (!Q_stricmp(token, "firingSound")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -443,7 +443,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->firingSound = trap_S_RegisterSound(token, false);
 
             continue;
-        } else if (!Q_stricmp(token, "flashSound") ) {
+        } else if (!Q_stricmp(token, "flashSound")) {
             int index = 0;
 
             token = COM_Parse(text_p);
@@ -469,7 +469,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
             wim->flashSound[index] = trap_S_RegisterSound(token, false);
 
             continue;
-        } else if (!Q_stricmp(token, "reloadSound") ) {
+        } else if (!Q_stricmp(token, "reloadSound")) {
             token = COM_Parse(text_p);
 
             if (!token) {
@@ -478,7 +478,7 @@ static bool CG_ParseWeaponModeSection(weaponInfoMode_t* wim, const char** text_p
 
             wim->reloadSound = trap_S_RegisterSound(token, false);
             continue;
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             return true; // reached the end of this weapon section
         } else {
             CG_Printf(S_ERROR "unknown token '%s' in weapon section\n", token);
@@ -547,7 +547,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         trap_FS_FCloseFile(f);
         CG_Printf(len == 0 ? "File %s is empty\n" : "File %s is too long\n", filename);
         return false;
@@ -570,11 +570,11 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             break;
         }
 
-        if (!Q_stricmp(token, "{") ) {
+        if (!Q_stricmp(token, "{")) {
             if (weaponMode == WPM_NONE) {
                 CG_Printf(S_ERROR "weapon mode section started without a declaration\n");
                 return false;
-            } else if (!CG_ParseWeaponModeSection(&wi->wim[weaponMode], &text_p) ) {
+            } else if (!CG_ParseWeaponModeSection(&wi->wim[weaponMode], &text_p)) {
                 CG_Printf(S_ERROR "failed to parse weapon mode section\n");
                 return false;
             }
@@ -583,16 +583,16 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             weaponMode = WPM_NONE;
 
             continue;
-        } else if (!Q_stricmp(token, "primary") ) {
+        } else if (!Q_stricmp(token, "primary")) {
             weaponMode = WPM_PRIMARY;
             continue;
-        } else if (!Q_stricmp(token, "secondary") ) {
+        } else if (!Q_stricmp(token, "secondary")) {
             weaponMode = WPM_SECONDARY;
             continue;
-        } else if (!Q_stricmp(token, "tertiary") ) {
+        } else if (!Q_stricmp(token, "tertiary")) {
             weaponMode = WPM_TERTIARY;
             continue;
-        } else if (!Q_stricmp(token, "weaponModel") ) {
+        } else if (!Q_stricmp(token, "weaponModel")) {
             char path[MAX_QPATH];
 
             token = COM_Parse(&text_p);
@@ -603,11 +603,11 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
 
             COM_StripExtension(token, token2);
 
-            if (cg_highPolyWeaponModels.integer && (wi->weaponModel = trap_R_RegisterModel(va("%s_view.iqm", token2) ) ) ) {
+            if (cg_highPolyWeaponModels.integer && (wi->weaponModel = trap_R_RegisterModel(va("%s_view.iqm", token2)))) {
                 wi->md5 = true;
 
                 if (!CG_RegisterWeaponAnimation(&wi->animations[WANIM_IDLE],
-                                                va("%s_view.iqm:idle", token2), true, false, false) ) {
+                                                va("%s_view.iqm:idle", token2), true, false, false)) {
                     // CG_Error( "could not find '%s'", path );
                 }
 
@@ -688,11 +688,11 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
                     CG_RegisterWeaponAnimation(&wi->animations[WANIM_ATTACK7],
                                                va("%s_view.iqm:fire7", token2), false, false, false);
                 }
-            } else if (cg_highPolyWeaponModels.integer && (wi->weaponModel = trap_R_RegisterModel(va("%s_view.md5mesh", token2) ) ) ) {
+            } else if (cg_highPolyWeaponModels.integer && (wi->weaponModel = trap_R_RegisterModel(va("%s_view.md5mesh", token2)))) {
                 wi->md5 = true;
 
                 if (!CG_RegisterWeaponAnimation(&wi->animations[WANIM_IDLE],
-                                                va("%s_view_idle.md5anim", token2), true, false, false) ) {
+                                                va("%s_view_idle.md5anim", token2), true, false, false)) {
                     // CG_Error( "could not find '%s'", path );
                 }
 
@@ -794,7 +794,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             wi->handsModel = trap_R_RegisterModel(path);
 
             continue;
-        } else if (!Q_stricmp(token, "weaponModel3rdPerson") ) {
+        } else if (!Q_stricmp(token, "weaponModel3rdPerson")) {
             char path[MAX_QPATH];
 
             token = COM_Parse(&text_p);
@@ -819,7 +819,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             wi->barrelModel3rdPerson = trap_R_RegisterModel(path);
 
             continue;
-        } else if (!Q_stricmp(token, "idleSound") ) {
+        } else if (!Q_stricmp(token, "idleSound")) {
             token = COM_Parse(&text_p);
 
             if (!token) {
@@ -829,7 +829,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             wi->readySound = trap_S_RegisterSound(token, false);
 
             continue;
-        } else if (!Q_stricmp(token, "icon") ) {
+        } else if (!Q_stricmp(token, "icon")) {
             token = COM_Parse(&text_p);
 
             if (!token) {
@@ -844,7 +844,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             }
 
             continue;
-        } else if (!Q_stricmp(token, "crosshair") ) {
+        } else if (!Q_stricmp(token, "crosshair")) {
             token = COM_Parse(&text_p);
 
             if (!token) {
@@ -858,7 +858,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             }
 
             continue;
-        } else if (!Q_stricmp(token, "crosshairIndicator") ) {
+        } else if (!Q_stricmp(token, "crosshairIndicator")) {
             token = COM_Parse(&text_p);
 
             if (!token) {
@@ -872,7 +872,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             }
 
             continue;
-        } else if (!Q_stricmp(token, "crosshairSize") ) {
+        } else if (!Q_stricmp(token, "crosshairSize")) {
             int size;
 
             token = COM_Parse(&text_p);
@@ -890,11 +890,11 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             wi->crossHairSize = size;
 
             continue;
-        } else if (!Q_stricmp(token, "disableIn3rdPerson") ) {
+        } else if (!Q_stricmp(token, "disableIn3rdPerson")) {
             wi->disableIn3rdPerson = true;
 
             continue;
-        } else if (!Q_stricmp(token, "rotation") ) {
+        } else if (!Q_stricmp(token, "rotation")) {
             if (!cg_highPolyWeaponModels.integer) {
                 for (i = 0; i < 3; i++) {
                     token = COM_ParseExt2(&text_p, false);
@@ -913,7 +913,7 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             }
 
             continue;
-        } else if (!Q_stricmp(token, "posOffs") ) {
+        } else if (!Q_stricmp(token, "posOffs")) {
             if (!cg_highPolyWeaponModels.integer) {
                 for (i = 0; i < 3; i++) {
                     token = COM_ParseExt2(&text_p, false);
@@ -931,16 +931,16 @@ static bool CG_ParseWeaponFile(const char* filename, int weapon, weaponInfo_t* w
             }
 
             continue;
-        } else if (!Q_stricmp(token, "rotationBone") ) {
+        } else if (!Q_stricmp(token, "rotationBone")) {
             if (!cg_highPolyWeaponModels.integer) {
                 token = COM_Parse2(&text_p);
                 continue;
             }
 
             token = COM_Parse2(&text_p);
-            Q_strncpyz(wi->rotationBone, token, sizeof(wi->rotationBone) );
+            Q_strncpyz(wi->rotationBone, token, sizeof(wi->rotationBone));
             continue;
-        } else if (!Q_stricmp(token, "modelScale") ) {
+        } else if (!Q_stricmp(token, "modelScale")) {
             if (!cg_highPolyWeaponModels.integer) {
                 token = COM_ParseExt2(&text_p, false);
                 continue;
@@ -995,7 +995,7 @@ void CG_RegisterWeapon(int weaponNum) {
 
     weaponInfo->humanName = BG_Weapon(weaponNum)->humanName;
 
-    if (!CG_ParseWeaponFile(path, weaponNum, weaponInfo) ) {
+    if (!CG_ParseWeaponFile(path, weaponNum, weaponInfo)) {
         Com_Printf(S_ERROR "failed to parse %s\n", path);
     }
 
@@ -1022,7 +1022,7 @@ Precaches weapons
 void CG_InitWeapons() {
     int i;
 
-    Com_Memset(cg_weapons, 0, sizeof(cg_weapons) );
+    Com_Memset(cg_weapons, 0, sizeof(cg_weapons));
 
     for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++) {
         CG_RegisterWeapon(i);
@@ -1068,7 +1068,7 @@ static void CG_SetWeaponLerpFrameAnimation(weapon_t weapon, lerpFrame_t* lf, int
     }
 
     if ( /*&cg_weapons[ weapon ].md5 &&*/ !toggle && lf && lf->old_animation && lf->old_animation->handle) {
-        if (!trap_R_BuildSkeleton(&oldGunSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->backlerp, lf->old_animation->clearOrigin) ) {
+        if (!trap_R_BuildSkeleton(&oldGunSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->backlerp, lf->old_animation->clearOrigin)) {
             CG_Printf("CG_SetWeaponLerpFrameAnimation: can't build old gunSkeleton\n");
             return;
         }
@@ -1085,8 +1085,8 @@ static void CG_WeaponAnimation(centity_t* cent, int* old, int* now, float* backL
     entityState_t* es = &cent->currentState;
 
     // see if the animation sequence is switching
-    if (es->weaponAnim != lf->animationNumber || !lf->animation || (cg_weapons[es->weapon].md5 && !lf->animation->handle) ) {
-        CG_SetWeaponLerpFrameAnimation( (weapon_t) es->weapon, lf, es->weaponAnim);
+    if (es->weaponAnim != lf->animationNumber || !lf->animation || (cg_weapons[es->weapon].md5 && !lf->animation->handle)) {
+        CG_SetWeaponLerpFrameAnimation((weapon_t) es->weapon, lf, es->weaponAnim);
     }
 
     CG_RunLerpFrame(lf, 1.0f);
@@ -1137,7 +1137,7 @@ static int CG_MapTorsoToWeaponFrame(clientInfo_t* ci, int frame, int anim) {
             return frame - 6;
         }
         // stand attack
-        else if ( (anim == TORSO_ATTACK || anim == TORSO_ATTACK_BLASTER) && frame < 6) {
+        else if ((anim == TORSO_ATTACK || anim == TORSO_ATTACK_BLASTER) && frame < 6) {
             return 1 + frame;
         }
     }
@@ -1205,7 +1205,7 @@ static void CG_CalculateWeaponPosition(vec3_t out_origin, vec3_t out_angles) {
     // weapon inertia
     offsets.angles = angles;
 
-    if (!filter.IsEmpty( ) ) {
+    if (!filter.IsEmpty( )) {
         auto last = filter.Last( );
         float dt;
 
@@ -1314,9 +1314,9 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
         weaponMode = WPM_PRIMARY;
     }
 
-    if ( ( (cent->currentState.eFlags & EF_FIRING) && weaponMode == WPM_PRIMARY) ||
-         ( (cent->currentState.eFlags & EF_FIRING2) && weaponMode == WPM_SECONDARY) ||
-         ( (cent->currentState.eFlags & EF_FIRING3) && weaponMode == WPM_TERTIARY) ) {
+    if (((cent->currentState.eFlags & EF_FIRING) && weaponMode == WPM_PRIMARY) ||
+        ((cent->currentState.eFlags & EF_FIRING2) && weaponMode == WPM_SECONDARY) ||
+        ((cent->currentState.eFlags & EF_FIRING3) && weaponMode == WPM_TERTIARY)) {
         firing = true;
     } else {
         firing = false;
@@ -1331,9 +1331,9 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
     }
 
     // add the weapon
-    Com_Memset(&gun, 0, sizeof(gun) );
-    Com_Memset(&barrel, 0, sizeof(barrel) );
-    Com_Memset(&flash, 0, sizeof(flash) );
+    Com_Memset(&gun, 0, sizeof(gun));
+    Com_Memset(&barrel, 0, sizeof(barrel));
+    Com_Memset(&flash, 0, sizeof(flash));
 
     VectorCopy(parent->lightingOrigin, gun.lightingOrigin);
     gun.renderfx = parent->renderfx;
@@ -1368,7 +1368,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
         gun.hModel = weapon->weaponModel;
     }
 
-    noGunModel = ( (!ps || cg.renderingThirdPerson) && weapon->disableIn3rdPerson) || !gun.hModel;
+    noGunModel = ((!ps || cg.renderingThirdPerson) && weapon->disableIn3rdPerson) || !gun.hModel;
 
     if (!ps) {
         // add weapon ready sound
@@ -1381,7 +1381,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
     }
 
     // Lucifer cannon charge warning beep
-    if (weaponNum == WP_LUCIFER_CANNON && (cent->currentState.eFlags & EF_WARN_CHARGE) ) {
+    if (weaponNum == WP_LUCIFER_CANNON && (cent->currentState.eFlags & EF_WARN_CHARGE)) {
         trap_S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin,
                                vec3_origin, ps ? cgs.media.lCannonWarningSound :
                                cgs.media.lCannonWarningSound2);
@@ -1458,7 +1458,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
         }
     }
 
-    if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+    if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
         if (ps || cg.renderingThirdPerson ||
             cent->currentState.number != cg.predictedPlayerState.clientNum) {
             if (noGunModel) {
@@ -1469,7 +1469,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
         }
 
         // if the PS is infinite disable it when not firing
-        if (!firing && CG_IsParticleSystemInfinite(cent->muzzlePS) ) {
+        if (!firing && CG_IsParticleSystemInfinite(cent->muzzlePS)) {
             CG_DestroyParticleSystem(&cent->muzzlePS);
         }
     }
@@ -1515,7 +1515,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent)
         if (weapon->wim[weaponMode].muzzleParticleSystem && cent->muzzlePsTrigger) {
             cent->muzzlePS = CG_SpawnNewParticleSystem(weapon->wim[weaponMode].muzzleParticleSystem);
 
-            if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+            if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
                 if (noGunModel) {
                     CG_SetAttachmentTag(&cent->muzzlePS->attachment, parent, parent->hModel, "tag_weapon");
                 } else {
@@ -1604,7 +1604,7 @@ void CG_AddViewWeapon(playerState_t* ps) {
     }
 
     // draw a prospective buildable infront of the player
-    if ( (ps->stats[STAT_BUILDABLE] & SB_BUILDABLE_MASK) > BA_NONE) {
+    if ((ps->stats[STAT_BUILDABLE] & SB_BUILDABLE_MASK) > BA_NONE) {
         CG_GhostBuildable(ps->stats[STAT_BUILDABLE]);
     }
 
@@ -1628,7 +1628,7 @@ void CG_AddViewWeapon(playerState_t* ps) {
         if (wi->wim[weaponMode].muzzleParticleSystem && cent->muzzlePsTrigger) {
             cent->muzzlePS = CG_SpawnNewParticleSystem(wi->wim[weaponMode].muzzleParticleSystem);
 
-            if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+            if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
                 CG_SetAttachmentPoint(&cent->muzzlePS->attachment, origin);
                 CG_SetAttachmentCent(&cent->muzzlePS->attachment, cent);
                 CG_AttachToPoint(&cent->muzzlePS->attachment);
@@ -1647,7 +1647,7 @@ void CG_AddViewWeapon(playerState_t* ps) {
 
     fovOffset = -0.03f * cg.refdef.fov_y;
 
-    Com_Memset(&hand, 0, sizeof(hand) );
+    Com_Memset(&hand, 0, sizeof(hand));
 
     // set up gun position
     CG_CalculateWeaponPosition(hand.origin, angles);
@@ -1717,7 +1717,7 @@ CG_WeaponSelectable
 ===============
 */
 static bool CG_WeaponSelectable(weapon_t weapon) {
-    if (!BG_InventoryContainsWeapon(weapon, cg.snap->ps.stats) ) {
+    if (!BG_InventoryContainsWeapon(weapon, cg.snap->ps.stats)) {
         return false;
     }
 
@@ -1730,7 +1730,7 @@ CG_UpgradeSelectable
 ===============
 */
 static bool CG_UpgradeSelectable(upgrade_t upgrade) {
-    if (!BG_InventoryContainsUpgrade(upgrade, cg.snap->ps.stats) ) {
+    if (!BG_InventoryContainsUpgrade(upgrade, cg.snap->ps.stats)) {
         return false;
     }
 
@@ -1765,14 +1765,14 @@ void CG_DrawHumanInventory() {
         return;
     }
 
-    if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) ) {
+    if (!(cg.snap->ps.pm_flags & PMF_FOLLOW)) {
         // first make sure that whatever it selected is actually selectable
         if (cg.weaponSelect < 32) {
-            if (!CG_WeaponSelectable( (weapon_t) cg.weaponSelect) ) {
+            if (!CG_WeaponSelectable((weapon_t) cg.weaponSelect)) {
                 CG_NextWeapon_f();
             }
         } else {
-            if (!CG_UpgradeSelectable( (upgrade_t) (cg.weaponSelect - 32) ) ) {
+            if (!CG_UpgradeSelectable((upgrade_t) (cg.weaponSelect - 32))) {
                 CG_NextWeapon_f();
             }
         }
@@ -1780,7 +1780,7 @@ void CG_DrawHumanInventory() {
 
     // put all weapons in the items list
     for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++) {
-        if (!BG_InventoryContainsWeapon(i, cg.snap->ps.stats) ) {
+        if (!BG_InventoryContainsWeapon(i, cg.snap->ps.stats)) {
             continue;
         }
 
@@ -1802,7 +1802,7 @@ void CG_DrawHumanInventory() {
 
     // put all upgrades in the weapons list
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
-        if (!BG_InventoryContainsUpgrade(i, cg.snap->ps.stats) ) {
+        if (!BG_InventoryContainsUpgrade(i, cg.snap->ps.stats)) {
             continue;
         }
 
@@ -1825,12 +1825,12 @@ void CG_DrawHumanInventory() {
     // reset buffer
     RML[0] = '\0';
 
-    Q_strncpyz(RML, "<div class='item_select'>", sizeof(RML) );
+    Q_strncpyz(RML, "<div class='item_select'>", sizeof(RML));
 
     // Build RML string
     for (i = 0; i < numItems; ++i) {
         const char* rmlClass;
-        const char* src =  CG_GetShaderNameFromHandle(items[i] < 32 ? cg_weapons[items[i]].weaponIcon : cg_upgrades[items[i] - 32].upgradeIcon);
+        const char* src = CG_GetShaderNameFromHandle(items[i] < 32 ? cg_weapons[items[i]].weaponIcon : cg_upgrades[items[i] - 32].upgradeIcon);
 
         switch (colinfo[i]) {
         case USABLE:
@@ -1852,7 +1852,7 @@ void CG_DrawHumanInventory() {
         }
 
 
-        Q_strcat(RML, sizeof(RML), va("<img class='%s' src='/%s' />", rmlClass, src) );
+        Q_strcat(RML, sizeof(RML), va("<img class='%s' src='/%s' />", rmlClass, src));
     }
     Q_strcat(RML, sizeof(RML), "</div>");
 
@@ -1880,21 +1880,21 @@ void CG_DrawItemSelectText() {
     // draw the selected name
     if (cg.weaponSelect < 32) {
         if (cg_weapons[cg.weaponSelect].registered &&
-            BG_InventoryContainsWeapon(cg.weaponSelect, cg.snap->ps.stats) ) {
-            if ( (name = cg_weapons[cg.weaponSelect].humanName) ) {
+            BG_InventoryContainsWeapon(cg.weaponSelect, cg.snap->ps.stats)) {
+            if ((name = cg_weapons[cg.weaponSelect].humanName)) {
                 Rocket_SetInnerRML(name, false);
             }
         }
     } else {
         if (cg_upgrades[cg.weaponSelect - 32].registered &&
-            BG_InventoryContainsUpgrade(cg.weaponSelect - 32, cg.snap->ps.stats) ) {
-            if ( (name = cg_upgrades[cg.weaponSelect - 32].humanName) ) {
+            BG_InventoryContainsUpgrade(cg.weaponSelect - 32, cg.snap->ps.stats)) {
+            if ((name = cg_upgrades[cg.weaponSelect - 32].humanName)) {
                 Rocket_SetInnerRML(name, false);
             }
         }
     }
 
-    Rocket_SetPropertyById("", "opacity", va("%f", alpha) );
+    Rocket_SetPropertyById("", "opacity", va("%f", alpha));
 }
 
 /*
@@ -1926,11 +1926,11 @@ void CG_NextWeapon_f() {
         }
 
         if (cg.weaponSelect < 32) {
-            if (CG_WeaponSelectable( (weapon_t) cg.weaponSelect) ) {
+            if (CG_WeaponSelectable((weapon_t) cg.weaponSelect)) {
                 break;
             }
         } else {
-            if (CG_UpgradeSelectable( (upgrade_t) (cg.weaponSelect - 32) ) ) {
+            if (CG_UpgradeSelectable((upgrade_t) (cg.weaponSelect - 32))) {
                 break;
             }
         }
@@ -1970,11 +1970,11 @@ void CG_PrevWeapon_f() {
         }
 
         if (cg.weaponSelect < 32) {
-            if (CG_WeaponSelectable( (weapon_t) cg.weaponSelect) ) {
+            if (CG_WeaponSelectable((weapon_t) cg.weaponSelect)) {
                 break;
             }
         } else {
-            if (CG_UpgradeSelectable( (upgrade_t) (cg.weaponSelect - 32) ) ) {
+            if (CG_UpgradeSelectable((upgrade_t) (cg.weaponSelect - 32))) {
                 break;
             }
         }
@@ -2001,7 +2001,7 @@ void CG_Weapon_f() {
         return;
     }
 
-    num = atoi(CG_Argv(1) );
+    num = atoi(CG_Argv(1));
 
     if (num < 1 || num > 31) {
         return;
@@ -2009,7 +2009,7 @@ void CG_Weapon_f() {
 
     cg.weaponSelectTime = cg.time;
 
-    if (!BG_InventoryContainsWeapon(num, cg.snap->ps.stats) ) {
+    if (!BG_InventoryContainsWeapon(num, cg.snap->ps.stats)) {
         return; // don't have the weapon
     }
 
@@ -2039,7 +2039,7 @@ static bool CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
         return false;
     }
 
-    if (cent->muzzlePS && CG_Attached(&cent->muzzlePS->attachment) ) {
+    if (cent->muzzlePS && CG_Attached(&cent->muzzlePS->attachment)) {
         CG_AttachmentPoint(&cent->muzzlePS->attachment, muzzle);
     } else {
         return false;
@@ -2075,7 +2075,7 @@ static void DrawGenericHitEffect(vec3_t origin, vec3_t normal, qhandle_t psHandl
 
     ps = CG_SpawnNewParticleSystem(psHandle);
 
-    if (!CG_IsParticleSystemValid(&ps) ) {
+    if (!CG_IsParticleSystemValid(&ps)) {
         return;
     }
 
@@ -2120,7 +2120,7 @@ static void DrawEntityHitEffect(vec3_t origin, vec3_t normal, int targetNum) {
 
     ps = CG_SpawnNewParticleSystem(psHandle);
 
-    if (CG_IsParticleSystemValid(&ps) ) {
+    if (CG_IsParticleSystemValid(&ps)) {
         CG_SetAttachmentPoint(&ps->attachment, origin);
         CG_SetAttachmentCent(&ps->attachment, &cg_entities[targetNum]);
         CG_AttachToPoint(&ps->attachment);
@@ -2153,7 +2153,7 @@ static void DrawTracer(vec3_t source, vec3_t dest, float chance, float length, f
 
     // Guarantee a minimum length of 1/4 * length.
     begin = random() * Q_clamp(distance - 0.25f * length, TRACER_MIN_DISTANCE, distance);
-    end   = Q_clamp(begin + length, begin, distance);
+    end = Q_clamp(begin + length, begin, distance);
 
     VectorMA(source, begin, forward, start);
     VectorMA(source, end, forward, finish);
@@ -2234,13 +2234,13 @@ static void ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, int attacker
 
         CG_Trace(&tr, origin, nullptr, nullptr, end, attackerNum, MASK_SHOT, 0);
 
-        if (!(tr.surfaceFlags & SURF_NOIMPACT) ) {
-            dummy.weapon          = WP_SHOTGUN;
-            dummy.generic1        = WPM_PRIMARY;
-            dummy.eventParm       = DirToByte(tr.plane.normal);
-            dummy.otherEntityNum  = tr.entityNum;
+        if (!(tr.surfaceFlags & SURF_NOIMPACT)) {
+            dummy.weapon = WP_SHOTGUN;
+            dummy.generic1 = WPM_PRIMARY;
+            dummy.eventParm = DirToByte(tr.plane.normal);
+            dummy.otherEntityNum = tr.entityNum;
             dummy.otherEntityNum2 = attackerNum;
-            dummy.torsoAnim       = 0; // Make sure it is not used uninitialized
+            dummy.torsoAnim = 0; // Make sure it is not used uninitialized
 
             if (cg_entities[tr.entityNum].currentState.eType == ET_PLAYER ||
                 cg_entities[tr.entityNum].currentState.eType == ET_BUILDABLE) {
@@ -2282,7 +2282,7 @@ void CG_HandleFireWeapon(centity_t* cent, weaponMode_t weaponMode) {
 
     if (wi->wim[weaponMode].muzzleParticleSystem) {
         if (!CG_IsParticleSystemValid(&cent->muzzlePS) ||
-            !CG_IsParticleSystemInfinite(cent->muzzlePS) ) {
+            !CG_IsParticleSystemInfinite(cent->muzzlePS)) {
             cent->muzzlePsTrigger = true;
         }
     }
@@ -2323,18 +2323,18 @@ void CG_HandleWeaponHitEntity(entityState_t* es, vec3_t origin) {
     centity_t* victim;
 
     // retrieve data from event
-    weapon      = (weapon_t) es->weapon;
-    weaponMode  = (weaponMode_t) es->generic1;
-    victimNum   = es->otherEntityNum;
+    weapon = (weapon_t) es->weapon;
+    weaponMode = (weaponMode_t) es->generic1;
+    victimNum = es->otherEntityNum;
     attackerNum = es->otherEntityNum2;
-    psCharge    = es->torsoAnim;
+    psCharge = es->torsoAnim;
     ByteToDir(es->eventParm, normal);
 
     if (weaponMode <= WPM_NONE || weaponMode >= WPM_NUM_WEAPONMODES) {
         weaponMode = WPM_PRIMARY;
     }
 
-    wim    = &cg_weapons[weapon].wim[weaponMode];
+    wim = &cg_weapons[weapon].wim[weaponMode];
     victim = &cg_entities[victimNum];
 
     // generic hit effect
@@ -2356,7 +2356,7 @@ void CG_HandleWeaponHitEntity(entityState_t* es, vec3_t origin) {
     }
 
     // tracer
-    if (CalcMuzzlePoint(attackerNum, muzzle) ) {
+    if (CalcMuzzlePoint(attackerNum, muzzle)) {
         DrawTracer(muzzle, origin, cg_tracerChance.value, cg_tracerLength.value,
                    cg_tracerWidth.value);
     }
@@ -2370,11 +2370,11 @@ void CG_HandleWeaponHitWall(entityState_t* es, vec3_t origin) {
     weaponInfoMode_t* wim;
 
     // retrieve data from event
-    weapon      = (weapon_t) es->weapon;
-    weaponMode  = (weaponMode_t) es->generic1;
+    weapon = (weapon_t) es->weapon;
+    weaponMode = (weaponMode_t) es->generic1;
     // victimNum   = es->otherEntityNum;
     attackerNum = es->otherEntityNum2;
-    psCharge    = es->torsoAnim;
+    psCharge = es->torsoAnim;
     ByteToDir(es->eventParm, normal);
 
     if (weaponMode <= WPM_NONE || weaponMode >= WPM_NUM_WEAPONMODES) {
@@ -2395,7 +2395,7 @@ void CG_HandleWeaponHitWall(entityState_t* es, vec3_t origin) {
     }
 
     // tracer
-    if (CalcMuzzlePoint(attackerNum, muzzle) ) {
+    if (CalcMuzzlePoint(attackerNum, muzzle)) {
         DrawTracer(muzzle, origin, cg_tracerChance.value, cg_tracerLength.value,
                    cg_tracerWidth.value);
     }
@@ -2408,13 +2408,13 @@ void CG_HandleMissileHitEntity(entityState_t* es, vec3_t origin) {
     centity_t* victim;
 
     // retrieve data from event
-    ma          = BG_Missile(es->weapon);
-    victimNum   = es->otherEntityNum;
+    ma = BG_Missile(es->weapon);
+    victimNum = es->otherEntityNum;
     // attackerNum = es->otherEntityNum2;
-    psCharge    = es->torsoAnim;
+    psCharge = es->torsoAnim;
     ByteToDir(es->eventParm, normal);
 
-    victim      = &cg_entities[victimNum];
+    victim = &cg_entities[victimNum];
 
     // generic hit effect
     if (ma->alwaysImpact) {
@@ -2441,10 +2441,10 @@ void CG_HandleMissileHitWall(entityState_t* es, vec3_t origin) {
     vec3_t normal;
 
     // retrieve data from event
-    ma          = BG_Missile(es->weapon);
+    ma = BG_Missile(es->weapon);
     // victimNum   = es->otherEntityNum;
     // attackerNum = es->otherEntityNum2;
-    psCharge    = es->torsoAnim;
+    psCharge = es->torsoAnim;
     ByteToDir(es->eventParm, normal);
 
     // generic hit effect
@@ -2490,7 +2490,7 @@ float CG_ChargeProgress() {
         return 0.0f;
     }
 
-    progress = ( (float) cg.predictedPlayerState.stats[STAT_MISC] - min) /
+    progress = ((float) cg.predictedPlayerState.stats[STAT_MISC] - min) /
                (max - min);
 
     if (progress > 1.0f) {

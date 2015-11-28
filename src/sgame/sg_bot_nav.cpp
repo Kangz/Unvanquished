@@ -54,9 +54,9 @@ void G_BotNavInit() {
             continue;
         }
 
-        Q_strncpyz(bot.name, BG_Class(i)->name, sizeof(bot.name) );
+        Q_strncpyz(bot.name, BG_Class(i)->name, sizeof(bot.name));
 
-        if (!trap_BotSetupNav(&bot, &model->navHandle) ) {
+        if (!trap_BotSetupNav(&bot, &model->navHandle)) {
             return;
         }
     }
@@ -100,11 +100,11 @@ Bot Navigation Querys
 float RadiusFromBounds2D(vec3_t mins, vec3_t maxs) {
     float rad1s = Square(mins[0]) + Square(mins[1]);
     float rad2s = Square(maxs[0]) + Square(maxs[1]);
-    return sqrt(std::max(rad1s, rad2s) );
+    return sqrt(std::max(rad1s, rad2s));
 }
 
 float BotGetGoalRadius(gentity_t* self) {
-    if (BotTargetIsEntity(self->botMind->goal) ) {
+    if (BotTargetIsEntity(self->botMind->goal)) {
         botTarget_t* t = &self->botMind->goal;
         if (t->ent->s.modelindex == BA_H_MEDISTAT || t->ent->s.modelindex == BA_A_BOOSTER) {
             return self->r.maxs[0] + t->ent->r.maxs[0];
@@ -119,11 +119,11 @@ float BotGetGoalRadius(gentity_t* self) {
 bool GoalInRange(gentity_t* self, float r) {
     gentity_t* ent = nullptr;
 
-    if (!BotTargetIsEntity(self->botMind->goal) ) {
+    if (!BotTargetIsEntity(self->botMind->goal)) {
         return (Distance(self->s.origin, self->botMind->nav.tpos) < r);
     }
 
-    while ( (ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, r) ) ) {
+    while ((ent = G_IterateEntitiesWithinRadius(ent, self->s.origin, r))) {
         if (ent == self->botMind->goal.ent) {
             return true;
         }
@@ -147,7 +147,7 @@ int DistanceToGoal(gentity_t* self) {
     vec3_t targetPos;
     vec3_t selfPos;
     // safety check for morons who use this incorrectly
-    if (!(self->botMind) ) {
+    if (!(self->botMind)) {
         return -1;
     }
     BotGetTargetPos(self->botMind->goal, targetPos);
@@ -159,7 +159,7 @@ int DistanceToGoalSquared(gentity_t* self) {
     vec3_t targetPos;
     vec3_t selfPos;
     // safety check for morons who use this incorrectly
-    if (!(self->botMind) ) {
+    if (!(self->botMind)) {
         return -1;
     }
     BotGetTargetPos(self->botMind->goal, targetPos);
@@ -176,7 +176,7 @@ bool BotPathIsWalkable(gentity_t* self, botTarget_t target) {
     VectorMA(self->s.origin, self->r.mins[2], viewNormal, selfPos);
     BotGetTargetPos(target, targetPos);
 
-    if (!trap_BotNavTrace(self->s.number, &trace, selfPos, targetPos) ) {
+    if (!trap_BotNavTrace(self->s.number, &trace, selfPos, targetPos)) {
         return false;
     }
 
@@ -198,7 +198,7 @@ Local Bot Navigation
 */
 
 signed char BotGetMaxMoveSpeed(gentity_t* self) {
-    if (usercmdButtonPressed(self->botMind->cmdBuffer.buttons, BUTTON_WALKING) ) {
+    if (usercmdButtonPressed(self->botMind->cmdBuffer.buttons, BUTTON_WALKING)) {
         return 63;
     }
 
@@ -215,11 +215,11 @@ void BotStrafeDodge(gentity_t* self) {
         botCmdBuffer->rightmove = -speed;
     }
 
-    if ( (self->client->time10000 % 2000) < 1000) {
+    if ((self->client->time10000 % 2000) < 1000) {
         botCmdBuffer->rightmove *= -1;
     }
 
-    if ( (self->client->time1000 % 300) >= 100 && (self->client->time10000 % 3000) > 2000) {
+    if ((self->client->time1000 % 300) >= 100 && (self->client->time10000 % 3000) > 2000) {
         botCmdBuffer->rightmove = 0;
     }
 }
@@ -304,7 +304,7 @@ void BotWalk(gentity_t* self, bool enable) {
     usercmd_t* botCmdBuffer = &self->botMind->cmdBuffer;
 
     if (!enable) {
-        if (usercmdButtonPressed(botCmdBuffer->buttons, BUTTON_WALKING) ) {
+        if (usercmdButtonPressed(botCmdBuffer->buttons, BUTTON_WALKING)) {
             usercmdReleaseButton(botCmdBuffer->buttons, BUTTON_WALKING);
             botCmdBuffer->forwardmove *= 2;
             botCmdBuffer->rightmove *= 2;
@@ -312,7 +312,7 @@ void BotWalk(gentity_t* self, bool enable) {
         return;
     }
 
-    if (!usercmdButtonPressed(botCmdBuffer->buttons, BUTTON_WALKING) ) {
+    if (!usercmdButtonPressed(botCmdBuffer->buttons, BUTTON_WALKING)) {
         usercmdPressButton(botCmdBuffer->buttons, BUTTON_WALKING);
         botCmdBuffer->forwardmove /= 2;
         botCmdBuffer->rightmove /= 2;
@@ -326,11 +326,11 @@ gentity_t* BotGetPathBlocker(gentity_t* self, const vec3_t dir) {
     trace_t trace;
     const int TRACE_LENGTH = BOT_OBSTACLE_AVOID_RANGE;
 
-    if (!(self && self->client) ) {
+    if (!(self && self->client)) {
         return nullptr;
     }
 
-    BG_ClassBoundingBox( (class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
+    BG_ClassBoundingBox((class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
 
     // account for how large we can step
     playerMins[2] += STEPSIZE;
@@ -339,7 +339,7 @@ gentity_t* BotGetPathBlocker(gentity_t* self, const vec3_t dir) {
     VectorMA(self->s.origin, TRACE_LENGTH, dir, end);
 
     trap_Trace(&trace, self->s.origin, playerMins, playerMaxs, end, self->s.number, MASK_SHOT, 0);
-    if ( (trace.fraction < 1.0f && trace.plane.normal[2] < 0.7f) || g_entities[trace.entityNum].s.eType == ET_BUILDABLE) {
+    if ((trace.fraction < 1.0f && trace.plane.normal[2] < 0.7f) || g_entities[trace.entityNum].s.eType == ET_BUILDABLE) {
         return &g_entities[trace.entityNum];
     } else {
         return nullptr;
@@ -355,13 +355,13 @@ bool BotShouldJump(gentity_t* self, gentity_t* blocker, const vec3_t dir) {
     vec3_t end;
 
     // blocker is not on our team, so ignore
-    if (BotGetEntityTeam(self) != BotGetEntityTeam(blocker) ) {
+    if (BotGetEntityTeam(self) != BotGetEntityTeam(blocker)) {
         return false;
     }
 
     // already normalized
 
-    BG_ClassBoundingBox( (class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
+    BG_ClassBoundingBox((class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
 
     playerMins[2] += STEPSIZE;
     playerMaxs[2] += STEPSIZE;
@@ -375,7 +375,7 @@ bool BotShouldJump(gentity_t* self, gentity_t* blocker, const vec3_t dir) {
         return false;
     }
 
-    jumpMagnitude = BG_Class( (class_t)self->client->ps.stats[STAT_CLASS])->jumpMagnitude;
+    jumpMagnitude = BG_Class((class_t)self->client->ps.stats[STAT_CLASS])->jumpMagnitude;
 
     // find the actual height of our jump
     jumpMagnitude = Square(jumpMagnitude) / (self->client->ps.gravity * 2);
@@ -405,12 +405,12 @@ bool BotFindSteerTarget(gentity_t* self, vec3_t dir) {
     int i;
     vec3_t angles;
 
-    if (!(self && self->client) ) {
+    if (!(self && self->client)) {
         return false;
     }
 
     // get bbox
-    BG_ClassBoundingBox( (class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
+    BG_ClassBoundingBox((class_t) self->client->ps.stats[STAT_CLASS], playerMins, playerMaxs, nullptr, nullptr, nullptr);
 
     // account for stepsize
     playerMins[2] += STEPSIZE;
@@ -431,8 +431,8 @@ bool BotFindSteerTarget(gentity_t* self, vec3_t dir) {
     // we check the full 180 degrees in front of us
     for (i = 0; i < 5; i++, yaw1 -= 15, yaw2 += 15) {
         // compute forward for right
-        forward[0] = cos(DEG2RAD(yaw1) );
-        forward[1] = sin(DEG2RAD(yaw1) );
+        forward[0] = cos(DEG2RAD(yaw1));
+        forward[1] = sin(DEG2RAD(yaw1));
         // forward is already normalized
         // try the right
         VectorMA(self->s.origin, BOT_OBSTACLE_AVOID_RANGE, forward, testPoint1);
@@ -448,8 +448,8 @@ bool BotFindSteerTarget(gentity_t* self, vec3_t dir) {
         }
 
         // compute forward for left
-        forward[0] = cos(DEG2RAD(yaw2) );
-        forward[1] = sin(DEG2RAD(yaw2) );
+        forward[0] = cos(DEG2RAD(yaw2));
+        forward[1] = sin(DEG2RAD(yaw2));
         // forward is already normalized
         // try the left
         VectorMA(self->s.origin, BOT_OBSTACLE_AVOID_RANGE, forward, testPoint2);
@@ -474,16 +474,16 @@ bool BotAvoidObstacles(gentity_t* self, vec3_t dir) {
     blocker = BotGetPathBlocker(self, dir);
 
     if (blocker) {
-        if (BotShouldJump(self, blocker, dir) ) {
+        if (BotShouldJump(self, blocker, dir)) {
             BotJump(self);
             return false;
-        } else if (!BotFindSteerTarget(self, dir) ) {
+        } else if (!BotFindSteerTarget(self, dir)) {
             vec3_t angles;
             vec3_t right;
             vectoangles(dir, angles);
             AngleVectors(angles, dir, right, nullptr);
 
-            if ( (self->client->time10000 % 2000) < 1000) {
+            if ((self->client->time10000 % 2000) < 1000) {
                 VectorCopy(right, dir);
             } else {
                 VectorNegate(right, dir);
@@ -502,14 +502,14 @@ bool BotOnLadder(gentity_t* self) {
     vec3_t mins, maxs;
     trace_t trace;
 
-    if (!BG_ClassHasAbility( (class_t) self->client->ps.stats[STAT_CLASS], SCA_CANUSELADDERS) ) {
+    if (!BG_ClassHasAbility((class_t) self->client->ps.stats[STAT_CLASS], SCA_CANUSELADDERS)) {
         return false;
     }
 
     AngleVectors(self->client->ps.viewangles, forward, nullptr, nullptr);
 
     forward[2] = 0.0f;
-    BG_ClassBoundingBox( (class_t) self->client->ps.stats[STAT_CLASS], mins, maxs, nullptr, nullptr, nullptr);
+    BG_ClassBoundingBox((class_t) self->client->ps.stats[STAT_CLASS], mins, maxs, nullptr, nullptr, nullptr);
     VectorMA(self->s.origin, 1.0f, forward, end);
 
     trap_Trace(&trace, self->s.origin, mins, maxs, end, self->s.number, MASK_PLAYERSOLID, 0);
@@ -540,7 +540,7 @@ void BotDirectionToUsercmd(gentity_t* self, vec3_t dir, usercmd_t* cmd) {
     rightmove = speed * DotProduct(right, dir);
 
     // find optimal magnitude to make speed as high as possible
-    if (Q_fabs(forwardmove) > Q_fabs(rightmove) ) {
+    if (Q_fabs(forwardmove) > Q_fabs(rightmove)) {
         float highestforward = forwardmove < 0 ? -speed : speed;
 
         float highestright = highestforward * rightmove / forwardmove;

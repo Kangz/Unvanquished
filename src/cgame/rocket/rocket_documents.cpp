@@ -46,7 +46,7 @@ void Rocket_LoadDocument(const char* path) {
         menuContext->PullDocumentToFront(document); // Ensure any duplicates will be found first.
 
         // Close any other documents which may have the same ID
-        other = menuContext->GetDocument(document->GetId() );
+        other = menuContext->GetDocument(document->GetId());
         if (other && other != document) {
             other->Close();
         }
@@ -62,15 +62,15 @@ void Rocket_LoadCursor(const char* path) {
 }
 
 void Rocket_DocumentAction(const char* name, const char* action) {
-    if (!Q_stricmp(action, "show") || !Q_stricmp(action, "open") ) {
+    if (!Q_stricmp(action, "show") || !Q_stricmp(action, "open")) {
         Rocket::Core::ElementDocument* document = menuContext->GetDocument(name);
         if (document) {
             document->Show();
         }
-    } else if (!Q_stricmp("close", action) ) {
+    } else if (!Q_stricmp("close", action)) {
         if (!*name) { // If name is empty, hide active
             if (menuContext->GetFocusElement() &&
-                menuContext->GetFocusElement()->GetOwnerDocument() ) {
+                menuContext->GetFocusElement()->GetOwnerDocument()) {
                 menuContext->GetFocusElement()->GetOwnerDocument()->Close();
             }
 
@@ -81,7 +81,7 @@ void Rocket_DocumentAction(const char* name, const char* action) {
         if (document) {
             document->Close();
         }
-    } else if (!Q_stricmp("goto", action) ) {
+    } else if (!Q_stricmp("goto", action)) {
         Rocket::Core::ElementDocument* document = menuContext->GetDocument(name);
         if (document) {
             Rocket::Core::ElementDocument* owner = menuContext->GetFocusElement()->GetOwnerDocument();
@@ -90,14 +90,14 @@ void Rocket_DocumentAction(const char* name, const char* action) {
             }
             document->Show();
         }
-    } else if (!Q_stricmp("load", action) ) {
+    } else if (!Q_stricmp("load", action)) {
         Rocket_LoadDocument(name);
-    } else if (!Q_stricmp("blur", action) || !Q_stricmp("hide", action) ) {
+    } else if (!Q_stricmp("blur", action) || !Q_stricmp("hide", action)) {
         Rocket::Core::ElementDocument* document = nullptr;
 
         if (!*name) { // If name is empty, hide active
             if (menuContext->GetFocusElement() &&
-                menuContext->GetFocusElement()->GetOwnerDocument() ) {
+                menuContext->GetFocusElement()->GetOwnerDocument()) {
                 document = menuContext->GetFocusElement()->GetOwnerDocument();
             }
         } else {
@@ -107,16 +107,16 @@ void Rocket_DocumentAction(const char* name, const char* action) {
         if (document) {
             document->Hide();
         }
-    } else if (!Q_stricmp("blurall", action) ) {
+    } else if (!Q_stricmp("blurall", action)) {
         for (int i = 0; i < menuContext->GetNumDocuments(); ++i) {
             menuContext->GetDocument(i)->Hide();
         }
-    } else if (!Q_stricmp("reload", action) ) {
+    } else if (!Q_stricmp("reload", action)) {
         Rocket::Core::ElementDocument* document = nullptr;
 
         if (!*name) { // If name is empty, hide active
             if (menuContext->GetFocusElement() &&
-                menuContext->GetFocusElement()->GetOwnerDocument() ) {
+                menuContext->GetFocusElement()->GetOwnerDocument()) {
                 document = menuContext->GetFocusElement()->GetOwnerDocument();
             }
         } else {

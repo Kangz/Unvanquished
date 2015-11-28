@@ -82,7 +82,7 @@ void AlienBuildableComponent::HandleDie(gentity_t* killer, meansOfDeath_t meansO
 void AlienBuildableComponent::Blast(int timeDelta) {
     float splashDamage = (float)entity.oldEnt->splashDamage;
     float splashRadius = (float)entity.oldEnt->splashRadius;
-    meansOfDeath_t splashMOD    = (meansOfDeath_t)entity.oldEnt->splashMethodOfDeath;
+    meansOfDeath_t splashMOD = (meansOfDeath_t)entity.oldEnt->splashMethodOfDeath;
 
     // Damage close humans.
     Utility::AntiHumanRadiusDamage(entity, splashDamage, splashRadius, splashMOD);

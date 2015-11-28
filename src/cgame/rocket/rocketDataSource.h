@@ -62,18 +62,18 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("source") != changed_attributes.end() ) {
-                SetDataSource(GetAttribute<Rocket::Core::String>("source", "") );
+            if (changed_attributes.find("source") != changed_attributes.end()) {
+                SetDataSource(GetAttribute<Rocket::Core::String>("source", ""));
             }
 
-            if (changed_attributes.find("fields") != changed_attributes.end() ) {
+            if (changed_attributes.find("fields") != changed_attributes.end()) {
                 csvFields = GetAttribute<Rocket::Core::String>("fields", "");
                 Rocket::Core::StringUtilities::ExpandString(fields, csvFields);
                 dirty_query = true;
             }
 
-            if (changed_attributes.find("formatter") != changed_attributes.end() ) {
-                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>() );
+            if (changed_attributes.find("formatter") != changed_attributes.end()) {
+                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>());
                 dirty_query = true;
             }
         }
@@ -99,23 +99,23 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
             if (dirty_query) {
                 dirty_query = false;
 
-                while (HasChildNodes() ) {
+                while (HasChildNodes()) {
 
-                    RemoveChild(GetFirstChild() );
+                    RemoveChild(GetFirstChild());
                 }
 
                 Rocket::Controls::DataQuery query(data_source, data_table, csvFields, 0, -1);
                 int index = 0;
 
-                while (query.NextRow() ) {
+                while (query.NextRow()) {
                     Rocket::Core::StringList raw_data;
                     Rocket::Core::String out;
 
                     for (size_t i = 0; i < fields.size(); ++i) {
-                        raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], "") );
+                        raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], ""));
                     }
 
-                    raw_data.push_back(va("%d", index++) );
+                    raw_data.push_back(va("%d", index++));
 
 
                     if (formatter) {
@@ -142,7 +142,7 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
             if (event == "mouseover") {
                 Rocket::Core::Element* parent = event.GetTargetElement();
                 Rocket::Core::Element* button = parent->GetTagName() == "button" ? parent : nullptr;
-                while ( (parent = parent->GetParentNode() ) ) {
+                while ((parent = parent->GetParentNode())) {
                     if (!button && parent->GetTagName() == "button") {
                         button = parent;
                         continue;
@@ -154,8 +154,8 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
 
                         for (i = 1; i < GetNumChildren(); ++i) {
                             if (GetChild(i) == button) {
-                                parameters.Set("index", va("%d", i - 1) );
-                                parameters.Set("datasource", data_source->GetDataSourceName() );
+                                parameters.Set("index", va("%d", i - 1));
+                                parameters.Set("datasource", data_source->GetDataSourceName());
                                 parameters.Set("table", data_table);
 
                                 DispatchEvent("rowselect", parameters);
@@ -183,11 +183,11 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
             width = child->GetOffsetWidth();
             height = child->GetOffsetHeight();
             child->SetProperty("position", "absolute");
-            child->SetProperty("top", va("%fpx", offset.y + (dimensions.y / 2) - (height / 2) ) );
-            child->SetProperty("left", va("%fpx", offset.x + (dimensions.x / 2) - (width / 2) ) );
+            child->SetProperty("top", va("%fpx", offset.y + (dimensions.y / 2) - (height / 2)));
+            child->SetProperty("left", va("%fpx", offset.x + (dimensions.x / 2) - (width / 2)));
 
             // No other children
-            if ( (numChildren = GetNumChildren() ) <= 1) {
+            if ((numChildren = GetNumChildren()) <= 1) {
                 return;
             }
 
@@ -198,12 +198,12 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
                 child = GetChild(i);
                 width = child->GetOffsetWidth();
                 height = child->GetOffsetHeight();
-                float y = sin(angle * (i - 1) * (M_PI / 180.0f) ) * radius;
-                float x = cos(angle * (i - 1) * (M_PI / 180.0f) ) * radius;
+                float y = sin(angle * (i - 1) * (M_PI / 180.0f)) * radius;
+                float x = cos(angle * (i - 1) * (M_PI / 180.0f)) * radius;
 
                 child->SetProperty("position", "absolute");
-                child->SetProperty("left", va("%fpx", (dimensions.x / 2) - (width / 2) + offset.x + x) );
-                child->SetProperty("top", va("%fpx", (dimensions.y / 2) - (height / 2) + offset.y + y) );
+                child->SetProperty("left", va("%fpx", (dimensions.x / 2) - (width / 2) + offset.x + x));
+                child->SetProperty("top", va("%fpx", (dimensions.y / 2) - (height / 2) + offset.y + y));
             }
         }
 
@@ -211,7 +211,7 @@ class RocketDataSource : public Rocket::Core::Element, public Rocket::Controls::
 
         void AddCancelbutton() {
             init = true;
-            Rocket::Core::Factory::InstanceElementText(this, va("<button onClick=\"hide %s\">Cancel</button>", GetOwnerDocument()->GetId().CString() ) );
+            Rocket::Core::Factory::InstanceElementText(this, va("<button onClick=\"hide %s\">Cancel</button>", GetOwnerDocument()->GetId().CString()));
             GetFirstChild()->SetClass("cancelButton", true);
         }
 

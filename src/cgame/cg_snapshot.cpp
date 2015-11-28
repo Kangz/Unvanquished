@@ -102,7 +102,7 @@ void CG_SetInitialSnapshot(snapshot_t* snap) {
         state = &cg.snap->entities[i];
         cent = &cg_entities[state->number];
 
-        memcpy(&cent->currentState, state, sizeof(entityState_t) );
+        memcpy(&cent->currentState, state, sizeof(entityState_t));
         // cent->currentState = *state;
         cent->interpolate = false;
         cent->currentValid = true;
@@ -117,7 +117,7 @@ void CG_SetInitialSnapshot(snapshot_t* snap) {
     if (snap->ps.persistant[PERS_TEAM] == TEAM_NONE) {
         Rocket_ShowHud(WP_NONE);
     } else {
-        Rocket_ShowHud(BG_GetPlayerWeapon(&snap->ps) );
+        Rocket_ShowHud(BG_GetPlayerWeapon(&snap->ps));
     }
 }
 
@@ -179,7 +179,7 @@ static void CG_TransitionSnapshot() {
         ps = &cg.snap->ps;
 
         // teleporting checks are irrespective of prediction
-        if ( (ps->eFlags ^ ops->eFlags) & EF_TELEPORT_BIT) {
+        if ((ps->eFlags ^ ops->eFlags) & EF_TELEPORT_BIT) {
             cg.thisFrameTeleport = true; // will be cleared by prediction code
         }
 
@@ -222,12 +222,12 @@ static void CG_SetNextSnap(snapshot_t* snap) {
         es = &snap->entities[num];
         cent = &cg_entities[es->number];
 
-        memcpy(&cent->nextState, es, sizeof(entityState_t) );
+        memcpy(&cent->nextState, es, sizeof(entityState_t));
         // cent->nextState = *es;
 
         // if this frame is a teleport, or the entity wasn't in the
         // previous frame, don't interpolate
-        if (!cent->currentValid || ( (cent->currentState.eFlags ^ es->eFlags) & EF_TELEPORT_BIT) ) {
+        if (!cent->currentValid || ((cent->currentState.eFlags ^ es->eFlags) & EF_TELEPORT_BIT)) {
             cent->interpolate = false;
         } else {
             cent->interpolate = true;
@@ -236,7 +236,7 @@ static void CG_SetNextSnap(snapshot_t* snap) {
 
     // if the next frame is a teleport for the playerstate, we
     // can't interpolate during demos
-    if (cg.snap && ( (snap->ps.eFlags ^ cg.snap->ps.eFlags) & EF_TELEPORT_BIT) ) {
+    if (cg.snap && ((snap->ps.eFlags ^ cg.snap->ps.eFlags) & EF_TELEPORT_BIT)) {
         cg.nextFrameTeleport = true;
     } else {
         cg.nextFrameTeleport = false;
@@ -248,7 +248,7 @@ static void CG_SetNextSnap(snapshot_t* snap) {
     }
 
     // if changing server restarts, don't interpolate
-    if ( (cg.nextSnap->snapFlags ^ cg.snap->snapFlags) & SNAPFLAG_SERVERCOUNT) {
+    if ((cg.nextSnap->snapFlags ^ cg.snap->snapFlags) & SNAPFLAG_SERVERCOUNT) {
         cg.nextFrameTeleport = true;
         CG_OnMapRestart();
     }
@@ -358,7 +358,7 @@ void CG_ProcessSnapshots() {
 
         // set our weapon selection to what
         // the playerstate is currently using
-        if (!(snap->snapFlags & SNAPFLAG_NOT_ACTIVE) ) {
+        if (!(snap->snapFlags & SNAPFLAG_NOT_ACTIVE)) {
             CG_SetInitialSnapshot(snap);
         }
     }

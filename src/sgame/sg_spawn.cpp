@@ -45,7 +45,7 @@ bool G_SpawnString(const char* key, const char* defaultString, char** out) {
     }
 
     for (i = 0; i < level.numSpawnVars; i++) {
-        if (!Q_stricmp(key, level.spawnVars[i][0]) ) {
+        if (!Q_stricmp(key, level.spawnVars[i][0])) {
             *out = level.spawnVars[i][1];
             return true;
         }
@@ -63,7 +63,7 @@ bool G_SpawnString(const char* key, const char* defaultString, char** out) {
 static bool G_SpawnStringIntoCVarIfSet(const char* key, const char* cvarName) {
     char* tmpString;
 
-    if (G_SpawnString(key, "", &tmpString) ) {
+    if (G_SpawnString(key, "", &tmpString)) {
         trap_Cvar_Set(cvarName, tmpString);
         return true;
     }
@@ -163,7 +163,7 @@ typedef struct {
     const char* replacement;
 } fieldDescriptor_t;
 
-static const fieldDescriptor_t fields[] ={
+static const fieldDescriptor_t fields[] = {
     { "acceleration", FOFS(acceleration), F_3D_VECTOR, ENT_V_UNCLEAR, nullptr },
     { "alias", FOFS(names[2]), F_STRING, ENT_V_UNCLEAR, nullptr },
     { "alpha", FOFS(restingPosition), F_3D_VECTOR, ENT_V_UNCLEAR, nullptr }, // What's with the variable abuse everytime?
@@ -251,7 +251,7 @@ typedef struct {
 } entityClassDescriptor_t;
 
 
-static const entityClassDescriptor_t entityClassDescriptions[] ={
+static const entityClassDescriptor_t entityClassDescriptions[] = {
     /**
      *
      *	Control entities
@@ -437,7 +437,7 @@ bool G_HandleEntityVersions(entityClassDescriptor_t* spawnDescription, gentity_t
 
     if (!spawnDescription->replacement || !Q_stricmp(entity->classname, spawnDescription->replacement)) {
         if (g_debugEntities.integer > -2) {
-            G_Printf(S_ERROR "Class %s has been marked deprecated but no replacement has been supplied\n", etos(entity) );
+            G_Printf(S_ERROR "Class %s has been marked deprecated but no replacement has been supplied\n", etos(entity));
         }
 
         return false;
@@ -445,7 +445,7 @@ bool G_HandleEntityVersions(entityClassDescriptor_t* spawnDescription, gentity_t
 
     if (g_debugEntities.integer >= 0) { // dont't warn about anything with -1 or lower
         if (spawnDescription->versionState < ENT_V_TMPORARY
-            || (g_debugEntities.integer >= 1 && spawnDescription->versionState >= ENT_V_TMPORARY) ) {
+            || (g_debugEntities.integer >= 1 && spawnDescription->versionState >= ENT_V_TMPORARY)) {
             G_Printf(S_WARNING "Entity %s uses a deprecated classtype — use the class ^5%s^* instead\n", etos(entity), spawnDescription->replacement);
         }
     }
@@ -458,7 +458,7 @@ bool G_ValidateEntity(entityClassDescriptor_t* entityClass, gentity_t* entity) {
     case CHAIN_ACTIVE:
         if (!entity->callTargetCount) { // check target usage for backward compatibility
             if (g_debugEntities.integer > -2) {
-                G_Printf(S_WARNING "Entity %s needs to call or target to something — Removing it.\n", etos(entity) );
+                G_Printf(S_WARNING "Entity %s needs to call or target to something — Removing it.\n", etos(entity));
             }
             return false;
         }
@@ -468,7 +468,7 @@ bool G_ValidateEntity(entityClassDescriptor_t* entityClass, gentity_t* entity) {
     case CHAIN_PASSIV:
         if (!entity->names[0]) {
             if (g_debugEntities.integer > -2) {
-                G_Printf(S_WARNING "Entity %s needs a name, so other entities can target it — Removing it.\n", etos(entity) );
+                G_Printf(S_WARNING "Entity %s needs a name, so other entities can target it — Removing it.\n", etos(entity));
             }
             return false;
         }
@@ -478,7 +478,7 @@ bool G_ValidateEntity(entityClassDescriptor_t* entityClass, gentity_t* entity) {
         if ((!entity->callTargetCount) // check target usage for backward compatibility
             || !entity->names[0]) {
             if (g_debugEntities.integer > -2) {
-                G_Printf(S_WARNING "Entity %s needs a name as well as a target to conditionally relay the firing — Removing it.\n", etos(entity) );
+                G_Printf(S_WARNING "Entity %s needs a name as well as a target to conditionally relay the firing — Removing it.\n", etos(entity));
             }
             return false;
         }
@@ -520,7 +520,7 @@ bool G_CallSpawnFunction(gentity_t* spawnedEntity) {
         const buildableAttributes_t* attr = BG_Buildable(buildable);
 
         // don't spawn built-in buildings if we are using a custom layout
-        if (level.layout[0] && Q_stricmp(level.layout, S_BUILTIN_LAYOUT) ) {
+        if (level.layout[0] && Q_stricmp(level.layout, S_BUILTIN_LAYOUT)) {
             return false;
         }
 
@@ -594,7 +594,7 @@ char* G_NewString(const char* string) {
 
     l = strlen(string) + 1;
 
-    newb =(char*) BG_Alloc(l);
+    newb = (char*) BG_Alloc(l);
 
     new_p = newb;
 
@@ -681,7 +681,7 @@ void G_ParseField(const char* key, const char* rawString, gentity_t* entity) {
             G_Error("Maximal number of %i targets reached.", MAX_ENTITY_TARGETS);
         }
 
-        ( (char**) entityDataField) [entity->targetCount++] = G_NewString(rawString);
+        ((char**) entityDataField) [entity->targetCount++] = G_NewString(rawString);
         break;
 
     case F_CALLTARGET:
@@ -689,7 +689,7 @@ void G_ParseField(const char* key, const char* rawString, gentity_t* entity) {
             G_Error("Maximal number of %i calltargets reached. You can solve this by using a Relay.", MAX_ENTITY_CALLTARGETS);
         }
 
-        ( (gentityCallDefinition_t*) entityDataField) [entity->callTargetCount++] = G_NewCallDefinition(fieldDescriptor->replacement ? fieldDescriptor->replacement : fieldDescriptor->name, rawString);
+        ((gentityCallDefinition_t*) entityDataField) [entity->callTargetCount++] = G_NewCallDefinition(fieldDescriptor->replacement ? fieldDescriptor->replacement : fieldDescriptor->name, rawString);
         break;
 
     case F_TIME:
@@ -700,18 +700,18 @@ void G_ParseField(const char* key, const char* rawString, gentity_t* entity) {
     case F_3D_VECTOR:
         sscanf(rawString, "%f %f %f", &tmpFloatData[0], &tmpFloatData[1], &tmpFloatData[2]);
 
-        ( (float*) entityDataField) [0] = tmpFloatData[0];
-        ( (float*) entityDataField) [1] = tmpFloatData[1];
-        ( (float*) entityDataField) [2] = tmpFloatData[2];
+        ((float*) entityDataField) [0] = tmpFloatData[0];
+        ((float*) entityDataField) [1] = tmpFloatData[1];
+        ((float*) entityDataField) [2] = tmpFloatData[2];
         break;
 
     case F_4D_VECTOR:
         sscanf(rawString, "%f %f %f %f", &tmpFloatData[0], &tmpFloatData[1], &tmpFloatData[2], &tmpFloatData[3]);
 
-        ( (float*) entityDataField) [0] = tmpFloatData[0];
-        ( (float*) entityDataField) [1] = tmpFloatData[1];
-        ( (float*) entityDataField) [2] = tmpFloatData[2];
-        ( (float*) entityDataField) [3] = tmpFloatData[3];
+        ((float*) entityDataField) [0] = tmpFloatData[0];
+        ((float*) entityDataField) [1] = tmpFloatData[1];
+        ((float*) entityDataField) [2] = tmpFloatData[2];
+        ((float*) entityDataField) [3] = tmpFloatData[3];
         break;
 
     case F_INT:
@@ -723,17 +723,17 @@ void G_ParseField(const char* key, const char* rawString, gentity_t* entity) {
         break;
 
     case F_YAW:
-        ( (float*) entityDataField) [PITCH] = 0;
-        ( (float*) entityDataField) [YAW] = atof(rawString);
-        ( (float*) entityDataField) [ROLL] = 0;
+        ((float*) entityDataField) [PITCH] = 0;
+        ((float*) entityDataField) [YAW] = atof(rawString);
+        ((float*) entityDataField) [ROLL] = 0;
         break;
 
     case F_SOUNDINDEX:
         if (strlen(rawString) >= MAX_QPATH) {
-            G_Error(S_ERROR "Sound filename %s in field %s of %s exceeds MAX_QPATH\n", rawString, fieldDescriptor->name, etos(entity) );
+            G_Error(S_ERROR "Sound filename %s in field %s of %s exceeds MAX_QPATH\n", rawString, fieldDescriptor->name, etos(entity));
         }
 
-        *(int*) entityDataField  = G_SoundIndex(rawString);
+        *(int*) entityDataField = G_SoundIndex(rawString);
         break;
 
     default:
@@ -823,7 +823,7 @@ void G_SpawnGEntityFromSpawnVars() {
     spawningEntity->targets[j] = nullptr;
 
     // if we didn't get necessary fields (like the classname), don't bother spawning anything
-    if (!G_CallSpawnFunction(spawningEntity) ) {
+    if (!G_CallSpawnFunction(spawningEntity)) {
         G_FreeEntity(spawningEntity);
     }
 }
@@ -852,7 +852,7 @@ bool G_WarnAboutDeprecatedEntityField(gentity_t* entity, const char* expectedFie
 
     if (g_debugEntities.integer >= 0) { // dont't warn about anything with -1 or lower
         if (typeOfDeprecation < ENT_V_TMPORARY
-            || (g_debugEntities.integer >= 1 && typeOfDeprecation >= ENT_V_TMPORARY) ) {
+            || (g_debugEntities.integer >= 1 && typeOfDeprecation >= ENT_V_TMPORARY)) {
             G_Printf(S_WARNING "Entity ^5#%i^* contains deprecated field ^5%s^* — use ^5%s^* instead\n", entity->s.number, actualFieldname, expectedFieldname);
         }
     }
@@ -901,7 +901,7 @@ bool G_ParseSpawnVars() {
     level.numSpawnVarChars = 0;
 
     // parse the opening brace
-    if (!trap_GetEntityToken(com_token, sizeof(com_token) ) ) {
+    if (!trap_GetEntityToken(com_token, sizeof(com_token))) {
         // end of spawn string
         return false;
     }
@@ -913,7 +913,7 @@ bool G_ParseSpawnVars() {
     // go through all the key / value pairs
     while (1) {
         // parse key
-        if (!trap_GetEntityToken(keyname, sizeof(keyname) ) ) {
+        if (!trap_GetEntityToken(keyname, sizeof(keyname))) {
             G_Error("G_ParseSpawnVars: EOF without closing brace");
         }
 
@@ -922,7 +922,7 @@ bool G_ParseSpawnVars() {
         }
 
         // parse value
-        if (!trap_GetEntityToken(com_token, sizeof(com_token) ) ) {
+        if (!trap_GetEntityToken(com_token, sizeof(com_token))) {
             G_Error("G_ParseSpawnVars: EOF without closing brace");
         }
 
@@ -968,14 +968,14 @@ void SP_worldspawn() {
 
     G_SpawnString("classname", "", &s);
 
-    if (Q_stricmp(s, S_WORLDSPAWN) ) {
+    if (Q_stricmp(s, S_WORLDSPAWN)) {
         G_Error("SP_worldspawn: The first entry in the spawn string isn't of expected type '" S_WORLDSPAWN "'");
     }
 
     // make some data visible to connecting client
     trap_SetConfigstring(CS_GAME_VERSION, GAME_VERSION);
 
-    trap_SetConfigstring(CS_LEVEL_START_TIME, va("%i", level.startTime) );
+    trap_SetConfigstring(CS_LEVEL_START_TIME, va("%i", level.startTime));
 
     G_SpawnString("music", "", &s);
     trap_SetConfigstring(CS_MUSIC, s);
@@ -985,19 +985,19 @@ void SP_worldspawn() {
     trap_SetConfigstring(CS_MESSAGE, s); // map specific message
 
     if (G_SpawnString("gradingTexture", "", &s)) {
-        trap_SetConfigstring(CS_GRADING_TEXTURES, va("%i %f %s", -1, 0.0f, s) );
+        trap_SetConfigstring(CS_GRADING_TEXTURES, va("%i %f %s", -1, 0.0f, s));
     }
 
     if (G_SpawnString("colorGrade", "", &s)) {
         Com_Printf("^3Warning: ^7\"colorGrade\" deprecated. Please use \"gradingTexture\"");
-        trap_SetConfigstring(CS_GRADING_TEXTURES, va("%i %f %s", -1, 0.0f, s) );
+        trap_SetConfigstring(CS_GRADING_TEXTURES, va("%i %f %s", -1, 0.0f, s));
     }
 
     if (G_SpawnString("reverbIntensity", "", &s)) {
         sscanf(s, "%f", &reverbIntensity);
     }
     if (G_SpawnString("reverbEffect", "", &s)) {
-        trap_SetConfigstring(CS_REVERB_EFFECTS, va("%i %f %s %f", 0, 0.0f, s, Com_Clamp(0.0f, 2.0f, reverbIntensity) ) );
+        trap_SetConfigstring(CS_REVERB_EFFECTS, va("%i %f %s %f", 0, 0.0f, s, Com_Clamp(0.0f, 2.0f, reverbIntensity)));
     }
 
     trap_SetConfigstring(CS_MOTD, g_motd.string); // message of the day
@@ -1025,7 +1025,7 @@ void SP_worldspawn() {
 
     if (g_doWarmup.integer) {
         level.warmupTime = level.matchTime + (g_warmup.integer * 1000);
-        trap_SetConfigstring(CS_WARMUP, va("%i", level.warmupTime) );
+        trap_SetConfigstring(CS_WARMUP, va("%i", level.warmupTime));
         G_LogPrintf("Warmup: %i\n", g_warmup.integer);
     }
 
@@ -1045,14 +1045,14 @@ void G_SpawnEntitiesFromString() {
     // the worldspawn is not an actual entity, but it still
     // has a "spawn" function to perform any global setup
     // needed by a level (setting configstrings or cvars, etc)
-    if (!G_ParseSpawnVars() ) {
+    if (!G_ParseSpawnVars()) {
         G_Error("SpawnEntities: no entities");
     }
 
     SP_worldspawn();
 
     // parse ents
-    while (G_ParseSpawnVars() ) {
+    while (G_ParseSpawnVars()) {
         G_SpawnGEntityFromSpawnVars();
     }
 }

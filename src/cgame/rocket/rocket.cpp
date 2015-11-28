@@ -78,7 +78,7 @@ class DaemonFileInterface : public Rocket::Core::FileInterface {
         }
 
         void Close(Rocket::Core::FileHandle file) {
-            trap_FS_FCloseFile( (fileHandle_t) file);
+            trap_FS_FCloseFile((fileHandle_t) file);
         }
 
         size_t Read(void* buffer, size_t size, Rocket::Core::FileHandle file) {
@@ -87,12 +87,12 @@ class DaemonFileInterface : public Rocket::Core::FileInterface {
 
         // TODO
         bool Seek(Rocket::Core::FileHandle file, long offset, int origin) {
-            return trap_FS_Seek( (fileHandle_t) file, offset, (fsOrigin_t) origin);
+            return trap_FS_Seek((fileHandle_t) file, offset, (fsOrigin_t) origin);
         }
 
         // TODO
         size_t Tell(Rocket::Core::FileHandle file) {
-            return (size_t) trap_FS_Tell( (fileHandle_t) file);
+            return (size_t) trap_FS_Tell((fileHandle_t) file);
         }
 
         /*
@@ -100,7 +100,7 @@ class DaemonFileInterface : public Rocket::Core::FileInterface {
         */
         // TODO
         size_t Length(Rocket::Core::FileHandle file) {
-            return (size_t) trap_FS_FileLength( (fileHandle_t) file);
+            return (size_t) trap_FS_FileLength((fileHandle_t) file);
         }
 };
 
@@ -111,7 +111,7 @@ class DaemonSystemInterface : public Rocket::Core::SystemInterface {
         }
 
         int TranslateString(Rocket::Core::String &translated, const Rocket::Core::String &input) {
-            const char* ret = _(input.CString() );
+            const char* ret = _(input.CString());
             translated = ret;
             return 0;
         }
@@ -120,23 +120,23 @@ class DaemonSystemInterface : public Rocket::Core::SystemInterface {
         bool LogMessage(Rocket::Core::Log::Type type, const Rocket::Core::String &message) {
             switch (type) {
             case Rocket::Core::Log::LT_ALWAYS:
-                Com_Printf("ALWAYS: %s\n", message.CString() );
+                Com_Printf("ALWAYS: %s\n", message.CString());
                 break;
 
             case Rocket::Core::Log::LT_ERROR:
-                Com_Printf("ERROR: %s\n", message.CString() );
+                Com_Printf("ERROR: %s\n", message.CString());
                 break;
 
             case Rocket::Core::Log::LT_WARNING:
-                Com_Printf("WARNING: %s\n", message.CString() );
+                Com_Printf("WARNING: %s\n", message.CString());
                 break;
 
             case Rocket::Core::Log::LT_INFO:
-                Com_Printf("INFO: %s\n", message.CString() );
+                Com_Printf("INFO: %s\n", message.CString());
                 break;
 
             default:
-                Com_Printf("%s\n", message.CString() );
+                Com_Printf("%s\n", message.CString());
             }
             return true;
         }
@@ -174,7 +174,7 @@ class RocketCompiledGeometry {
             this->verts = createVertexArray(verticies, numVerticies);
 
             this->indices = new int[sizeof(int) * _numIndicies];
-            Com_Memcpy(indices, _indices, _numIndicies * sizeof(int) );
+            Com_Memcpy(indices, _indices, _numIndicies * sizeof(int));
 
             this->shader = shader;
         }
@@ -231,7 +231,7 @@ class DaemonRenderInterface : public Rocket::Core::RenderInterface {
         }
         bool GenerateTexture(Rocket::Core::TextureHandle& texture_handle, const byte* source, const Rocket::Core::Vector2i& source_dimensions, int) {
 
-            texture_handle = trap_R_GenerateTexture( (const byte*)source, source_dimensions.x, source_dimensions.y);
+            texture_handle = trap_R_GenerateTexture((const byte*)source, source_dimensions.x, source_dimensions.y);
             // Com_DPrintf( "RE_GenerateTexture [ %lu ( %d x %d )]\n", textureHandle, sourceDimensions.x, sourceDimensions.y );
 
             return (texture_handle > 0);
@@ -253,7 +253,7 @@ class DaemonRenderInterface : public Rocket::Core::RenderInterface {
 
 void Rocket_Rocket_f() {
     std::string action = CG_Argv(1);
-    Rocket_DocumentAction(action.c_str(), CG_Argv(2) );
+    Rocket_DocumentAction(action.c_str(), CG_Argv(2));
 }
 
 void Rocket_RocketDebug_f() {
@@ -264,10 +264,10 @@ void Rocket_RocketDebug_f() {
         init = true;
     }
 
-    Rocket::Debugger::SetVisible(!Rocket::Debugger::IsVisible() );
+    Rocket::Debugger::SetVisible(!Rocket::Debugger::IsVisible());
 
-    if (Rocket::Debugger::IsVisible() ) {
-        if (!Q_stricmp(CG_Argv(1), "hud") ) {
+    if (Rocket::Debugger::IsVisible()) {
+        if (!Q_stricmp(CG_Argv(1), "hud")) {
             Rocket::Debugger::SetContext(hudContext);
         } else {
             Rocket::Debugger::SetContext(menuContext);
@@ -299,7 +299,7 @@ void Rocket_Init() {
     Rocket::Core::SetSystemInterface(&systemInterface);
     Rocket::Core::SetRenderInterface(&renderInterface);
 
-    if (!Rocket::Core::Initialise() ) {
+    if (!Rocket::Core::Initialise()) {
         Com_Printf("Could not init libRocket\n");
         return;
     }
@@ -322,7 +322,7 @@ void Rocket_Init() {
     Rocket_InitKeys();
 
     // Create the menu context
-    menuContext = Rocket::Core::CreateContext("menuContext", Rocket::Core::Vector2i(cgs.glconfig.vidWidth, cgs.glconfig.vidHeight) );
+    menuContext = Rocket::Core::CreateContext("menuContext", Rocket::Core::Vector2i(cgs.glconfig.vidWidth, cgs.glconfig.vidHeight));
 
     // Add the listener so we know where to give mouse/keyboard control to
     menuContext->GetRootElement()->AddEventListener("show", &fm);
@@ -331,25 +331,25 @@ void Rocket_Init() {
     menuContext->GetRootElement()->AddEventListener("load", &fm);
 
     // Create the HUD context
-    hudContext = Rocket::Core::CreateContext("hudContext", Rocket::Core::Vector2i(cgs.glconfig.vidWidth, cgs.glconfig.vidHeight) );
+    hudContext = Rocket::Core::CreateContext("hudContext", Rocket::Core::Vector2i(cgs.glconfig.vidWidth, cgs.glconfig.vidHeight));
 
     // Add custom client elements
-    Rocket::Core::Factory::RegisterElementInstancer("datagrid", new Rocket::Core::ElementInstancerGeneric< SelectableDataGrid >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("progressbar", new Rocket::Core::ElementInstancerGeneric< RocketProgressBar >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("dataselect", new Rocket::Core::ElementInstancerGeneric< RocketDataSelect >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("console_text", new Rocket::Core::ElementInstancerGeneric< RocketConsoleTextElement >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("datasource_single", new Rocket::Core::ElementInstancerGeneric< RocketDataSourceSingle >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("datasource", new Rocket::Core::ElementInstancerGeneric< RocketDataSource >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("circlemenu", new Rocket::Core::ElementInstancerGeneric< RocketCircleMenu >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("keybind", new Rocket::Core::ElementInstancerGeneric< RocketKeyBinder >() )->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("datagrid", new Rocket::Core::ElementInstancerGeneric< SelectableDataGrid >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("progressbar", new Rocket::Core::ElementInstancerGeneric< RocketProgressBar >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("dataselect", new Rocket::Core::ElementInstancerGeneric< RocketDataSelect >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("console_text", new Rocket::Core::ElementInstancerGeneric< RocketConsoleTextElement >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("datasource_single", new Rocket::Core::ElementInstancerGeneric< RocketDataSourceSingle >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("datasource", new Rocket::Core::ElementInstancerGeneric< RocketDataSource >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("circlemenu", new Rocket::Core::ElementInstancerGeneric< RocketCircleMenu >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("keybind", new Rocket::Core::ElementInstancerGeneric< RocketKeyBinder >())->RemoveReference();
     // Rocket::Core::Factory::RegisterElementInstancer( "body", new Rocket::Core::ElementInstancerGeneric< RocketElementDocument >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("chatfield", new Rocket::Core::ElementInstancerGeneric< RocketChatField >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("input", new Rocket::Core::ElementInstancerGeneric< CvarElementFormControlInput >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("select", new Rocket::Core::ElementInstancerGeneric< CvarElementFormControlSelect >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("if", new Rocket::Core::ElementInstancerGeneric< RocketConditionalElement >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("colorinput", new Rocket::Core::ElementInstancerGeneric< RocketColorInput >() )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("include", new Rocket::Core::ElementInstancerGeneric< RocketIncludeElement > () )->RemoveReference();
-    Rocket::Core::Factory::RegisterElementInstancer("inlinecvar", new Rocket::Core::ElementInstancerGeneric< RocketCvarInlineElement > () )->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("chatfield", new Rocket::Core::ElementInstancerGeneric< RocketChatField >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("input", new Rocket::Core::ElementInstancerGeneric< CvarElementFormControlInput >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("select", new Rocket::Core::ElementInstancerGeneric< CvarElementFormControlSelect >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("if", new Rocket::Core::ElementInstancerGeneric< RocketConditionalElement >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("colorinput", new Rocket::Core::ElementInstancerGeneric< RocketColorInput >())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("include", new Rocket::Core::ElementInstancerGeneric< RocketIncludeElement > ())->RemoveReference();
+    Rocket::Core::Factory::RegisterElementInstancer("inlinecvar", new Rocket::Core::ElementInstancerGeneric< RocketCvarInlineElement > ())->RemoveReference();
 
     whiteShader = trap_R_RegisterShader("white", RSF_DEFAULT);
 }
@@ -388,7 +388,7 @@ void Rocket_Shutdown() {
 
     dataSourceMap.clear();
 
-    while (!eventQueue.empty() ) {
+    while (!eventQueue.empty()) {
         delete eventQueue.front();
         eventQueue.pop();
     }
@@ -443,7 +443,7 @@ Rocket::Core::String Rocket_QuakeToRML(const char* in, int parseFlags = 0) {
         return "";
     }
 
-    for (const auto& token : Color::Parser(in, Color::Color() ) ) {
+    for (const auto& token : Color::Parser(in, Color::Color())) {
         if (token.Type() == Color::Token::CHARACTER) {
             char c = *token.Begin();
             if (c == '<') {
@@ -473,7 +473,7 @@ Rocket::Core::String Rocket_QuakeToRML(const char* in, int parseFlags = 0) {
                     out.Append(spanstr);
                     spanHasContent = true;
                 }
-                out.Append(token.Begin(), token.Size() );
+                out.Append(token.Begin(), token.Size());
             }
         } else if (token.Type() == Color::Token::COLOR) {
             if (span && spanHasContent) {
@@ -488,7 +488,7 @@ Rocket::Core::String Rocket_QuakeToRML(const char* in, int parseFlags = 0) {
                 Com_sprintf(rgb, sizeof(rgb), "<span style='color: #%02X%02X%02X;'>",
                             (int) color32.Red(),
                             (int) color32.Green(),
-                            (int) color32.Blue() );
+                            (int) color32.Blue());
 
                 // don't add the span yet, because it might be empty
                 spanstr = rgb;
@@ -532,16 +532,16 @@ Rocket::Core::String Rocket_QuakeToRML(const char* in, int parseFlags = 0) {
             emoticon = out.Substring(openBracket + 1, closeBracket - openBracket - 1);
 
             // Certain characters are invalid
-            if (emoticon.Empty() || IsInvalidEmoticon(emoticon) ) {
+            if (emoticon.Empty() || IsInvalidEmoticon(emoticon)) {
                 currentPosition = closeBracket + 1;
                 continue;
             }
 
             // TODO: Dont hardcode the extension.
-            path =  va("emoticons/%s.crn", emoticon.CString() );
-            if (CG_FileExists(path) ) {
+            path = va("emoticons/%s.crn", emoticon.CString());
+            if (CG_FileExists(path)) {
                 out.Erase(openBracket, closeBracket - openBracket + 1);
-                path = va("<img class='trem-emoticon' src='/emoticons/%s' />", emoticon.CString() );
+                path = va("<img class='trem-emoticon' src='/emoticons/%s' />", emoticon.CString());
                 out.Insert(openBracket, path);
                 currentPosition = openBracket + strlen(path);
             } else {
@@ -565,7 +565,7 @@ void Rocket_SetActiveContext(int catcher) {
         break;
 
     default:
-        if (!(catcher & KEYCATCH_CONSOLE) ) {
+        if (!(catcher & KEYCATCH_CONSOLE)) {
             menuContext->ShowMouseCursor(false);
             trap_SetMouseMode(MouseMode::Deltas);
         }

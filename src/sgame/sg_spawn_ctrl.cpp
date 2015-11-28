@@ -48,13 +48,13 @@ void target_relay_act(gentity_t* self, gentity_t*, gentity_t* activator) {
         return;
     }
 
-    if ( (self->spawnflags & 1) && activator && activator->client &&
-         activator->client->pers.team != TEAM_HUMANS) {
+    if ((self->spawnflags & 1) && activator && activator->client &&
+        activator->client->pers.team != TEAM_HUMANS) {
         return;
     }
 
-    if ( (self->spawnflags & 2) && activator && activator->client &&
-         activator->client->pers.team != TEAM_ALIENS) {
+    if ((self->spawnflags & 2) && activator && activator->client &&
+        activator->client->pers.team != TEAM_ALIENS) {
         return;
     }
 
@@ -91,13 +91,13 @@ void ctrl_relay_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 }
 
 void SP_ctrl_relay(gentity_t* self) {
-    if (Q_stricmp(self->classname, S_CTRL_RELAY) ) { // if anything but ctrl_relay
+    if (Q_stricmp(self->classname, S_CTRL_RELAY)) { // if anything but ctrl_relay
         if (!self->config.wait.time) {
             // check delay for backwards compatibility
             G_SpawnFloat("delay", "0", &self->config.wait.time);
 
             // target delay had previously a default of 1 instead of 0
-            if (!self->config.wait.time && !Q_stricmp(self->classname, "target_delay") ) {
+            if (!self->config.wait.time && !Q_stricmp(self->classname, "target_delay")) {
                 self->config.wait.time = 1;
             }
         }

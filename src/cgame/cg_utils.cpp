@@ -41,12 +41,12 @@ bool CG_ParseColor(byte* c, const char** text_p) {
             return false;
         }
 
-        c[i] = (int)( (float) 0xFF * atof_neg(token, false) );
+        c[i] = (int)((float) 0xFF * atof_neg(token, false));
     }
 
     token = COM_Parse(text_p);
 
-    if (strcmp(token, "}") ) {
+    if (strcmp(token, "}")) {
         CG_Printf(S_ERROR "missing '}'\n");
         return false;
     }
@@ -65,7 +65,7 @@ Gets the name of a shader from the qhandle_t
 const char* CG_GetShaderNameFromHandle(const qhandle_t shader) {
     static char out[MAX_STRING_CHARS];
 
-    trap_R_GetShaderNameFromHandle(shader, out, sizeof(out) );
+    trap_R_GetShaderNameFromHandle(shader, out, sizeof(out));
     return out;
 }
 
@@ -84,7 +84,7 @@ const char* Gettext(const char* msgid) {
 
     index = (index + 1) & 3;
     buf = buffer[index];
-    trap_Gettext(buf, msgid, sizeof(buffer[0]) );
+    trap_Gettext(buf, msgid, sizeof(buffer[0]));
     return buf;
 }
 
@@ -99,7 +99,7 @@ const char* Pgettext(const char* ctxt, const char* msgid) {
 
     index = (index + 1) & 3;
     buf = buffer[index];
-    trap_Pgettext(buf, ctxt, msgid, sizeof(buffer) );
+    trap_Pgettext(buf, ctxt, msgid, sizeof(buffer));
     return buf;
 }
 
@@ -114,7 +114,7 @@ const char* GettextPlural(const char* msgid, const char* msgid2, int number) {
 
     index = (index + 1) & 3;
     buf = buffer[index];
-    trap_GettextPlural(buf, msgid, msgid2, number, sizeof(buffer[0]) );
+    trap_GettextPlural(buf, msgid, msgid2, number, sizeof(buffer[0]));
     return buf;
 }
 
@@ -165,14 +165,14 @@ Color::Color UI_GetChatColour(int which, int team) {
 void CG_ReadableSize(char* buf, int bufsize, int value) {
     if (value > 1024 * 1024 * 1024) {
         // gigs
-        Com_sprintf(buf, bufsize, "%d", value / (1024 * 1024 * 1024) );
+        Com_sprintf(buf, bufsize, "%d", value / (1024 * 1024 * 1024));
         Com_sprintf(buf + strlen(buf), bufsize - strlen(buf), ".%02d GB",
-                    (value % (1024 * 1024 * 1024) ) * 100 / (1024 * 1024 * 1024) );
+                    (value % (1024 * 1024 * 1024)) * 100 / (1024 * 1024 * 1024));
     } else if (value > 1024 * 1024) {
         // megs
-        Com_sprintf(buf, bufsize, "%d", value / (1024 * 1024) );
+        Com_sprintf(buf, bufsize, "%d", value / (1024 * 1024));
         Com_sprintf(buf + strlen(buf), bufsize - strlen(buf), ".%02d MB",
-                    (value % (1024 * 1024) ) * 100 / (1024 * 1024) );
+                    (value % (1024 * 1024)) * 100 / (1024 * 1024));
     } else if (value > 1024) {
         // kilos
         Com_sprintf(buf, bufsize, "%d KB", value / 1024);

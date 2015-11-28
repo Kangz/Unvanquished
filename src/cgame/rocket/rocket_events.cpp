@@ -47,12 +47,12 @@ void Rocket_ProcessEvent(Rocket::Core::Event& event, Rocket::Core::String& value
 
     Rocket::Core::StringUtilities::ExpandString(list, value, ';');
     for (size_t i = 0; i < list.size(); ++i) {
-        eventQueue.push(new RocketEvent_t(event, list[i]) );
+        eventQueue.push(new RocketEvent_t(event, list[i]));
     }
 }
 
 bool Rocket_GetEvent(std::string& cmdText) {
-    if (!eventQueue.empty() ) {
+    if (!eventQueue.empty()) {
         cmdText = eventQueue.front()->cmd.CString();
         activeElement = eventQueue.front()->targetElement;
         return true;
@@ -71,12 +71,12 @@ void Rocket_DeleteEvent() {
 void Rocket_GetEventParameters(char* params, int /*length*/) {
     RocketEvent_t* event = eventQueue.front();
     *params = '\0';
-    if (!eventQueue.empty() ) {
+    if (!eventQueue.empty()) {
         int index = 0;
         Rocket::Core::String key;
         Rocket::Core::String value;
 
-        while (event->Parameters.Iterate(index, key, value) ) {
+        while (event->Parameters.Iterate(index, key, value)) {
             Info_SetValueForKeyRocket(params, key.CString(), value.CString(), true);
         }
     }

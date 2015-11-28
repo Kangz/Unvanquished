@@ -190,7 +190,7 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
             if (text[0] == '/' && text[1] == '*') {
                 // two increments, avoiding matching /*/
                 ++text;
-                while (*++text && !(text[0] == '*' && text[1] == '/') ) {
+                while (*++text && !(text[0] == '*' && text[1] == '/')) {
                 }
 
                 if (!*text) {
@@ -212,8 +212,8 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
         while (*text < 0 || * text > ' ') {
             if (ignoreQuotes || text[0] != '"') {
                 // copy until next space, quote or EOT, handling backslashes
-                while (*text < 0 || (*text > ' ' && *text != '"') ) {
-                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' ') ) ) {
+                while (*text < 0 || (*text > ' ' && *text != '"')) {
+                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' '))) {
                         break;
                     }
 
@@ -226,7 +226,7 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
                 ++text;
 
                 while (*text && *text != '"') {
-                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' ') ) ) {
+                    if (*text == '\\' && (++text, (*text >= 0 && *text < ' '))) {
                         break;
                     }
 

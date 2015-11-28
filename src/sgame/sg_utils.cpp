@@ -99,13 +99,13 @@ static int G_FindConfigstringIndex(const char* name, int start, int max, bool cr
     }
 
     for (i = 1; i < max; i++) {
-        trap_GetConfigstring(start + i, s, sizeof(s) );
+        trap_GetConfigstring(start + i, s, sizeof(s));
 
         if (!s[0]) {
             break;
         }
 
-        if (!strcmp(s, name) ) {
+        if (!strcmp(s, name)) {
             return i;
         }
     }
@@ -298,7 +298,7 @@ void G_KillBrushModel(gentity_t* ent, gentity_t* activator) {
         VectorAdd(e->r.currentOrigin, e->r.mins, mins);
         VectorAdd(e->r.currentOrigin, e->r.maxs, maxs);
 
-        if (!trap_EntityContact(mins, maxs, ent) ) {
+        if (!trap_EntityContact(mins, maxs, ent)) {
             continue;
         }
 
@@ -471,11 +471,11 @@ static const char* addr4parse(const char* str, addr_t* addr) {
     int i;
     int octet = 0;
     int num = 0;
-    memset(addr, 0, sizeof(addr_t) );
+    memset(addr, 0, sizeof(addr_t));
     addr->type = IPv4;
 
     for (i = 0; octet < 4; i++) {
-        if (isdigit(str[i]) ) {
+        if (isdigit(str[i])) {
             num = num * 10 + str[i] - '0';
         } else {
             if (num < 0 || num > 255) {
@@ -509,7 +509,7 @@ static const char* addr6parse(const char* str, addr_t* addr) {
     /* 8 hexadectets unless :: is present */
     for (i = 0; before + after <= 8; i++) {
         // num = num << 4 | str[ i ] - '0';
-        if (isdigit(str[i]) ) {
+        if (isdigit(str[i])) {
             num = num * 16 + str[i] - '0';
         } else if (str[i] >= 'A' && str[i] <= 'F') {
             num = num * 16 + 10 + str[i] - 'A';
@@ -565,7 +565,7 @@ static const char* addr6parse(const char* str, addr_t* addr) {
         return nullptr;
     }
 
-    memset(addr, 0, sizeof(addr_t) );
+    memset(addr, 0, sizeof(addr_t));
     addr->type = IPv6;
 
     if (before) {
@@ -583,17 +583,17 @@ bool G_AddressParse(const char* str, addr_t* addr) {
     const char* p;
     int max;
 
-    if (strchr(str, ':') ) {
+    if (strchr(str, ':')) {
         p = addr6parse(str, addr);
         max = 64;
-    } else if (strchr(str, '.') ) {
+    } else if (strchr(str, '.')) {
         p = addr4parse(str, addr);
         max = 32;
     } else {
         return false;
     }
 
-    Q_strncpyz(addr->str, str, sizeof(addr->str) );
+    Q_strncpyz(addr->str, str, sizeof(addr->str));
 
     if (!p) {
         return false;
@@ -649,7 +649,7 @@ bool G_AddressCompare(const addr_t* a, const addr_t* b) {
     }
 
     if (netmask) {
-        netmask = ( (1 << netmask) - 1) << (8 - netmask);
+        netmask = ((1 << netmask) - 1) << (8 - netmask);
         return (a->addr[i] & netmask) == (b->addr[i] & netmask);
     }
 
@@ -718,7 +718,7 @@ gentity_t* G_SpawnFire(vec3_t origin, vec3_t normal, gentity_t* fireStarter) {
 
     // don't spawn a fire inside another fire
     fire = nullptr;
-    while ( (fire = G_IterateEntitiesWithinRadius(fire, origin, FIRE_MIN_DISTANCE) ) ) {
+    while ((fire = G_IterateEntitiesWithinRadius(fire, origin, FIRE_MIN_DISTANCE))) {
         if (fire->s.eType == ET_FIRE) {
             return nullptr;
         }
@@ -728,8 +728,8 @@ gentity_t* G_SpawnFire(vec3_t origin, vec3_t normal, gentity_t* fireStarter) {
 
     // create a fire entity
     fire->classname = "fire";
-    fire->s.eType   = ET_FIRE;
-    fire->clipmask  = 0;
+    fire->s.eType = ET_FIRE;
+    fire->clipmask = 0;
 
     fire->entity = new FireEntity(FireEntity::Params {fire});
     fire->entity->Ignite(fireStarter);
@@ -805,7 +805,7 @@ bool G_IsPlayableTeam(team_t team) {
 }
 
 bool G_IsPlayableTeam(int team) {
-    return G_IsPlayableTeam( (team_t)team);
+    return G_IsPlayableTeam((team_t)team);
 }
 
 team_t G_IterateTeams(team_t team) {

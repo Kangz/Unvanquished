@@ -84,14 +84,14 @@ bool Q_UTF8_ContByte(char c) {
 }
 
 static bool getbit(const unsigned char* p, int pos) {
-    p   += pos / 8;
+    p += pos / 8;
     pos %= 8;
 
     return (*p & (1 << (7 - pos))) != 0;
 }
 
 static void setbit(unsigned char* p, int pos, bool on) {
-    p   += pos / 8;
+    p += pos / 8;
     pos %= 8;
 
     if (on) {
@@ -116,7 +116,7 @@ static void shiftbitsright(unsigned char* p, unsigned long num, unsigned long by
     }
 
     step = by / 8;
-    off  = by % 8;
+    off = by % 8;
 
     for (e = p + (num + 7) / 8 - 1; e > p + step; e--) {
         *e = (*(e - step) >> off) | (*(e - step - 1) << (8 - off));
@@ -136,7 +136,7 @@ unsigned long Q_UTF8_CodePoint(const char* str) {
     unsigned long codepoint = 0;
     unsigned char* p = (unsigned char*) &codepoint;
 
-    if (size > sizeof(codepoint) ) {
+    if (size > sizeof(codepoint)) {
         size = sizeof(codepoint);
     } else if (size < 1) {
         size = 1;
@@ -212,16 +212,16 @@ int Q_UTF8_Store(const char* s) {
         return 0;
     }
 
-    if (!(us[0] & 0x80) ) { // 0xxxxxxx
+    if (!(us[0] & 0x80)) { // 0xxxxxxx
         r = us[0];
-    } else if ( (us[0] & 0xE0) == 0xC0) { // 110xxxxx
+    } else if ((us[0] & 0xE0) == 0xC0) { // 110xxxxx
         r = us[0];
         r |= (uint32_t) us[1] << 8;
-    } else if ( (us[0] & 0xF0) == 0xE0) { // 1110xxxx
+    } else if ((us[0] & 0xF0) == 0xE0) { // 1110xxxx
         r = us[0];
         r |= (uint32_t) us[1] << 8;
         r |= (uint32_t) us[2] << 16;
-    } else if ( (us[0] & 0xF8) == 0xF0) { // 11110xxx
+    } else if ((us[0] & 0xF8) == 0xF0) { // 11110xxx
         r = us[0];
         r |= (uint32_t) us[1] << 8;
         r |= (uint32_t) us[2] << 16;

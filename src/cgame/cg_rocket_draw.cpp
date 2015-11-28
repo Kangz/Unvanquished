@@ -143,7 +143,7 @@ class HudElement : public Rocket::Core::Element {
         }
 
         void GetColor(const Rocket::Core::String& property, Color::Color& color) {
-            color = Color::Adapt(GetProperty<Rocket::Core::Colourb>(property) );
+            color = Color::Adapt(GetProperty<Rocket::Core::Colourb>(property));
         }
 
     protected:
@@ -176,7 +176,7 @@ class TextHudElement : public HudElement {
                                                                          this,
                                                                          "#text",
                                                                          "#text",
-                                                                         Rocket::Core::XMLAttributes() ) );
+                                                                         Rocket::Core::XMLAttributes()));
             AppendChild(textElement);
         }
 
@@ -195,7 +195,7 @@ class AmmoHudElement : public TextHudElement {
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList& changed_attributes) {
             TextHudElement::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("type") != changed_attributes.end() ) {
+            if (changed_attributes.find("type") != changed_attributes.end()) {
                 const Rocket::Core::String& type = GetAttribute<Rocket::Core::String>("type", "");
                 showTotalAmmo = type == "total";
             }
@@ -224,7 +224,7 @@ class AmmoHudElement : public TextHudElement {
             default:
                 if (showTotalAmmo) {
                     int maxAmmo = BG_Weapon(weapon)->maxAmmo;
-                    if (value == cg.snap->ps.ammo + (cg.snap->ps.clips * maxAmmo) ) {
+                    if (value == cg.snap->ps.ammo + (cg.snap->ps.clips * maxAmmo)) {
                         return;
                     }
                     value = cg.snap->ps.ammo + (cg.snap->ps.clips * maxAmmo);
@@ -247,11 +247,11 @@ class AmmoHudElement : public TextHudElement {
             }
 
             if (!bp) {
-                SetText(va("%d", value) );
+                SetText(va("%d", value));
             } else if (valueMarked > 0) {
-                SetText(va("%d+%d", value, valueMarked) );
+                SetText(va("%d+%d", value, valueMarked));
             } else {
-                SetText(va("%d", value) );
+                SetText(va("%d", value));
             }
         }
 
@@ -273,7 +273,7 @@ class ClipsHudElement : public TextHudElement {
             int value;
             playerState_t* ps = &cg.snap->ps;
 
-            switch (BG_PrimaryWeapon(ps->stats) ) {
+            switch (BG_PrimaryWeapon(ps->stats)) {
             case WP_NONE:
             case WP_BLASTER:
             case WP_ABUILD:
@@ -289,7 +289,7 @@ class ClipsHudElement : public TextHudElement {
                 value = ps->clips;
 
                 if (value > -1 && value != clips) {
-                    SetText(va("%d", value) );
+                    SetText(va("%d", value));
                     clips = value;
                 }
 
@@ -352,7 +352,7 @@ class FpsHudElement : public TextHudElement {
                 fps = 0;
             }
 
-            SetText(va("%d", fps) );
+            SetText(va("%d", fps));
         }
     private:
         bool shouldShowFps;
@@ -372,7 +372,7 @@ class CrosshairIndicatorHudElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (changed_properties.find("color") != changed_properties.end() ) {
+            if (changed_properties.find("color") != changed_properties.end()) {
                 GetColor("color", color);
             }
         }
@@ -386,10 +386,10 @@ class CrosshairIndicatorHudElement : public HudElement {
             weaponInfo_t* wi;
             bool onRelevantEntity;
 
-            if ( (!cg_drawCrosshairHit.integer && !cg_drawCrosshairFriendFoe.integer) ||
-                 cg.snap->ps.persistant[PERS_SPECSTATE] != SPECTATOR_NOT ||
-                 cg.snap->ps.pm_type == PM_INTERMISSION ||
-                 cg.renderingThirdPerson) {
+            if ((!cg_drawCrosshairHit.integer && !cg_drawCrosshairFriendFoe.integer) ||
+                cg.snap->ps.persistant[PERS_SPECSTATE] != SPECTATOR_NOT ||
+                cg.snap->ps.pm_type == PM_INTERMISSION ||
+                cg.renderingThirdPerson) {
                 return;
             }
 
@@ -405,7 +405,7 @@ class CrosshairIndicatorHudElement : public HudElement {
 
             // set base color (friend/foe detection)
             if (cg_drawCrosshairFriendFoe.integer >= CROSSHAIR_ALWAYSON ||
-                (cg_drawCrosshairFriendFoe.integer >= CROSSHAIR_RANGEDONLY && BG_Weapon(weapon)->longRanged) ) {
+                (cg_drawCrosshairFriendFoe.integer >= CROSSHAIR_RANGEDONLY && BG_Weapon(weapon)->longRanged)) {
                 if (cg.crosshairFoe) {
                     baseColor = Color::Red;
                     baseColor.SetAlpha(color.Alpha() * 0.75f);
@@ -425,7 +425,7 @@ class CrosshairIndicatorHudElement : public HudElement {
 
             // add hit color
             if (cg_drawCrosshairHit.integer && cg.hitTime + CROSSHAIR_INDICATOR_HITFADE > cg.time) {
-                dim = ( (cg.hitTime + CROSSHAIR_INDICATOR_HITFADE) - cg.time) / (float)CROSSHAIR_INDICATOR_HITFADE;
+                dim = ((cg.hitTime + CROSSHAIR_INDICATOR_HITFADE) - cg.time) / (float)CROSSHAIR_INDICATOR_HITFADE;
                 drawColor = Color::Blend(baseColor, Color::White, dim);
             } else if (!onRelevantEntity) {
                 return;
@@ -460,7 +460,7 @@ class CrosshairHudElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (changed_properties.find("color") != changed_properties.end() ) {
+            if (changed_properties.find("color") != changed_properties.end()) {
                 GetColor("color", color);
             }
         }
@@ -562,11 +562,11 @@ void CG_AddSpeed() {
         windowTime = SPEEDOMETER_NUM_SAMPLES * 1000;
     }
 
-    if ( (newSpeedGteMaxSpeed = (speed >= speedSamples[maxSpeedSample]) ) ) {
+    if ((newSpeedGteMaxSpeed = (speed >= speedSamples[maxSpeedSample]))) {
         maxSpeedSample = oldestSpeedSample;
     }
 
-    if ( (newSpeedGteMaxSpeedInWindow = (speed >= speedSamples[maxSpeedSampleInWindow]) ) ) {
+    if ((newSpeedGteMaxSpeedInWindow = (speed >= speedSamples[maxSpeedSampleInWindow]))) {
         maxSpeedSampleInWindow = oldestSpeedSample;
     }
 
@@ -586,7 +586,7 @@ void CG_AddSpeed() {
     }
 
     if (!newSpeedGteMaxSpeedInWindow && (maxSpeedSampleInWindow == oldestSpeedSample ||
-                                         cg.time - speedSampleTimes[maxSpeedSampleInWindow] > windowTime) ) {
+                                         cg.time - speedSampleTimes[maxSpeedSampleInWindow] > windowTime)) {
         int i;
 
         do {
@@ -620,13 +620,13 @@ class SpeedGraphElement : public HudElement {
                                                                              this,
                                                                              "#text",
                                                                              "span",
-                                                                             xml) );
+                                                                             xml));
             maxSpeedElement->SetClass("speed_max", true);
             currentSpeedElement = dynamic_cast< Rocket::Core::ElementText* >(Rocket::Core::Factory::InstanceElement(
                                                                                  this,
                                                                                  "#text",
                                                                                  "span",
-                                                                                 xml) );
+                                                                                 xml));
             currentSpeedElement->SetClass("speed_current", true);
             AppendChild(maxSpeedElement);
             AppendChild(currentSpeedElement);
@@ -634,11 +634,11 @@ class SpeedGraphElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (changed_properties.find("color") != changed_properties.end() ) {
+            if (changed_properties.find("color") != changed_properties.end()) {
                 GetColor("color", color);
             }
 
-            if (changed_properties.find("background-color") != changed_properties.end() ) {
+            if (changed_properties.find("background-color") != changed_properties.end()) {
                 GetColor("background-color", backColor);
             }
         }
@@ -684,7 +684,7 @@ class SpeedGraphElement : public HudElement {
                     if (val < SPEED_MED) {
                         color = Color::Blend(slow, medium, val / SPEED_MED);
                     } else if (val < SPEED_FAST) {
-                        color = Color::Blend(medium, fast, (val - SPEED_MED) / (SPEED_FAST - SPEED_MED) );
+                        color = Color::Blend(medium, fast, (val - SPEED_MED) / (SPEED_FAST - SPEED_MED));
                     } else {
                         color = fast;
                     }
@@ -715,8 +715,8 @@ class SpeedGraphElement : public HudElement {
                 }
                 // HACK: Put extra spaces to separate the children because setting them to block makes them disappear.
                 // TODO: Figure out why setting these two elements to block makes them disappear.
-                maxSpeedElement->SetText(va("%d   ", (int) speedSamples[maxSpeedSampleInWindow]) );
-                currentSpeedElement->SetText(va("%d", (int) val) );
+                maxSpeedElement->SetText(va("%d   ", (int) speedSamples[maxSpeedSampleInWindow]));
+                currentSpeedElement->SetText(va("%d", (int) val));
             }
         }
 
@@ -741,7 +741,7 @@ class CreditsValueElement : public TextHudElement {
             int value = ps->persistant[PERS_CREDIT];
             if (credits != value) {
                 credits = value;
-                SetText(va("%d", credits) );
+                SetText(va("%d", credits));
             }
         }
 
@@ -764,7 +764,7 @@ class EvosValueElement : public TextHudElement {
 
             if (evos != value) {
                 evos = value;
-                SetText(va("%1.1f", evos) );
+                SetText(va("%1.1f", evos));
             }
         }
 
@@ -786,7 +786,7 @@ class StaminaValueElement : public TextHudElement {
             if (stamina != value) {
                 stamina = value;
                 int percent = 100 * (stamina / (float) STAMINA_MAX);
-                SetText(va("%d", percent) );
+                SetText(va("%d", percent));
             }
         }
 
@@ -812,7 +812,7 @@ class WeaponIconElement : public HudElement {
             if (newWeapon != weapon) {
                 weapon = newWeapon;
                 // don't display if dead
-                if ( (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 || weapon == WP_NONE) && !IsVisible() ) {
+                if ((cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 || weapon == WP_NONE) && !IsVisible()) {
                     SetProperty("display", "none");
                     return;
                 }
@@ -828,7 +828,7 @@ class WeaponIconElement : public HudElement {
                     return;
                 }
 
-                SetInnerRML(va("<img src='/%s' />", CG_GetShaderNameFromHandle(cg_weapons[weapon].weaponIcon) ) );
+                SetInnerRML(va("<img src='/%s' />", CG_GetShaderNameFromHandle(cg_weapons[weapon].weaponIcon)));
                 SetProperty("display", "block");
             }
 
@@ -853,7 +853,7 @@ class WallwalkElement : public HudElement {
 
         void DoOnUpdate() {
             bool wallwalking = cg.snap->ps.stats[STAT_STATE] & SS_WALLCLIMBING;
-            if ( (wallwalking && !isActive) || (!wallwalking && isActive) ) {
+            if ((wallwalking && !isActive) || (!wallwalking && isActive)) {
                 SetActive(wallwalking);
             }
         }
@@ -878,7 +878,7 @@ class UsableBuildableElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (display.Empty() && changed_properties.find("display") != changed_properties.end() ) {
+            if (display.Empty() && changed_properties.find("display") != changed_properties.end()) {
                 display = GetProperty<Rocket::Core::String>("display");
             }
         }
@@ -898,22 +898,22 @@ class UsableBuildableElement : public HudElement {
             if (es->eType == ET_BUILDABLE && BG_Buildable(es->modelindex)->usable &&
                 cg.predictedPlayerState.persistant[PERS_TEAM] == BG_Buildable(es->modelindex)->team) {
                 // hack to prevent showing the usable buildable when you aren't carrying an energy weapon
-                if ( (es->modelindex == BA_H_REACTOR || es->modelindex == BA_H_REPEATER) &&
-                     (!BG_Weapon(cg.snap->ps.weapon)->usesEnergy ||
-                      BG_Weapon(cg.snap->ps.weapon)->infiniteAmmo) ) {
+                if ((es->modelindex == BA_H_REACTOR || es->modelindex == BA_H_REPEATER) &&
+                    (!BG_Weapon(cg.snap->ps.weapon)->usesEnergy ||
+                     BG_Weapon(cg.snap->ps.weapon)->infiniteAmmo)) {
                     cg.nearUsableBuildable = BA_NONE;
                     SetProperty("display", "none");
                     return;
                 }
 
-                if (IsVisible() ) {
+                if (IsVisible()) {
                     return;
                 }
 
                 SetProperty("display", display);
                 cg.nearUsableBuildable = es->modelindex;
             } else {
-                if (IsVisible() ) {
+                if (IsVisible()) {
                     // Clear the old image if there was one.
                     SetProperty("display", "none");
                     cg.nearUsableBuildable = BA_NONE;
@@ -936,7 +936,7 @@ class LocationElement : public HudElement {
             centity_t* locent;
 
             if (cg.intermissionStarted) {
-                if (!location.Empty() ) {
+                if (!location.Empty()) {
                     location = "";
                     SetInnerRML(location);
                 }
@@ -952,7 +952,7 @@ class LocationElement : public HudElement {
             }
 
             if (location != newLocation) {
-                SetInnerRML(Rocket_QuakeToRML(location.CString(), RP_EMOTICONS) );
+                SetInnerRML(Rocket_QuakeToRML(location.CString(), RP_EMOTICONS));
             }
         }
 
@@ -973,10 +973,10 @@ class TimerElement : public TextHudElement {
             int mins, seconds, tens;
             int msec;
 
-            if (!cg_drawTimer.integer && IsVisible() ) {
+            if (!cg_drawTimer.integer && IsVisible()) {
                 SetProperty("display", "none");
                 return;
-            } else if (cg_drawTimer.integer && !IsVisible() ) {
+            } else if (cg_drawTimer.integer && !IsVisible()) {
                 SetProperty("display", "block");
             }
 
@@ -989,7 +989,7 @@ class TimerElement : public TextHudElement {
             seconds -= tens * 10;
 
             if (seconds_ != seconds || mins != mins_ || tens != tens_) {
-                SetText(va("%d:%d%d", mins, tens, seconds) );
+                SetText(va("%d:%d%d", mins, tens, seconds));
                 seconds_ = seconds;
                 mins_ = mins;
                 tens_ = tens;
@@ -1094,7 +1094,7 @@ static void CG_Rocket_DrawDisconnect() {
     }
 
     // blink the icon
-    if ( (cg.time >> 9) & 1) {
+    if ((cg.time >> 9) & 1) {
         return;
     }
 
@@ -1102,7 +1102,7 @@ static void CG_Rocket_DrawDisconnect() {
     y = 480 - 48;
 
     CG_DrawPic(x, y, 48, 48, trap_R_RegisterShader("gfx/2d/net",
-                                                   RSF_DEFAULT) );
+                                                   RSF_DEFAULT));
 }
 
 #define MAX_LAGOMETER_PING  900
@@ -1118,7 +1118,7 @@ class LagometerElement : public TextHudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (changed_properties.find("background-color") != changed_properties.end() ) {
+            if (changed_properties.find("background-color") != changed_properties.end()) {
                 GetColor("background-color", adjustedColor);
             }
         }
@@ -1237,9 +1237,9 @@ class LagometerElement : public TextHudElement {
         void DoOnUpdate() {
             const char* ping;
 
-            if ( (cg.snap && cg.snap->ps.pm_type == PM_INTERMISSION)
-                 || !cg_lagometer.integer
-                 || cg.demoPlayback) {
+            if ((cg.snap && cg.snap->ps.pm_type == PM_INTERMISSION)
+                || !cg_lagometer.integer
+                || cg.demoPlayback) {
                 if (shouldDrawLagometer) {
                     SetText("");
                     shouldDrawLagometer = false;
@@ -1284,7 +1284,7 @@ static void CG_ScanForCrosshairEntity() {
     }
 
     cg.crosshairFriend = false;
-    cg.crosshairFoe    = false;
+    cg.crosshairFoe = false;
 
     VectorCopy(cg.refdef.vieworg, start);
     VectorMA(start, 131072, cg.refdef.viewaxis[0], end);
@@ -1380,7 +1380,7 @@ class CrosshairNamesElement : public HudElement {
 
             if (alpha != alpha_) {
                 alpha_ = alpha;
-                SetProperty("opacity", va("%f", alpha) );
+                SetProperty("opacity", va("%f", alpha));
             }
 
             if (cg_drawEntityInfo.integer) {
@@ -1404,13 +1404,13 @@ class CrosshairNamesElement : public HudElement {
 
             if (name != name_) {
                 name_ = name;
-                SetInnerRML(Rocket_QuakeToRML(name.CString(), RP_EMOTICONS) );
+                SetInnerRML(Rocket_QuakeToRML(name.CString(), RP_EMOTICONS));
             }
         }
 
     private:
         void Clear() {
-            if (!name_.Empty() ) {
+            if (!name_.Empty()) {
                 name_ = "";
                 SetInnerRML("");
             }
@@ -1446,7 +1446,7 @@ class MomentumElement : public TextHudElement {
             momentum = cg.predictedPlayerState.persistant[PERS_MOMENTUM] / 10.0f;
             if (momentum != momentum_) {
                 momentum_ = momentum;
-                SetText(va("%.1f", momentum_) );
+                SetText(va("%.1f", momentum_));
             }
         }
 
@@ -1468,7 +1468,7 @@ class LevelshotElement : public HudElement {
         }
 
         void DoOnUpdate() {
-            if ( (rocketInfo.data.mapIndex < 0 || rocketInfo.data.mapIndex >= rocketInfo.data.mapCount) ) {
+            if ((rocketInfo.data.mapIndex < 0 || rocketInfo.data.mapIndex >= rocketInfo.data.mapCount)) {
                 Clear();
                 return;
             }
@@ -1477,7 +1477,7 @@ class LevelshotElement : public HudElement {
                 mapIndex = rocketInfo.data.mapIndex;
                 SetInnerRML(va("<img class='levelshot' src='/meta/%s/%s' />",
                                rocketInfo.data.mapList[mapIndex].mapLoadName,
-                               rocketInfo.data.mapList[mapIndex].mapLoadName) );
+                               rocketInfo.data.mapList[mapIndex].mapLoadName));
             }
         }
 
@@ -1508,13 +1508,13 @@ class LevelshotLoadingElement : public HudElement {
             const char* newMap = Info_ValueForKey(CG_ConfigString(CS_SERVERINFO), "mapname");
             if (map != newMap) {
                 map = newMap;
-                SetInnerRML(va("<img class='levelshot' src='/meta/%s/%s' />", newMap, newMap) );
+                SetInnerRML(va("<img class='levelshot' src='/meta/%s/%s' />", newMap, newMap));
             }
         }
 
     private:
         void Clear() {
-            if (!map.Empty() ) {
+            if (!map.Empty()) {
                 map = "";
                 SetInnerRML("");
             }
@@ -1542,10 +1542,10 @@ class CenterPrintElement : public HudElement {
             }
 
             if (cg.time == cg.centerPrintTime) {
-                SetInnerRML(Rocket_QuakeToRML(cg.centerPrint, RP_EMOTICONS) );
+                SetInnerRML(Rocket_QuakeToRML(cg.centerPrint, RP_EMOTICONS));
             }
 
-            SetProperty("opacity", va("%f", CG_FadeAlpha(cg.centerPrintTime, CENTER_PRINT_DURATION) ) );
+            SetProperty("opacity", va("%f", CG_FadeAlpha(cg.centerPrintTime, CENTER_PRINT_DURATION)));
         }
 };
 
@@ -1565,7 +1565,7 @@ class BeaconAgeElement : public TextHudElement {
 
                 if (alpha_ != cg.beaconRocket.ageAlpha) {
                     alpha_ = cg.beaconRocket.ageAlpha;
-                    SetProperty("opacity", va("%f", alpha_) );
+                    SetProperty("opacity", va("%f", alpha_));
                 }
             } else {
                 Clear();
@@ -1600,7 +1600,7 @@ class BeaconDistanceElement : public TextHudElement {
 
                 if (alpha_ != cg.beaconRocket.distanceAlpha) {
                     alpha_ = cg.beaconRocket.distanceAlpha;
-                    SetProperty("opacity", va("%f", alpha_) );
+                    SetProperty("opacity", va("%f", alpha_));
                 }
             } else {
                 Clear();
@@ -1635,7 +1635,7 @@ class BeaconInfoElement : public TextHudElement {
 
                 if (alpha_ != cg.beaconRocket.infoAlpha) {
                     alpha_ = cg.beaconRocket.infoAlpha;
-                    SetProperty("opacity", va("%f", alpha_) );
+                    SetProperty("opacity", va("%f", alpha_));
                 }
             } else {
                 Clear();
@@ -1665,12 +1665,12 @@ class BeaconNameElement : public HudElement {
             if (cg.beaconRocket.nameAlpha > 0) {
                 if (name != cg.beaconRocket.name) {
                     name = cg.beaconRocket.name;
-                    SetInnerRML(Rocket_QuakeToRML(name.CString(), RP_EMOTICONS) );
+                    SetInnerRML(Rocket_QuakeToRML(name.CString(), RP_EMOTICONS));
                 }
 
                 if (alpha_ != cg.beaconRocket.nameAlpha) {
                     alpha_ = cg.beaconRocket.nameAlpha;
-                    SetProperty("opacity", va("%f", alpha_) );
+                    SetProperty("opacity", va("%f", alpha_));
                 }
             } else {
                 Clear();
@@ -1697,7 +1697,7 @@ class BeaconIconElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (changed_properties.find("color") != changed_properties.end() ) {
+            if (changed_properties.find("color") != changed_properties.end()) {
                 GetColor("color", color_);
             }
         }
@@ -1737,12 +1737,12 @@ class BeaconOwnerElement : public HudElement {
             if (cg.beaconRocket.ownerAlpha > 0) {
                 if (owner != cg.beaconRocket.owner) {
                     owner = cg.beaconRocket.owner;
-                    SetInnerRML(Rocket_QuakeToRML(owner.CString(), RP_EMOTICONS) );
+                    SetInnerRML(Rocket_QuakeToRML(owner.CString(), RP_EMOTICONS));
                 }
 
                 if (alpha_ != cg.beaconRocket.ownerAlpha) {
                     alpha_ = cg.beaconRocket.ownerAlpha;
-                    SetProperty("opacity", va("%f", alpha_) );
+                    SetProperty("opacity", va("%f", alpha_));
                 }
             } else {
                 Clear();
@@ -1776,7 +1776,7 @@ class PredictedMineEfficiencyElement : public HudElement {
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList& changed_properties) {
             HudElement::OnPropertyChange(changed_properties);
-            if (display < 0 && changed_properties.find("display") != changed_properties.end() ) {
+            if (display < 0 && changed_properties.find("display") != changed_properties.end()) {
                 display = GetProperty<int>("display");
             }
         }
@@ -1803,7 +1803,7 @@ class PredictedMineEfficiencyElement : public HudElement {
             } else {
                 if (!IsVisible() && !shouldBeVisible) {
                     SetProperty("display", Rocket::Core::Property(display,
-                                                                  Rocket::Core::Property::KEYWORD) );
+                                                                  Rocket::Core::Property::KEYWORD));
                     shouldBeVisible = true;
                 }
             }
@@ -1821,19 +1821,19 @@ class PredictedMineEfficiencyElement : public HudElement {
                     if (delta < 0) {
                         color = Color::Red;
                         // Error sign
-                        msg = va("<span class='material-icon error'>&#xE000;</span> You are losing efficiency. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str() );
+                        msg = va("<span class='material-icon error'>&#xE000;</span> You are losing efficiency. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str());
                     } else if (delta < 10) {
                         color = Color::Orange;
                         // Warning sign
-                        msg = va("<span class='material-icon warning'>&#xE002;</span> Minimal efficency gain. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str() );
+                        msg = va("<span class='material-icon warning'>&#xE002;</span> Minimal efficency gain. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str());
                     } else if (delta < 50) {
                         color = Color::Yellow;
-                        msg = va("<span class='material-icon warning'>&#xE002;</span> Average efficency gain. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str() );
+                        msg = va("<span class='material-icon warning'>&#xE002;</span> Average efficency gain. Build the %s%s further apart for more efficiency.", BG_Buildable(buildable)->humanName, pluralSuffix[buildable].c_str());
                     } else {
                         color = Color::Green;
                     }
 
-                    SetInnerRML(va("EFFICIENCY: %s%s%s", CG_Rocket_QuakeToRML(va("%s%+d%%", Color::CString(color), delta) ), msg ? "<br/>" : "", msg ? msg : "") );
+                    SetInnerRML(va("EFFICIENCY: %s%s%s", CG_Rocket_QuakeToRML(va("%s%+d%%", Color::CString(color), delta)), msg ? "<br/>" : "", msg ? msg : ""));
                     lastDelta = delta;
                 }
             }
@@ -1858,10 +1858,10 @@ class BarbsHudElement : public HudElement {
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList& changed_attributes) {
             HudElement::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("src") != changed_attributes.end() ) {
+            if (changed_attributes.find("src") != changed_attributes.end()) {
                 if (maxBarbs > 0) {
                     Rocket::Core::String src = GetAttribute<Rocket::Core::String>("src", "");
-                    Rocket::Core::String base(va("<img class='barbs' src='%s' />", src.CString() ) );
+                    Rocket::Core::String base(va("<img class='barbs' src='%s' />", src.CString()));
                     Rocket::Core::String rml;
 
                     for (int i = 0; i < maxBarbs; i++) {
@@ -1880,7 +1880,7 @@ class BarbsHudElement : public HudElement {
 
             if (newNumBarbs < maxBarbs) {
                 // start regenerating barb now
-                if (newNumBarbs > numBarbs || (newNumBarbs < numBarbs && numBarbs == maxBarbs) ) {
+                if (newNumBarbs > numBarbs || (newNumBarbs < numBarbs && numBarbs == maxBarbs)) {
                     t0 = cg.time;
                     offset = -M_PI_2; // sin(-pi/2) is minimal
                 }
@@ -1907,7 +1907,7 @@ class BarbsHudElement : public HudElement {
                     barb->SetProperty("opacity", "1.0");
                 } else if (i == numBarbs) { // draw regenerating barb
                     float opacity = GetSin() / 8.0f + (1.0f / 8.0f); // in [0, 0.125]
-                    barb->SetProperty("opacity", va("%f", opacity) );
+                    barb->SetProperty("opacity", va("%f", opacity));
                 } else {
                     barb->SetProperty("opacity", "0.0");
                 }
@@ -1917,11 +1917,11 @@ class BarbsHudElement : public HudElement {
     private:
 
         float GetSin() {
-            return sin(GetParam() );
+            return sin(GetParam());
         }
 
         float GetCos() {
-            return cos(GetParam() );
+            return cos(GetParam());
         }
 
         float GetParam() {
@@ -2005,7 +2005,7 @@ void CG_Rocket_DrawPlayerHealthCross() {
             color.SetAlpha(ref_alpha * cg.healthCrossFade);
             trap_R_SetColor(color);
             CG_DrawPic(rect.x, rect.y, rect.w, rect.h, shader);
-            color.SetAlpha(ref_alpha * (1.0f - cg.healthCrossFade) );
+            color.SetAlpha(ref_alpha * (1.0f - cg.healthCrossFade));
             trap_R_SetColor(color);
             CG_DrawPic(rect.x, rect.y, rect.w, rect.h, cg.lastHealthCross);
             trap_R_ClearColor();
@@ -2163,11 +2163,11 @@ static void CG_DrawStack(rectDef_t* rect, const Color::Color& color, float fill,
     case LALIGN_BOTTOMRIGHT:
         if (vertical) {
             CG_DrawPic(rect->x, rect->y + rect->h *
-                       (1 + ( (1 - fill) / fmax) - frac / fmax),
+                       (1 + ((1 - fill) / fmax) - frac / fmax),
                        rect->w, each, cgs.media.whiteShader);
         } else {
             CG_DrawPic(rect->x + rect->w *
-                       (1 + ( (1 - fill) / fmax) - frac / fmax), rect->y,
+                       (1 + ((1 - fill) / fmax) - frac / fmax), rect->y,
                        each, rect->h, cgs.media.whiteShader);
         }
     }
@@ -2200,7 +2200,7 @@ static void CG_DrawPlayerAmmoStack() {
     // smoothing effects (only if weaponTime etc. apply to primary weapon)
     if (ps->weapon == primary && ps->weaponTime > 0 &&
         (ps->weaponstate == WEAPON_FIRING ||
-         ps->weaponstate == WEAPON_RELOADING) ) {
+         ps->weaponstate == WEAPON_RELOADING)) {
         // track the weaponTime we're coming down from
         // if weaponstate changed, this value is invalid
         if (lastws != ps->weaponstate || ps->weaponTime > maxwt) {
@@ -2246,9 +2246,9 @@ static void CG_DrawPlayerAmmoStack() {
 
     Rocket_GetProperty("text-align", buf, sizeof(buf), ROCKET_STRING);
 
-    if (*buf && !Q_stricmp(buf, "right") ) {
+    if (*buf && !Q_stricmp(buf, "right")) {
         align = LALIGN_BOTTOMRIGHT;
-    } else if (*buf && !Q_stricmp(buf, "center") ) {
+    } else if (*buf && !Q_stricmp(buf, "center")) {
         align = LALIGN_CENTER;
     } else {
         align = LALIGN_TOPLEFT;
@@ -2269,7 +2269,7 @@ static void CG_DrawPlayerClipsStack() {
     CG_GetRocketElementColor(foreColor);
     CG_GetRocketElementRect(&rect);
 
-    maxVal = BG_Weapon(BG_PrimaryWeapon(ps->stats) )->maxClips;
+    maxVal = BG_Weapon(BG_PrimaryWeapon(ps->stats))->maxClips;
 
     if (!maxVal) {
         return; // not a clips weapon
@@ -2317,9 +2317,9 @@ void CG_Rocket_DrawFollow() {
         char buffer[MAX_STRING_CHARS];
 
         if (!cg.chaseFollow) {
-            Q_strncpyz(buffer, FOLLOWING_STRING, sizeof(buffer) );
+            Q_strncpyz(buffer, FOLLOWING_STRING, sizeof(buffer));
         } else {
-            Q_strncpyz(buffer, CHASING_STRING, sizeof(buffer) );
+            Q_strncpyz(buffer, CHASING_STRING, sizeof(buffer));
         }
 
         Q_strcat(buffer, sizeof(buffer), cgs.clientinfo[cg.snap->ps.clientNum].name);
@@ -2334,10 +2334,10 @@ void CG_Rocket_DrawConnectText() {
     char rml[MAX_STRING_CHARS];
     const char* s;
 
-    if (!Q_stricmp(rocketInfo.cstate.servername, "localhost") ) {
-        Q_strncpyz(rml, "Starting up…", sizeof(rml) );
+    if (!Q_stricmp(rocketInfo.cstate.servername, "localhost")) {
+        Q_strncpyz(rml, "Starting up…", sizeof(rml));
     } else {
-        Q_strncpyz(rml, va("Connecting to %s <br/>", rocketInfo.cstate.servername), sizeof(rml) );
+        Q_strncpyz(rml, va("Connecting to %s <br/>", rocketInfo.cstate.servername), sizeof(rml));
     }
 
     if (rocketInfo.cstate.connState < CA_CONNECTED && *rocketInfo.cstate.messageString) {
@@ -2433,7 +2433,7 @@ void CG_Rocket_DrawChatType() {
         { "", N_("Command: ") },
     };
 
-    if ( (size_t) cg.sayType < ARRAY_LEN(sayText) ) {
+    if ((size_t) cg.sayType < ARRAY_LEN(sayText)) {
         const char* prompt = _(sayText[cg.sayType].prompt);
 
         if (ui_chatPromptColors.integer) {
@@ -2517,7 +2517,7 @@ static void CG_Rocket_DrawPlayerMomentumBar() {
     // draw glow on momentum event
     if (cg.momentumGainedTime + MOMENTUM_BAR_GLOWTIME > cg.time) {
         glowFraction = fabs(cg.momentumGained / MOMENTUM_MAX);
-        glowStrength = (MOMENTUM_BAR_GLOWTIME - (cg.time - cg.momentumGainedTime) ) /
+        glowStrength = (MOMENTUM_BAR_GLOWTIME - (cg.time - cg.momentumGainedTime)) /
                        (float)MOMENTUM_BAR_GLOWTIME;
 
         if (cg.momentumGained > 0.0f) {
@@ -2531,7 +2531,7 @@ static void CG_Rocket_DrawPlayerMomentumBar() {
         color = Color::Color(1.0f, 1.0f, 1.0f, 0.5f* glowStrength);
 
         if (vertical) {
-            CG_FillRect(x, y + h * (1.0f - (rawFraction + glowOffset) ), w, h * glowFraction, color);
+            CG_FillRect(x, y + h * (1.0f - (rawFraction + glowOffset)), w, h * glowFraction, color);
         } else {
             CG_FillRect(x + w * (rawFraction - glowOffset), y, w * glowFraction, h, color);
         }
@@ -2540,8 +2540,8 @@ static void CG_Rocket_DrawPlayerMomentumBar() {
     }
 
     // draw threshold markers
-    while ( (unlockableIter = BG_IterateMomentumThresholds(unlockableIter, team, &threshold, &unlocked) ),
-            (unlockableIter.num >= 0) ) {
+    while ((unlockableIter = BG_IterateMomentumThresholds(unlockableIter, team, &threshold, &unlocked)),
+           (unlockableIter.num >= 0)) {
         fraction = threshold / MOMENTUM_MAX;
 
         if (fraction > 1.0f) {
@@ -2564,7 +2564,7 @@ void CG_Rocket_DrawMineRate() {
     int efficiency;
 
     // check if builder
-    switch (BG_GetPlayerWeapon(&cg.snap->ps) ) {
+    switch (BG_GetPlayerWeapon(&cg.snap->ps)) {
     case WP_ABUILD:
     case WP_ABUILD2:
     case WP_HBUILD:
@@ -2575,9 +2575,9 @@ void CG_Rocket_DrawMineRate() {
         return;
     }
 
-    levelRate  = cg.predictedPlayerState.persistant[PERS_MINERATE] / 10.0f;
+    levelRate = cg.predictedPlayerState.persistant[PERS_MINERATE] / 10.0f;
     efficiency = cg.predictedPlayerState.persistant[PERS_RGS_EFFICIENCY];
-    rate       = ( (efficiency / 100.0f) * levelRate);
+    rate = ((efficiency / 100.0f) * levelRate);
 
     Rocket_SetInnerRML(va(_("%.1f BP/min (%d%% × %.1f)"), rate, efficiency, levelRate), 0);
 }
@@ -2585,7 +2585,7 @@ void CG_Rocket_DrawMineRate() {
 static INLINE qhandle_t CG_GetUnlockableIcon(int num) {
     int index = BG_UnlockableTypeIndex(num);
 
-    switch (BG_UnlockableType(num) ) {
+    switch (BG_UnlockableType(num)) {
     case UNLT_WEAPON:
         return cg_weapons[index].weaponIcon;
 
@@ -2742,7 +2742,7 @@ static void CG_Rocket_DrawVote_internal(team_t team) {
         trap_S_StartLocalSound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
     }
 
-    sec = (VOTE_TIME - (cg.time - cgs.voteTime[team]) ) / 1000;
+    sec = (VOTE_TIME - (cg.time - cgs.voteTime[team])) / 1000;
 
     if (sec < 0) {
         sec = 0;
@@ -2765,14 +2765,14 @@ static void CG_Rocket_DrawVote() {
 }
 
 static void CG_Rocket_DrawTeamVote() {
-    CG_Rocket_DrawVote_internal( (team_t) cg.predictedPlayerState.persistant[PERS_TEAM]);
+    CG_Rocket_DrawVote_internal((team_t) cg.predictedPlayerState.persistant[PERS_TEAM]);
 }
 
 static void CG_Rocket_DrawSpawnQueuePosition() {
     int position;
     const char* s;
 
-    if (!(cg.snap->ps.pm_flags & PMF_QUEUED) ) {
+    if (!(cg.snap->ps.pm_flags & PMF_QUEUED)) {
         Rocket_SetInnerRML("", 0);
         return;
     }
@@ -2785,7 +2785,7 @@ static void CG_Rocket_DrawSpawnQueuePosition() {
     }
 
     if (position == 1) {
-        s = va(_("You are at the front of the spawn queue") );
+        s = va(_("You are at the front of the spawn queue"));
     } else {
         s = va(_("You are at position %d in the spawn queue"), position);
     }
@@ -2797,12 +2797,12 @@ static void CG_Rocket_DrawNumSpawns() {
     int position, spawns;
     const char* s;
 
-    if (!(cg.snap->ps.pm_flags & PMF_QUEUED) ) {
+    if (!(cg.snap->ps.pm_flags & PMF_QUEUED)) {
         Rocket_SetInnerRML("", 0);
         return;
     }
 
-    spawns   = cg.snap->ps.persistant[PERS_SPAWNQUEUE] & 0x000000ff;
+    spawns = cg.snap->ps.persistant[PERS_SPAWNQUEUE] & 0x000000ff;
     position = cg.snap->ps.persistant[PERS_SPAWNQUEUE] >> 8;
 
     if (position < 1 || cg.intermissionStarted) {
@@ -2831,14 +2831,14 @@ static void CG_Rocket_DrawWarmup() {
         return;
     }
 
-    Rocket_SetInnerRML(va("%s", sec ? va("%d", sec) : _("FIGHT!") ), 0);
+    Rocket_SetInnerRML(va("%s", sec ? va("%d", sec) : _("FIGHT!")), 0);
 }
 
 static void CG_Rocket_DrawProgressValue() {
     const char* src = CG_Rocket_GetAttribute("src");
     if (*src) {
         float value = CG_Rocket_ProgressBarValue(src);
-        Rocket_SetInnerRML(va("%d", (int) (value * 100) ), 0);
+        Rocket_SetInnerRML(va("%d", (int) (value * 100)), 0);
     }
 }
 
@@ -2851,7 +2851,7 @@ static void CG_Rocket_DrawMOTD() {
     char parsed[MAX_STRING_CHARS];
 
     s = CG_ConfigString(CS_MOTD);
-    Q_ParseNewlines(parsed, s, sizeof(parsed) );
+    Q_ParseNewlines(parsed, s, sizeof(parsed));
     Rocket_SetInnerRML(parsed, RP_EMOTICONS);
 }
 
@@ -2864,10 +2864,10 @@ static void CG_Rocket_DrawHostname() {
 static void CG_Rocket_DrawDownloadName() {
     char downloadName[MAX_STRING_CHARS];
 
-    trap_Cvar_VariableStringBuffer("cl_downloadName", downloadName, sizeof(downloadName) );
+    trap_Cvar_VariableStringBuffer("cl_downloadName", downloadName, sizeof(downloadName));
 
-    if (Q_stricmp(downloadName, rocketInfo.downloadName) ) {
-        Q_strncpyz(rocketInfo.downloadName, downloadName, sizeof(rocketInfo.downloadName) );
+    if (Q_stricmp(downloadName, rocketInfo.downloadName)) {
+        Q_strncpyz(rocketInfo.downloadName, downloadName, sizeof(rocketInfo.downloadName));
         Rocket_SetInnerRML(rocketInfo.downloadName, RP_QUAKE);
     }
 }
@@ -2883,8 +2883,8 @@ static void CG_Rocket_DrawDownloadTime() {
         return;
     }
 
-    if ( (rocketInfo.realtime - downloadTime) / 1000) {
-        xferRate = downloadCount / ( (rocketInfo.realtime - downloadTime) / 1000);
+    if ((rocketInfo.realtime - downloadTime) / 1000) {
+        xferRate = downloadCount / ((rocketInfo.realtime - downloadTime) / 1000);
     } else {
         xferRate = 0;
     }
@@ -2895,7 +2895,7 @@ static void CG_Rocket_DrawDownloadTime() {
 
         // We do it in K (/1024) because we'd overflow around 4MB
         CG_PrintTime(dlTimeBuf, sizeof dlTimeBuf,
-                     (n - ( ( (downloadCount / 1024) * n) / (downloadSize / 1024) ) ) * 1000);
+                     (n - (((downloadCount / 1024) * n) / (downloadSize / 1024))) * 1000);
         Rocket_SetInnerRML(dlTimeBuf, RP_QUAKE);
     } else {
         Rocket_SetInnerRML(_("estimating"), RP_QUAKE);
@@ -2941,8 +2941,8 @@ static void CG_Rocket_DrawDownloadSpeed() {
         return;
     }
 
-    if ( (rocketInfo.realtime - downloadTime) / 1000) {
-        xferRate = downloadCount / ( (rocketInfo.realtime - downloadTime) / 1000);
+    if ((rocketInfo.realtime - downloadTime) / 1000) {
+        xferRate = downloadCount / ((rocketInfo.realtime - downloadTime) / 1000);
         CG_ReadableSize(xferRateBuf, sizeof xferRateBuf, xferRate);
         Rocket_SetInnerRML(va("%s/Sec", xferRateBuf), RP_QUAKE);
     } else {
@@ -2964,7 +2964,7 @@ typedef struct {
 } elementRenderCmd_t;
 
 // THESE MUST BE ALPHABETIZED
-static const elementRenderCmd_t elementRenderCmdList[] ={
+static const elementRenderCmd_t elementRenderCmdList[] = {
     { "ammo_stack", &CG_DrawPlayerAmmoStack, ELEMENT_HUMANS },
     { "chattype", &CG_Rocket_DrawChatType, ELEMENT_ALL },
     { "clip_stack", &CG_DrawPlayerClipsStack, ELEMENT_HUMANS },
@@ -3001,7 +3001,7 @@ static const elementRenderCmd_t elementRenderCmdList[] ={
 static const size_t elementRenderCmdListCount = ARRAY_LEN(elementRenderCmdList);
 
 static int elementRenderCmdCmp(const void* a, const void* b) {
-    return Q_stricmp( (const char*) a, ( (elementRenderCmd_t*) b)->name);
+    return Q_stricmp((const char*) a, ((elementRenderCmd_t*) b)->name);
 }
 
 void CG_Rocket_RenderElement(const char* tag) {
@@ -3009,12 +3009,12 @@ void CG_Rocket_RenderElement(const char* tag) {
 
     cmd = (elementRenderCmd_t*) bsearch(tag, elementRenderCmdList, elementRenderCmdListCount, sizeof(elementRenderCmd_t), elementRenderCmdCmp);
 
-    if (cmd && CG_Rocket_IsCommandAllowed(cmd->type) ) {
+    if (cmd && CG_Rocket_IsCommandAllowed(cmd->type)) {
         cmd->exec();
     }
 }
 
-#define REGISTER_ELEMENT(tag, clazz) Rocket::Core::Factory::RegisterElementInstancer(tag, new Rocket::Core::ElementInstancerGeneric< clazz >() )->RemoveReference();
+#define REGISTER_ELEMENT(tag, clazz) Rocket::Core::Factory::RegisterElementInstancer(tag, new Rocket::Core::ElementInstancerGeneric< clazz >())->RemoveReference();
 void CG_Rocket_RegisterElements() {
     for (unsigned i = 0; i < elementRenderCmdListCount; i++) {
         // Check that the commands are in increasing order so that it can be used by bsearch

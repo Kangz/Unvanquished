@@ -102,7 +102,7 @@ Simple istream based class that takes ownership of the streambuf
 
 class DaemonIstream : public std::istream {
     public:
-        DaemonIstream(const std::string& filename) : std::istream(new DaemonInputbuf(filename) ) {
+        DaemonIstream(const std::string& filename) : std::istream(new DaemonInputbuf(filename)) {
         }
         ~DaemonIstream() {
             delete rdbuf();
@@ -131,7 +131,7 @@ class DaemonFileSystem : public FileSystem {
             files = FS_ListFiles(pathname.c_str(), nullptr, &numFiles);
 
             for (int i = 0; i < numFiles; i++) {
-                ret.push_back(std::string(files[i]) );
+                ret.push_back(std::string(files[i]));
             }
 
             FS_FreeFileList(files);
@@ -139,7 +139,7 @@ class DaemonFileSystem : public FileSystem {
         }
 
         std::unique_ptr<std::istream> open_file(const std::string& filename) {
-            return std::unique_ptr<std::istream>(new DaemonIstream(filename) );
+            return std::unique_ptr<std::istream>(new DaemonIstream(filename));
         }
 };
 
@@ -150,18 +150,18 @@ Logging functions used by tinygettext
 */
 
 void Trans_Error(const std::string& str) {
-    Com_Printf("^1%s^7", str.c_str() );
+    Com_Printf("^1%s^7", str.c_str());
 }
 
 void Trans_Warning(const std::string& str) {
     if (trans_debug->integer != 0) {
-        Com_Printf("^3%s^7", str.c_str() );
+        Com_Printf("^3%s^7", str.c_str());
     }
 }
 
 void Trans_Info(const std::string& str) {
     if (trans_debug->integer != 0) {
-        Com_Printf("%s", str.c_str() );
+        Com_Printf("%s", str.c_str());
     }
 }
 
@@ -175,7 +175,7 @@ If no languages are close, force English.
 */
 
 void Trans_SetLanguage(const char* lang) {
-    Language requestLang = Language::from_env(std::string(lang) );
+    Language requestLang = Language::from_env(std::string(lang));
 
     // default to english
     Language bestLang = Language::from_env("en");
@@ -202,9 +202,9 @@ void Trans_SetLanguage(const char* lang) {
     trans_manager.set_language(bestLang);
     trans_managergame.set_language(bestLang);
 
-    Cvar_Set("language", bestLang.str().c_str() );
+    Cvar_Set("language", bestLang.str().c_str());
 
-    Com_Printf("Set language to %s", bestLang.get_name().c_str() );
+    Com_Printf("Set language to %s", bestLang.get_name().c_str());
 }
 
 void Trans_UpdateLanguage_f() {
@@ -213,7 +213,7 @@ void Trans_UpdateLanguage_f() {
     #ifndef BUILD_SERVER
     // update the default console keys string
     Z_Free(cl_consoleKeys->resetString);
-    cl_consoleKeys->resetString = CopyString(_("~ ` 0x7e 0x60") );
+    cl_consoleKeys->resetString = CopyString(_("~ ` 0x7e 0x60"));
     #endif
 }
 
@@ -240,8 +240,8 @@ void Trans_Init() {
     tinygettext::Log::set_log_warning_callback(&Trans_Warning);
     tinygettext::Log::set_log_info_callback(&Trans_Info);
 
-    trans_manager.set_filesystem(std::unique_ptr<FileSystem>(new DaemonFileSystem) );
-    trans_managergame.set_filesystem(std::unique_ptr<FileSystem>(new DaemonFileSystem) );
+    trans_manager.set_filesystem(std::unique_ptr<FileSystem>(new DaemonFileSystem));
+    trans_managergame.set_filesystem(std::unique_ptr<FileSystem>(new DaemonFileSystem));
 
     trans_manager.add_directory("translation/client");
     trans_managergame.add_directory("translation/game");
@@ -249,14 +249,14 @@ void Trans_Init() {
     langs = trans_manager.get_languages();
 
     for (std::set<Language>::iterator p = langs.begin(); p != langs.end(); p++) {
-        Q_strcat(langList, sizeof(langList), va("\"%s\" ", p->get_name().c_str() ) );
-        Q_strcat(encList, sizeof(encList), va("\"%s\" ", p->str().c_str() ) );
+        Q_strcat(langList, sizeof(langList), va("\"%s\" ", p->get_name().c_str()));
+        Q_strcat(encList, sizeof(encList), va("\"%s\" ", p->str().c_str()));
     }
 
     Cvar_Set("trans_languages", langList);
     Cvar_Set("trans_encodings", encList);
 
-    Com_Printf("Loaded %lu language%s\n", (unsigned long) langs.size(), (langs.size() == 1 ? "" : "s") );
+    Com_Printf("Loaded %lu language%s\n", (unsigned long) langs.size(), (langs.size() == 1 ? "" : "s"));
 }
 
 void Trans_LoadDefaultLanguage() {
@@ -272,7 +272,7 @@ void Trans_LoadDefaultLanguage() {
         } else {
             Cvar_Set("language", va("%s%s%s", locale->lang,
                                     locale->country[0] ? "_" : "",
-                                    locale->country) );
+                                    locale->country));
         }
 
         FL_FreeLocale(&locale);

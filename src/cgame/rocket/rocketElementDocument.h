@@ -51,7 +51,7 @@ class RocketElementDocument : public Rocket::Core::ElementDocument {
             if (event == "keydown") {
                 Rocket::Core::Input::KeyIdentifier key = (Rocket::Core::Input::KeyIdentifier) event.GetParameter<int>("key_identifier", 0);
 
-                if (key == Rocket::Core::Input::KI_ESCAPE && !HasAttribute("nohide") ) {
+                if (key == Rocket::Core::Input::KI_ESCAPE && !HasAttribute("nohide")) {
                     this->Hide();
                 }
             }

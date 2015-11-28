@@ -52,7 +52,7 @@ class RocketDataFormatter : public Rocket::Controls::DataFormatter {
         }
 
         void FormatData(Rocket::Core::String &formatted_data, const Rocket::Core::StringList &raw_data) {
-            Com_Memset(&data, 0, sizeof(data) );
+            Com_Memset(&data, 0, sizeof(data));
 
             for (size_t i = 0; i < raw_data.size(); ++i) {
                 Info_SetValueForKeyRocket(data, va("%u", (uint32_t) i+1), raw_data[i].CString(), true);

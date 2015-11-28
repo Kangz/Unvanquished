@@ -76,10 +76,10 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
                 std::stack<Rocket::Core::Element*> stack;
                 stack.push(this);
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetWidth() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetWidth()) != 0) {
                         dimensions.x = base_size;
-                        while (!stack.empty() ) {
+                        while (!stack.empty()) {
                             dimensions.x = stack.top()->ResolveProperty("width", dimensions.x);
 
                             stack.pop();
@@ -101,10 +101,10 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
                 std::stack<Rocket::Core::Element*> stack;
                 stack.push(this);
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetHeight() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetHeight()) != 0) {
                         dimensions.y = base_size;
-                        while (!stack.empty() ) {
+                        while (!stack.empty()) {
                             dimensions.y = stack.top()->ResolveProperty("height", dimensions.y);
 
                             stack.pop();
@@ -129,29 +129,29 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("source") != changed_attributes.end() ) {
-                SetDataSource(GetAttribute<Rocket::Core::String>("source", "") );
+            if (changed_attributes.find("source") != changed_attributes.end()) {
+                SetDataSource(GetAttribute<Rocket::Core::String>("source", ""));
             }
 
-            if (changed_attributes.find("fields") != changed_attributes.end() ) {
+            if (changed_attributes.find("fields") != changed_attributes.end()) {
                 csvFields = GetAttribute<Rocket::Core::String>("fields", "");
                 Rocket::Core::StringUtilities::ExpandString(fields, csvFields);
                 dirty_query = true;
             }
 
-            if (changed_attributes.find("formatter") != changed_attributes.end() ) {
-                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>() );
+            if (changed_attributes.find("formatter") != changed_attributes.end()) {
+                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>());
                 dirty_query = true;
             }
         }
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList &changed_properties) {
             Rocket::Core::Element::OnPropertyChange(changed_properties);
-            if (changed_properties.find("width") != changed_properties.end() || changed_properties.find("height") != changed_properties.end() ) {
+            if (changed_properties.find("width") != changed_properties.end() || changed_properties.find("height") != changed_properties.end()) {
                 dirty_layout = true;
             }
 
-            if (changed_properties.find("radius") != changed_properties.end() ) {
+            if (changed_properties.find("radius") != changed_properties.end()) {
                 radius = GetProperty("radius")->Get<float>();
             }
 
@@ -176,11 +176,11 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
 
         // Checks if parents are visible as well
         bool IsTreeVisible() {
-            if (IsVisible() ) {
+            if (IsVisible()) {
                 Rocket::Core::Element* parent = this;
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if (!parent->IsVisible() ) {
+                while ((parent = parent->GetParentNode())) {
+                    if (!parent->IsVisible()) {
                         return false;
                     }
                 }
@@ -197,12 +197,12 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
             // Only do layout if element is visible
             // Positions calcs are not correct if element
             // is not visible.
-            if (dirty_query && IsTreeVisible() ) {
+            if (dirty_query && IsTreeVisible()) {
                 dirty_query = false;
 
-                while (HasChildNodes() ) {
+                while (HasChildNodes()) {
 
-                    RemoveChild(GetFirstChild() );
+                    RemoveChild(GetFirstChild());
                 }
 
                 AddCancelbutton();
@@ -210,15 +210,15 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
                 Rocket::Controls::DataQuery query(data_source, data_table, csvFields, 0, -1);
                 int index = 0;
 
-                while (query.NextRow() ) {
+                while (query.NextRow()) {
                     Rocket::Core::StringList raw_data;
                     Rocket::Core::String out;
 
                     for (size_t i = 0; i < fields.size(); ++i) {
-                        raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], "") );
+                        raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], ""));
                     }
 
-                    raw_data.push_back(va("%d", index++) );
+                    raw_data.push_back(va("%d", index++));
 
                     if (formatter) {
                         formatter->FormatData(out, raw_data);
@@ -244,7 +244,7 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
             if (event == "mouseover") {
                 Rocket::Core::Element* parent = event.GetTargetElement();
                 Rocket::Core::Element* button = parent->GetTagName() == "button" ? parent : nullptr;
-                while ( (parent = parent->GetParentNode() ) ) {
+                while ((parent = parent->GetParentNode())) {
                     if (!button && parent->GetTagName() == "button") {
                         button = parent;
                         continue;
@@ -256,8 +256,8 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
 
                         for (i = 1; i < GetNumChildren(); ++i) {
                             if (GetChild(i) == button) {
-                                parameters.Set("index", va("%d", i - 1) );
-                                parameters.Set("datasource", data_source->GetDataSourceName() );
+                                parameters.Set("index", va("%d", i - 1));
+                                parameters.Set("datasource", data_source->GetDataSourceName());
                                 parameters.Set("table", data_table);
 
                                 DispatchEvent("rowselect", parameters);
@@ -269,9 +269,9 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
                     }
                 }
             }
-            if (event.GetTargetElement() == GetFirstChild() ) {
+            if (event.GetTargetElement() == GetFirstChild()) {
                 if (event == "click") {
-                    DispatchEvent("cancel", Rocket::Core::Dictionary() );
+                    DispatchEvent("cancel", Rocket::Core::Dictionary());
                 }
             }
         }
@@ -290,11 +290,11 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
             width = child->GetOffsetWidth();
             height = child->GetOffsetHeight();
             child->SetProperty("position", "absolute");
-            child->SetProperty("top", va("%fpx", offset.y + (dimensions.y / 2) - (height / 2) ) );
-            child->SetProperty("left", va("%fpx", offset.x + (dimensions.x / 2) - (width / 2) ) );
+            child->SetProperty("top", va("%fpx", offset.y + (dimensions.y / 2) - (height / 2)));
+            child->SetProperty("left", va("%fpx", offset.x + (dimensions.x / 2) - (width / 2)));
 
             // No other children
-            if ( (numChildren = GetNumChildren() ) <= 1) {
+            if ((numChildren = GetNumChildren()) <= 1) {
                 return;
             }
 
@@ -305,12 +305,12 @@ class RocketCircleMenu : public Rocket::Core::Element, public Rocket::Controls::
                 child = GetChild(i);
                 width = child->GetOffsetWidth();
                 height = child->GetOffsetHeight();
-                float y = sin(angle * (i - 1) * (M_PI / 180.0f) ) * radius;
-                float x = cos(angle * (i - 1) * (M_PI / 180.0f) ) * radius;
+                float y = sin(angle * (i - 1) * (M_PI / 180.0f)) * radius;
+                float x = cos(angle * (i - 1) * (M_PI / 180.0f)) * radius;
 
                 child->SetProperty("position", "absolute");
-                child->SetProperty("left", va("%fpx", (dimensions.x / 2) - (width / 2) + offset.x + x) );
-                child->SetProperty("top", va("%fpx", (dimensions.y / 2) - (height / 2) + offset.y + y) );
+                child->SetProperty("left", va("%fpx", (dimensions.x / 2) - (width / 2) + offset.x + x));
+                child->SetProperty("top", va("%fpx", (dimensions.y / 2) - (height / 2) + offset.y + y));
             }
         }
 

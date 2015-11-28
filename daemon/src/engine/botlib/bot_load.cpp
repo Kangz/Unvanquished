@@ -46,7 +46,7 @@ void BotSaveOffMeshConnections(NavData_t* nav) {
     char filePath[MAX_QPATH];
     fileHandle_t f = 0;
 
-    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname) );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
     Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navcon", mapname, nav->name);
     f = FS_FOpenFileWrite(filePath);
 
@@ -99,7 +99,7 @@ void BotLoadOffMeshConnections(const char* filename, NavData_t* nav) {
     char filePath[MAX_QPATH];
     fileHandle_t f = 0;
 
-    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname) );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
     Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navcon", mapname, filename);
     FS_FOpenFileRead(filePath, &f, true);
 
@@ -153,8 +153,8 @@ bool BotLoadNavMesh(const char* filename, NavData_t &nav) {
 
     BotLoadOffMeshConnections(filename, &nav);
 
-    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname) );
-    Cvar_VariableStringBuffer("fs_game", gameName, sizeof(gameName) );
+    Cvar_VariableStringBuffer("mapname", mapname, sizeof(mapname));
+    Cvar_VariableStringBuffer("fs_game", gameName, sizeof(gameName));
     Com_sprintf(filePath, sizeof(filePath), "maps/%s-%s.navMesh", mapname, filename);
     Com_Printf(" loading navigation mesh file '%s'...\n", filePath);
 
@@ -198,7 +198,7 @@ bool BotLoadNavMesh(const char* filename, NavData_t &nav) {
 
     dtStatus status = nav.mesh->init(&header.params);
 
-    if (dtStatusFailed(status) ) {
+    if (dtStatusFailed(status)) {
         Com_Log(LOG_ERROR, "Could not init navmesh");
         dtFreeNavMesh(nav.mesh);
         nav.mesh = nullptr;
@@ -218,7 +218,7 @@ bool BotLoadNavMesh(const char* filename, NavData_t &nav) {
 
     status = nav.cache->init(&header.cacheParams, &alloc, &comp, &nav.process);
 
-    if (dtStatusFailed(status) ) {
+    if (dtStatusFailed(status)) {
         Com_Log(LOG_ERROR, "Could not init tile cache");
         dtFreeNavMesh(nav.mesh);
         dtFreeTileCache(nav.cache);
@@ -268,7 +268,7 @@ bool BotLoadNavMesh(const char* filename, NavData_t &nav) {
         dtCompressedTileRef tile = 0;
         dtStatus status = nav.cache->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, &tile);
 
-        if (dtStatusFailed(status) ) {
+        if (dtStatusFailed(status)) {
             Com_Log(LOG_ERROR, "Failed to add tile to navmesh");
             dtFree(data);
             dtFreeTileCache(nav.cache);
@@ -316,7 +316,7 @@ void BotShutdownNav() {
         }
 
         nav->process.con.reset();
-        memset(nav->name, 0, sizeof(nav->name) );
+        memset(nav->name, 0, sizeof(nav->name));
     }
 
     #ifndef BUILD_SERVER
@@ -335,8 +335,8 @@ bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle) {
 
         for (int i = 0; i < MAX_CLIENTS; i++) {
             // should only init the corridor once
-            if (!agents[i].corridor.getPath() ) {
-                if (!agents[i].corridor.init(MAX_BOT_PATH) ) {
+            if (!agents[i].corridor.getPath()) {
+                if (!agents[i].corridor.init(MAX_BOT_PATH)) {
                     return false;
                 }
             }
@@ -346,7 +346,7 @@ bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle) {
             agents[i].needReplan = true;
             agents[i].nav = nullptr;
             agents[i].offMesh = false;
-            memset(agents[i].routeResults, 0, sizeof(agents[i].routeResults) );
+            memset(agents[i].routeResults, 0, sizeof(agents[i].routeResults));
         }
         #ifndef BUILD_SERVER
         NavEditInit();
@@ -361,12 +361,12 @@ bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle) {
     NavData_t* nav = &BotNavData[numNavData];
     const char* filename = botClass->name;
 
-    if (!BotLoadNavMesh(filename, *nav) ) {
+    if (!BotLoadNavMesh(filename, *nav)) {
         BotShutdownNav();
         return false;
     }
 
-    Q_strncpyz(nav->name, botClass->name, sizeof(nav->name) );
+    Q_strncpyz(nav->name, botClass->name, sizeof(nav->name));
     nav->query = dtAllocNavMeshQuery();
 
     if (!nav->query) {
@@ -375,7 +375,7 @@ bool BotSetupNav(const botClass_t* botClass, qhandle_t* navHandle) {
         return false;
     }
 
-    if (dtStatusFailed(nav->query->init(nav->mesh, maxNavNodes->integer) ) ) {
+    if (dtStatusFailed(nav->query->init(nav->mesh, maxNavNodes->integer))) {
         Com_Printf("Could not init Detour Navigation Mesh Query for navmesh %s\n", filename);
         BotShutdownNav();
         return false;

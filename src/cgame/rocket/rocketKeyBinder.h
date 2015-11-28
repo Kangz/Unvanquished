@@ -49,13 +49,13 @@ class RocketKeyBinder : public Rocket::Core::Element, public Rocket::Core::Event
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("cmd") != changed_attributes.end() ) {
+            if (changed_attributes.find("cmd") != changed_attributes.end()) {
                 cmd = GetAttribute("cmd")->Get<Rocket::Core::String>();
                 dirty_key = true;
             }
 
-            if (changed_attributes.find("team") != changed_attributes.end() ) {
-                team = GetTeam(GetAttribute("team")->Get<Rocket::Core::String>().CString() );
+            if (changed_attributes.find("team") != changed_attributes.end()) {
+                team = GetTeam(GetAttribute("team")->Get<Rocket::Core::String>().CString());
                 dirty_key = true;
             }
         }
@@ -81,7 +81,7 @@ class RocketKeyBinder : public Rocket::Core::Element, public Rocket::Core::Event
         void OnUpdate() {
             if (dirty_key && team >= 0) {
                 dirty_key = false;
-                SetInnerRML(CG_KeyBinding(cmd.CString(), team) );
+                SetInnerRML(CG_KeyBinding(cmd.CString(), team));
             }
         }
 
@@ -95,7 +95,7 @@ class RocketKeyBinder : public Rocket::Core::Element, public Rocket::Core::Event
                 mouse_x = event.GetParameter<int>("mouse_x", 0);
                 mouse_y = event.GetParameter<int>("mouse_y", 0);
             } else if (waitingForKeypress && event == "keydown") {
-                int newKey = Rocket_ToQuake( (Rocket::Core::Input::KeyIdentifier) event.GetParameter< int >("key_identifier", 0) );
+                int newKey = Rocket_ToQuake((Rocket::Core::Input::KeyIdentifier) event.GetParameter< int >("key_identifier", 0));
 
                 BindKey(newKey);
 
@@ -131,7 +131,7 @@ class RocketKeyBinder : public Rocket::Core::Element, public Rocket::Core::Event
                 return;
             }
 
-            trap_Key_SetBinding(newKey, team, cmd.CString() );
+            trap_Key_SetBinding(newKey, team, cmd.CString());
 
             if (key > 0) {
                 trap_Key_SetBinding(key, team, "");
@@ -160,7 +160,7 @@ class RocketKeyBinder : public Rocket::Core::Element, public Rocket::Core::Event
                 }
             }
 
-            Com_Printf("^3Warning: Team %s not found", team.CString() );
+            Com_Printf("^3Warning: Team %s not found", team.CString());
             return -1;
         }
 

@@ -110,7 +110,7 @@ static void findEmptySpot(vec3_t origin, float radius, vec3_t spot) {
             for (k = -1; k <= 1; k++) {
                 VectorSet(delta, (i * radius),
                           (j * radius),
-                          (k * radius) );
+                          (k * radius));
 
                 VectorAdd(origin, delta, test);
 
@@ -302,7 +302,7 @@ void gfx_shader_mod_act(gentity_t* self, gentity_t*, gentity_t*) {
     }
 
     G_SetShaderRemap(self->shaderKey, self->shaderReplacement, level.time * 0.001);
-    trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig() );
+    trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig());
 
     self->active = true;
 }
@@ -317,7 +317,7 @@ void gfx_shader_mod_reset(gentity_t* self) {
     }
 
     G_SetShaderRemap(self->shaderKey, self->shaderKey, level.time * 0.001);
-    trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig() );
+    trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig());
 
     self->active = false;
 }

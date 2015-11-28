@@ -83,7 +83,7 @@ namespace Color {
                 color = 7;
             }
 
-            if ( (cmax + cmin) / 2 >= 0.64) {
+            if ((cmax + cmin) / 2 >= 0.64) {
                 color |= 8; // bright
             }
         } else {

@@ -37,7 +37,7 @@ Maryland 20850 USA.
 #include "CBSE.h"
 
 void InitEnvAFXEntity(gentity_t* self, bool link) {
-    if (!VectorCompare(self->s.angles, vec3_origin) ) {
+    if (!VectorCompare(self->s.angles, vec3_origin)) {
         G_SetMovedir(self->s.angles, self->movedir);
     }
 
@@ -93,7 +93,7 @@ void SP_env_afx_push(gentity_t* self) {
     self->nextthink = level.time + FRAMETIME;
     self->act = env_afx_toggle;
 
-    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED) );
+    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED));
 
     // unlike other afx, we need to send this one to the client
     self->r.svFlags &= ~SVF_NOCLIENT;
@@ -123,8 +123,8 @@ void env_afx_teleporter_touch(gentity_t* self, gentity_t* other, trace_t*) {
     }
 
     // Spectators only?
-    if ( (self->spawnflags & 1) &&
-         other->client->sess.spectatorState == SPECTATOR_NOT) {
+    if ((self->spawnflags & 1) &&
+        other->client->sess.spectatorState == SPECTATOR_NOT) {
         return;
     }
 
@@ -188,7 +188,7 @@ void env_afx_hurt_touch(gentity_t* self, gentity_t* other, trace_t*) {
     }
 
     // play sound
-    if (!(self->spawnflags & 4) ) {
+    if (!(self->spawnflags & 4)) {
         G_Sound(other, CHAN_AUTO, self->soundIndex);
     }
 
@@ -211,7 +211,7 @@ void SP_env_afx_hurt(gentity_t* self) {
 
     self->act = env_afx_toggle;
 
-    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED) );
+    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED));
 }
 
 /*
@@ -294,7 +294,7 @@ void SP_env_afx_heal(gentity_t* self) {
     self->touch = env_afx_heal_touch;
     self->act = env_afx_toggle;
 
-    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED) );
+    InitEnvAFXEntity(self, !(self->spawnflags & SPF_SPAWN_DISABLED));
 }
 
 /*
@@ -326,11 +326,11 @@ void env_afx_ammo_touch(gentity_t* self, gentity_t* other, trace_t*) {
 
     weapon = BG_PrimaryWeapon(other->client->ps.stats);
 
-    if (BG_Weapon(weapon)->usesEnergy && (self->spawnflags & 2) ) {
+    if (BG_Weapon(weapon)->usesEnergy && (self->spawnflags & 2)) {
         return;
     }
 
-    if (!BG_Weapon(weapon)->usesEnergy && (self->spawnflags & 4) ) {
+    if (!BG_Weapon(weapon)->usesEnergy && (self->spawnflags & 4)) {
         return;
     }
 
@@ -343,7 +343,7 @@ void env_afx_ammo_touch(gentity_t* self, gentity_t* other, trace_t*) {
     maxAmmo = BG_Weapon(weapon)->maxAmmo;
     maxClips = BG_Weapon(weapon)->maxClips;
 
-    if ( (other->client->ps.ammo + self->config.amount) > maxAmmo) {
+    if ((other->client->ps.ammo + self->config.amount) > maxAmmo) {
         if (other->client->ps.clips < maxClips) {
             other->client->ps.clips++;
             other->client->ps.ammo = 1;
@@ -365,7 +365,7 @@ void SP_env_afx_ammo(gentity_t* self) {
 
     if (self->config.amount <= 0) {
         self->config.amount = 1;
-        G_Printf(S_WARNING "%s with negative or unset ammo amount key\n", etos(self) );
+        G_Printf(S_WARNING "%s with negative or unset ammo amount key\n", etos(self));
     }
 
     self->touch = env_afx_ammo_touch;

@@ -46,7 +46,7 @@ void LoadCRN(const char* name, byte** data, int* width, int* height,
     }
 
     if (!crnd::crnd_get_texture_info(buff, buffLen, &ti) ||
-        (ti.m_faces != 1 && ti.m_faces != 6) ) {
+        (ti.m_faces != 1 && ti.m_faces != 6)) {
         ri.FS_FreeFile(buff);
         return;
     }

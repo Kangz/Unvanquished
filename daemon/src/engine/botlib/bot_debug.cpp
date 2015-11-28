@@ -47,11 +47,11 @@ void DebugDrawQuake::init(BotDebugInterface_t* ref) {
 }
 
 void DebugDrawQuake::depthMask(bool state) {
-    re->DebugDrawDepthMask( (bool) (int) state);
+    re->DebugDrawDepthMask((bool) (int) state);
 }
 
 void DebugDrawQuake::begin(duDebugDrawPrimitives prim, float s) {
-    re->DebugDrawBegin( (debugDrawMode_t) prim, s);
+    re->DebugDrawBegin((debugDrawMode_t) prim, s);
 }
 
 void DebugDrawQuake::vertex(const float* pos, unsigned int c) {

@@ -53,7 +53,7 @@ int CG_ParseInfos(const char* buf, int max, char* infos[]) {
             break;
         }
 
-        if (strcmp(token, "{") ) {
+        if (strcmp(token, "{")) {
             Com_Printf("Missing { in info file\n");
             break;
         }
@@ -73,11 +73,11 @@ int CG_ParseInfos(const char* buf, int max, char* infos[]) {
                 break;
             }
 
-            if (!strcmp(token, "}") ) {
+            if (!strcmp(token, "}")) {
                 break;
             }
 
-            Q_strncpyz(key, token, sizeof(key) );
+            Q_strncpyz(key, token, sizeof(key));
 
             token = COM_ParseExt(&buf, false);
 
@@ -89,7 +89,7 @@ int CG_ParseInfos(const char* buf, int max, char* infos[]) {
         }
 
         // NOTE: extra space for arena number
-        infos[count] = (char*) BG_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS) ) + 1);
+        infos[count] = (char*) BG_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1);
 
         if (infos[count]) {
             strcpy(infos[count], info);
@@ -113,13 +113,13 @@ static void CG_LoadArenasFromFile(char* filename) {
     len = trap_FS_FOpenFile(filename, &f, FS_READ);
 
     if (!f) {
-        trap_Print(va("%sfile not found: %s\n", Color::CString(Color::Red), filename) );
+        trap_Print(va("%sfile not found: %s\n", Color::CString(Color::Red), filename));
         return;
     }
 
     if (len >= MAX_ARENAS_TEXT) {
         trap_Print(va("%sfile too large: %s is %i, max allowed is %i\n",
-                      Color::CString(Color::Red), filename, len, MAX_ARENAS_TEXT) );
+                      Color::CString(Color::Red), filename, len, MAX_ARENAS_TEXT));
         trap_FS_FCloseFile(f);
         return;
     }
@@ -160,7 +160,7 @@ void CG_LoadArenas() {
     rocketInfo.data.mapCount = 0;
 
     // get all directories from meta
-    numdirs = trap_FS_GetFileListRecursive("meta", ".arena", dirlist, sizeof(dirlist) );
+    numdirs = trap_FS_GetFileListRecursive("meta", ".arena", dirlist, sizeof(dirlist));
     dirptr = dirlist;
 
     for (i = 0; i < numdirs; i++, dirptr += dirlen + 1) {
@@ -170,11 +170,11 @@ void CG_LoadArenas() {
         CG_LoadArenasFromFile(filename);
     }
 
-    trap_Print(va("[skipnotify]%i arenas parsed\n", cg_numArenas) );
+    trap_Print(va("[skipnotify]%i arenas parsed\n", cg_numArenas));
 
     for (n = 0; n < cg_numArenas; n++) {
-        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapLoadName = BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "map") );
-        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapName = BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "longname") );
+        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapLoadName = BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "map"));
+        rocketInfo.data.mapList[rocketInfo.data.mapCount].mapName = BG_strdup(Info_ValueForKey(cg_arenaInfos[n], "longname"));
         rocketInfo.data.mapCount++;
 
         if (rocketInfo.data.mapCount >= MAX_MAPS) {

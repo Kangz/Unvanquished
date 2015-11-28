@@ -50,7 +50,7 @@ sharedEntity_t* SV_GentityNum(int num) {
         Com_Error(ERR_DROP, "SV_GentityNum: bad num %d", num);
     }
 
-    ent = (sharedEntity_t*)( (byte*) sv.gentities + sv.gentitySize * (num) );
+    ent = (sharedEntity_t*)((byte*) sv.gentities + sv.gentitySize * (num));
 
     return ent;
 }
@@ -62,7 +62,7 @@ playerState_t* SV_GameClientNum(int num) {
         Com_Error(ERR_DROP, "SV_GameClientNum: bad num");
     }
 
-    ps = (playerState_t*)( (byte*) sv.gameClients + sv.gameClientSize * (num) );
+    ps = (playerState_t*)((byte*) sv.gameClients + sv.gameClientSize * (num));
 
     return ps;
 }
@@ -168,7 +168,7 @@ void SV_LocateGameData(const IPC::SharedMemory& shmRegion, int numGEntities, int
     if (numGEntities < 0 || sizeofGEntity_t < 0 || sizeofGameClient < 0) {
         Com_Error(ERR_DROP, "SV_LocateGameData: Invalid game data parameters");
     }
-    if ( (int) shmRegion.GetSize() < numGEntities * sizeofGEntity_t + sv_maxclients->integer * sizeofGameClient) {
+    if ((int) shmRegion.GetSize() < numGEntities * sizeofGEntity_t + sv_maxclients->integer * sizeofGameClient) {
         Com_Error(ERR_DROP, "SV_LocateGameData: Shared memory region too small");
     }
 
@@ -257,19 +257,19 @@ static void SV_GetTimeString(char* buffer, int length, const char* format, const
     if (tm) {
         struct tm t;
 
-        t.tm_sec   = tm->tm_sec;
-        t.tm_min   = tm->tm_min;
-        t.tm_hour  = tm->tm_hour;
-        t.tm_mday  = tm->tm_mday;
-        t.tm_mon   = tm->tm_mon;
-        t.tm_year  = tm->tm_year;
-        t.tm_wday  = tm->tm_wday;
-        t.tm_yday  = tm->tm_yday;
+        t.tm_sec = tm->tm_sec;
+        t.tm_min = tm->tm_min;
+        t.tm_hour = tm->tm_hour;
+        t.tm_mday = tm->tm_mday;
+        t.tm_mon = tm->tm_mon;
+        t.tm_year = tm->tm_year;
+        t.tm_wday = tm->tm_wday;
+        t.tm_yday = tm->tm_yday;
         t.tm_isdst = tm->tm_isdst;
 
         strftime(buffer, length, format, &t);
     } else {
-        strftime(buffer, length, format, gmtime(nullptr) );
+        strftime(buffer, length, format, gmtime(nullptr));
     }
 }
 
@@ -281,7 +281,7 @@ Called every time a map changes
 ===============
 */
 void SV_ShutdownGameProgs() {
-    if (!gvm.IsActive() ) {
+    if (!gvm.IsActive()) {
         return;
     }
 
@@ -321,7 +321,7 @@ Called on a map_restart, but not on a map change
 ===================
 */
 void SV_RestartGameProgs() {
-    if (!gvm.IsActive() ) {
+    if (!gvm.IsActive()) {
         return;
     }
 

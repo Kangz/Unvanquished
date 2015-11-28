@@ -42,7 +42,7 @@ typedef struct {
     const char* classname;
 } buildableName_t;
 
-static const buildableName_t bg_buildableNameList[] ={
+static const buildableName_t bg_buildableNameList[] = {
     { BA_A_SPAWN, "eggpod", "team_alien_spawn"     },
     { BA_A_OVERMIND, "overmind", "team_alien_overmind"  },
     { BA_A_BARRICADE, "barricade", "team_alien_barricade" },
@@ -75,7 +75,7 @@ BG_BuildableByName
 */
 const buildableAttributes_t* BG_BuildableByName(const char* name) {
     for (unsigned i = 0; i < bg_numBuildables; i++) {
-        if (!Q_stricmp(bg_buildableList[i].name, name) ) {
+        if (!Q_stricmp(bg_buildableList[i].name, name)) {
             return &bg_buildableList[i];
         }
     }
@@ -90,7 +90,7 @@ BG_BuildableByEntityName
 */
 const buildableAttributes_t* BG_BuildableByEntityName(const char* name) {
     for (unsigned i = 0; i < bg_numBuildables; i++) {
-        if (!Q_stricmp(bg_buildableList[i].entityName, name) ) {
+        if (!Q_stricmp(bg_buildableList[i].entityName, name)) {
             return &bg_buildableList[i];
         }
     }
@@ -122,7 +122,7 @@ void BG_InitBuildableAttributes() {
         ba = &bg_buildableList[i];
 
         // Initialise default values for buildables
-        Com_Memset(ba, 0, sizeof(buildableAttributes_t) );
+        Com_Memset(ba, 0, sizeof(buildableAttributes_t));
 
         ba->number = bh->number;
         ba->name = bh->name;
@@ -176,7 +176,7 @@ void BG_InitBuildableModelConfigs() {
 
     for (i = BA_NONE + 1; i < BA_NUM_BUILDABLES; i++) {
         bc = BG_BuildableModelConfig(i);
-        Com_Memset(bc, 0, sizeof(buildableModelConfig_t) );
+        Com_Memset(bc, 0, sizeof(buildableModelConfig_t));
 
         BG_ParseBuildableModelFile(va("configs/buildables/%s.model.cfg",
                                       BG_Buildable(i)->name), bc);
@@ -190,7 +190,7 @@ typedef struct {
     weapon_t startWeapon;
 } classData_t;
 
-static classData_t bg_classData[] ={
+static classData_t bg_classData[] = {
     {
         PCL_NONE, // int     number;
         "spectator", // char    *name;
@@ -278,7 +278,7 @@ BG_ClassByName
 const classAttributes_t* BG_ClassByName(const char* name) {
     if (name) {
         for (unsigned i = 0; i < bg_numClasses; i++) {
-            if (!Q_stricmp(bg_classList[i].name, name) ) {
+            if (!Q_stricmp(bg_classList[i].name, name)) {
                 return &bg_classList[i];
             }
         }
@@ -307,7 +307,7 @@ BG_ClassModelConfigByName
 classModelConfig_t* BG_ClassModelConfigByName(const char* name) {
     if (name) {
         for (unsigned i = 0; i < bg_numClasses; i++) {
-            if (!Q_stricmp(bg_classModelConfigList[i].humanName, name) ) {
+            if (!Q_stricmp(bg_classModelConfigList[i].humanName, name)) {
                 return &bg_classModelConfigList[i];
             }
         }
@@ -385,7 +385,7 @@ int BG_ClassCanEvolveFromTo(int from, int to, int credits) {
         return -1;
     }
 
-    if (!BG_ClassUnlocked(to) || BG_ClassDisabled(to) ) {
+    if (!BG_ClassUnlocked(to) || BG_ClassDisabled(to)) {
         return -1;
     }
 
@@ -395,8 +395,8 @@ int BG_ClassCanEvolveFromTo(int from, int to, int credits) {
     // classes w/o a cost are for spawning only
     if (toCost == 0) {
         // (adv.) granger may evolve into adv. granger or dretch at no cost
-        if ( (from == PCL_ALIEN_BUILDER0 || from == PCL_ALIEN_BUILDER0_UPG) &&
-             (to == PCL_ALIEN_BUILDER0_UPG || to == PCL_ALIEN_LEVEL0) ) {
+        if ((from == PCL_ALIEN_BUILDER0 || from == PCL_ALIEN_BUILDER0_UPG) &&
+            (to == PCL_ALIEN_BUILDER0_UPG || to == PCL_ALIEN_LEVEL0)) {
             return 0;
         }
 
@@ -492,7 +492,7 @@ void BG_InitClassModelConfigs() {
         BG_ParseClassModelFile(va("configs/classes/%s.model.cfg",
                                   BG_Class(i)->name), cc);
 
-        cc->segmented = cc->modelName[0] ? BG_NonSegModel(va("models/players/%s/animation.cfg", cc->modelName) ) : false;
+        cc->segmented = cc->modelName[0] ? BG_NonSegModel(va("models/players/%s/animation.cfg", cc->modelName)) : false;
     }
 }
 
@@ -503,7 +503,7 @@ typedef struct {
     const char* name;
 } weaponData_t;
 
-static const weaponData_t bg_weaponsData[] ={
+static const weaponData_t bg_weaponsData[] = {
     { WP_ALEVEL0, "level0"    },
     { WP_ALEVEL1, "level1"    },
     { WP_ALEVEL2, "level2"    },
@@ -538,7 +538,7 @@ static const weaponAttributes_t nullWeapon {};
 
 weapon_t BG_WeaponNumberByName(const char* name) {
     for (unsigned i = 0; i < bg_numWeapons; i++) {
-        if (!Q_stricmp(bg_weaponsData[i].name, name) ) {
+        if (!Q_stricmp(bg_weaponsData[i].name, name)) {
             return bg_weaponsData[i].number;
         }
     }
@@ -579,10 +579,10 @@ void BG_InitWeaponAttributes() {
         wd = &bg_weaponsData[i];
         wa = &bg_weapons[i];
 
-        Com_Memset(wa, 0, sizeof(weaponAttributes_t) );
+        Com_Memset(wa, 0, sizeof(weaponAttributes_t));
 
         wa->number = wd->number;
-        wa->name   = wd->name;
+        wa->name = wd->name;
 
         // set default values for optional fields
         wa->knockbackScale = 1.0f;
@@ -601,7 +601,7 @@ typedef struct {
 } upgradeData_t;
 
 
-static const upgradeData_t bg_upgradesData[] ={
+static const upgradeData_t bg_upgradesData[] = {
     { UP_LIGHTARMOUR, "larmour"  },
     { UP_MEDIUMARMOUR, "marmour"  },
     { UP_BATTLESUIT, "bsuit"    },
@@ -628,7 +628,7 @@ BG_UpgradeByName
 */
 const upgradeAttributes_t* BG_UpgradeByName(const char* name) {
     for (unsigned i = 0; i < bg_numUpgrades; i++) {
-        if (!Q_stricmp(bg_upgrades[i].name, name) ) {
+        if (!Q_stricmp(bg_upgrades[i].name, name)) {
             return &bg_upgrades[i];
         }
     }
@@ -660,7 +660,7 @@ void BG_InitUpgradeAttributes() {
         ua = &bg_upgrades[i];
 
         // Initialise default values for buildables
-        Com_Memset(ua, 0, sizeof(upgradeAttributes_t) );
+        Com_Memset(ua, 0, sizeof(upgradeAttributes_t));
 
         ua->number = ud->number;
         ua->name = ud->name;
@@ -676,7 +676,7 @@ typedef struct {
     const char* name;
 } missileData_t;
 
-static const missileData_t bg_missilesData[] ={
+static const missileData_t bg_missilesData[] = {
     { MIS_FLAMER, "flamer"       },
     { MIS_BLASTER, "blaster"      },
     { MIS_PRIFLE, "prifle"       },
@@ -704,7 +704,7 @@ BG_MissileByName
 */
 const missileAttributes_t* BG_MissileByName(const char* name) {
     for (unsigned i = 0; i < bg_numMissiles; i++) {
-        if (!Q_stricmp(bg_missiles[i].name, name) ) {
+        if (!Q_stricmp(bg_missiles[i].name, name)) {
             return &bg_missiles[i];
         }
     }
@@ -735,9 +735,9 @@ void BG_InitMissileAttributes() {
         md = &bg_missilesData[i];
         ma = &bg_missiles[i];
 
-        Com_Memset(ma, 0, sizeof(missileAttributes_t) );
+        Com_Memset(ma, 0, sizeof(missileAttributes_t));
 
-        ma->name   = md->name;
+        ma->name = md->name;
         ma->number = md->number;
 
         // for simplicity, read both from a single file
@@ -753,7 +753,7 @@ typedef struct {
     const char* name;
 } meansOfDeathData_t;
 
-static const meansOfDeathData_t bg_meansOfDeathData[] ={
+static const meansOfDeathData_t bg_meansOfDeathData[] = {
     { MOD_ABUILDER_CLAW, "MOD_ABUILDER_CLAW" },
     { MOD_UNKNOWN, "MOD_UNKNOWN" },
     { MOD_SHOTGUN, "MOD_SHOTGUN" },
@@ -817,7 +817,7 @@ BG_MeansOfDeathByName
 */
 meansOfDeath_t BG_MeansOfDeathByName(const char* name) {
     for (unsigned i = 0; i < bg_numMeansOfDeath; i++) {
-        if (!Q_stricmp(bg_meansOfDeathData[i].name, name) ) {
+        if (!Q_stricmp(bg_meansOfDeathData[i].name, name)) {
             return bg_meansOfDeathData[i].number;
         }
     }
@@ -835,7 +835,7 @@ typedef struct {
 
 static const beaconAttributes_t nullBeacon {};
 
-static const beaconData_t bg_beaconsData[]  ={
+static const beaconData_t bg_beaconsData[] = {
     { BCT_POINTER, "pointer", BCF_IMPORTANT | BCF_PER_PLAYER | BCF_PRECISE },
     { BCT_TIMER, "timer", BCF_IMPORTANT | BCF_PER_PLAYER },
     { BCT_TAG, "tag", BCF_RESERVED },
@@ -857,7 +857,7 @@ BG_BeaconByName
 */
 const beaconAttributes_t* BG_BeaconByName(const char* name) {
     for (unsigned i = 0; i < bg_numBeacons; i++) {
-        if (!Q_stricmp(bg_beacons[i].name, name) ) {
+        if (!Q_stricmp(bg_beacons[i].name, name)) {
             return bg_beacons + i;
         }
     }
@@ -891,7 +891,7 @@ void BG_InitBeaconAttributes() {
         bd = bg_beaconsData + i;
         ba = bg_beacons + i;
 
-        Com_Memset(ba, 0, sizeof(beaconAttributes_t) );
+        Com_Memset(ba, 0, sizeof(beaconAttributes_t));
 
         ba->number = bd->number;
         ba->name = bd->name;
@@ -950,8 +950,8 @@ void BG_UnloadAllConfigs() {
         buildableAttributes_t* ba = &bg_buildableList[i];
 
         if (ba) {
-            BG_Free( (char*)ba->humanName);
-            BG_Free( (char*)ba->info);
+            BG_Free((char*)ba->humanName);
+            BG_Free((char*)ba->info);
         }
     }
 
@@ -961,11 +961,11 @@ void BG_UnloadAllConfigs() {
         if (ca) {
             // Do not free the statically allocated empty string
             if (ca->info && *ca->info != '\0') {
-                BG_Free( (char*)ca->info);
+                BG_Free((char*)ca->info);
             }
 
             if (ca->fovCvar && *ca->fovCvar != '\0') {
-                BG_Free( (char*)ca->fovCvar);
+                BG_Free((char*)ca->fovCvar);
             }
         }
     }
@@ -978,10 +978,10 @@ void BG_UnloadAllConfigs() {
         weaponAttributes_t* wa = &bg_weapons[i];
 
         if (wa) {
-            BG_Free( (char*)wa->humanName);
+            BG_Free((char*)wa->humanName);
 
             if (wa->info && *wa->info != '\0') {
-                BG_Free( (char*)wa->info);
+                BG_Free((char*)wa->info);
             }
         }
     }
@@ -990,10 +990,10 @@ void BG_UnloadAllConfigs() {
         upgradeAttributes_t* ua = &bg_upgrades[i];
 
         if (ua) {
-            BG_Free( (char*)ua->humanName);
+            BG_Free((char*)ua->humanName);
 
             if (ua->info && *ua->info != '\0') {
-                BG_Free( (char*)ua->info);
+                BG_Free((char*)ua->info);
             }
         }
     }
@@ -1002,10 +1002,10 @@ void BG_UnloadAllConfigs() {
         beaconAttributes_t* ba = bg_beacons + i;
 
         if (ba) {
-            BG_Free( (char*)ba->humanName);
+            BG_Free((char*)ba->humanName);
 
             #ifdef BUILD_CGAME
-            BG_Free( (char*)ba->text[0]);
+            BG_Free((char*)ba->text[0]);
             #endif
         }
     }
@@ -1125,7 +1125,7 @@ void BG_EvaluateTrajectoryDelta(const trajectory_t* tr, int atTime, vec3_t resul
     }
 }
 
-static const char* const eventnames[] ={
+static const char* const eventnames[] = {
     "EV_NONE",
 
     "EV_FOOTSTEP",
@@ -1249,7 +1249,7 @@ BG_EventName
 ===============
 */
 const char* BG_EventName(int num) {
-    if (num < 0 || num >= (int) ARRAY_LEN(eventnames) ) {
+    if (num < 0 || num >= (int) ARRAY_LEN(eventnames)) {
         return "UNKNOWN";
     }
 
@@ -1270,7 +1270,7 @@ void BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, playerStat
     #ifndef NDEBUG
     {
         char buf[256];
-        trap_Cvar_VariableStringBuffer("showevents", buf, sizeof(buf) );
+        trap_Cvar_VariableStringBuffer("showevents", buf, sizeof(buf));
 
         if (atof(buf) != 0) {
             #ifdef BUILD_SGAME
@@ -1359,7 +1359,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, bool snap)
         }
 
         seq = ps->entityEventSequence & (MAX_EVENTS - 1);
-        s->event = ps->events[seq] | ( (ps->entityEventSequence & 3) << 8);
+        s->event = ps->events[seq] | ((ps->entityEventSequence & 3) << 8);
         s->eventParm = ps->eventParms[seq];
         ps->entityEventSequence++;
     }
@@ -1371,7 +1371,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, bool snap)
     s->modelindex = 0;
 
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
-        if (BG_InventoryContainsUpgrade(i, ps->stats) ) {
+        if (BG_InventoryContainsUpgrade(i, ps->stats)) {
             s->modelindex |= 1 << i;
         }
     }
@@ -1481,7 +1481,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
         }
 
         seq = ps->entityEventSequence & (MAX_EVENTS - 1);
-        s->event = ps->events[seq] | ( (ps->entityEventSequence & 3) << 8);
+        s->event = ps->events[seq] | ((ps->entityEventSequence & 3) << 8);
         s->eventParm = ps->eventParms[seq];
         ps->entityEventSequence++;
     }
@@ -1493,7 +1493,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
     s->modelindex = 0;
 
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
-        if (BG_InventoryContainsUpgrade(i, ps->stats) ) {
+        if (BG_InventoryContainsUpgrade(i, ps->stats)) {
             s->modelindex |= 1 << i;
         }
     }
@@ -1583,7 +1583,7 @@ int BG_SlotsForInventory(int stats[]) {
     }
 
     for (i = UP_NONE; i < UP_NUM_UPGRADES; i++) {
-        if (BG_InventoryContainsUpgrade(i, stats) ) {
+        if (BG_InventoryContainsUpgrade(i, stats)) {
             slot = BG_Upgrade(i)->slots;
 
             // this check should never be true
@@ -1629,7 +1629,7 @@ Does the player hold an upgrade?
 ========================
 */
 bool BG_InventoryContainsUpgrade(int item, int stats[]) {
-    return (stats[STAT_ITEMS] & (1 << item) );
+    return (stats[STAT_ITEMS] & (1 << item));
 }
 
 /*
@@ -1662,7 +1662,7 @@ Is this upgrade active?
 ========================
 */
 bool BG_UpgradeIsActive(int item, int stats[]) {
-    return (stats[STAT_ACTIVEITEMS] & (1 << item) );
+    return (stats[STAT_ACTIVEITEMS] & (1 << item));
 }
 
 /*
@@ -1692,7 +1692,7 @@ bool BG_RotateAxis(vec3_t surfNormal, vec3_t inAxis[3],
 
     // can't rotate with no rotation vector
     if (VectorLength(xNormal) != 0.0f) {
-        rotAngle = RAD2DEG(acos(DotProduct(localNormal, refNormal) ) );
+        rotAngle = RAD2DEG(acos(DotProduct(localNormal, refNormal)));
 
         if (inverse) {
             rotAngle = -rotAngle;
@@ -1805,14 +1805,14 @@ int BG_GetValueOfPlayer(playerState_t* ps) {
     case TEAM_HUMANS:
         // Add upgrade price
         for (upgradeNum = UP_NONE + 1; upgradeNum < UP_NUM_UPGRADES; upgradeNum++) {
-            if (BG_InventoryContainsUpgrade(upgradeNum, ps->stats) ) {
+            if (BG_InventoryContainsUpgrade(upgradeNum, ps->stats)) {
                 price += BG_Upgrade(upgradeNum)->price;
             }
         }
 
         // Add weapon price
         for (upgradeNum = WP_NONE + 1; upgradeNum < WP_NUM_WEAPONS; upgradeNum++) {
-            if (BG_InventoryContainsWeapon(upgradeNum, ps->stats) ) {
+            if (BG_InventoryContainsWeapon(upgradeNum, ps->stats)) {
                 price += BG_Weapon(upgradeNum)->price;
             }
         }
@@ -1827,7 +1827,7 @@ int BG_GetValueOfPlayer(playerState_t* ps) {
         return 0;
     }
 
-    return PLAYER_BASE_VALUE + (int)( (float)price * PLAYER_PRICE_TO_VALUE);
+    return PLAYER_BASE_VALUE + (int)((float)price * PLAYER_PRICE_TO_VALUE);
 }
 
 /*
@@ -1876,7 +1876,7 @@ bool BG_PlayerLowAmmo(const playerState_t* ps, bool* energy) {
     // look for the primary weapon
     for (weapon = WP_NONE + 1; weapon < WP_NUM_WEAPONS; weapon++) {
         if (weapon != WP_BLASTER) {
-            if (BG_InventoryContainsWeapon(weapon, ps->stats) ) {
+            if (BG_InventoryContainsWeapon(weapon, ps->stats)) {
                 goto found;
             }
         }
@@ -2052,7 +2052,7 @@ int BG_UnpackEntityNumbers(entityState_t* es, int* entityNums, unsigned int coun
             break;
 
         case 3:
-            *entityNum = (es->time >> (GENTITYNUM_BITS * 2) );
+            *entityNum = (es->time >> (GENTITYNUM_BITS * 2));
             break;
 
         case 4:
@@ -2064,7 +2064,7 @@ int BG_UnpackEntityNumbers(entityState_t* es, int* entityNums, unsigned int coun
             break;
 
         case 6:
-            *entityNum = (es->time2 >> (GENTITYNUM_BITS * 2) );
+            *entityNum = (es->time2 >> (GENTITYNUM_BITS * 2));
             break;
 
         case 7:
@@ -2076,7 +2076,7 @@ int BG_UnpackEntityNumbers(entityState_t* es, int* entityNums, unsigned int coun
             break;
 
         case 9:
-            *entityNum = (es->constantLight >> (GENTITYNUM_BITS * 2) );
+            *entityNum = (es->constantLight >> (GENTITYNUM_BITS * 2));
             break;
 
         default:
@@ -2150,7 +2150,7 @@ void BG_ParseCSVEquipmentList(const char* string, weapon_t* weapons, int weapons
             break;
         }
 
-        if (i == (weaponsSize - 1) || j == (upgradesSize - 1) ) {
+        if (i == (weaponsSize - 1) || j == (upgradesSize - 1)) {
             break;
         }
     }
@@ -2388,12 +2388,12 @@ weapon_t BG_PrimaryWeapon(int stats[]) {
             continue;
         }
 
-        if (BG_InventoryContainsWeapon(i, stats) ) {
+        if (BG_InventoryContainsWeapon(i, stats)) {
             return (weapon_t) i;
         }
     }
 
-    if (BG_InventoryContainsWeapon(WP_BLASTER, stats) ) {
+    if (BG_InventoryContainsWeapon(WP_BLASTER, stats)) {
         return WP_BLASTER;
     }
 
@@ -2414,7 +2414,7 @@ int BG_LoadEmoticons(emoticon_t* emoticons, int num) {
     int count;
 
     numFiles = trap_FS_GetFileList("emoticons", "x1.crn", fileList,
-                                   sizeof(fileList) );
+                                   sizeof(fileList));
 
     if (numFiles < 1) {
         return 0;
@@ -2440,7 +2440,7 @@ int BG_LoadEmoticons(emoticon_t* emoticons, int num) {
             continue;
         }
 
-        if (!trap_FS_FOpenFile(va("emoticons/%s", filePtr), nullptr, FS_READ) ) {
+        if (!trap_FS_FOpenFile(va("emoticons/%s", filePtr), nullptr, FS_READ)) {
             Com_Printf("^3could not open \"emoticons/%s\"\n", filePtr);
             continue;
         }
@@ -2496,7 +2496,7 @@ const char* BG_TeamNamePlural(int team) {
 }
 
 int cmdcmp(const void* a, const void* b) {
-    return b ? Q_stricmp( (const char*) a, ( (dummyCmd_t*) b)->name) : 1;
+    return b ? Q_stricmp((const char*) a, ((dummyCmd_t*) b)->name) : 1;
 }
 
 /*
@@ -2510,7 +2510,7 @@ char* Quote(const char* str) {
     static int index = -1;
 
     index = (index + 1) & 3;
-    trap_QuoteString(str, buffer[index], sizeof(buffer[index]) );
+    trap_QuoteString(str, buffer[index], sizeof(buffer[index]));
 
     return buffer[index];
 }
@@ -2525,7 +2525,7 @@ char* Substring(const char* in, int start, int count) {
     static char buffer[MAX_STRING_CHARS];
     char* buf = buffer;
 
-    memset(&buffer, 0, sizeof(buffer) );
+    memset(&buffer, 0, sizeof(buffer));
 
     Q_strncpyz(buffer, in+start, count);
 

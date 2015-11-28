@@ -26,15 +26,15 @@ along with Unvanquished Source Code.  If not, see <http://www.gnu.org/licenses/>
 
 static Log::Logger fireLogger("sgame.fire");
 
-const float IgnitableComponent::SELF_DAMAGE          = 10.0f;
-const float IgnitableComponent::SPLASH_DAMAGE        = 20.0f;
+const float IgnitableComponent::SELF_DAMAGE = 10.0f;
+const float IgnitableComponent::SPLASH_DAMAGE = 20.0f;
 const float IgnitableComponent::SPLASH_DAMAGE_RADIUS = 60.0f;
-const int IgnitableComponent::MIN_BURN_TIME        = 2500;
-const int IgnitableComponent::STOP_CHECK_TIME      = 2500;
-const float IgnitableComponent::STOP_CHANCE          = 0.5f;
-const float IgnitableComponent::STOP_RADIUS          = 150.0f;
-const int IgnitableComponent::SPREAD_CHECK_TIME    = 2500;
-const float IgnitableComponent::SPREAD_RADIUS        = 120.0f;
+const int IgnitableComponent::MIN_BURN_TIME = 2500;
+const int IgnitableComponent::STOP_CHECK_TIME = 2500;
+const float IgnitableComponent::STOP_CHANCE = 0.5f;
+const float IgnitableComponent::STOP_RADIUS = 150.0f;
+const int IgnitableComponent::SPREAD_CHECK_TIME = 2500;
+const float IgnitableComponent::SPREAD_RADIUS = 120.0f;
 
 IgnitableComponent::IgnitableComponent(Entity& entity, bool alwaysOnFire, ThinkingComponent& r_ThinkingComponent)
     : IgnitableComponentBase(entity, alwaysOnFire, r_ThinkingComponent)
@@ -155,7 +155,7 @@ void IgnitableComponent::ConsiderStop(int timeDelta) {
         }
 
         float frac = G_Distance(entity.oldEnt, other.oldEnt) / STOP_RADIUS;
-        float mod  = frac * 1.0f + (1.0f - frac) * STOP_CHANCE;
+        float mod = frac * 1.0f + (1.0f - frac) * STOP_CHANCE;
 
         burnStopChance *= mod;
     });

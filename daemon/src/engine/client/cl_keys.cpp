@@ -45,7 +45,7 @@ key up events are sent even if in console mode
 
 */
 
-#define CLIP(t) Math::Clamp( (t), 0, MAX_TEAMS - 1)
+#define CLIP(t) Math::Clamp((t), 0, MAX_TEAMS - 1)
 
 Console::Field g_consoleField(INT_MAX);
 bool chat_irc;
@@ -71,7 +71,7 @@ typedef struct {
 } keyname_t;
 
 // names not in this list can either be lowercase ascii, or '0xnn' hex sequences
-static const keyname_t keynames[] ={
+static const keyname_t keynames[] = {
     { "TAB", K_TAB                    },
     { "ENTER", K_ENTER                  },
     { "ESCAPE", K_ESCAPE                 },
@@ -416,8 +416,8 @@ static void Field_Paste(Util::LineEditData& edit) {
     // send as if typed, so insert / overstrike works properly
     pasteLen = strlen(cbd);
 
-    while (pasteLen >= (width = Q_UTF8_Width(cbd) ) ) {
-        Field_CharEvent(edit, Q_UTF8_CodePoint(cbd) );
+    while (pasteLen >= (width = Q_UTF8_Width(cbd))) {
+        Field_CharEvent(edit, Q_UTF8_CodePoint(cbd));
 
         cbd += width;
         pasteLen -= width;
@@ -558,7 +558,7 @@ void Field_CharEvent(Util::LineEditData& edit, int c) {
     }
 
     // 'unprintable' on Mac - used for cursor keys, function keys etc.
-    if ( (unsigned int)(c - 0xF700) < 0x200u) {
+    if ((unsigned int)(c - 0xF700) < 0x200u) {
         return;
     }
 
@@ -630,15 +630,15 @@ void Console_Key(int key) {
     // command history (ctrl-p ctrl-n for unix style)
 
     // ----(SA)  added some mousewheel functionality to the console
-    if ( (key == K_MWHEELUP && keys[K_SHIFT].down) || (key == K_UPARROW) || (key == K_KP_UPARROW) ||
-         ( (tolower(key) == 'p') && keys[K_CTRL].down) ) {
+    if ((key == K_MWHEELUP && keys[K_SHIFT].down) || (key == K_UPARROW) || (key == K_KP_UPARROW) ||
+        ((tolower(key) == 'p') && keys[K_CTRL].down)) {
         g_consoleField.HistoryPrev();
         return;
     }
 
     // ----(SA)  added some mousewheel functionality to the console
-    if ( (key == K_MWHEELDOWN && keys[K_SHIFT].down) || (key == K_DOWNARROW) || (key == K_KP_DOWNARROW) ||
-         ( (tolower(key) == 'n') && keys[K_CTRL].down) ) {
+    if ((key == K_MWHEELDOWN && keys[K_SHIFT].down) || (key == K_DOWNARROW) || (key == K_KP_DOWNARROW) ||
+        ((tolower(key) == 'n') && keys[K_CTRL].down)) {
         g_consoleField.HistoryNext();
         return;
     }
@@ -675,13 +675,13 @@ void Console_Key(int key) {
     }
 
     // ctrl-home = top of console
-    if ( (key == K_HOME || key == K_KP_HOME) && keys[K_CTRL].down) {
+    if ((key == K_HOME || key == K_KP_HOME) && keys[K_CTRL].down) {
         Con_JumpUp();
         return;
     }
 
     // ctrl-end = bottom of console
-    if ( (key == K_END || key == K_KP_END) && keys[K_CTRL].down) {
+    if ((key == K_END || key == K_KP_END) && keys[K_CTRL].down) {
         Con_ScrollToBottom();
         return;
     }
@@ -743,7 +743,7 @@ int Key_StringToKeynum(const char* str) {
 
     // scan for a text match
     for (kn = keynames; kn->name; kn++) {
-        if (!Q_stricmp(str, kn->name) ) {
+        if (!Q_stricmp(str, kn->name)) {
             return kn->keynum;
         }
     }
@@ -824,7 +824,7 @@ int Key_GetTeam(const char* arg, const char* cmd) {
     }
 
     for (t = 0; arg[t]; ++t) {
-        if (!isdigit(arg[t]) ) {
+        if (!isdigit(arg[t])) {
             break;
         }
     }
@@ -832,7 +832,7 @@ int Key_GetTeam(const char* arg, const char* cmd) {
     if (!arg[t]) {
         t = atoi(arg);
 
-        if (t != CLIP(t) ) {
+        if (t != CLIP(t)) {
             Com_Printf("^3%s:^7 %d is not a valid team number\n", cmd, t);
             return -1;
         }
@@ -844,7 +844,7 @@ int Key_GetTeam(const char* arg, const char* cmd) {
 
     for (unsigned t = 0; t < ARRAY_LEN(labels); ++t) {
         // matching initial substring
-        if (!Q_strnicmp(arg, labels[t].label, l) ) {
+        if (!Q_strnicmp(arg, labels[t].label, l)) {
             return labels[t].team;
         }
     }
@@ -946,10 +946,10 @@ void Key_Unbind_f() {
         }
     }
 
-    b = Key_StringToKeynum(Cmd_Argv(b - 1) );
+    b = Key_StringToKeynum(Cmd_Argv(b - 1));
 
     if (b == -1) {
-        Com_Printf("\"%s\" isn't a valid key\n", Cmd_Argv(1) );
+        Com_Printf("\"%s\" isn't a valid key\n", Cmd_Argv(1));
         return;
     }
 
@@ -1012,7 +1012,7 @@ void Key_Bind_f() {
     if (!cmd) {
         if (teambind) {
             if (keys[b].binding[team]) {
-                Com_Printf("\"%s\"[%s] = %s\n", key, teamName[team], Cmd_QuoteString(keys[b].binding[team]) );
+                Com_Printf("\"%s\"[%s] = %s\n", key, teamName[team], Cmd_QuoteString(keys[b].binding[team]));
             } else {
                 Com_Printf("\"%s\"[%s] is not bound\n", key, teamName[team]);
             }
@@ -1022,7 +1022,7 @@ void Key_Bind_f() {
 
             for (i = 0; i < MAX_TEAMS; ++i) {
                 if (keys[b].binding[i]) {
-                    Com_Printf("\"%s\"[%s] = %s\n", key, teamName[i], Cmd_QuoteString(keys[b].binding[i]) );
+                    Com_Printf("\"%s\"[%s] = %s\n", key, teamName[i], Cmd_QuoteString(keys[b].binding[i]));
                     bound = true;
                 }
             }
@@ -1041,7 +1041,7 @@ void Key_Bind_f() {
         Key_SetBinding(b, team, cmd);
     } else {
         // set to 3rd arg onwards (4th if team binding)
-        Key_SetBinding(b, team, Cmd_ArgsFrom(2 + teambind) );
+        Key_SetBinding(b, team, Cmd_ArgsFrom(2 + teambind));
     }
 }
 
@@ -1086,12 +1086,12 @@ void Key_EditBind_f() {
         buf = Str::UTF8To32("/bind ");
     }
 
-    buf += Str::UTF8To32(Key_KeynumToString(b) );
+    buf += Str::UTF8To32(Key_KeynumToString(b));
     buf += Str::UTF8To32(" ");
 
     const char* binding = Key_GetBinding(b, -team);
     if (binding) {
-        buf += Str::UTF8To32(Cmd::Escape(std::string(binding) ) );
+        buf += Str::UTF8To32(Cmd::Escape(std::string(binding)));
     }
 
     // FIXME: use text console if that's where the editbind command was entered
@@ -1113,12 +1113,12 @@ void Key_WriteBindings(fileHandle_t f) {
 
     for (i = 0; i < MAX_KEYS; i++) {
         if (keys[i].binding[0] && keys[i].binding[0][0]) {
-            FS_Printf(f, "bind       %s %s\n", Key_KeynumToString(i), Cmd_QuoteString(keys[i].binding[0]) );
+            FS_Printf(f, "bind       %s %s\n", Key_KeynumToString(i), Cmd_QuoteString(keys[i].binding[0]));
         }
 
         for (team = 1; team < MAX_TEAMS; ++team) {
             if (keys[i].binding[team] && keys[i].binding[team][0]) {
-                FS_Printf(f, "teambind %d %s %s\n", team, Key_KeynumToString(i), Cmd_QuoteString(keys[i].binding[team]) );
+                FS_Printf(f, "teambind %d %s %s\n", team, Key_KeynumToString(i), Cmd_QuoteString(keys[i].binding[team]));
             }
         }
     }
@@ -1163,9 +1163,9 @@ Key_SetKeyData
 ============
 */
 void Key_SetKeyData_f() {
-    if (atoi(Cmd_Argv(1) ) == plusCommand.check) {
-        plusCommand.key  = atoi(Cmd_Argv(2) ) - 1;
-        plusCommand.time = atoi(Cmd_Argv(3) );
+    if (atoi(Cmd_Argv(1)) == plusCommand.check) {
+        plusCommand.key = atoi(Cmd_Argv(2)) - 1;
+        plusCommand.time = atoi(Cmd_Argv(3));
         plusCommand.valid = true;
     } else {
         plusCommand.valid = false;
@@ -1231,7 +1231,7 @@ void Field_CompleteTeamname(int flags) {
 Key_KeynameCompletion
 ============
 */
-void Key_KeynameCompletion(void (* callback)(const char* s) ) {
+void Key_KeynameCompletion(void (* callback)(const char* s)) {
     int i;
 
     for (i = 0; keynames[i].name != nullptr; i++) {
@@ -1309,7 +1309,7 @@ static const struct {
     unsigned short count;
     unsigned short bit;
     unsigned int index;
-} modifierKeys[] ={
+} modifierKeys[] = {
     { "shift", 5, 1, K_SHIFT },
     { "ctrl", 4, 2, K_CTRL },
     { "alt", 3, 4, K_ALT },
@@ -1357,14 +1357,14 @@ static modifierMask_t getModifierMask(const char* mods) {
             if (!Q_strnicmp(ptr, modifierKeys[i].name, modifierKeys[i].count)
                 && (ptr[modifierKeys[i].count] == ' ' ||
                     ptr[modifierKeys[i].count] == ',' ||
-                    ptr[modifierKeys[i].count] == 0) ) {
+                    ptr[modifierKeys[i].count] == 0)) {
                 if (invert) {
                     mask.up |= modifierKeys[i].bit;
                 } else {
                     mask.down |= modifierKeys[i].bit;
                 }
 
-                if ( (mask.down & mask.up) & modifierKeys[i].bit) {
+                if ((mask.down & mask.up) & modifierKeys[i].bit) {
                     Com_Printf("can't have %s both pressed and not pressed\n", modifierKeys[i].name);
                     return none;
                 }
@@ -1392,11 +1392,11 @@ static modifierMask_t getModifierMask(const char* mods) {
     }
 
     for (i = 0; i < NUM_RECOGNISED_MODIFIERS; ++i) {
-        if (mask.up & (1 << i) ) {
+        if (mask.up & (1 << i)) {
             ++mask.bits;
         }
 
-        if (mask.down & (1 << i) ) {
+        if (mask.down & (1 << i)) {
             ++mask.bits;
         }
     }
@@ -1408,11 +1408,11 @@ static int checkKeysDown(modifierMask_t mask) {
     int i;
 
     for (i = 0; modifierKeys[i].bit; ++i) {
-        if ( (mask.down & modifierKeys[i].bit) && keys[modifierKeys[i].index].down == 0) {
+        if ((mask.down & modifierKeys[i].bit) && keys[modifierKeys[i].index].down == 0) {
             return 0; // should be pressed, isn't pressed
         }
 
-        if ( (mask.up & modifierKeys[i].bit) && keys[modifierKeys[i].index].down) {
+        if ((mask.up & modifierKeys[i].bit) && keys[modifierKeys[i].index].down) {
             return 0; // should not be pressed, is pressed
         }
     }
@@ -1446,7 +1446,7 @@ void Key_ModCase_f() {
     }
 
     while (index < count) {
-        modifierMask_t mask = getModifierMask(Cmd_Argv(2 * index + 1) );
+        modifierMask_t mask = getModifierMask(Cmd_Argv(2 * index + 1));
 
         if (mask.bits == 0) {
             return; // parse failure (reported) - abort
@@ -1543,7 +1543,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
     case K_KP_INS:
     case K_KP_DEL:
     case K_KP_HOME:
-        if (IN_IsNumLockDown() ) {
+        if (IN_IsNumLockDown()) {
             onlybinds = true;
         }
 
@@ -1588,7 +1588,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
     if (key == K_ENTER) {
         if (down) {
             if (keys[K_ALT].down) {
-                Cvar_SetValue("r_fullscreen", !Cvar_VariableIntegerValue("r_fullscreen") );
+                Cvar_SetValue("r_fullscreen", !Cvar_VariableIntegerValue("r_fullscreen"));
                 return;
             }
         }
@@ -1602,7 +1602,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
     #endif
 
     // console key is hardcoded, so the user can never unbind it
-    if (key == K_CONSOLE || (keys[K_SHIFT].down && key == K_ESCAPE) ) {
+    if (key == K_CONSOLE || (keys[K_SHIFT].down && key == K_ESCAPE)) {
         if (!down) {
             return;
         }
@@ -1626,7 +1626,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
 
     // escape is always handled special
     if (key == K_ESCAPE && down) {
-        if (!(cls.keyCatchers & KEYCATCH_UI) ) {
+        if (!(cls.keyCatchers & KEYCATCH_UI)) {
             if (cls.state == CA_ACTIVE && !clc.demoplaying) {
                 // Arnout: on request
                 if (cls.keyCatchers & KEYCATCH_CONSOLE) { // get rid of the console
@@ -1649,7 +1649,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
     // Don't do anything if libRocket menus have focus
     // Everything is handled by libRocket. Also we don't want
     // to run any binds (since they won't be found).
-    if (cls.keyCatchers & KEYCATCH_UI && !(cls.keyCatchers & KEYCATCH_CONSOLE) ) {
+    if (cls.keyCatchers & KEYCATCH_UI && !(cls.keyCatchers & KEYCATCH_CONSOLE)) {
         cgvm.CGameKeyEvent(key, down);
         return;
     }
@@ -1664,7 +1664,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
         // Handle any +commands which were invoked on the corresponding key-down
         Cmd::BufferCommandText(va("keyup %d %d %u", plusCommand.check, key, time));
 
-        if (cls.keyCatchers & KEYCATCH_CGAME && cgvm.IsActive() ) {
+        if (cls.keyCatchers & KEYCATCH_CGAME && cgvm.IsActive()) {
             if (!onlybinds) {
                 cgvm.CGameKeyEvent(key, down);
             }
@@ -1679,7 +1679,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
             Console_Key(key);
         }
     } else if (cls.keyCatchers & KEYCATCH_CGAME && !bypassMenu) {
-        if (cgvm.IsActive() ) {
+        if (cgvm.IsActive()) {
             if (!onlybinds) {
                 cgvm.CGameKeyEvent(key, down);
             }

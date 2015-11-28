@@ -50,20 +50,20 @@ class RocketDataSourceSingle : public Rocket::Core::Element, public Rocket::Cont
 
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("source") != changed_attributes.end() ) {
-                ParseDataSource(data_source, data_table, GetAttribute("source")->Get<Rocket::Core::String>() );
+            if (changed_attributes.find("source") != changed_attributes.end()) {
+                ParseDataSource(data_source, data_table, GetAttribute("source")->Get<Rocket::Core::String>());
                 dirty_query = true;
             }
-            if (changed_attributes.find("fields") != changed_attributes.end() ) {
+            if (changed_attributes.find("fields") != changed_attributes.end()) {
                 csvFields = GetAttribute("fields")->Get<Rocket::Core::String>();
                 Rocket::Core::StringUtilities::ExpandString(fields, csvFields);
                 dirty_query = true;
             }
-            if (changed_attributes.find("formatter") != changed_attributes.end() ) {
-                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>() );
+            if (changed_attributes.find("formatter") != changed_attributes.end()) {
+                formatter = Rocket::Controls::DataFormatter::GetDataFormatter(GetAttribute("formatter")->Get<Rocket::Core::String>());
                 dirty_query = true;
             }
-            if (changed_attributes.find("targetid") != changed_attributes.end() || changed_attributes.find("targetdoc") != changed_attributes.end() ) {
+            if (changed_attributes.find("targetid") != changed_attributes.end() || changed_attributes.find("targetdoc") != changed_attributes.end()) {
                 dirty_listener = true;
             }
         }
@@ -72,7 +72,7 @@ class RocketDataSourceSingle : public Rocket::Core::Element, public Rocket::Cont
             Rocket::Core::Element::ProcessEvent(evt);
 
             // Make sure it is meant for the element we are listening to
-            if (evt == "rowselect" && targetElement == evt.GetTargetElement() ) {
+            if (evt == "rowselect" && targetElement == evt.GetTargetElement()) {
                 const Rocket::Core::Dictionary* parameters = evt.GetParameters();
                 selection = parameters->Get<int>("index", -1);
                 dirty_query = true;
@@ -85,7 +85,7 @@ class RocketDataSourceSingle : public Rocket::Core::Element, public Rocket::Cont
                 Rocket::Core::ElementDocument* document;
                 Rocket::Core::String td;
 
-                if (  (td = GetAttribute<Rocket::Core::String>("targetdoc", "") ).Empty() ) {
+                if ((td = GetAttribute<Rocket::Core::String>("targetdoc", "")).Empty()) {
                     document = GetOwnerDocument();
                 } else {
                     document = GetContext()->GetDocument(td);
@@ -94,7 +94,7 @@ class RocketDataSourceSingle : public Rocket::Core::Element, public Rocket::Cont
                 if (document) {
                     Rocket::Core::Element* element;
 
-                    if ( (element = document->GetElementById(GetAttribute<Rocket::Core::String>("targetid", "") ) ) ) {
+                    if ((element = document->GetElementById(GetAttribute<Rocket::Core::String>("targetid", "")))) {
                         if (element != targetElement) {
                             if (targetElement) {
                                 targetElement->RemoveEventListener("rowselect", this);
@@ -116,7 +116,7 @@ class RocketDataSourceSingle : public Rocket::Core::Element, public Rocket::Cont
                 query.NextRow();
 
                 for (size_t i = 0; i < fields.size(); ++i) {
-                    raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], "") );
+                    raw_data.push_back(query.Get<Rocket::Core::String>(fields[i], ""));
                 }
 
                 if (formatter) {

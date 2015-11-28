@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // tr_shade_calc.c
 #include "tr_local.h"
 
-#define WAVEVALUE(table, base, amplitude, phase, freq) ((base) + table[Q_ftol( ( ( (phase) + backEnd.refdef.floatTime* (freq) )* FUNCTABLE_SIZE) ) & FUNCTABLE_MASK]* (amplitude))
+#define WAVEVALUE(table, base, amplitude, phase, freq) ((base) + table[Q_ftol((((phase) + backEnd.refdef.floatTime* (freq))* FUNCTABLE_SIZE)) & FUNCTABLE_MASK]* (amplitude))
 
 static float* TableForFunc(genFunc_t func) {
     switch (func) {
@@ -307,7 +307,7 @@ float RB_EvalExpression(const expression_t* exp, float defaultValue) {
                 value = table->values[oldIndex];
             } else {
                 // lerp value
-                value = table->values[oldIndex] + ( (table->values[newIndex] - table->values[oldIndex]) * lerp);
+                value = table->values[oldIndex] + ((table->values[newIndex] - table->values[oldIndex]) * lerp);
             }
 
             // ri.Printf(PRINT_ALL, "%s: %i %i %f\n", table->name, oldIndex, newIndex, value);
@@ -322,7 +322,7 @@ float RB_EvalExpression(const expression_t* exp, float defaultValue) {
         default: {
             if (numOps < 2) {
                 ri.Printf(PRINT_ALL, "WARNING: shader %s has numOps < 2 for binary operator %s\n", tess.surfaceShader->name,
-                          GetOpName(op.type) );
+                          GetOpName(op.type));
                 return defaultValue;
             }
 
@@ -376,7 +376,7 @@ float RB_EvalExpression(const expression_t* exp, float defaultValue) {
                 break;
 
             case OP_MOD:
-                value = (float)( (int) value1 % (int) value2);
+                value = (float)((int) value1 % (int) value2);
                 break;
 
             case OP_MUL:
@@ -430,7 +430,7 @@ static void ReorderQuadVerts(shaderVertex_t* vert, glIndex_t* index,
     vec2_t midTexCoord;
     int i;
 
-    Com_Memcpy(vertexCopy, vert, 4 * sizeof(shaderVertex_t) );
+    Com_Memcpy(vertexCopy, vert, 4 * sizeof(shaderVertex_t));
 
     midTexCoord[0] = midTexCoord[1] = 0.0f;
     for (i = 0; i < 4; i++) {
@@ -454,7 +454,7 @@ static void ReorderQuadVerts(shaderVertex_t* vert, glIndex_t* index,
 
     for (i = 0; i < 4; i++) {
         Com_Memcpy(&vert[newIndex[i]], &vertexCopy[i],
-                   sizeof(shaderVertex_t) );
+                   sizeof(shaderVertex_t));
     }
     for (i = 0; i < 6; i++) {
         index[i] = minIndex + newIndex[index[i] - minIndex];
@@ -498,7 +498,7 @@ static void AutospriteDeform(int firstVertex, int numVertexes, int numIndexes) {
         for (j = 0; j < 4; j++) {
             VectorCopy(mid, v[j].xyz);
             Vector4Set(v[j].spriteOrientation,
-                       0, 0, 0, floatToHalf(radius) );
+                       0, 0, 0, floatToHalf(radius));
         }
     }
 }
@@ -510,7 +510,7 @@ Autosprite2Deform
 Autosprite2 will pivot a rectangular quad along the center of its long axis
 =====================
 */
-static const int edgeVerts[6][2] ={
+static const int edgeVerts[6][2] = {
     { 0, 1 },
     { 0, 2 },
     { 0, 3 },

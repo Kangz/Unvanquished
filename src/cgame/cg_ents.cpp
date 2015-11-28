@@ -140,7 +140,7 @@ void CG_PositionEntityOnTag(refEntity_t* entity, const refEntity_t* parent,
     }
 
     // had to cast away the const to avoid compiler problems...
-    AxisMultiply(lerped.axis, ( (refEntity_t*) parent)->axis, entity->axis);
+    AxisMultiply(lerped.axis, ((refEntity_t*) parent)->axis, entity->axis);
     entity->backlerp = parent->backlerp;
 }
 
@@ -172,7 +172,7 @@ void CG_PositionRotatedEntityOnTag(refEntity_t* entity, const refEntity_t* paren
 
     // had to cast away the const to avoid compiler problems...
     AxisMultiply(entity->axis, lerped.axis, tempAxis);
-    AxisMultiply(tempAxis, ( (refEntity_t*) parent)->axis, entity->axis);
+    AxisMultiply(tempAxis, ((refEntity_t*) parent)->axis, entity->axis);
 }
 
 /*
@@ -263,7 +263,7 @@ static void CG_EntityEffects(centity_t* cent) {
     }
 
     // constant light glow
-    if (cent->currentState.constantLight && (cent->currentState.eType == ET_MOVER || cent->currentState.eType == ET_MODELDOOR) ) {
+    if (cent->currentState.constantLight && (cent->currentState.eType == ET_MOVER || cent->currentState.eType == ET_MODELDOOR)) {
         int cl;
         int i, r, g, b;
 
@@ -271,13 +271,13 @@ static void CG_EntityEffects(centity_t* cent) {
         r = cl & 255;
         g = (cl >> 8) & 255;
         b = (cl >> 16) & 255;
-        i = ( (cl >> 24) & 255) * 4;
+        i = ((cl >> 24) & 255) * 4;
 
         trap_R_AddAdditiveLightToScene(cent->lerpOrigin, i, r, g, b);
     }
 
-    if (CG_IsTrailSystemValid(&cent->muzzleTS) ) {
-        if (cg.time > cent->muzzleTSDeathTime && CG_IsTrailSystemValid(&cent->muzzleTS) ) {
+    if (CG_IsTrailSystemValid(&cent->muzzleTS)) {
+        if (cg.time > cent->muzzleTSDeathTime && CG_IsTrailSystemValid(&cent->muzzleTS)) {
             CG_DestroyTrailSystem(&cent->muzzleTS);
         }
     }
@@ -299,7 +299,7 @@ static void CG_General(centity_t* cent) {
         return;
     }
 
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
 
     // set frame
 
@@ -382,7 +382,7 @@ static void CG_Missile(centity_t* cent) {
     }
 
     // create the render entity
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
     VectorCopy(cent->lerpOrigin, ent.origin);
     VectorCopy(cent->lerpOrigin, ent.oldorigin);
 
@@ -448,12 +448,12 @@ static void CG_Missile(centity_t* cent) {
 
             if (ma->animLooping) {
                 ent.frame = ma->animStartFrame +
-                            (int)( (timeSinceStart / 1000.0f) * ma->animFrameRate) % ma->animNumFrames;
+                            (int)((timeSinceStart / 1000.0f) * ma->animFrameRate) % ma->animNumFrames;
             } else {
                 ent.frame = ma->animStartFrame +
-                            (int)( (timeSinceStart / 1000.0f) * ma->animFrameRate);
+                            (int)((timeSinceStart / 1000.0f) * ma->animFrameRate);
 
-                if (ent.frame > (ma->animStartFrame + ma->animNumFrames) ) {
+                if (ent.frame > (ma->animStartFrame + ma->animNumFrames)) {
                     ent.frame = ma->animStartFrame +ma->animNumFrames;
                 }
             }
@@ -463,10 +463,10 @@ static void CG_Missile(centity_t* cent) {
     }
 
     // Add particle system.
-    if (ma->particleSystem && !CG_IsParticleSystemValid(&cent->missilePS) ) {
+    if (ma->particleSystem && !CG_IsParticleSystemValid(&cent->missilePS)) {
         cent->missilePS = CG_SpawnNewParticleSystem(ma->particleSystem);
 
-        if (CG_IsParticleSystemValid(&cent->missilePS) ) {
+        if (CG_IsParticleSystemValid(&cent->missilePS)) {
             CG_SetAttachmentCent(&cent->missilePS->attachment, cent);
             CG_AttachToCent(&cent->missilePS->attachment);
             cent->missilePS->charge = es->torsoAnim;
@@ -474,10 +474,10 @@ static void CG_Missile(centity_t* cent) {
     }
 
     // Add trail system.
-    if (ma->trailSystem && !CG_IsTrailSystemValid(&cent->missileTS) ) {
+    if (ma->trailSystem && !CG_IsTrailSystemValid(&cent->missileTS)) {
         cent->missileTS = CG_SpawnNewTrailSystem(ma->trailSystem);
 
-        if (CG_IsTrailSystemValid(&cent->missileTS) ) {
+        if (CG_IsTrailSystemValid(&cent->missileTS)) {
             // TODO: Make attachment to tags on missile models work.
             /*const char *tag;
             bool       attachToTag = true;
@@ -526,7 +526,7 @@ static void CG_Mover(centity_t* cent) {
     s1 = &cent->currentState;
 
     // create the render entity
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
     VectorCopy(cent->lerpOrigin, ent.origin);
     VectorCopy(cent->lerpOrigin, ent.oldorigin);
     AnglesToAxis(cent->lerpAngles, ent.axis);
@@ -566,7 +566,7 @@ static void CG_Portal(centity_t* cent) {
     s1 = &cent->currentState;
 
     // create the render entity
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
     VectorCopy(cent->lerpOrigin, ent.origin);
     VectorCopy(s1->origin2, ent.oldorigin);
     ByteToDir(s1->eventParm, ent.axis[0]);
@@ -597,11 +597,11 @@ void CG_Fire(centity_t* cent) {
     // TODO: Add burning sound
     // trap_S_StartSound( origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media. );
 
-    if (!CG_IsParticleSystemValid(&cent->entityPS) ) {
+    if (!CG_IsParticleSystemValid(&cent->entityPS)) {
         // TODO: Use different particle systems for different normals
         cent->entityPS = CG_SpawnNewParticleSystem(cgs.media.floorFirePS);
 
-        if (CG_IsParticleSystemValid(&cent->entityPS) ) {
+        if (CG_IsParticleSystemValid(&cent->entityPS)) {
             CG_SetParticleSystemNormal(cent->entityPS, cent->currentState.origin2);
             CG_SetAttachmentPoint(&cent->entityPS->attachment, cent->currentState.origin);
             CG_AttachToPoint(&cent->entityPS->attachment);
@@ -650,7 +650,7 @@ static void CG_LightFlare(centity_t* cent) {
 
     trap_AddVisTestToScene(cent->lfs.hTest, es->origin, 16.0f, 8.0f);
 
-    memset(&flare, 0, sizeof(flare) );
+    memset(&flare, 0, sizeof(flare));
 
     flare.reType = RT_SPRITE;
     flare.customShader = cgs.gameShaders[es->modelindex];
@@ -683,7 +683,7 @@ static void CG_LightFlare(centity_t* cent) {
 
     if (maxAngle > 0.0f) {
         float radiusMod = 1.0f - (180.0f - RAD2DEG(
-                                      acos(DotProduct(delta, forward) ) ) ) / maxAngle;
+                                      acos(DotProduct(delta, forward)))) / maxAngle;
 
         if (radiusMod < 0.0f) {
             radiusMod = 0.0f;
@@ -776,11 +776,11 @@ static void CG_Lev2ZapChain(centity_t* cent) {
 
         target = &cg_entities[entityNums[i]];
 
-        if (!CG_IsTrailSystemValid(&cent->level2ZapTS[i]) ) {
+        if (!CG_IsTrailSystemValid(&cent->level2ZapTS[i])) {
             cent->level2ZapTS[i] = CG_SpawnNewTrailSystem(cgs.media.level2ZapTS);
         }
 
-        if (CG_IsTrailSystemValid(&cent->level2ZapTS[i]) ) {
+        if (CG_IsTrailSystemValid(&cent->level2ZapTS[i])) {
             CG_SetAttachmentCent(&cent->level2ZapTS[i]->frontAttachment, source);
             CG_SetAttachmentCent(&cent->level2ZapTS[i]->backAttachment, target);
             CG_AttachToCent(&cent->level2ZapTS[i]->frontAttachment);
@@ -899,7 +899,7 @@ static void CG_CalcEntityLerpPositions(centity_t* cent) {
     if (cg_projectileNudge.integer &&
         !cg.demoPlayback &&
         cent->currentState.eType == ET_MISSILE &&
-        !(cg.snap->ps.pm_flags & PMF_FOLLOW) ) {
+        !(cg.snap->ps.pm_flags & PMF_FOLLOW)) {
         timeshift = cg.ping;
     }
 
@@ -997,7 +997,7 @@ static void CG_CEntityPVSLeave(centity_t* cent) {
     switch (es->eType) {
     case ET_LEV2_ZAP_CHAIN:
         for (i = 0; i <= LEVEL2_AREAZAP_MAX_TARGETS; i++) {
-            if (CG_IsTrailSystemValid(&cent->level2ZapTS[i]) ) {
+            if (CG_IsTrailSystemValid(&cent->level2ZapTS[i])) {
                 CG_DestroyTrailSystem(&cent->level2ZapTS[i]);
             }
         }
@@ -1009,7 +1009,7 @@ static void CG_CEntityPVSLeave(centity_t* cent) {
         break;
 
     case ET_FIRE:
-        if (CG_IsParticleSystemValid(&cent->entityPS) ) {
+        if (CG_IsParticleSystemValid(&cent->entityPS)) {
             CG_DestroyParticleSystem(&cent->entityPS);
         }
         break;
@@ -1019,26 +1019,26 @@ static void CG_CEntityPVSLeave(centity_t* cent) {
     }
 
     // some muzzle PS are infinite, destroy them here
-    if (CG_IsParticleSystemValid(&cent->muzzlePS) ) {
+    if (CG_IsParticleSystemValid(&cent->muzzlePS)) {
         CG_DestroyParticleSystem(&cent->muzzlePS);
     }
 
     // destroy the jetpack PS
-    if (CG_IsParticleSystemValid(&cent->jetPackPS[0]) ) {
+    if (CG_IsParticleSystemValid(&cent->jetPackPS[0])) {
         CG_DestroyParticleSystem(&cent->jetPackPS[0]);
     }
 
-    if (CG_IsParticleSystemValid(&cent->jetPackPS[1]) ) {
+    if (CG_IsParticleSystemValid(&cent->jetPackPS[1])) {
         CG_DestroyParticleSystem(&cent->jetPackPS[1]);
     }
 
     // Destroy missile PS.
-    if (CG_IsParticleSystemValid(&cent->missilePS) ) {
+    if (CG_IsParticleSystemValid(&cent->missilePS)) {
         CG_DestroyParticleSystem(&cent->missilePS);
     }
 
     // Destroy missile TS.
-    if (CG_IsTrailSystemValid(&cent->missileTS) ) {
+    if (CG_IsTrailSystemValid(&cent->missileTS)) {
         CG_DestroyTrailSystem(&cent->missileTS);
     }
 
@@ -1226,8 +1226,8 @@ void CG_AddPacketEntities() {
             case ET_MISSILE:
             case ET_CORPSE:
                 x = (es->solid & 255);
-                zd = ( (es->solid >> 8) & 255);
-                zu = ( (es->solid >> 16) & 255) - 32;
+                zd = ((es->solid >> 8) & 255);
+                zu = ((es->solid >> 16) & 255) - 32;
 
                 mins[0] = mins[1] = -x;
                 maxs[0] = maxs[1] = x;

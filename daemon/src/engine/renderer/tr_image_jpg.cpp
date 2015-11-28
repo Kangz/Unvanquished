@@ -108,7 +108,7 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height,
      * requires it in order to read binary files.
      */
 
-    len = ri.FS_ReadFile( (char*) filename, &fbuffer.v);
+    len = ri.FS_ReadFile((char*) filename, &fbuffer.v);
 
     if (!fbuffer.b || len < 0) {
         return;
@@ -174,7 +174,7 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height,
     pixelcount = cinfo.output_width * cinfo.output_height;
 
     if (!cinfo.output_width || !cinfo.output_height
-        || ( (pixelcount * 4) / cinfo.output_width) / 4 != cinfo.output_height
+        || ((pixelcount * 4) / cinfo.output_width) / 4 != cinfo.output_height
         || pixelcount > 0x1FFFFFFF || cinfo.output_components != 3) {
         // Free the memory to make sure we don't leak memory
         ri.FS_FreeFile(fbuffer.v);
@@ -206,7 +206,7 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height,
          * Here the array is only one element long, but you could ask for
          * more than one scanline at a time if that's more convenient.
          */
-        buf = ( (out + (row_stride * cinfo.output_scanline) ) );
+        buf = ((out + (row_stride * cinfo.output_scanline)));
         buffer = &buf;
         Q_UNUSED(jpeg_read_scanlines(&cinfo, buffer, 1));
     }
@@ -351,7 +351,7 @@ static void jpegDest(j_compress_ptr cinfo, byte* outfile, int size) {
     if (cinfo->dest == nullptr) {
         /* first time for this JPEG object? */
         cinfo->dest = (struct jpeg_destination_mgr*)
-                      (*cinfo->mem->alloc_small)( (j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(my_destination_mgr) );
+                      (*cinfo->mem->alloc_small)((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(my_destination_mgr));
     }
 
     dest = (my_dest_ptr) cinfo->dest;
@@ -419,7 +419,7 @@ int SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality, int image_width, 
          * Here the array is only one element long, but you could pass
          * more than one scanline at a time if that's more convenient.
          */
-        row_pointer[0] = &image_buffer[( (cinfo.image_height - 1) * row_stride) - cinfo.next_scanline * row_stride];
+        row_pointer[0] = &image_buffer[((cinfo.image_height - 1) * row_stride) - cinfo.next_scanline * row_stride];
         Q_UNUSED(jpeg_write_scanlines(&cinfo, row_pointer, 1));
     }
 

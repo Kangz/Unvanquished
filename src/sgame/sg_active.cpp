@@ -43,7 +43,7 @@ void P_DamageFeedback(gentity_t* player) {
 
     client = player->client;
 
-    if (!PM_Live(client->ps.pm_type) ) {
+    if (!PM_Live(client->ps.pm_type)) {
         return;
     }
 
@@ -74,7 +74,7 @@ void P_DamageFeedback(gentity_t* player) {
     }
 
     // play an appropriate pain sound
-    if ( (level.time > player->pain_debounce_time) && !(player->flags & FL_GODMODE) ) {
+    if ((level.time > player->pain_debounce_time) && !(player->flags & FL_GODMODE)) {
         player->pain_debounce_time = level.time + 700;
         int transmittedHalth = (int)std::ceil(player->entity->Get<HealthComponent>()->Health());
         transmittedHalth = Math::Clamp(transmittedHalth, 0, 255);
@@ -116,7 +116,7 @@ void P_WorldEffects(gentity_t* ent) {
             // drown!
             ent->client->airOutTime += 1000;
 
-            if (G_Alive(ent) ) {
+            if (G_Alive(ent)) {
                 // take more damage the longer underwater
                 ent->damage += 2;
 
@@ -126,11 +126,11 @@ void P_WorldEffects(gentity_t* ent) {
 
                 // play a gurp sound instead of a general pain sound
                 if (ent->entity->Get<HealthComponent>()->Health() <= (float)ent->damage) {
-                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("*drown.wav") );
+                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("*drown.wav"));
                 } else if (rand() < RAND_MAX / 2 + 1) {
-                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp1.wav") );
+                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp1.wav"));
                 } else {
-                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp2.wav") );
+                    G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp2.wav"));
                 }
 
                 // don't play a general pain sound
@@ -149,7 +149,7 @@ void P_WorldEffects(gentity_t* ent) {
     // check for sizzle damage (move to pmove?)
     //
     if (waterlevel &&
-        (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME) ) ) {
+        (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME))) {
         if (G_Alive(ent) && ent->pain_debounce_time <= level.time) {
             if (ent->watertype & CONTENTS_LAVA) {
                 ent->entity->Damage(30.0f * waterlevel, nullptr, Util::nullopt, Util::nullopt, 0, MOD_LAVA);
@@ -168,7 +168,7 @@ G_SetClientSound
 ===============
 */
 void G_SetClientSound(gentity_t* ent) {
-    if (ent->waterlevel && (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME) ) ) {
+    if (ent->waterlevel && (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME))) {
         ent->client->ps.loopSound = level.snd_fry;
     } else {
         ent->client->ps.loopSound = 0;
@@ -190,7 +190,7 @@ static int GetClientMass(gentity_t* ent) {
     if (ent->client->pers.team == TEAM_ALIENS) {
         entMass = BG_Class(ent->client->pers.classSelection)->health;
     } else if (ent->client->pers.team == TEAM_HUMANS) {
-        if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, ent->client->ps.stats) ) {
+        if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, ent->client->ps.stats)) {
             entMass *= 2;
         }
     } else {
@@ -305,7 +305,7 @@ void ClientImpacts(gentity_t* ent, pmove_t* pm) {
     }
 
     // clear a fake trace struct for touch function
-    memset(&trace, 0, sizeof(trace) );
+    memset(&trace, 0, sizeof(trace));
 
     for (i = 0; i < pm->numtouch; i++) {
         other = &g_entities[pm->touchents[i]];
@@ -332,13 +332,13 @@ void ClientImpacts(gentity_t* ent, pmove_t* pm) {
             ClientShove(ent, other);
 
             // bot should get pushed out the way
-            if ( (other->r.svFlags & SVF_BOT) && ent->client->pers.team == other->client->pers.team) {
+            if ((other->r.svFlags & SVF_BOT) && ent->client->pers.team == other->client->pers.team) {
                 PushBot(ent, other);
             }
 
             // if we are standing on their head, then we should be pushed also
-            if ( (ent->r.svFlags & SVF_BOT) && ent->s.groundEntityNum == other->s.number &&
-                 other->client && ent->client->pers.team == other->client->pers.team) {
+            if ((ent->r.svFlags & SVF_BOT) && ent->s.groundEntityNum == other->s.number &&
+                other->client && ent->client->pers.team == other->client->pers.team) {
                 PushBot(other, ent);
             }
         }
@@ -377,7 +377,7 @@ void  G_TouchTriggers(gentity_t* ent) {
     }
 
     // dead clients don't activate triggers!
-    if (G_Dead(ent) ) {
+    if (G_Dead(ent)) {
         return;
     }
 
@@ -403,7 +403,7 @@ void  G_TouchTriggers(gentity_t* ent) {
             continue;
         }
 
-        if (!(hit->r.contents & CONTENTS_SENSOR) ) {
+        if (!(hit->r.contents & CONTENTS_SENSOR)) {
             continue;
         }
 
@@ -416,11 +416,11 @@ void  G_TouchTriggers(gentity_t* ent) {
             continue;
         }
 
-        if (!trap_EntityContact(mins, maxs, hit) ) {
+        if (!trap_EntityContact(mins, maxs, hit)) {
             continue;
         }
 
-        memset(&trace, 0, sizeof(trace) );
+        memset(&trace, 0, sizeof(trace));
 
         if (hit->touch) {
             hit->touch(hit, ent, &trace);
@@ -478,7 +478,7 @@ void SpectatorThink(gentity_t* ent, usercmd_t* ucmd) {
         client->ps.persistant[PERS_UNLOCKABLES] = BG_UnlockablesMask(client->pers.team);
         queued = G_SearchSpawnQueue(&level.team[team].spawnQueue, ent - g_entities);
 
-        if (!ClientInactivityTimer(ent, queued || !level.team[team].numSpawns) ) {
+        if (!ClientInactivityTimer(ent, queued || !level.team[team].numSpawns)) {
             return;
         }
     } else {
@@ -540,7 +540,7 @@ void SpectatorThink(gentity_t* ent, usercmd_t* ucmd) {
         client->ps.weapon = WP_NONE;
 
         // Set up for pmove
-        memset(&pm, 0, sizeof(pm) );
+        memset(&pm, 0, sizeof(pm));
         pm.ps = &client->ps;
         pm.pmext = &client->pmext;
         pm.cmd = *ucmd;
@@ -587,17 +587,17 @@ bool ClientInactivityTimer(gentity_t* ent, bool active) {
                client->pers.cmd.forwardmove ||
                client->pers.cmd.rightmove ||
                client->pers.cmd.upmove ||
-               usercmdButtonPressed(client->pers.cmd.buttons, BUTTON_ATTACK) ) {
+               usercmdButtonPressed(client->pers.cmd.buttons, BUTTON_ATTACK)) {
         client->inactivityTime = level.time + g_inactivity.integer * 1000;
         client->inactivityWarning = false;
     } else if (!client->pers.localClient) {
         if (level.time > client->inactivityTime &&
-            !G_admin_permission(ent, ADMF_ACTIVITY) ) {
-            if (strchr(g_inactivity.string, 's') ) {
+            !G_admin_permission(ent, ADMF_ACTIVITY)) {
+            if (strchr(g_inactivity.string, 's')) {
                 trap_SendServerCommand(-1,
-                                       va("print_tr %s %s %s", QQ(N_("$1$^7 moved from $2$ to spectators due to inactivity\n") ),
-                                          Quote(client->pers.netname), Quote(BG_TeamName(client->pers.team) ) ) );
-                G_LogPrintf("Inactivity: %d\n", (int)(client - level.clients) );
+                                       va("print_tr %s %s %s", QQ(N_("$1$^7 moved from $2$ to spectators due to inactivity\n")),
+                                          Quote(client->pers.netname), Quote(BG_TeamName(client->pers.team))));
+                G_LogPrintf("Inactivity: %d\n", (int)(client - level.clients));
                 G_ChangeTeam(ent, TEAM_NONE);
             } else {
                 trap_DropClient(client - level.clients, "Dropped due to inactivity");
@@ -607,10 +607,10 @@ bool ClientInactivityTimer(gentity_t* ent, bool active) {
 
         if (level.time > client->inactivityTime - 10000 &&
             !client->inactivityWarning &&
-            !G_admin_permission(ent, ADMF_ACTIVITY) ) {
+            !G_admin_permission(ent, ADMF_ACTIVITY)) {
             client->inactivityWarning = true;
             trap_SendServerCommand(client - level.clients,
-                                   va("cp_tr %s", strchr(g_inactivity.string, 's') ? N_("\"Ten seconds until inactivity spectate!\n\"") : N_("\"Ten seconds until inactivity drop!\n\"") ) );
+                                   va("cp_tr %s", strchr(g_inactivity.string, 's') ? N_("\"Ten seconds until inactivity spectate!\n\"") : N_("\"Ten seconds until inactivity drop!\n\"")));
         }
     }
 
@@ -633,12 +633,12 @@ static void G_ReplenishHumanHealth(gentity_t* self) {
     }
 
     // check if medikit is active
-    if (!(client->ps.stats[STAT_STATE] & SS_HEALING_4X) ) {
+    if (!(client->ps.stats[STAT_STATE] & SS_HEALING_4X)) {
         return;
     }
 
     // stop if client is fully healed
-    if (self->entity->Get<HealthComponent>()->FullHealth() ) {
+    if (self->entity->Get<HealthComponent>()->FullHealth()) {
         client->medKitHealthToRestore = 0;
         client->ps.stats[STAT_STATE] &= ~SS_HEALING_4X;
 
@@ -675,7 +675,7 @@ static void BeaconAutoTag(gentity_t* self, int timePassed) {
     team_t team;
     vec3_t viewOrigin, forward, end;
 
-    if (!(client = self->client) ) {
+    if (!(client = self->client)) {
         return;
     }
 
@@ -691,22 +691,22 @@ static void BeaconAutoTag(gentity_t* self, int timePassed) {
 
     client->ps.stats[STAT_TAGSCORE] = 0;
 
-    for (target = nullptr; (target = G_IterateEntities(target) ); ) {
+    for (target = nullptr; (target = G_IterateEntities(target)); ) {
         // Tag entity directly hit and entities in human radar range, make sure the latter are also
         // in vis and, for buildables, are in a line of sight.
-        if ( (target == traceEnt) ||
-             (team == TEAM_HUMANS &&
-              BG_InventoryContainsUpgrade(UP_RADAR, client->ps.stats) &&
-              Distance(self->s.origin, target->s.origin) < RADAR_RANGE &&
-              Beacon::EntityTaggable(target->s.number, team, false) &&
-              trap_InPVSIgnorePortals(self->s.origin, target->s.origin) &&
-              (target->s.eType != ET_BUILDABLE ||
-               G_LineOfSight(self, target, MASK_SOLID, false) ) ) ) {
-            target->tagScore     += timePassed;
-            target->tagScoreTime  = level.time;
+        if ((target == traceEnt) ||
+            (team == TEAM_HUMANS &&
+             BG_InventoryContainsUpgrade(UP_RADAR, client->ps.stats) &&
+             Distance(self->s.origin, target->s.origin) < RADAR_RANGE &&
+             Beacon::EntityTaggable(target->s.number, team, false) &&
+             trap_InPVSIgnorePortals(self->s.origin, target->s.origin) &&
+             (target->s.eType != ET_BUILDABLE ||
+              G_LineOfSight(self, target, MASK_SOLID, false)))) {
+            target->tagScore += timePassed;
+            target->tagScoreTime = level.time;
 
             if (target->tagScore > 1000) {
-                Beacon::Tag(target, team, (target->s.eType == ET_BUILDABLE) );
+                Beacon::Tag(target, team, (target->s.eType == ET_BUILDABLE));
             }
 
             client->ps.stats[STAT_TAGSCORE] = Math::Clamp(
@@ -733,7 +733,7 @@ void ClientTimerActions(gentity_t* ent, int msec) {
     }
 
     client = ent->client;
-    ps     = &client->ps;
+    ps = &client->ps;
 
     client->time100 += msec;
     client->time1000 += msec;
@@ -750,7 +750,7 @@ void ClientTimerActions(gentity_t* ent, int msec) {
 
         // Update build timer
         if (weapon == WP_ABUILD || weapon == WP_ABUILD2 ||
-            BG_InventoryContainsWeapon(WP_HBUILD, client->ps.stats) ) {
+            BG_InventoryContainsWeapon(WP_HBUILD, client->ps.stats)) {
             if (client->ps.stats[STAT_MISC] > 0) {
                 client->ps.stats[STAT_MISC] -= 100;
             }
@@ -782,7 +782,7 @@ void ClientTimerActions(gentity_t* ent, int msec) {
                 dist = BG_Class(ent->client->ps.stats[STAT_CLASS])->buildDist * DotProduct(forward, aimDir);
 
                 client->ps.stats[STAT_BUILDABLE] &= ~SB_BUILDABLE_STATE_MASK;
-                client->ps.stats[STAT_BUILDABLE] |= SB_BUILDABLE_FROM_IBE(G_CanBuild(ent, buildable, dist, dummy, dummy2, &dummy3) );
+                client->ps.stats[STAT_BUILDABLE] |= SB_BUILDABLE_FROM_IBE(G_CanBuild(ent, buildable, dist, dummy, dummy2, &dummy3));
 
                 if (buildable == BA_H_DRILL || buildable == BA_A_LEECH) {
                     client->ps.stats[STAT_PREDICTION] =
@@ -828,13 +828,13 @@ void ClientTimerActions(gentity_t* ent, int msec) {
         // remove orphaned tags for enemy structures when the structure's death was confirmed
         {
             gentity_t* other = nullptr;
-            while ( (other = G_IterateEntities(other) ) ) {
+            while ((other = G_IterateEntities(other))) {
                 if (other->s.eType == ET_BEACON &&
                     other->s.modelindex == BCT_TAG &&
                     (other->s.eFlags & EF_BC_ENEMY) &&
                     !other->tagAttachment &&
                     ent->client->pers.team == other->s.generic1 &&
-                    G_LineOfSight(ent, other, CONTENTS_SOLID, true) ) {
+                    G_LineOfSight(ent, other, CONTENTS_SOLID, true)) {
                     Beacon::Delete(other, true);
                 }
             }
@@ -908,9 +908,9 @@ void ClientIntermissionThink(gclient_t* client) {
     usercmdCopyButtons(client->oldbuttons, client->buttons);
     usercmdCopyButtons(client->buttons, client->pers.cmd.buttons);
 
-    if ( (usercmdButtonPressed(client->buttons, BUTTON_ATTACK) ||
-          usercmdButtonPressed(client->buttons, BUTTON_USE_HOLDABLE) ) &&
-         usercmdButtonsDiffer(client->oldbuttons, client->buttons) ) {
+    if ((usercmdButtonPressed(client->buttons, BUTTON_ATTACK) ||
+         usercmdButtonPressed(client->buttons, BUTTON_USE_HOLDABLE)) &&
+        usercmdButtonsDiffer(client->oldbuttons, client->buttons)) {
         client->readyToExit = 1;
     }
 }
@@ -950,7 +950,7 @@ void ClientEvents(gentity_t* ent, int oldEventSequence) {
                 break; // not in the player model
             }
 
-            fallDistance = ( (float) client->ps.stats[STAT_FALLDIST] - MIN_FALL_DISTANCE) /
+            fallDistance = ((float) client->ps.stats[STAT_FALLDIST] - MIN_FALL_DISTANCE) /
                            (MAX_FALL_DISTANCE - MIN_FALL_DISTANCE);
 
             if (fallDistance < 0.0f) {
@@ -959,8 +959,8 @@ void ClientEvents(gentity_t* ent, int oldEventSequence) {
                 fallDistance = 1.0f;
             }
 
-            damage = (int)( (float) BG_Class(pcl)->health *
-                            BG_Class(pcl)->fallDamage * fallDistance);
+            damage = (int)((float) BG_Class(pcl)->health *
+                           BG_Class(pcl)->fallDamage * fallDistance);
 
             VectorSet(dir, 0, 0, 1);
             BG_ClassBoundingBox(pcl, mins, nullptr, nullptr, nullptr, nullptr);
@@ -1008,7 +1008,7 @@ void SendPendingPredictableEvents(playerState_t* ps) {
         // create a temporary entity for this event which is sent to everyone
         // except the client who generated the event
         seq = ps->entityEventSequence & (MAX_EVENTS - 1);
-        event = ps->events[seq] | ( (ps->entityEventSequence & 3) << 8);
+        event = ps->events[seq] | ((ps->entityEventSequence & 3) << 8);
         // set external event to zero before calling BG_PlayerStateToEntityState
         extEvent = ps->externalEvent;
         ps->externalEvent = 0;
@@ -1059,7 +1059,7 @@ void G_UnlaggedStore() {
         save = &ent->client->unlaggedHist[level.unlaggedIndex];
         save->used = false;
 
-        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY) ) {
+        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY)) {
             continue;
         }
 
@@ -1164,7 +1164,7 @@ void G_UnlaggedCalc(int time, gentity_t* rewindEnt) {
             continue;
         }
 
-        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY) ) {
+        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY)) {
             continue;
         }
 
@@ -1264,11 +1264,11 @@ void G_UnlaggedOn(gentity_t* attacker, vec3_t muzzle, float range) {
             continue;
         }
 
-        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY) ) {
+        if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY)) {
             continue;
         }
 
-        if (VectorCompare(ent->r.currentOrigin, calc->origin) ) {
+        if (VectorCompare(ent->r.currentOrigin, calc->origin)) {
             continue;
         }
 
@@ -1335,7 +1335,7 @@ static void G_UnlaggedDetectCollisions(gentity_t* ent) {
     calc = &ent->client->unlaggedCalc;
 
     // if the client isn't moving, this is not necessary
-    if (VectorCompare(ent->client->oldOrigin, ent->client->ps.origin) ) {
+    if (VectorCompare(ent->client->oldOrigin, ent->client->ps.origin)) {
         return;
     }
 
@@ -1377,18 +1377,18 @@ static int FindAlienHealthSource(gentity_t* self) {
 
     self->boosterUsed = nullptr;
 
-    for (ent = nullptr; (ent = G_IterateEntities(ent, nullptr, true, 0, nullptr) ); ) {
-        if (!G_OnSameTeam(self, ent) ) {
+    for (ent = nullptr; (ent = G_IterateEntities(ent, nullptr, true, 0, nullptr)); ) {
+        if (!G_OnSameTeam(self, ent)) {
             continue;
         }
-        if (G_Dead(ent) ) {
+        if (G_Dead(ent)) {
             continue;
         }
 
         distance = Distance(ent->s.origin, self->s.origin);
 
         if (ent->client && self != ent && distance < REGEN_TEAMMATE_RANGE &&
-            G_LineOfSight(self, ent, MASK_SOLID, false) ) {
+            G_LineOfSight(self, ent, MASK_SOLID, false)) {
             closeTeammates++;
             ret |= (closeTeammates > 1) ? SS_HEALING_4X : SS_HEALING_2X;
         } else if (ent->s.eType == ET_BUILDABLE && ent->spawned && ent->powered) {
@@ -1400,13 +1400,13 @@ static int FindAlienHealthSource(gentity_t* self) {
                 // The closest booster used will play an effect
                 if (needsHealing && distance < minBoosterDistance) {
                     minBoosterDistance = distance;
-                    self->boosterUsed  = ent;
+                    self->boosterUsed = ent;
                 }
             } else if (distance < BG_Buildable(ent->s.modelindex)->creepSize) {
                 // Creep healing
                 ret |= SS_HEALING_4X;
-            } else if ( (ent->s.modelindex == BA_A_OVERMIND || ent->s.modelindex == BA_A_SPAWN) &&
-                        distance < CREEP_BASESIZE) {
+            } else if ((ent->s.modelindex == BA_A_OVERMIND || ent->s.modelindex == BA_A_SPAWN) &&
+                       distance < CREEP_BASESIZE) {
                 // Base healing
                 ret |= SS_HEALING_2X;
             }
@@ -1471,13 +1471,13 @@ static void G_ReplenishAlienHealth(gentity_t* self) {
                 modifier = 1.0f;
             } else {
                 // Exponentially decrease healing rate when not on creep. ln(2) ~= 0.6931472
-                modifier = exp( (0.6931472f / (1000.0f * g_alienOffCreepRegenHalfLife.value) ) *
-                                (self->healthSourceTime - level.time) );
+                modifier = exp((0.6931472f / (1000.0f * g_alienOffCreepRegenHalfLife.value)) *
+                               (self->healthSourceTime - level.time));
                 modifier = std::max(modifier, ALIEN_REGEN_NOCREEP_MIN);
             }
         }
 
-        interval = (int)(1000.0f / (regenBaseRate * modifier) );
+        interval = (int)(1000.0f / (regenBaseRate * modifier));
 
         // If recovery interval is less than frametime, compensate by healing more
         count = 1 + (level.time - self->nextRegenTime) / interval;
@@ -1563,7 +1563,7 @@ void ClientThink_real(gentity_t* self) {
     client->unlaggedTime = ucmd->serverTime;
 
     if (level.pmoveParams.fixed || client->pers.pmoveFixed) {
-        ucmd->serverTime = ( (ucmd->serverTime + level.pmoveParams.msec - 1) / level.pmoveParams.msec) * level.pmoveParams.msec;
+        ucmd->serverTime = ((ucmd->serverTime + level.pmoveParams.msec - 1) / level.pmoveParams.msec) * level.pmoveParams.msec;
         // if (ucmd->serverTime - client->ps.commandTime <= 0)
         // return;
     }
@@ -1596,7 +1596,7 @@ void ClientThink_real(gentity_t* self) {
     G_namelog_update_score(client);
 
     // check for inactivity timer, but never drop the local client of a non-dedicated server
-    if (!ClientInactivityTimer(self, false) ) {
+    if (!ClientInactivityTimer(self, false)) {
         return;
     }
 
@@ -1605,7 +1605,7 @@ void ClientThink_real(gentity_t* self) {
 
     if (client->noclip) {
         client->ps.pm_type = PM_NOCLIP;
-    } else if (G_Dead(self) ) {
+    } else if (G_Dead(self)) {
         client->ps.pm_type = PM_DEAD;
     } else if (client->ps.stats[STAT_STATE] & SS_BLOBLOCKED) {
         client->ps.pm_type = PM_GRABBED;
@@ -1613,20 +1613,20 @@ void ClientThink_real(gentity_t* self) {
         client->ps.pm_type = PM_NORMAL;
     }
 
-    if ( (client->ps.stats[STAT_STATE] & SS_BLOBLOCKED) &&
-         client->lastLockTime + LOCKBLOB_LOCKTIME < level.time) {
+    if ((client->ps.stats[STAT_STATE] & SS_BLOBLOCKED) &&
+        client->lastLockTime + LOCKBLOB_LOCKTIME < level.time) {
         client->ps.stats[STAT_STATE] &= ~SS_BLOBLOCKED;
     }
 
-    if ( (client->ps.stats[STAT_STATE] & SS_SLOWLOCKED) &&
-         client->lastSlowTime + ABUILDER_BLOB_TIME < level.time) {
+    if ((client->ps.stats[STAT_STATE] & SS_SLOWLOCKED) &&
+        client->lastSlowTime + ABUILDER_BLOB_TIME < level.time) {
         client->ps.stats[STAT_STATE] &= ~SS_SLOWLOCKED;
     }
 
     // Is power/creep available for the client's team?
-    if (client->pers.team == TEAM_HUMANS && G_ActiveReactor() ) {
+    if (client->pers.team == TEAM_HUMANS && G_ActiveReactor()) {
         client->ps.eFlags |= EF_POWER_AVAILABLE;
-    } else if (client->pers.team == TEAM_ALIENS && G_ActiveOvermind() ) {
+    } else if (client->pers.team == TEAM_ALIENS && G_ActiveOvermind()) {
         client->ps.eFlags |= EF_POWER_AVAILABLE;
     } else {
         client->ps.eFlags &= ~EF_POWER_AVAILABLE;
@@ -1646,8 +1646,8 @@ void ClientThink_real(gentity_t* self) {
         }
     }
 
-    if ( (client->ps.stats[STAT_STATE] & SS_POISONED) &&
-         client->lastPoisonTime + ALIEN_POISON_TIME < level.time) {
+    if ((client->ps.stats[STAT_STATE] & SS_POISONED) &&
+        client->lastPoisonTime + ALIEN_POISON_TIME < level.time) {
         client->ps.stats[STAT_STATE] &= ~SS_POISONED;
     }
 
@@ -1658,13 +1658,13 @@ void ClientThink_real(gentity_t* self) {
 
     // handle medkit (TODO: move into helper function)
     if (BG_InventoryContainsUpgrade(UP_MEDKIT, client->ps.stats) &&
-        BG_UpgradeIsActive(UP_MEDKIT, client->ps.stats) ) {
+        BG_UpgradeIsActive(UP_MEDKIT, client->ps.stats)) {
         // if currently using a medkit or have no need for a medkit now
-        if ( (client->ps.stats[STAT_STATE] & SS_HEALING_4X) ||
-             (healthComponent->FullHealth() &&
-              !(client->ps.stats[STAT_STATE] & SS_POISONED) ) ) {
+        if ((client->ps.stats[STAT_STATE] & SS_HEALING_4X) ||
+            (healthComponent->FullHealth() &&
+             !(client->ps.stats[STAT_STATE] & SS_POISONED))) {
             BG_DeactivateUpgrade(UP_MEDKIT, client->ps.stats);
-        } else if (G_Alive(self) ) {
+        } else if (G_Alive(self)) {
             // remove anti toxin
             BG_DeactivateUpgrade(UP_MEDKIT, client->ps.stats);
             BG_RemoveUpgradeFromInventory(UP_MEDKIT, client->ps.stats);
@@ -1689,7 +1689,7 @@ void ClientThink_real(gentity_t* self) {
 
     // Throw human grenade
     if (BG_InventoryContainsUpgrade(UP_GRENADE, client->ps.stats) &&
-        BG_UpgradeIsActive(UP_GRENADE, client->ps.stats) ) {
+        BG_UpgradeIsActive(UP_GRENADE, client->ps.stats)) {
         // Remove from inventory
         BG_DeactivateUpgrade(UP_GRENADE, client->ps.stats);
         BG_RemoveUpgradeFromInventory(UP_GRENADE, client->ps.stats);
@@ -1699,7 +1699,7 @@ void ClientThink_real(gentity_t* self) {
 
     // Throw human firebomb
     if (BG_InventoryContainsUpgrade(UP_FIREBOMB, client->ps.stats) &&
-        BG_UpgradeIsActive(UP_FIREBOMB, client->ps.stats) ) {
+        BG_UpgradeIsActive(UP_FIREBOMB, client->ps.stats)) {
         // Remove from inventory
         BG_DeactivateUpgrade(UP_FIREBOMB, client->ps.stats);
         BG_RemoveUpgradeFromInventory(UP_FIREBOMB, client->ps.stats);
@@ -1728,7 +1728,7 @@ void ClientThink_real(gentity_t* self) {
     // set up for pmove
     oldEventSequence = client->ps.eventSequence;
 
-    memset(&pm, 0, sizeof(pm) );
+    memset(&pm, 0, sizeof(pm));
 
     if (self->flags & FL_FORCE_GESTURE) {
         self->flags &= ~FL_FORCE_GESTURE;
@@ -1738,9 +1738,9 @@ void ClientThink_real(gentity_t* self) {
     // clear fall impact velocity before every pmove
     VectorSet(client->pmext.fallImpactVelocity, 0.0f, 0.0f, 0.0f);
 
-    pm.ps    = &client->ps;
+    pm.ps = &client->ps;
     pm.pmext = &client->pmext;
-    pm.cmd   = *ucmd;
+    pm.cmd = *ucmd;
 
     if (pm.ps->pm_type == PM_DEAD) {
         pm.tracemask = MASK_DEADSOLID;
@@ -1748,12 +1748,12 @@ void ClientThink_real(gentity_t* self) {
         pm.tracemask = MASK_PLAYERSOLID;
     }
 
-    pm.trace          = trap_Trace;
-    pm.pointcontents  = trap_PointContents;
-    pm.debugLevel     = g_debugMove.integer;
-    pm.noFootsteps    = 0;
-    pm.pmove_fixed    = level.pmoveParams.fixed || client->pers.pmoveFixed;
-    pm.pmove_msec     = level.pmoveParams.msec;
+    pm.trace = trap_Trace;
+    pm.pointcontents = trap_PointContents;
+    pm.debugLevel = g_debugMove.integer;
+    pm.noFootsteps = 0;
+    pm.pmove_fixed = level.pmoveParams.fixed || client->pers.pmoveFixed;
+    pm.pmove_msec = level.pmoveParams.msec;
     pm.pmove_accurate = level.pmoveParams.accurate;
 
     VectorCopy(client->ps.origin, client->oldOrigin);
@@ -1784,7 +1784,7 @@ void ClientThink_real(gentity_t* self) {
 
     switch (client->ps.weapon) {
     case WP_ALEVEL0:
-        if (!G_CheckVenomAttack(self) ) {
+        if (!G_CheckVenomAttack(self)) {
             client->ps.weaponstate = WEAPON_READY;
         } else {
             client->ps.generic1 = WPM_PRIMARY;
@@ -1795,7 +1795,7 @@ void ClientThink_real(gentity_t* self) {
 
     case WP_ALEVEL3:
     case WP_ALEVEL3_UPG:
-        if (!G_CheckPounceAttack(self) ) {
+        if (!G_CheckPounceAttack(self)) {
             client->ps.weaponstate = WEAPON_READY;
         } else {
             client->ps.generic1 = WPM_SECONDARY;
@@ -1809,7 +1809,7 @@ void ClientThink_real(gentity_t* self) {
         // If not currently in a trample, reset the trample bookkeeping data
         if (!(client->ps.pm_flags & PMF_CHARGE) && client->trampleBuildablesHitPos) {
             client->trampleBuildablesHitPos = 0;
-            memset(client->trampleBuildablesHit, 0, sizeof(client->trampleBuildablesHit) );
+            memset(client->trampleBuildablesHit, 0, sizeof(client->trampleBuildablesHit));
         }
 
         break;
@@ -1855,7 +1855,7 @@ void ClientThink_real(gentity_t* self) {
     client->ps.persistant[PERS_UNLOCKABLES] = BG_UnlockablesMask(client->pers.team);
 
     // Don't think anymore if dead
-    if (G_Dead(self) ) {
+    if (G_Dead(self)) {
         return;
     }
 
@@ -1866,7 +1866,7 @@ void ClientThink_real(gentity_t* self) {
 
     if (usercmdButtonPressed(client->buttons, BUTTON_ACTIVATE) &&
         !usercmdButtonPressed(client->oldbuttons, BUTTON_ACTIVATE) &&
-        G_Alive(self) ) {
+        G_Alive(self)) {
         trace_t trace;
         vec3_t view, point;
         gentity_t* ent;
@@ -1880,7 +1880,7 @@ void ClientThink_real(gentity_t* self) {
 
         if (ent && ent->use &&
             (!ent->buildableTeam   || ent->buildableTeam   == client->pers.team) &&
-            (!ent->conditions.team || ent->conditions.team == client->pers.team) ) {
+            (!ent->conditions.team || ent->conditions.team == client->pers.team)) {
             if (g_debugEntities.integer > 1) {
                 G_Printf("Debug: Calling entity->use for player facing %s\n", etos(ent));
             }
@@ -1888,7 +1888,7 @@ void ClientThink_real(gentity_t* self) {
             ent->use(ent, self, self); // other and activator are the same in this context
         } else {
             // no entity in front of player - do a small area search
-            for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, client->ps.origin, ENTITY_USE_RANGE) ); ) {
+            for (ent = nullptr; (ent = G_IterateEntitiesWithinRadius(ent, client->ps.origin, ENTITY_USE_RANGE)); ) {
                 if (ent && ent->use && ent->buildableTeam == client->pers.team) {
                     if (g_debugEntities.integer > 1) {
                         G_Printf("Debug: Calling entity->use after an area-search for %s\n", etos(ent));
@@ -1901,7 +1901,7 @@ void ClientThink_real(gentity_t* self) {
             }
 
             if (!ent && client->pers.team == TEAM_ALIENS) {
-                if (BG_AlienCanEvolve(client->ps.stats[STAT_CLASS], client->pers.credit) ) {
+                if (BG_AlienCanEvolve(client->ps.stats[STAT_CLASS], client->pers.credit)) {
                     // no nearby objects and alien - show class menu
                     G_TriggerMenu(client->ps.clientNum, MN_A_INFEST);
                 } else {
@@ -1912,8 +1912,8 @@ void ClientThink_real(gentity_t* self) {
         }
     }
 
-    client->ps.persistant[PERS_BP] = G_GetBuildPointsInt( (team_t) client->pers.team);
-    client->ps.persistant[PERS_MARKEDBP] = G_GetMarkedBuildPointsInt( (team_t) client->pers.team);
+    client->ps.persistant[PERS_BP] = G_GetBuildPointsInt((team_t) client->pers.team);
+    client->ps.persistant[PERS_MARKEDBP] = G_GetMarkedBuildPointsInt((team_t) client->pers.team);
 
     if (client->ps.persistant[PERS_BP] < 0) {
         client->ps.persistant[PERS_BP] = 0;
@@ -2025,7 +2025,7 @@ void ClientEndFrame(gentity_t* ent) {
     P_DamageFeedback(ent);
 
     // add the EF_CONNECTION flag if we haven't gotten commands recently
-    if (level.time - ent->client->lastCmdTime > 1000 && !(ent->r.svFlags & SVF_BOT) ) {
+    if (level.time - ent->client->lastCmdTime > 1000 && !(ent->r.svFlags & SVF_BOT)) {
         ent->client->ps.eFlags |= EF_CONNECTION;
     } else {
         ent->client->ps.eFlags &= ~EF_CONNECTION;

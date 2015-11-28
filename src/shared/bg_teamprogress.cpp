@@ -122,7 +122,7 @@ static void InformUnlockableStatusChanges(int* statusChanges, int count) {
     for (unlockableNum = 0; unlockableNum < NUM_UNLOCKABLES; unlockableNum++) {
         unlockable = &unlockables[unlockableNum];
 
-        if (!statusChanges[unlockableNum] || Disabled(unlockable) ) {
+        if (!statusChanges[unlockableNum] || Disabled(unlockable)) {
             continue;
         }
 
@@ -143,7 +143,7 @@ static void InformUnlockableStatusChanges(int* statusChanges, int count) {
             textptr += 2;
         }
 
-        Com_sprintf(textptr, sizeof(text) - (textptr - text), "%s", UnlockableHumanName(unlockable) );
+        Com_sprintf(textptr, sizeof(text) - (textptr - text), "%s", UnlockableHumanName(unlockable));
         textptr += strlen(textptr);
     }
 
@@ -176,38 +176,38 @@ static INLINE void CheckStatusKnowledge(unlockableType_t type, int itemNum) {
 
     if (!unlockables[unlockablesTypeOffset[type] + itemNum].statusKnown) {
         dummy.type = type;
-        dummy.num  = itemNum;
+        dummy.num = itemNum;
 
         Com_Printf(S_WARNING "Asked for the status of unlockable item %s but the status is unknown.\n",
-                   UnlockableHumanName(&dummy) );
+                   UnlockableHumanName(&dummy));
     }
 }
 
 static float UnlockToLockThreshold(float unlockThreshold) {
     float momentumHalfLife = 0.0f;
-    float unlockableMinTime  = 0.0f;
+    float unlockableMinTime = 0.0f;
     #ifdef BUILD_UI
     char buffer[MAX_TOKEN_CHARS];
     #endif
 
     // maintain cache
     static float lastMomentumHalfLife = 0.0f;
-    static float lastunlockableMinTime  = 0.0f;
-    static float lastMod                = 0.0f;
+    static float lastunlockableMinTime = 0.0f;
+    static float lastMod = 0.0f;
 
     // retrieve relevant settings
     #ifdef BUILD_SGAME
     momentumHalfLife = g_momentumHalfLife.value;
-    unlockableMinTime  = g_unlockableMinTime.value;
+    unlockableMinTime = g_unlockableMinTime.value;
     #endif
     #ifdef BUILD_CGAME
     momentumHalfLife = cgs.momentumHalfLife;
-    unlockableMinTime  = cgs.unlockableMinTime;
+    unlockableMinTime = cgs.unlockableMinTime;
     #endif
     #ifdef BUILD_UI
-    trap_Cvar_VariableStringBuffer("ui_momentumHalfLife", buffer, sizeof(buffer) );
+    trap_Cvar_VariableStringBuffer("ui_momentumHalfLife", buffer, sizeof(buffer));
     sscanf(buffer, "%f", &momentumHalfLife);
-    trap_Cvar_VariableStringBuffer("ui_unlockableMinTime", buffer, sizeof(buffer) );
+    trap_Cvar_VariableStringBuffer("ui_unlockableMinTime", buffer, sizeof(buffer));
     sscanf(buffer, "%f", &unlockableMinTime);
     #endif
 
@@ -224,10 +224,10 @@ static float UnlockToLockThreshold(float unlockThreshold) {
     }
 
     lastMomentumHalfLife = momentumHalfLife;
-    lastunlockableMinTime  = unlockableMinTime;
+    lastunlockableMinTime = unlockableMinTime;
 
     // ln(2) ~= 0.6931472
-    lastMod = exp(-0.6931472f * (unlockableMinTime / (momentumHalfLife * 60.0f) ) );
+    lastMod = exp(-0.6931472f * (unlockableMinTime / (momentumHalfLife * 60.0f)));
 
     return lastMod * unlockThreshold;
 }
@@ -240,13 +240,13 @@ void BG_InitUnlockackables() {
     unlockablesDataAvailable = false;
     unlockablesTeamKnowledge = TEAM_NONE;
 
-    memset(unlockables, 0, sizeof(unlockables) );
-    memset(unlockablesMask, 0, sizeof(unlockablesMask) );
+    memset(unlockables, 0, sizeof(unlockables));
+    memset(unlockablesMask, 0, sizeof(unlockablesMask));
 
-    unlockablesTypeOffset[UNLT_WEAPON]    = 0;
-    unlockablesTypeOffset[UNLT_UPGRADE]   = WP_NUM_WEAPONS;
+    unlockablesTypeOffset[UNLT_WEAPON] = 0;
+    unlockablesTypeOffset[UNLT_UPGRADE] = WP_NUM_WEAPONS;
     unlockablesTypeOffset[UNLT_BUILDABLE] = unlockablesTypeOffset[UNLT_UPGRADE]   + UP_NUM_UPGRADES;
-    unlockablesTypeOffset[UNLT_CLASS]     = unlockablesTypeOffset[UNLT_BUILDABLE] + BA_NUM_BUILDABLES;
+    unlockablesTypeOffset[UNLT_CLASS] = unlockablesTypeOffset[UNLT_BUILDABLE] + BA_NUM_BUILDABLES;
 
     #ifdef BUILD_SGAME
     G_UpdateUnlockables();
@@ -278,7 +278,7 @@ void BG_ImportUnlockablesFromMask(int team, int mask) {
     lastTeam = (team_t) team;
 
     // no status change yet
-    memset(statusChanges, 0, sizeof(statusChanges) );
+    memset(statusChanges, 0, sizeof(statusChanges));
 
     for (unlockableNum = 0; unlockableNum < NUM_UNLOCKABLES; unlockableNum++) {
         unlockable = &unlockables[unlockableNum];
@@ -292,22 +292,22 @@ void BG_ImportUnlockablesFromMask(int team, int mask) {
 
         switch (unlockableType) {
         case UNLT_WEAPON:
-            currentTeam     = BG_Weapon(itemNum)->team;
+            currentTeam = BG_Weapon(itemNum)->team;
             unlockThreshold = BG_Weapon(itemNum)->unlockThreshold;
             break;
 
         case UNLT_UPGRADE:
-            currentTeam     = TEAM_HUMANS;
+            currentTeam = TEAM_HUMANS;
             unlockThreshold = BG_Upgrade(itemNum)->unlockThreshold;
             break;
 
         case UNLT_BUILDABLE:
-            currentTeam     = BG_Buildable(itemNum)->team;
+            currentTeam = BG_Buildable(itemNum)->team;
             unlockThreshold = BG_Buildable(itemNum)->unlockThreshold;
             break;
 
         case UNLT_CLASS:
-            currentTeam     = TEAM_ALIENS;
+            currentTeam = TEAM_ALIENS;
             unlockThreshold = BG_Class(itemNum)->unlockThreshold;
             break;
 
@@ -317,16 +317,16 @@ void BG_ImportUnlockablesFromMask(int team, int mask) {
 
         unlockThreshold = std::max(unlockThreshold, 0);
 
-        unlockable->type            = unlockableType;
-        unlockable->num             = itemNum;
-        unlockable->team            = currentTeam;
+        unlockable->type = unlockableType;
+        unlockable->num = itemNum;
+        unlockable->team = currentTeam;
         unlockable->unlockThreshold = unlockThreshold;
-        unlockable->lockThreshold   = UnlockToLockThreshold(unlockThreshold);
+        unlockable->lockThreshold = UnlockToLockThreshold(unlockThreshold);
 
         // retrieve the item's locking state
         if (!unlockThreshold) {
             unlockable->statusKnown = true;
-            unlockable->unlocked    = true;
+            unlockable->unlocked = true;
         } else if (currentTeam == team) {
             newStatus = mask & (1 << teamUnlockableNum);
 
@@ -342,12 +342,12 @@ void BG_ImportUnlockablesFromMask(int team, int mask) {
             #endif
 
             unlockable->statusKnown = true;
-            unlockable->unlocked    = newStatus;
+            unlockable->unlocked = newStatus;
 
             teamUnlockableNum++;
         } else {
             unlockable->statusKnown = false;
-            unlockable->unlocked    = false;
+            unlockable->unlocked = false;
         }
 
         itemNum++;
@@ -360,7 +360,7 @@ void BG_ImportUnlockablesFromMask(int team, int mask) {
     }
 
     // export team and mask into cvar for UI
-    trap_Cvar_Set("ui_unlockables", va("%d %d", team, mask) );
+    trap_Cvar_Set("ui_unlockables", va("%d %d", team, mask));
     #endif
 
     // we only know the state for one team
@@ -380,11 +380,11 @@ int BG_UnlockablesMask(int team) {
 }
 
 unlockableType_t BG_UnlockableType(int num) {
-    return (unlockableType_t) ( ( (unsigned) num < NUM_UNLOCKABLES) ? unlockables[num].type : UNLT_NUM_UNLOCKABLETYPES);
+    return (unlockableType_t) (((unsigned) num < NUM_UNLOCKABLES) ? unlockables[num].type : UNLT_NUM_UNLOCKABLETYPES);
 }
 
 int BG_UnlockableTypeIndex(int num) {
-    return ( (unsigned) num < NUM_UNLOCKABLES) ? unlockables[num].num : 0;
+    return ((unsigned) num < NUM_UNLOCKABLES) ? unlockables[num].num : 0;
 }
 
 bool BG_WeaponUnlocked(int weapon) {
@@ -437,7 +437,7 @@ momentumThresholdIterator_t BG_IterateMomentumThresholds(momentumThresholdIterat
         unlockable_t unlockable = unlockables[unlockableIter.num];
         int thisThreshold = unlockable.unlocked ? unlockable.lockThreshold : unlockable.unlockThreshold;
 
-        if (unlockable.team == team && unlockable.unlockThreshold && (!unlockableIter.threshold || unlockableIter.threshold == thisThreshold) ) {
+        if (unlockable.team == team && unlockable.unlockThreshold && (!unlockableIter.threshold || unlockableIter.threshold == thisThreshold)) {
             *unlocked = unlockable.unlocked;
             *threshold = thisThreshold;
 
@@ -513,22 +513,22 @@ void G_UpdateUnlockables() {
 
         switch (unlockableType) {
         case UNLT_WEAPON:
-            team            = BG_Weapon(itemNum)->team;
+            team = BG_Weapon(itemNum)->team;
             unlockThreshold = BG_Weapon(itemNum)->unlockThreshold;
             break;
 
         case UNLT_UPGRADE:
-            team            = TEAM_HUMANS;
+            team = TEAM_HUMANS;
             unlockThreshold = BG_Upgrade(itemNum)->unlockThreshold;
             break;
 
         case UNLT_BUILDABLE:
-            team            = BG_Buildable(itemNum)->team;
+            team = BG_Buildable(itemNum)->team;
             unlockThreshold = BG_Buildable(itemNum)->unlockThreshold;
             break;
 
         case UNLT_CLASS:
-            team            = TEAM_ALIENS;
+            team = TEAM_ALIENS;
             unlockThreshold = BG_Class(itemNum)->unlockThreshold;
             break;
 
@@ -539,12 +539,12 @@ void G_UpdateUnlockables() {
         unlockThreshold = std::max(unlockThreshold, 0);
         momentum = level.team[team].momentum;
 
-        unlockable->type            = unlockableType;
-        unlockable->num             = itemNum;
-        unlockable->team            = team;
-        unlockable->statusKnown     = true;
+        unlockable->type = unlockableType;
+        unlockable->num = itemNum;
+        unlockable->team = team;
+        unlockable->statusKnown = true;
         unlockable->unlockThreshold = unlockThreshold;
-        unlockable->lockThreshold   = UnlockToLockThreshold(unlockThreshold);
+        unlockable->lockThreshold = UnlockToLockThreshold(unlockThreshold);
 
         // calculate the item's locking state
         unlockable->unlocked = (
@@ -589,7 +589,7 @@ void UI_UpdateUnlockables() {
     team_t team;
     int mask;
 
-    trap_Cvar_VariableStringBuffer("ui_unlockables", buffer, sizeof(buffer) );
+    trap_Cvar_VariableStringBuffer("ui_unlockables", buffer, sizeof(buffer));
     sscanf(buffer, "%d %d", (int*)&team, &mask);
 
     BG_ImportUnlockablesFromMask(team, mask);

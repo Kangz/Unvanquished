@@ -46,7 +46,7 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
     public:
         RocketChatField(const Rocket::Core::String &tag) : Rocket::Core::Element(tag), focus(false), cursor_character_index(0), text_element(nullptr) {
             // Spawn text container
-            text_element = Rocket::Core::Factory::InstanceElement(this, "div", "*", Rocket::Core::XMLAttributes() );
+            text_element = Rocket::Core::Factory::InstanceElement(this, "div", "*", Rocket::Core::XMLAttributes());
 
             // Add it to this element
             AppendChild(text_element);
@@ -84,7 +84,7 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
         }
 
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList& changed_attributes) {
-            if (changed_attributes.find("exec") != changed_attributes.end() ) {
+            if (changed_attributes.find("exec") != changed_attributes.end()) {
                 cmd = GetAttribute<Rocket::Core::String>("exec", "");
             }
         }
@@ -112,12 +112,12 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
             }
 
             // We are in focus, let the element know
-            if (event.GetTargetElement() == GetOwnerDocument() ) {
+            if (event.GetTargetElement() == GetOwnerDocument()) {
                 if (event == "show") {
                     focus = true;
                     GetContext()->ShowMouseCursor(false);
                 } else if (event == "blur" || event == "hide") {
-                    focus =  false;
+                    focus = false;
                     text.Clear();
                     UpdateText();
                 }
@@ -141,7 +141,7 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
                         break;
 
                     case Rocket::Core::Input::KI_DELETE:
-                        if (cursor_character_index < (int) text.Length() ) {
+                        if (cursor_character_index < (int) text.Length()) {
                             text.Erase(cursor_character_index, 1);
                             UpdateText();
                         }
@@ -158,27 +158,27 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
 
                     case Rocket::Core::Input::KI_RETURN:
                     case Rocket::Core::Input::KI_NUMPADENTER: {
-                        if (text.Empty() ) {
+                        if (text.Empty()) {
                             GetOwnerDocument()->Hide();
                             return;
                         } else if (cmd == "/") {
                             Rocket::Core::String utf8String;
                             Rocket::Core::WString(text).ToUTF8(utf8String);
-                            trap_SendConsoleCommand(va("%s\n", utf8String.CString() ) );
+                            trap_SendConsoleCommand(va("%s\n", utf8String.CString()));
                             text.Clear();
                             UpdateText();
                             GetOwnerDocument()->Hide();
                             return;
                         }
 
-                        if (cmd.Empty() ) {
+                        if (cmd.Empty()) {
                             cmd = cg_sayCommand.string;
                         }
 
-                        if (!cmd.Empty() && !text.Empty() ) {
+                        if (!cmd.Empty() && !text.Empty()) {
                             Rocket::Core::String utf8String;
                             Rocket::Core::WString(text).ToUTF8(utf8String);
-                            trap_SendConsoleCommand(va("%s %s", cmd.CString(), Cmd::Escape(utf8String.CString() ).c_str() ) );
+                            trap_SendConsoleCommand(va("%s %s", cmd.CString(), Cmd::Escape(utf8String.CString()).c_str()));
                             text.Clear();
                             UpdateText();
                             GetOwnerDocument()->Hide();
@@ -195,7 +195,7 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
                         event.GetParameter< int >("meta_key", 0) == 0) {
                         Rocket::Core::word character = event.GetParameter< Rocket::Core::word >("data", 0);
 
-                        if ( (int) text.Length() == cursor_character_index) {
+                        if ((int) text.Length() == cursor_character_index) {
                             text.Append(character);
                         } else {
                             text.Insert(cursor_character_index, character);
@@ -221,10 +221,10 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
                 std::stack<Rocket::Core::Element*> stack;
                 stack.push(this);
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetWidth() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetWidth()) != 0) {
                         dimensions.x = base_size;
-                        while (!stack.empty() ) {
+                        while (!stack.empty()) {
                             dimensions.x = stack.top()->ResolveProperty("width", dimensions.x);
 
                             stack.pop();
@@ -257,13 +257,13 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
 
             cursor_size.x = 1;
             cursor_size.y = (float) Rocket::Core::ElementUtilities::GetLineHeight(text_element) + 2;
-            Rocket::Core::GeometryUtilities::GenerateQuad(&vertices[0], &indices[0], Rocket::Core::Vector2f(0, 0), cursor_size, GetProperty< Rocket::Core::Colourb >("color") );
+            Rocket::Core::GeometryUtilities::GenerateQuad(&vertices[0], &indices[0], Rocket::Core::Vector2f(0, 0), cursor_size, GetProperty< Rocket::Core::Colourb >("color"));
         }
 
         void MoveCursor(int amt) {
             cursor_character_index += amt;
 
-            cursor_character_index = Rocket::Core::Math::Clamp<int>(cursor_character_index, 0, text.Length() );
+            cursor_character_index = Rocket::Core::Math::Clamp<int>(cursor_character_index, 0, text.Length());
         }
 
         void UpdateCursorPosition() {
@@ -273,15 +273,15 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
 
             cursor_position = GetAbsoluteOffset();
 
-            cursor_position.x += (float) Rocket::Core::ElementUtilities::GetStringWidth(text_element, text.Substring(0, cursor_character_index) );
+            cursor_position.x += (float) Rocket::Core::ElementUtilities::GetStringWidth(text_element, text.Substring(0, cursor_character_index));
         }
 
         void UpdateText() {
             RemoveChild(text_element);
-            text_element = Rocket::Core::Factory::InstanceElement(this, "div", "*", Rocket::Core::XMLAttributes() );
+            text_element = Rocket::Core::Factory::InstanceElement(this, "div", "*", Rocket::Core::XMLAttributes());
             AppendChild(text_element);
             text_element->RemoveReference();
-            if (!text.Empty() ) {
+            if (!text.Empty()) {
                 Rocket::Core::String utf8;
                 text.ToUTF8(utf8);
                 q2rml(utf8, text_element);
@@ -294,11 +294,11 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
             Rocket::Core::Element* child = nullptr;
             bool span = false;
 
-            if (in.Empty() ) {
+            if (in.Empty()) {
                 return;
             }
 
-            for (const auto& token : Color::Parser(in.CString(), Color::White) ) {
+            for (const auto& token : Color::Parser(in.CString(), Color::White)) {
                 if (token.Type() == Color::Token::COLOR) {
                     Rocket::Core::XMLAttributes xml;
 
@@ -311,7 +311,7 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
                         out.Clear();
                     }
                     // If not intialized, probably the first one, and should be white.
-                    else if (!out.Empty() ) {
+                    else if (!out.Empty()) {
                         Rocket::Core::XMLAttributes xml;
                         child = Rocket::Core::Factory::InstanceElement(parent, "#text", "span", xml);
                         child->SetProperty("color", "#FFFFFF");
@@ -324,8 +324,8 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
 
                     child = Rocket::Core::Factory::InstanceElement(parent, "#text", "span", xml);
                     Color::Color32Bit color32 = token.Color();
-                    child->SetProperty("color", va("#%02X%02X%02X", (int) color32.Red(), (int) color32.Green(), (int) color32.Blue() ) );
-                    out.Append(token.Begin(), token.Size() );
+                    child->SetProperty("color", va("#%02X%02X%02X", (int) color32.Red(), (int) color32.Green(), (int) color32.Blue()));
+                    out.Append(token.Begin(), token.Size());
                     span = true;
                 } else if (token.Type() == Color::Token::ESCAPE) {
                     out.Append(Color::Constants::ESCAPE);
@@ -353,22 +353,22 @@ class RocketChatField : public Rocket::Core::Element, Rocket::Core::EventListene
                         static_cast<Rocket::Core::ElementText*>(child)->SetText(out);
                         parent->AppendChild(child);
                         child->RemoveReference();
-                        parent->AppendChild( (child = Rocket::Core::Factory::InstanceElement(parent, "*", "br", Rocket::Core::XMLAttributes() ) ) );
+                        parent->AppendChild((child = Rocket::Core::Factory::InstanceElement(parent, "*", "br", Rocket::Core::XMLAttributes())));
                         child->RemoveReference();
                         out.Clear();
                     } else {
-                        out.Append(token.Begin(), token.Size() );
+                        out.Append(token.Begin(), token.Size());
                     }
                 }
             }
 
-            if (span && child && !out.Empty() ) {
+            if (span && child && !out.Empty()) {
                 static_cast<Rocket::Core::ElementText*>(child)->SetText(out);
                 parent->AppendChild(child);
                 child->RemoveReference();
                 span = false;
-            } else if (!span && !child && !out.Empty() ) {
-                child = Rocket::Core::Factory::InstanceElement(parent, "#text", "span", Rocket::Core::XMLAttributes() );
+            } else if (!span && !child && !out.Empty()) {
+                child = Rocket::Core::Factory::InstanceElement(parent, "#text", "span", Rocket::Core::XMLAttributes());
                 static_cast<Rocket::Core::ElementText*>(child)->SetText(out);
                 parent->AppendChild(child);
                 child->RemoveReference();

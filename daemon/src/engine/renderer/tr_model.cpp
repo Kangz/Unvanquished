@@ -104,7 +104,7 @@ qhandle_t RE_RegisterModel(const char* name) {
     for (hModel = 1; hModel < tr.numModels; hModel++) {
         mod = tr.models[hModel];
 
-        if (!strcmp(mod->name, name) ) {
+        if (!strcmp(mod->name, name)) {
             if (mod->type == MOD_BAD) {
                 return 0;
             }
@@ -114,13 +114,13 @@ qhandle_t RE_RegisterModel(const char* name) {
     }
 
     // allocate a new model_t
-    if ( (mod = R_AllocModel() ) == nullptr) {
+    if ((mod = R_AllocModel()) == nullptr) {
         ri.Printf(PRINT_WARNING, "RE_RegisterModel: R_AllocModel() failed for '%s'\n", name);
         return 0;
     }
 
     // only set the name after the model has been successfully loaded
-    Q_strncpyz(mod->name, name, sizeof(mod->name) );
+    Q_strncpyz(mod->name, name, sizeof(mod->name));
 
     // make sure the render thread is stopped
     R_SyncRenderThread();
@@ -130,7 +130,7 @@ qhandle_t RE_RegisterModel(const char* name) {
     // load the files
     numLoaded = 0;
 
-    if (strstr(name, ".iqm") || strstr(name, ".md5mesh") ) {
+    if (strstr(name, ".iqm") || strstr(name, ".md5mesh")) {
         // try loading skeletal file
 
         loaded = false;
@@ -141,9 +141,9 @@ qhandle_t RE_RegisterModel(const char* name) {
 
             ident = LittleLong(*(unsigned*) buffer);
 
-            if (!Q_strnicmp( (const char*) buffer, "MD5Version", 10) ) {
+            if (!Q_strnicmp((const char*) buffer, "MD5Version", 10)) {
                 loaded = R_LoadMD5(mod, buffer, name);
-            } else if (!Q_strnicmp( (const char*) buffer, "INTERQUAKEMODEL", 15) ) {
+            } else if (!Q_strnicmp((const char*) buffer, "INTERQUAKEMODEL", 15)) {
                 loaded = R_LoadIQModel(mod, buffer, bufferLen, name);
             }
 
@@ -163,7 +163,7 @@ qhandle_t RE_RegisterModel(const char* name) {
         if (lod != 0) {
             char namebuf[80];
 
-            if (strrchr(filename, '.') ) {
+            if (strrchr(filename, '.')) {
                 *strrchr(filename, '.') = 0;
             }
 
@@ -236,7 +236,7 @@ fail:
 ** RE_BeginRegistration
 */
 bool RE_BeginRegistration(glconfig_t* glconfigOut, glconfig2_t* glconfig2Out) {
-    if (!R_Init() ) {
+    if (!R_Init()) {
         return false;
     }
 
@@ -304,7 +304,7 @@ void R_Modellist_f() {
 
         if (mod->type == MOD_MESH) {
             for (j = 0; j < MD3_MAX_LODS; j++) {
-                if (mod->mdv[j] && (j == 0 || mod->mdv[j] != mod->mdv[j - 1]) ) {
+                if (mod->mdv[j] && (j == 0 || mod->mdv[j] != mod->mdv[j - 1])) {
                     mdvModel_t* mdvModel;
                     mdvSurface_t* mdvSurface;
                     mdvTagName_t* mdvTagName;
@@ -313,7 +313,7 @@ void R_Modellist_f() {
 
                     total++;
                     ri.Printf(PRINT_ALL, "%d.%02d MB '%s' LOD = %i\n", mod->dataSize / (1024 * 1024),
-                              (mod->dataSize % (1024 * 1024) ) * 100 / (1024 * 1024),
+                              (mod->dataSize % (1024 * 1024)) * 100 / (1024 * 1024),
                               mod->name, j);
 
                     if (showFrames && mdvModel->numFrames > 1) {
@@ -336,7 +336,7 @@ void R_Modellist_f() {
             }
         } else {
             ri.Printf(PRINT_ALL, "%d.%02d MB '%s'\n", mod->dataSize / (1024 * 1024),
-                      (mod->dataSize % (1024 * 1024) ) * 100 / (1024 * 1024),
+                      (mod->dataSize % (1024 * 1024)) * 100 / (1024 * 1024),
                       mod->name);
 
             total++;
@@ -346,7 +346,7 @@ void R_Modellist_f() {
     }
 
     ri.Printf(PRINT_ALL, " %d.%02d MB total model memory\n", totalDataSize / (1024 * 1024),
-              (totalDataSize % (1024 * 1024) ) * 100 / (1024 * 1024) );
+              (totalDataSize % (1024 * 1024)) * 100 / (1024 * 1024));
     ri.Printf(PRINT_ALL, " %i total models\n\n", total);
 }
 
@@ -374,7 +374,7 @@ static int R_GetTag(mdvModel_t* model, int frame, const char* _tagName, int star
     tagName = model->tagNames;
 
     for (i = 0; i < model->numTags; i++, tag++, tagName++) {
-        if ( (i >= startTagIndex) && !strcmp(tagName->name, _tagName) ) {
+        if ((i >= startTagIndex) && !strcmp(tagName->name, _tagName)) {
             *outTag = tag;
             return i;
         }
@@ -479,7 +479,7 @@ int RE_BoneIndex(qhandle_t hModel, const char* boneName) {
         md5Model_t* md5 = model->md5;
 
         for (i = 0, bone = md5->bones; i < md5->numBones; i++, bone++) {
-            if (!Q_stricmp(bone->name, boneName) ) {
+            if (!Q_stricmp(bone->name, boneName)) {
                 return i;
             }
         }
@@ -490,7 +490,7 @@ int RE_BoneIndex(qhandle_t hModel, const char* boneName) {
         char* str = model->iqm->jointNames;
 
         while (i < model->iqm->num_joints) {
-            if (!Q_stricmp(boneName, str) ) {
+            if (!Q_stricmp(boneName, str)) {
                 return i;
             }
 

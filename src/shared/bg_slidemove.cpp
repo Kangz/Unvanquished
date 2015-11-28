@@ -299,7 +299,7 @@ bool PM_StepSlideMove(bool gravity, bool predictive) {
     VectorCopy(pm->ps->origin, start_o);
     VectorCopy(pm->ps->velocity, start_v);
 
-    if (!PM_SlideMove(gravity) ) {
+    if (!PM_SlideMove(gravity)) {
         VectorCopy(start_o, down);
         VectorMA(down, -STEPSIZE, normal, down);
         pm->trace(&trace, start_o, pm->mins, pm->maxs, down, pm->ps->clientNum, pm->tracemask, 0);
@@ -320,12 +320,12 @@ bool PM_StepSlideMove(bool gravity, bool predictive) {
 
         // never step up when you still have up velocity
         if (DotProduct(trace.plane.normal, pm->ps->velocity) > 0.0f &&
-            (trace.fraction == 1.0f || DotProduct(trace.plane.normal, normal) < 0.7f) ) {
+            (trace.fraction == 1.0f || DotProduct(trace.plane.normal, normal) < 0.7f)) {
             return stepped;
         }
 
         // never step up when flying upwards with the jetpack
-        if (pm->ps->velocity[2] > 0.0f && (pm->ps->stats[STAT_STATE2] & SS2_JETPACK_ACTIVE) ) {
+        if (pm->ps->velocity[2] > 0.0f && (pm->ps->stats[STAT_STATE2] & SS2_JETPACK_ACTIVE)) {
             return stepped;
         }
 
@@ -399,7 +399,7 @@ bool PM_PredictStepMove() {
     VectorCopy(pm->ps->origin, origin);
     impactSpeed = pml.impactSpeed;
 
-    if (PM_StepSlideMove(false, true) ) {
+    if (PM_StepSlideMove(false, true)) {
         stepped = true;
     }
 

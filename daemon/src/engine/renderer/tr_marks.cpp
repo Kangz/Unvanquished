@@ -82,7 +82,7 @@ static void R_ChopPolyBehindPlane(int numInPoints, vec3_t inPoints[MAX_VERTS_ON_
 
     if (!counts[1]) {
         *numOutPoints = numInPoints;
-        Com_Memcpy(outPoints, inPoints, numInPoints * sizeof(vec3_t) );
+        Com_Memcpy(outPoints, inPoints, numInPoints * sizeof(vec3_t));
         return;
     }
 
@@ -164,17 +164,17 @@ void R_BoxSurfaces_r(bspNode_t* node, vec3_t mins, vec3_t maxs, surfaceType_t** 
         surf = *mark;
 
         // check if the surface has NOIMPACT or NOMARKS set
-        if ( (surf->shader->surfaceFlags & (SURF_NOIMPACT | SURF_NOMARKS) ) || (surf->shader->contentFlags & CONTENTS_FOG) ) {
+        if ((surf->shader->surfaceFlags & (SURF_NOIMPACT | SURF_NOMARKS)) || (surf->shader->contentFlags & CONTENTS_FOG)) {
             surf->viewCount = tr.viewCountNoReset;
         }
         // extra check for surfaces to avoid list overflows
         else if (*(surf->data) == SF_FACE) {
             // the face plane should go through the box
-            s = BoxOnPlaneSide(mins, maxs, &( (srfSurfaceFace_t*) surf->data)->plane);
+            s = BoxOnPlaneSide(mins, maxs, &((srfSurfaceFace_t*) surf->data)->plane);
 
             if (s == 1 || s == 2) {
                 surf->viewCount = tr.viewCountNoReset;
-            } else if (DotProduct( ( (srfSurfaceFace_t*) surf->data)->plane.normal, dir) > -0.5) {
+            } else if (DotProduct(((srfSurfaceFace_t*) surf->data)->plane.normal, dir) > -0.5) {
                 // don't add faces that make sharp angles with the projection direction
                 surf->viewCount = tr.viewCountNoReset;
             }
@@ -235,7 +235,7 @@ void R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POL
     mf->firstPoint = (*returnedPoints);
     mf->numPoints = numClipPoints;
 
-    Com_Memcpy(pointBuffer + (*returnedPoints) * 3, clipPoints[pingPong], numClipPoints * sizeof(vec3_t) );
+    Com_Memcpy(pointBuffer + (*returnedPoints) * 3, clipPoints[pingPong], numClipPoints * sizeof(vec3_t));
 
     (*returnedPoints) += numClipPoints;
     (*returnedFragments)++;

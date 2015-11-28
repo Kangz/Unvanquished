@@ -79,9 +79,9 @@ static bool MakeTextureMatrix(vec4_t texMat[2], vec4_t projection, decalVert_t* 
     /* calculate texture origin */
     s = 0.0f;
     t = 0.0f;
-    bary[0] = ( (b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t) ) / bb;
-    bary[1] = ( (c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t) ) / bb;
-    bary[2] = ( (a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t) ) / bb;
+    bary[0] = ((b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t)) / bb;
+    bary[1] = ((c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t)) / bb;
+    bary[2] = ((a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t)) / bb;
 
     origin[0] = bary[0] * pa[0] + bary[1] * pb[0] + bary[2] * pc[0];
     origin[1] = bary[0] * pa[1] + bary[1] * pb[1] + bary[2] * pc[1];
@@ -90,9 +90,9 @@ static bool MakeTextureMatrix(vec4_t texMat[2], vec4_t projection, decalVert_t* 
     /* calculate s vector */
     s = 1.0f;
     t = 0.0f;
-    bary[0] = ( (b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t) ) / bb;
-    bary[1] = ( (c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t) ) / bb;
-    bary[2] = ( (a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t) ) / bb;
+    bary[0] = ((b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t)) / bb;
+    bary[1] = ((c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t)) / bb;
+    bary[2] = ((a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t)) / bb;
 
     xyz[0] = bary[0] * pa[0] + bary[1] * pb[0] + bary[2] * pc[0];
     xyz[1] = bary[0] * pa[1] + bary[1] * pb[1] + bary[2] * pc[1];
@@ -103,9 +103,9 @@ static bool MakeTextureMatrix(vec4_t texMat[2], vec4_t projection, decalVert_t* 
     /* calculate t vector */
     s = 0.0f;
     t = 1.0f;
-    bary[0] = ( (b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t) ) / bb;
-    bary[1] = ( (c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t) ) / bb;
-    bary[2] = ( (a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t) ) / bb;
+    bary[0] = ((b->st[0] - s) * (c->st[1] - t) - (c->st[0] - s) * (b->st[1] - t)) / bb;
+    bary[1] = ((c->st[0] - s) * (a->st[1] - t) - (a->st[0] - s) * (c->st[1] - t)) / bb;
+    bary[2] = ((a->st[0] - s) * (b->st[1] - t) - (b->st[0] - s) * (a->st[1] - t)) / bb;
 
     xyz[0] = bary[0] * pa[0] + bary[1] * pb[0] + bary[2] * pc[0];
     xyz[1] = bary[0] * pa[1] + bary[1] * pb[1] + bary[2] * pc[1];
@@ -244,7 +244,7 @@ void RE_ProjectDecal(qhandle_t hShader, int numPoints, vec3_t* points, vec4_t pr
         VectorCopy(points[3], dv[3].xyz);
 
         /* make texture matrix */
-        if (!MakeTextureMatrix(temp.texMat[0], projection, &dv[0], &dv[1], &dv[2]) ) {
+        if (!MakeTextureMatrix(temp.texMat[0], projection, &dv[0], &dv[1], &dv[2])) {
             return;
         }
     }
@@ -271,7 +271,7 @@ void RE_ProjectDecal(qhandle_t hShader, int numPoints, vec3_t* points, vec4_t pr
     }
 
     /* make the front plane */
-    if (!PlaneFromPoints(temp.planes[0], dv[0].xyz, dv[1].xyz, dv[2].xyz) ) {
+    if (!PlaneFromPoints(temp.planes[0], dv[0].xyz, dv[1].xyz, dv[2].xyz)) {
         return;
     }
 
@@ -284,14 +284,14 @@ void RE_ProjectDecal(qhandle_t hShader, int numPoints, vec3_t* points, vec4_t pr
     for (i = 0; i < numPoints; i++) {
         VectorMA(dv[i].xyz, projection[3], projection, xyz);
 
-        if (!PlaneFromPoints(temp.planes[i + 2], dv[(i + 1) % numPoints].xyz, dv[i].xyz, xyz) ) {
+        if (!PlaneFromPoints(temp.planes[i + 2], dv[(i + 1) % numPoints].xyz, dv[i].xyz, xyz)) {
             return;
         }
     }
 
     /* create a new projector */
     dp = &tr.refdef.decalProjectors[r_numDecalProjectors & DECAL_PROJECTOR_MASK];
-    Com_Memcpy(dp, &temp, sizeof(*dp) );
+    Com_Memcpy(dp, &temp, sizeof(*dp));
 
     /* we have a winner */
     r_numDecalProjectors++;
@@ -331,7 +331,7 @@ return true if the decal projector intersects the bounding box
 bool R_TestDecalBoundingBox(decalProjector_t* dp, vec3_t mins, vec3_t maxs) {
     if (mins[0] >= (dp->center[0] + dp->radius) || maxs[0] <= (dp->center[0] - dp->radius) ||
         mins[1] >= (dp->center[1] + dp->radius) || maxs[1] <= (dp->center[1] - dp->radius) ||
-        mins[2] >= (dp->center[2] + dp->radius) || maxs[2] <= (dp->center[2] - dp->radius) ) {
+        mins[2] >= (dp->center[2] + dp->radius) || maxs[2] <= (dp->center[2] - dp->radius)) {
         return false;
     }
 
@@ -350,7 +350,7 @@ bool R_TestDecalBoundingSphere(decalProjector_t* dp, vec3_t center, float radius
     VectorSubtract(center, dp->center, delta);
     distance2 = DotProduct(delta, delta);
 
-    if (distance2 >= (radius2 + dp->radius2) ) {
+    if (distance2 >= (radius2 + dp->radius2)) {
         return false;
     }
 
@@ -414,7 +414,7 @@ static void ChopWindingBehindPlane(int numInPoints, vec3_t inPoints[MAX_DECAL_VE
     /* all points on back */
     if (counts[SIDE_FRONT] == 0) {
         *numOutPoints = numInPoints;
-        Com_Memcpy(outPoints, inPoints, numInPoints * sizeof(vec3_t) );
+        Com_Memcpy(outPoints, inPoints, numInPoints * sizeof(vec3_t));
         return;
     }
 
@@ -469,7 +469,7 @@ static void ProjectDecalOntoWinding(decalProjector_t* dp, int numPoints, vec3_t 
     polyVert_t* vert;
 
     /* make a plane from the winding */
-    if (!PlaneFromPoints(plane, points[0][0], points[0][1], points[0][2]) ) {
+    if (!PlaneFromPoints(plane, points[0][0], points[0][1], points[0][2])) {
         return;
     }
 
@@ -687,7 +687,7 @@ void R_ProjectDecalOntoSurface(decalProjector_t* dp, bspSurface_t* surf, bspMode
 
     // % if( surf->viewCount == tr.viewCount )
     // %     return;
-    if ( (surf->shader->surfaceFlags & (SURF_NOIMPACT | SURF_NOMARKS) ) || (surf->shader->contentFlags & CONTENTS_FOG) ) {
+    if ((surf->shader->surfaceFlags & (SURF_NOIMPACT | SURF_NOMARKS)) || (surf->shader->contentFlags & CONTENTS_FOG)) {
         return;
     }
 
@@ -703,7 +703,7 @@ void R_ProjectDecalOntoSurface(decalProjector_t* dp, bspSurface_t* surf, bspMode
     }
 
     /* test bounding sphere */
-    if (!R_TestDecalBoundingSphere(dp, gen->origin, (gen->radius * gen->radius) ) ) {
+    if (!R_TestDecalBoundingSphere(dp, gen->origin, (gen->radius * gen->radius))) {
         return;
     }
 
@@ -769,7 +769,7 @@ void R_AddDecalSurface(decal_t* decal) {
     /* set it up */
     srf->surfaceType = SF_DECAL;
     srf->numVerts = decal->numVerts;
-    Com_Memcpy(srf->verts, decal->verts, srf->numVerts * sizeof(*srf->verts) );
+    Com_Memcpy(srf->verts, decal->verts, srf->numVerts * sizeof(*srf->verts));
 
     /* fade colors */
     if (decal->fadeStartTime < tr.refdef.time && decal->fadeStartTime < decal->fadeEndTime) {
@@ -784,7 +784,7 @@ void R_AddDecalSurface(decal_t* decal) {
     }
 
     /* add surface to scene */
-    R_AddDrawSurf( (surfaceType_t*) srf, decal->shader, -1, decal->fogIndex);
+    R_AddDrawSurf((surfaceType_t*) srf, decal->shader, -1, decal->fogIndex);
     tr.pc.c_decalSurfaces++;
 
     /* free temporary decal */

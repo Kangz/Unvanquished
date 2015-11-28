@@ -54,7 +54,7 @@ void game_score_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 
 void SP_game_score(gentity_t* self) {
     if (!self->config.amount) {
-        if (G_SpawnInt("count", "0", &self->config.amount) ) {
+        if (G_SpawnInt("count", "0", &self->config.amount)) {
             G_WarnAboutDeprecatedEntityField(self, "amount", "count", ENT_V_RENAMED);
         } else {
             self->config.amount = 1;

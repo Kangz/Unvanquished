@@ -65,7 +65,7 @@ static char* keyup[MAX_KEYS];
 
 // Arnout: doubleTap button mapping
 // FIXME: should be registered by cgame code
-static kbuttons_t dtmapping[] ={
+static kbuttons_t dtmapping[] = {
     KB_BUTTONS, // DT_NONE
     KB_MOVELEFT, // DT_MOVELEFT
     KB_MOVERIGHT, // DT_MOVERIGHT
@@ -235,7 +235,7 @@ void CL_KeyMove(usercmd_t* cmd) {
     // the walking flag is to keep animations consistent
     // even during acceleration and deceleration
     //
-    if (kb[KB_SPEED].active != (cl_run->integer != 0) ) {
+    if (kb[KB_SPEED].active != (cl_run->integer != 0)) {
         movespeed = 127;
         usercmdReleaseButton(cmd->buttons, BUTTON_WALKING);
     } else {
@@ -318,8 +318,8 @@ void CL_KeyMove(usercmd_t* cmd) {
                 cl.doubleTap.pressedTime[i] = cl.doubleTap.releasedTime[i] = 0;
                 cmd->doubleTap = i;
                 cl.doubleTap.lastdoubleTap = com_frameTime;
-            } else if (!key_down && (cl.doubleTap.pressedTime[i] || cl.doubleTap.releasedTime[i]) ) {
-                if (com_frameTime - cl.doubleTap.pressedTime[i] >= (cl_doubletapdelay->integer + cls.frametime) ) {
+            } else if (!key_down && (cl.doubleTap.pressedTime[i] || cl.doubleTap.releasedTime[i])) {
+                if (com_frameTime - cl.doubleTap.pressedTime[i] >= (cl_doubletapdelay->integer + cls.frametime)) {
                     cl.doubleTap.pressedTime[i] = cl.doubleTap.releasedTime[i] = 0;
                 }
             }
@@ -376,7 +376,7 @@ void CL_JoystickMove(usercmd_t* cmd) {
     // int             movespeed;
     float anglespeed;
 
-    if (kb[KB_SPEED].active == (cl_run->integer != 0) ) {
+    if (kb[KB_SPEED].active == (cl_run->integer != 0)) {
         usercmdPressButton(cmd->buttons, BUTTON_WALKING);
     }
 
@@ -392,23 +392,23 @@ void CL_JoystickMove(usercmd_t* cmd) {
 
     if (!kb[KB_STRAFE].active) {
         cl.viewangles[YAW] += anglespeed * j_yaw->value * cl.joystickAxis[j_yaw_axis->integer];
-        cmd->rightmove = ClampChar(cmd->rightmove + (int)(j_side->value * cl.joystickAxis[j_side_axis->integer]) );
+        cmd->rightmove = ClampChar(cmd->rightmove + (int)(j_side->value * cl.joystickAxis[j_side_axis->integer]));
     } else {
         cl.viewangles[YAW] += anglespeed * j_side->value * cl.joystickAxis[j_side_axis->integer];
-        cmd->rightmove = ClampChar(cmd->rightmove + (int)(j_yaw->value * cl.joystickAxis[j_yaw_axis->integer]) );
+        cmd->rightmove = ClampChar(cmd->rightmove + (int)(j_yaw->value * cl.joystickAxis[j_yaw_axis->integer]));
     }
 
     #endif
 
     if (kb[KB_MLOOK].active) {
         cl.viewangles[PITCH] += anglespeed * j_forward->value * cl.joystickAxis[j_forward_axis->integer];
-        cmd->forwardmove = ClampChar(cmd->forwardmove + (int)(j_pitch->value * cl.joystickAxis[j_pitch_axis->integer]) );
+        cmd->forwardmove = ClampChar(cmd->forwardmove + (int)(j_pitch->value * cl.joystickAxis[j_pitch_axis->integer]));
     } else {
         cl.viewangles[PITCH] += anglespeed * j_pitch->value * cl.joystickAxis[j_pitch_axis->integer];
-        cmd->forwardmove = ClampChar(cmd->forwardmove + (int)(j_forward->value * cl.joystickAxis[j_forward_axis->integer]) );
+        cmd->forwardmove = ClampChar(cmd->forwardmove + (int)(j_forward->value * cl.joystickAxis[j_forward_axis->integer]));
     }
 
-    cmd->upmove = ClampChar(cmd->upmove + (int) (j_up->value * cl.joystickAxis[j_up_axis->integer]) );
+    cmd->upmove = ClampChar(cmd->upmove + (int) (j_up->value * cl.joystickAxis[j_up_axis->integer]));
 }
 
 /*
@@ -421,7 +421,7 @@ void CL_Xbox360ControllerMove(usercmd_t* cmd) {
     // int     movespeed;
     float anglespeed;
 
-    if (kb[KB_SPEED].active == (cl_run->integer != 0) ) {
+    if (kb[KB_SPEED].active == (cl_run->integer != 0)) {
         usercmdPressButton(cmd->buttons, BUTTON_WALKING);
     }
 
@@ -492,8 +492,8 @@ void CL_MouseMove(usercmd_t* cmd) {
             power[0] = powf(rate[0] / cl_mouseAccelOffset->value, cl_mouseAccel->value);
             power[1] = powf(rate[1] / cl_mouseAccelOffset->value, cl_mouseAccel->value);
 
-            mx = cl_sensitivity->value * (mx + ( (mx < 0) ? -power[0] : power[0]) * cl_mouseAccelOffset->value);
-            my = cl_sensitivity->value * (my + ( (my < 0) ? -power[1] : power[1]) * cl_mouseAccelOffset->value);
+            mx = cl_sensitivity->value * (mx + ((mx < 0) ? -power[0] : power[0]) * cl_mouseAccelOffset->value);
+            my = cl_sensitivity->value * (my + ((my < 0) ? -power[1] : power[1]) * cl_mouseAccelOffset->value);
 
             /*  NERVE - SMF - this has moved to CG_CalcFov to fix zoomed-in/out transition movement bug
                     if ( cl.snap.ps.stats[STAT_ZOOMED_VIEW] ) {
@@ -525,7 +525,7 @@ void CL_MouseMove(usercmd_t* cmd) {
         cl.viewangles[YAW] -= m_yaw->value * mx;
     }
 
-    if ( (kb[KB_MLOOK].active || cl_freelook->integer) && !kb[KB_STRAFE].active) {
+    if ((kb[KB_MLOOK].active || cl_freelook->integer) && !kb[KB_STRAFE].active) {
         cl.viewangles[PITCH] += m_pitch->value * my;
     } else {
         cmd->forwardmove = ClampChar(cmd->forwardmove - m_forward->value * my);
@@ -569,7 +569,7 @@ void CL_CmdButtons(usercmd_t* cmd) {
 
     // allow the game to know if any key at all is
     // currently pressed, even if it isn't bound to anything
-    if (anykeydown && (!cls.keyCatchers) ) {
+    if (anykeydown && (!cls.keyCatchers)) {
         usercmdPressButton(cmd->buttons, BUTTON_ANY);
     }
 
@@ -617,7 +617,7 @@ usercmd_t CL_CreateCmd() {
     // keyboard angle adjustment
     CL_AdjustAngles();
 
-    memset(&cmd, 0, sizeof(cmd) );
+    memset(&cmd, 0, sizeof(cmd));
 
     CL_CmdButtons(&cmd);
 
@@ -717,7 +717,7 @@ bool CL_ReadyToSendPacket() {
     }
 
     // send every frame for LAN
-    if (Sys_IsLANAddress(clc.netchan.remoteAddress) ) {
+    if (Sys_IsLANAddress(clc.netchan.remoteAddress)) {
         return true;
     }
 
@@ -751,7 +751,7 @@ static void CL_WriteBinaryMessage(msg_t* msg) {
 
     MSG_Uncompressed(msg);
 
-    if ( (msg->cursize + clc.binaryMessageLength) >= msg->maxsize) {
+    if ((msg->cursize + clc.binaryMessageLength) >= msg->maxsize) {
         clc.binaryMessageOverflowed = true;
         return;
     }
@@ -797,10 +797,10 @@ void CL_WritePacket() {
         return;
     }
 
-    memset(&nullcmd, 0, sizeof(nullcmd) );
+    memset(&nullcmd, 0, sizeof(nullcmd));
     oldcmd = &nullcmd;
 
-    MSG_Init(&buf, data, sizeof(data) );
+    MSG_Init(&buf, data, sizeof(data));
 
     MSG_Bitstream(&buf);
     // write the current serverId so the server
@@ -918,7 +918,7 @@ void CL_SendCmd() {
     CL_CreateNewCommands();
 
     // don't send a packet if the last packet was sent too recently
-    if (!CL_ReadyToSendPacket() ) {
+    if (!CL_ReadyToSendPacket()) {
         if (cl_showSend->integer) {
             Com_Printf(". ");
         }
@@ -964,7 +964,7 @@ void IN_BuiltinButtonCommand() {
     // Search in the button commands given by cgame
     for (i = 0; i < USERCMD_BUTTONS; ++i) {
         if (registeredButtonCommands[i]) {
-            if (!Q_stricmp(registeredButtonCommands[i] + 1, name) ) {
+            if (!Q_stricmp(registeredButtonCommands[i] + 1, name)) {
                 key = KB_BUTTONS + i;
                 break;
             }
@@ -975,7 +975,7 @@ void IN_BuiltinButtonCommand() {
     if (key == -1) {
         i = 0;
         while (builtinButtonCommands[i].name != nullptr) {
-            if (!Q_stricmp(builtinButtonCommands[i].name, name) ) {
+            if (!Q_stricmp(builtinButtonCommands[i].name, name)) {
                 key = builtinButtonCommands[i].key;
                 break;
             }
@@ -999,9 +999,9 @@ void IN_KeysUp_f() {
     int i;
     bool first = true;
 
-    check = atoi(Cmd_Argv(1) );
-    key   = atoi(Cmd_Argv(2) );
-    time  = atoi(Cmd_Argv(3) );
+    check = atoi(Cmd_Argv(1));
+    key = atoi(Cmd_Argv(2));
+    time = atoi(Cmd_Argv(3));
 
     for (i = 0; i < USERCMD_BUTTONS; ++i) {
         if (kb[KB_BUTTONS + i].down[0] == key || kb[KB_BUTTONS + i].down[1] == key) {
@@ -1164,7 +1164,7 @@ void CL_ClearKeys() {
         }
     }
 
-    memset(kb, 0, sizeof(kb) );
+    memset(kb, 0, sizeof(kb));
 }
 
 // Whether the cursor is enabled

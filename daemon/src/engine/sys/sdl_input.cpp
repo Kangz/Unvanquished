@@ -118,7 +118,7 @@ static void IN_PrintKey(const SDL_Keysym* keysym, keyNum_t key, bool down) {
     }
 
     Com_Printf("%c 0x%02x \"%s\" Q:0x%02x(%s)\n", down ? '+' : ' ', keysym->scancode,
-               SDL_GetKeyName(keysym->sym), key, Key_KeynumToString(key) );
+               SDL_GetKeyName(keysym->sym), key, Key_KeynumToString(key));
 }
 
 #define MAX_CONSOLE_KEYS 16
@@ -179,13 +179,13 @@ static bool IN_IsConsoleKey(keyNum_t key, const unsigned char character) {
 
             if (token[0] == '+' && token[1]) {
                 for (unsigned i = 0; i < ARRAY_LEN(modMap); ++i) {
-                    if (!Q_stricmp(token + 1, modMap[i].name) ) {
+                    if (!Q_stricmp(token + 1, modMap[i].name)) {
                         ifMod |= 1 << i;
                     }
                 }
             } else if (token[0] == '-' && token[1]) {
                 for (unsigned i = 0; i < ARRAY_LEN(modMap); ++i) {
-                    if (!Q_stricmp(token + 1, modMap[i].name) ) {
+                    if (!Q_stricmp(token + 1, modMap[i].name)) {
                         unlessMod |= 1 << i;
                     }
                 }
@@ -218,7 +218,7 @@ static bool IN_IsConsoleKey(keyNum_t key, const unsigned char character) {
         bool flag = false;
 
         for (unsigned i = 0; i < ARRAY_LEN(modMap); ++i) {
-            if ( (ifMod & 1 << i) && keys[modMap[i].key].down) {
+            if ((ifMod & 1 << i) && keys[modMap[i].key].down) {
                 flag = true;
                 break;
             }
@@ -232,7 +232,7 @@ static bool IN_IsConsoleKey(keyNum_t key, const unsigned char character) {
     // require all -MOD not to be pressed
     if (unlessMod) {
         for (unsigned i = 0; i < ARRAY_LEN(modMap); ++i) {
-            if ( (unlessMod & 1 << i) && keys[modMap[i].key].down) {
+            if ((unlessMod & 1 << i) && keys[modMap[i].key].down) {
                 return false;
             }
         }
@@ -558,7 +558,7 @@ static bool cursor_active = true;
  * the game is responsible of drawing the cursor image
  */
 void IN_SetCursorActive(bool active) {
-    if (!mouseAvailable || !SDL_WasInit(SDL_INIT_VIDEO) ) {
+    if (!mouseAvailable || !SDL_WasInit(SDL_INIT_VIDEO)) {
         return;
     }
 
@@ -600,7 +600,7 @@ static void ForceCursor(bool force) {
 }
 
 // We translate axes movement into keypresses
-static int joy_keys[16] ={
+static int joy_keys[16] = {
     K_LEFTARROW, K_RIGHTARROW,
     K_UPARROW, K_DOWNARROW,
     K_JOY16, K_JOY17,
@@ -614,7 +614,7 @@ static int joy_keys[16] ={
 
 // translate hat events into keypresses
 // the 4 highest buttons are used for the first hat ...
-static int hat_keys[16] ={
+static int hat_keys[16] = {
     K_JOY29, K_JOY30,
     K_JOY31, K_JOY32,
     K_JOY25, K_JOY26,
@@ -646,7 +646,7 @@ static void IN_InitJoystick() {
     }
 
     stick = nullptr;
-    memset(&stick_state, '\0', sizeof(stick_state) );
+    memset(&stick_state, '\0', sizeof(stick_state));
 
     if (!in_joystick->integer && !in_xbox360Controller->integer) {
         Com_DPrintf("Joystick is not active.\n");
@@ -659,11 +659,11 @@ static void IN_InitJoystick() {
         return;
     }
 
-    if (!SDL_WasInit(SDL_INIT_JOYSTICK) ) {
+    if (!SDL_WasInit(SDL_INIT_JOYSTICK)) {
         Com_DPrintf("Calling SDL_Init(SDL_INIT_JOYSTICK)...\n");
 
         if (SDL_Init(SDL_INIT_JOYSTICK) == -1) {
-            Com_DPrintf("SDL_Init(SDL_INIT_JOYSTICK) failed: %s\n", SDL_GetError() );
+            Com_DPrintf("SDL_Init(SDL_INIT_JOYSTICK) failed: %s\n", SDL_GetError());
             return;
         }
 
@@ -674,7 +674,7 @@ static void IN_InitJoystick() {
     Com_DPrintf("%d possible joysticks\n", total);
 
     for (i = 0; i < total; i++) {
-        Com_DPrintf("[%d] %s\n", i, SDL_JoystickNameForIndex(i) );
+        Com_DPrintf("[%d] %s\n", i, SDL_JoystickNameForIndex(i));
     }
 
     in_joystickNo = Cvar_Get("in_joystickNo", "0", 0);
@@ -693,17 +693,17 @@ static void IN_InitJoystick() {
     }
 
     Com_DPrintf("Joystick %d opened\n", in_joystickNo->integer);
-    Com_DPrintf("Name:    %s\n", SDL_JoystickNameForIndex(in_joystickNo->integer) );
-    Com_DPrintf("Axes:    %d\n", SDL_JoystickNumAxes(stick) );
-    Com_DPrintf("Hats:    %d\n", SDL_JoystickNumHats(stick) );
-    Com_DPrintf("Buttons: %d\n", SDL_JoystickNumButtons(stick) );
-    Com_DPrintf("Balls: %d\n", SDL_JoystickNumBalls(stick) );
+    Com_DPrintf("Name:    %s\n", SDL_JoystickNameForIndex(in_joystickNo->integer));
+    Com_DPrintf("Axes:    %d\n", SDL_JoystickNumAxes(stick));
+    Com_DPrintf("Hats:    %d\n", SDL_JoystickNumHats(stick));
+    Com_DPrintf("Buttons: %d\n", SDL_JoystickNumButtons(stick));
+    Com_DPrintf("Balls: %d\n", SDL_JoystickNumBalls(stick));
     Com_DPrintf("Use Analog: %s\n", in_joystickUseAnalog->integer ? "Yes" : "No");
 
     SDL_JoystickEventState(SDL_QUERY);
 
     // XBox 360 controller support
-    if (!Q_stricmp(SDL_JoystickNameForIndex(in_joystickNo->integer), "Microsoft X-Box 360 pad") ) {
+    if (!Q_stricmp(SDL_JoystickNameForIndex(in_joystickNo->integer), "Microsoft X-Box 360 pad")) {
         Cvar_Set("in_xbox360ControllerAvailable", "1");
     } else {
         Cvar_Set("in_xbox360ControllerAvailable", "0");
@@ -746,7 +746,7 @@ static void IN_JoyMove() {
 
     SDL_JoystickUpdate();
 
-    memset(joy_pressed, '\0', sizeof(joy_pressed) );
+    memset(joy_pressed, '\0', sizeof(joy_pressed));
 
     // update the ball state.
     total = SDL_JoystickNumBalls(stick);
@@ -782,7 +782,7 @@ static void IN_JoyMove() {
     total = SDL_JoystickNumButtons(stick);
 
     if (total > 0) {
-        if (total > (int) ARRAY_LEN(stick_state.buttons) ) {
+        if (total > (int) ARRAY_LEN(stick_state.buttons)) {
             total = ARRAY_LEN(stick_state.buttons);
         }
 
@@ -812,16 +812,16 @@ static void IN_JoyMove() {
         }
 
         for (i = 0; i < total; i++) {
-            ( (Uint8*) &hats) [i] = SDL_JoystickGetHat(stick, i);
+            ((Uint8*) &hats) [i] = SDL_JoystickGetHat(stick, i);
         }
     }
 
     // update hat state
     if (hats != stick_state.oldhats) {
         for (i = 0; i < 4; i++) {
-            if ( ( (Uint8*) &hats) [i] != ( (Uint8*) &stick_state.oldhats) [i]) {
+            if (((Uint8*) &hats) [i] != ((Uint8*) &stick_state.oldhats) [i]) {
                 // release event
-                switch ( ( (Uint8*) &stick_state.oldhats) [i]) {
+                switch (((Uint8*) &stick_state.oldhats) [i]) {
                 case SDL_HAT_UP:
                     Com_QueueEvent(0, SE_KEY, hat_keys[4 * i + 0], false, 0, nullptr);
                     break;
@@ -863,7 +863,7 @@ static void IN_JoyMove() {
                 }
 
                 // press event
-                switch ( ( (Uint8*) &hats) [i]) {
+                switch (((Uint8*) &hats) [i]) {
                 case SDL_HAT_UP:
                     Com_QueueEvent(0, SE_KEY, hat_keys[4 * i + 0], true, 0, nullptr);
                     break;
@@ -922,15 +922,15 @@ static void IN_JoyMove() {
             Sint16 axis = SDL_JoystickGetAxis(stick, i);
 
             if (!in_joystickUseAnalog->integer) {
-                float f = ( (float) axis) / 32767.0f;
+                float f = ((float) axis) / 32767.0f;
 
                 if (f < -in_joystickThreshold->value) {
-                    axes |= (1 << (i * 2) );
+                    axes |= (1 << (i * 2));
                 } else if (f > in_joystickThreshold->value) {
-                    axes |= (1 << ( (i * 2) + 1) );
+                    axes |= (1 << ((i * 2) + 1));
                 }
             } else {
-                float f = ( (float) abs(axis) ) / 32767.0f;
+                float f = ((float) abs(axis)) / 32767.0f;
 
                 if (f < in_joystickThreshold->value) {
                     axis = 0;
@@ -948,11 +948,11 @@ static void IN_JoyMove() {
     /* Time to update axes state based on old vs. new. */
     if (axes != stick_state.oldaxes) {
         for (i = 0; i < 16; i++) {
-            if ( (axes & (1 << i) ) && !(stick_state.oldaxes & (1 << i) ) ) {
+            if ((axes & (1 << i)) && !(stick_state.oldaxes & (1 << i))) {
                 Com_QueueEvent(0, SE_KEY, joy_keys[i], true, 0, nullptr);
             }
 
-            if (!(axes & (1 << i) ) && (stick_state.oldaxes & (1 << i) ) ) {
+            if (!(axes & (1 << i)) && (stick_state.oldaxes & (1 << i))) {
                 Com_QueueEvent(0, SE_KEY, joy_keys[i], false, 0, nullptr);
             }
         }
@@ -964,7 +964,7 @@ static void IN_JoyMove() {
 
 static void IN_XBox360Axis(int controllerAxis, int gameAxis, float scale) {
     Sint16 axis = SDL_JoystickGetAxis(stick, controllerAxis);
-    float f = ( (float) axis) / 32767.0f;
+    float f = ((float) axis) / 32767.0f;
 
     if (f > -in_joystickThreshold->value && f < in_joystickThreshold->value) {
         Com_QueueEvent(0, SE_JOYSTICK_AXIS, gameAxis, 0, 0, nullptr);
@@ -981,7 +981,7 @@ static int IN_XBox360AxisToButton(int controllerAxis, int key, float expectedSta
     unsigned int axes = 0;
 
     Sint16 axis = SDL_JoystickGetAxis(stick, controllerAxis);
-    float f = ( (float) axis) / 32767.0f;
+    float f = ((float) axis) / 32767.0f;
 
     /*
     if(f < -in_joystickThreshold->value)
@@ -994,11 +994,11 @@ static int IN_XBox360AxisToButton(int controllerAxis, int key, float expectedSta
     }
     */
 
-    if (f > (expectedStartValue + threshold + in_joystickThreshold->value) ) {
-        axes |= (1 << (controllerAxis) );
+    if (f > (expectedStartValue + threshold + in_joystickThreshold->value)) {
+        axes |= (1 << (controllerAxis));
     }
 
-    if ( (axes & (1 << controllerAxis) ) && !(stick_state.oldaxes & (1 << controllerAxis) ) ) {
+    if ((axes & (1 << controllerAxis)) && !(stick_state.oldaxes & (1 << controllerAxis))) {
         Com_QueueEvent(0, SE_KEY, key, true, 0, nullptr);
 
         if (in_xbox360ControllerDebug->integer) {
@@ -1006,7 +1006,7 @@ static int IN_XBox360AxisToButton(int controllerAxis, int key, float expectedSta
         }
     }
 
-    if (!(axes & (1 << controllerAxis) ) && (stick_state.oldaxes & (1 << controllerAxis) ) ) {
+    if (!(axes & (1 << controllerAxis)) && (stick_state.oldaxes & (1 << controllerAxis))) {
         Com_QueueEvent(0, SE_KEY, key, false, 0, nullptr);
 
         if (in_xbox360ControllerDebug->integer) {
@@ -1039,13 +1039,13 @@ static void IN_Xbox360ControllerMove() {
 
     SDL_JoystickUpdate();
 
-    memset(joy_pressed, '\0', sizeof(joy_pressed) );
+    memset(joy_pressed, '\0', sizeof(joy_pressed));
 
     // query the stick buttons...
     total = SDL_JoystickNumButtons(stick);
 
     if (total > 0) {
-        if (total > (int) ARRAY_LEN(stick_state.buttons) ) {
+        if (total > (int) ARRAY_LEN(stick_state.buttons)) {
             total = ARRAY_LEN(stick_state.buttons);
         }
 
@@ -1056,7 +1056,7 @@ static void IN_Xbox360ControllerMove() {
                 Com_QueueEvent(0, SE_KEY, K_XBOX360_A + i, pressed, 0, nullptr);
 
                 if (in_xbox360ControllerDebug->integer) {
-                    Com_Printf("xbox button = %i to key = Q:0x%02x(%s)\n", i, K_XBOX360_A + i, Key_KeynumToString(K_XBOX360_A + i) );
+                    Com_Printf("xbox button = %i to key = Q:0x%02x(%s)\n", i, K_XBOX360_A + i, Key_KeynumToString(K_XBOX360_A + i));
                 }
 
                 stick_state.buttons[i] = pressed;
@@ -1118,7 +1118,7 @@ static void IN_Xbox360ControllerMove() {
                 }
 
                 if (hat != SDL_HAT_CENTERED) {
-                    Com_Printf("xbox hat bits = %i to key = Q:0x%02x(%s)\n", hat, key, Key_KeynumToString(key) );
+                    Com_Printf("xbox hat bits = %i to key = Q:0x%02x(%s)\n", hat, key, Key_KeynumToString(key));
                 }
             }
 
@@ -1241,14 +1241,14 @@ static void IN_ProcessEvents(bool dropInput) {
     keyNum_t key = (keyNum_t) 0;
     static keyNum_t lastKeyDown = (keyNum_t) 0;
 
-    if (!SDL_WasInit(SDL_INIT_VIDEO) ) {
+    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
         return;
     }
 
-    while (SDL_PollEvent(&e) ) {
+    while (SDL_PollEvent(&e)) {
         switch (e.type) {
         case SDL_KEYDOWN:
-            if (!dropInput && (!e.key.repeat || cls.keyCatchers) ) {
+            if (!dropInput && (!e.key.repeat || cls.keyCatchers)) {
                 key = IN_TranslateSDLToQ3Key(&e.key.keysym, true);
 
                 if (key) {
@@ -1331,7 +1331,7 @@ static void IN_ProcessEvents(bool dropInput) {
                     break;
 
                 default:
-                    b = K_AUX1 + (e.button.button - (SDL_BUTTON_X2 + 1) ) % 16;
+                    b = K_AUX1 + (e.button.button - (SDL_BUTTON_X2 + 1)) % 16;
                     break;
                 }
 
@@ -1422,7 +1422,7 @@ void IN_Frame() {
         // If not DISCONNECTED (main menu) or ACTIVE (in game), we're loading
         // Loading in windowed mode
         ForceCursor(true);
-    } else if (!(SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) ) {
+    } else if (!(SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS)) {
         // Window doesn't have focus
         ForceCursor(true);
     } else if (com_minimized->integer) {
@@ -1451,7 +1451,7 @@ IN_Init
 void IN_Init(void* windowData) {
     int appState;
 
-    if (!SDL_WasInit(SDL_INIT_VIDEO) ) {
+    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
         Com_Error(ERR_FATAL, "IN_Init called before SDL_Init( SDL_INIT_VIDEO )");
     }
 
@@ -1478,8 +1478,8 @@ void IN_Init(void* windowData) {
     IN_SetCursorActive(true);
 
     appState = SDL_GetWindowFlags(window);
-    Cvar_SetValue("com_unfocused", !(appState & SDL_WINDOW_INPUT_FOCUS) );
-    Cvar_SetValue("com_minimized", (appState & SDL_WINDOW_MINIMIZED) );
+    Cvar_SetValue("com_unfocused", !(appState & SDL_WINDOW_INPUT_FOCUS));
+    Cvar_SetValue("com_minimized", (appState & SDL_WINDOW_MINIMIZED));
     IN_InitJoystick();
     Com_DPrintf("------------------------------------\n");
 }

@@ -70,7 +70,7 @@ class RocketProgressBar : public Rocket::Core::Element {
         void Update() {
             float newValue;
 
-            if (!source.Empty() ) {
+            if (!source.Empty()) {
                 newValue = CG_Rocket_ProgressBarValue(source.CString());
 
                 if (newValue != value) {
@@ -130,11 +130,11 @@ class RocketProgressBar : public Rocket::Core::Element {
         void OnPropertyChange(const Rocket::Core::PropertyNameList &changed_properties) {
             Element::OnPropertyChange(changed_properties);
 
-            if (changed_properties.find("color") != changed_properties.end() ) {
-                color = Color::Adapt(GetProperty("color")->Get<Rocket::Core::Colourb>() );
+            if (changed_properties.find("color") != changed_properties.end()) {
+                color = Color::Adapt(GetProperty("color")->Get<Rocket::Core::Colourb>());
             }
 
-            if (changed_properties.find("image") != changed_properties.end() ) {
+            if (changed_properties.find("image") != changed_properties.end()) {
                 Rocket::Core::String image = GetProperty<Rocket::Core::String>("image");
 
                 // skip the leading slash
@@ -145,7 +145,7 @@ class RocketProgressBar : public Rocket::Core::Element {
                 shader = trap_R_RegisterShader(image.CString(), RSF_NOMIP);
             }
 
-            if (changed_properties.find("orientation") != changed_properties.end() ) {
+            if (changed_properties.find("orientation") != changed_properties.end()) {
                 Rocket::Core::String orientation_string = GetProperty<Rocket::Core::String>("orientation");
 
                 if (orientation_string == "left") {
@@ -163,11 +163,11 @@ class RocketProgressBar : public Rocket::Core::Element {
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
 
-            if (changed_attributes.find("value") != changed_attributes.end() ) {
-                value = Com_Clamp(0.0f, 1.0f, GetAttribute<float>("value", 0.0f) );
+            if (changed_attributes.find("value") != changed_attributes.end()) {
+                value = Com_Clamp(0.0f, 1.0f, GetAttribute<float>("value", 0.0f));
             }
 
-            if (changed_attributes.find("src") != changed_attributes.end() ) {
+            if (changed_attributes.find("src") != changed_attributes.end()) {
                 source = GetAttribute<Rocket::Core::String>("src", "");
             }
         }
@@ -192,10 +192,10 @@ class RocketProgressBar : public Rocket::Core::Element {
                 std::stack<Rocket::Core::Element*> stack;
                 stack.push(this);
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetWidth() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetWidth()) != 0) {
                         dimensions.x = base_size;
-                        while (!stack.empty() ) {
+                        while (!stack.empty()) {
                             dimensions.x = stack.top()->ResolveProperty("width", dimensions.x);
 
                             stack.pop();
@@ -218,10 +218,10 @@ class RocketProgressBar : public Rocket::Core::Element {
                 std::stack<Rocket::Core::Element*> stack;
                 stack.push(this);
 
-                while ( (parent = parent->GetParentNode() ) ) {
-                    if ( (base_size = parent->GetOffsetHeight() ) != 0) {
+                while ((parent = parent->GetParentNode())) {
+                    if ((base_size = parent->GetOffsetHeight()) != 0) {
                         dimensions.y = base_size;
-                        while (!stack.empty() ) {
+                        while (!stack.empty()) {
                             dimensions.y = stack.top()->ResolveProperty("height", dimensions.y);
 
                             stack.pop();
@@ -233,7 +233,7 @@ class RocketProgressBar : public Rocket::Core::Element {
                 }
             }
 
-            if (shader && (auto_height || auto_width) ) {
+            if (shader && (auto_height || auto_width)) {
                 int x, y;
                 trap_R_GetTextureSize(shader, &x, &y);
 

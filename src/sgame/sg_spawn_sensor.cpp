@@ -37,7 +37,7 @@ Maryland 20850 USA.
 
 // the same as InitTrigger
 void InitBrushSensor(gentity_t* self) {
-    if (!VectorCompare(self->s.angles, vec3_origin) ) {
+    if (!VectorCompare(self->s.angles, vec3_origin)) {
         G_SetMovedir(self->s.angles, self->movedir);
     }
 
@@ -67,7 +67,7 @@ void trigger_compat_propagation_act(gentity_t* self, gentity_t*, gentity_t* acti
     G_FireEntity(self, self);
 
     if (g_debugEntities.integer >= -1) { // dont't warn about anything with -1 or lower
-        G_Printf(S_ERROR "It appears as if %s is targeted by %s to enforce firing, which is undefined behavior — stop doing that! This WILL break in future releases and toggle the sensor instead.\n", etos(self), etos(activator) );
+        G_Printf(S_ERROR "It appears as if %s is targeted by %s to enforce firing, which is undefined behavior — stop doing that! This WILL break in future releases and toggle the sensor instead.\n", etos(self), etos(activator));
     }
 }
 
@@ -103,7 +103,7 @@ void trigger_multiple_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 
     }
     if (activator && activator->client && self->conditions.team &&
-        (activator->client->pers.team != self->conditions.team) ) {
+        (activator->client->pers.team != self->conditions.team)) {
         return;
     }
 
@@ -314,7 +314,7 @@ bool sensor_buildable_match(gentity_t* self, gentity_t* activator) {
 
 void sensor_buildable_touch(gentity_t* self, gentity_t* activator, trace_t*) {
     // sanity check
-    if (!activator || !(activator->s.eType == ET_BUILDABLE) ) {
+    if (!activator || !(activator->s.eType == ET_BUILDABLE)) {
         return;
     }
 
@@ -394,13 +394,13 @@ bool sensor_equipment_match(gentity_t* self, gentity_t* activator) {
     } else {
         // otherwise check against the lists
         for (i = 0; self->conditions.weapons[i] != WP_NONE; i++) {
-            if (BG_InventoryContainsWeapon(self->conditions.weapons[i], activator->client->ps.stats) ) {
+            if (BG_InventoryContainsWeapon(self->conditions.weapons[i], activator->client->ps.stats)) {
                 return true;
             }
         }
 
         for (i = 0; self->conditions.upgrades[i] != UP_NONE; i++) {
-            if (BG_InventoryContainsUpgrade(self->conditions.upgrades[i], activator->client->ps.stats) ) {
+            if (BG_InventoryContainsUpgrade(self->conditions.upgrades[i], activator->client->ps.stats)) {
                 return true;
             }
         }
@@ -423,11 +423,11 @@ void sensor_player_touch(gentity_t* self, gentity_t* activator, trace_t*) {
         return; // can't retrigger until the wait is over
     }
 
-    if (self->conditions.team && (activator->client->pers.team != self->conditions.team) ) {
+    if (self->conditions.team && (activator->client->pers.team != self->conditions.team)) {
         return;
     }
 
-    if ( (self->conditions.upgrades[0] || self->conditions.weapons[0]) && activator->client->pers.team == TEAM_HUMANS) {
+    if ((self->conditions.upgrades[0] || self->conditions.weapons[0]) && activator->client->pers.team == TEAM_HUMANS) {
         shouldFire = sensor_equipment_match(self, activator);
     } else if (self->conditions.classes[0] && activator->client->pers.team == TEAM_ALIENS) {
         shouldFire = sensor_class_match(self, activator);

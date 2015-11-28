@@ -128,8 +128,8 @@ typedef enum {
 } pmtype_t;
 
 // pmtype_t categories
-#define PM_Paralyzed(x) ( (x) == PM_DEAD || (x) == PM_FREEZE || (x) == PM_INTERMISSION)
-#define PM_Live(x)      ( (x) == PM_NORMAL || (x) == PM_GRABBED)
+#define PM_Paralyzed(x) ((x) == PM_DEAD || (x) == PM_FREEZE || (x) == PM_INTERMISSION)
+#define PM_Live(x)      ((x) == PM_NORMAL || (x) == PM_GRABBED)
 
 typedef enum {
     WEAPON_READY,
@@ -268,8 +268,8 @@ typedef enum {
 #define SB_BUILDABLE_MASK        0x00FF
 #define SB_BUILDABLE_STATE_MASK  0xFF00
 #define SB_BUILDABLE_STATE_SHIFT 8
-#define SB_BUILDABLE_FROM_IBE(x) ( (x) << SB_BUILDABLE_STATE_SHIFT)
-#define SB_BUILDABLE_TO_IBE(x)   ( ( (x) & SB_BUILDABLE_STATE_MASK) >> SB_BUILDABLE_STATE_SHIFT)
+#define SB_BUILDABLE_FROM_IBE(x) ((x) << SB_BUILDABLE_STATE_SHIFT)
+#define SB_BUILDABLE_TO_IBE(x)   (((x) & SB_BUILDABLE_STATE_MASK) >> SB_BUILDABLE_STATE_SHIFT)
 
 typedef enum {
     IBE_NONE, // no error, can build
@@ -915,8 +915,8 @@ typedef enum {
     PCL_NUM_CLASSES
 } class_t;
 // convenience bitmasks
-#define PCL_ALIEN_CLASSES ( (1 << PCL_HUMAN_NAKED) - (1 << PCL_ALIEN_BUILDER0) )
-#define PCL_HUMAN_CLASSES ( (1 << PCL_NUM_CLASSES) - (1 << PCL_HUMAN_NAKED) )
+#define PCL_ALIEN_CLASSES ((1 << PCL_HUMAN_NAKED) - (1 << PCL_ALIEN_BUILDER0))
+#define PCL_HUMAN_CLASSES ((1 << PCL_NUM_CLASSES) - (1 << PCL_HUMAN_NAKED))
 #define PCL_ALL_CLASSES   (PCL_ALIEN_CLASSES | PCL_HUMAN_CLASSES)
 
 // spectator state

@@ -48,7 +48,7 @@ AIValue_t AIBoxToken(const pc_token_stripped_t* token) {
         return AIBoxString(token->string);
     }
 
-    if ( (float) token->intvalue != token->floatvalue) {
+    if ((float) token->intvalue != token->floatvalue) {
         return AIBoxFloat(token->floatvalue);
     } else {
         return AIBoxInt(token->intvalue);
@@ -61,7 +61,7 @@ static AIValue_t buildingIsDamaged(gentity_t* self, const AIValue_t*) {
 }
 
 static AIValue_t haveWeapon(gentity_t* self, const AIValue_t* params) {
-    return AIBoxInt(BG_InventoryContainsWeapon(AIUnBoxInt(params[0]), self->client->ps.stats) );
+    return AIBoxInt(BG_InventoryContainsWeapon(AIUnBoxInt(params[0]), self->client->ps.stats));
 }
 
 static AIValue_t alertedToEnemy(gentity_t* self, const AIValue_t*) {
@@ -73,11 +73,11 @@ static AIValue_t botTeam(gentity_t* self, const AIValue_t*) {
 }
 
 static AIValue_t goalTeam(gentity_t* self, const AIValue_t*) {
-    return AIBoxInt(BotGetTargetTeam(self->botMind->goal) );
+    return AIBoxInt(BotGetTargetTeam(self->botMind->goal));
 }
 
 static AIValue_t goalType(gentity_t* self, const AIValue_t*) {
-    return AIBoxInt(BotGetTargetType(self->botMind->goal) );
+    return AIBoxInt(BotGetTargetType(self->botMind->goal));
 }
 
 // TODO: Check if we can just check for HealthComponent.
@@ -85,11 +85,11 @@ static AIValue_t goalDead(gentity_t* self, const AIValue_t*) {
     bool dead = false;
     botTarget_t* goal = &self->botMind->goal;
 
-    if (!BotTargetIsEntity(*goal) ) {
+    if (!BotTargetIsEntity(*goal)) {
         dead = true;
     } else if (BotGetTargetTeam(*goal) == TEAM_NONE) {
         dead = true;
-    } else if (!G_Alive(self->botMind->goal.ent) ) {
+    } else if (!G_Alive(self->botMind->goal.ent)) {
         dead = true;
     } else if (goal->ent->client && goal->ent->client->sess.spectatorState != SPECTATOR_NOT) {
         dead = true;
@@ -109,20 +109,20 @@ static AIValue_t goalBuildingType(gentity_t* self, const AIValue_t*) {
 }
 
 static AIValue_t currentWeapon(gentity_t* self, const AIValue_t*) {
-    return AIBoxInt(BG_GetPlayerWeapon(&self->client->ps) );
+    return AIBoxInt(BG_GetPlayerWeapon(&self->client->ps));
 }
 
 static AIValue_t haveUpgrade(gentity_t* self, const AIValue_t* params) {
     int upgrade = AIUnBoxInt(params[0]);
-    return AIBoxInt(!BG_UpgradeIsActive(upgrade, self->client->ps.stats) && BG_InventoryContainsUpgrade(upgrade, self->client->ps.stats) );
+    return AIBoxInt(!BG_UpgradeIsActive(upgrade, self->client->ps.stats) && BG_InventoryContainsUpgrade(upgrade, self->client->ps.stats));
 }
 
 static AIValue_t percentAmmo(gentity_t* self, const AIValue_t*) {
-    return AIBoxFloat(PercentAmmoRemaining(BG_PrimaryWeapon(self->client->ps.stats), &self->client->ps) );
+    return AIBoxFloat(PercentAmmoRemaining(BG_PrimaryWeapon(self->client->ps.stats), &self->client->ps));
 }
 
 static AIValue_t teamateHasWeapon(gentity_t* self, const AIValue_t* params) {
-    return AIBoxInt(BotTeamateHasWeapon(self, AIUnBoxInt(params[0]) ) );
+    return AIBoxInt(BotTeamateHasWeapon(self, AIUnBoxInt(params[0])));
 }
 
 static AIValue_t distanceTo(gentity_t* self, const AIValue_t* params) {
@@ -133,11 +133,11 @@ static AIValue_t distanceTo(gentity_t* self, const AIValue_t* params) {
 }
 
 static AIValue_t baseRushScore(gentity_t* self, const AIValue_t*) {
-    return AIBoxFloat(BotGetBaseRushScore(self) );
+    return AIBoxFloat(BotGetBaseRushScore(self));
 }
 
 static AIValue_t healScore(gentity_t* self, const AIValue_t*) {
-    return AIBoxFloat(BotGetHealScore(self) );
+    return AIBoxFloat(BotGetHealScore(self));
 }
 
 static AIValue_t botClass(gentity_t* self, const AIValue_t*) {
@@ -159,7 +159,7 @@ static AIValue_t inAttackRange(gentity_t* self, const AIValue_t* params) {
 
     BotSetTarget(&target, e.ent, nullptr);
 
-    if (BotTargetInAttackRange(self, target) ) {
+    if (BotTargetInAttackRange(self, target)) {
         return AIBoxInt(true);
     }
 
@@ -177,8 +177,8 @@ static AIValue_t isVisible(gentity_t* self, const AIValue_t* params) {
 
     BotSetTarget(&target, e.ent, nullptr);
 
-    if (BotTargetIsVisible(self, target, CONTENTS_SOLID) ) {
-        if (BotEnemyIsValid(self, e.ent) ) {
+    if (BotTargetIsVisible(self, target, CONTENTS_SOLID)) {
+        if (BotEnemyIsValid(self, e.ent)) {
             self->botMind->enemyLastSeen = level.time;
         }
         return AIBoxInt(true);
@@ -196,7 +196,7 @@ static AIValue_t directPathTo(gentity_t* self, const AIValue_t* params) {
     } else if (ed.ent) {
         botTarget_t target;
         BotSetTarget(&target, ed.ent, nullptr);
-        return AIBoxInt(BotPathIsWalkable(self, target) );
+        return AIBoxInt(BotPathIsWalkable(self, target));
     }
 
     return AIBoxInt(false);
@@ -205,7 +205,7 @@ static AIValue_t directPathTo(gentity_t* self, const AIValue_t* params) {
 static AIValue_t botCanEvolveTo(gentity_t* self, const AIValue_t* params) {
     class_t c = (class_t) AIUnBoxInt(params[0]);
 
-    return AIBoxInt(BotCanEvolveToClass(self, c) );
+    return AIBoxInt(BotCanEvolveToClass(self, c));
 }
 
 static AIValue_t humanMomentum(gentity_t*, const AIValue_t*) {
@@ -217,11 +217,11 @@ static AIValue_t alienMomentum(gentity_t*, const AIValue_t*) {
 }
 
 static AIValue_t randomChance(gentity_t*, const AIValue_t*) {
-    return AIBoxFloat(random() );
+    return AIBoxFloat(random());
 }
 
 static AIValue_t cvarInt(gentity_t*, const AIValue_t* params) {
-    vmCvar_t* c = G_FindCvar(AIUnBoxString(params[0]) );
+    vmCvar_t* c = G_FindCvar(AIUnBoxString(params[0]));
 
     if (!c) {
         return AIBoxInt(0);
@@ -231,7 +231,7 @@ static AIValue_t cvarInt(gentity_t*, const AIValue_t* params) {
 }
 
 static AIValue_t cvarFloat(gentity_t*, const AIValue_t* params) {
-    vmCvar_t* c = G_FindCvar(AIUnBoxString(params[0]) );
+    vmCvar_t* c = G_FindCvar(AIUnBoxString(params[0]));
 
     if (!c) {
         return AIBoxFloat(0);
@@ -261,7 +261,7 @@ static const struct AIConditionMap_s {
     AIValueType_t retType;
     AIFunc func;
     int nparams;
-} conditionFuncs[] ={
+} conditionFuncs[] = {
     { "alertedToEnemy", VALUE_INT, alertedToEnemy, 0 },
     { "alienMomentum", VALUE_INT, alienMomentum, 0 },
     { "baseRushScore", VALUE_FLOAT, baseRushScore, 0 },
@@ -295,7 +295,7 @@ static const struct AIOpMap_s {
     const char* str;
     int tokenSubtype;
     AIOpType_t opType;
-} conditionOps[] ={
+} conditionOps[] = {
     { ">=", P_LOGIC_GEQ, OP_GREATERTHANEQUAL },
     { ">", P_LOGIC_GREATER, OP_GREATERTHAN      },
     { "<=", P_LOGIC_LEQ, OP_LESSTHANEQUAL    },
@@ -368,12 +368,12 @@ static AIOp_t* newOp(pc_token_list* list) {
 
     AIOpType_t op = opTypeFromToken(&current->token);
 
-    if (isBinaryOp(op) ) {
-        AIBinaryOp_t* b = (AIBinaryOp_t*) BG_Alloc(sizeof(*b) );
+    if (isBinaryOp(op)) {
+        AIBinaryOp_t* b = (AIBinaryOp_t*) BG_Alloc(sizeof(*b));
         b->opType = op;
         ret = (AIOp_t*) b;
-    } else if (isUnaryOp(op) ) {
-        AIUnaryOp_t* u = (AIUnaryOp_t*) BG_Alloc(sizeof(*u) );
+    } else if (isUnaryOp(op)) {
+        AIUnaryOp_t* u = (AIUnaryOp_t*) BG_Alloc(sizeof(*u));
         u->opType = op;
         ret = (AIOp_t*) u;
     }
@@ -386,7 +386,7 @@ static AIValue_t* newValueLiteral(pc_token_list** list) {
     pc_token_list* current = *list;
     pc_token_stripped_t* token = &current->token;
 
-    ret = (AIValue_t*) BG_Alloc(sizeof(*ret) );
+    ret = (AIValue_t*) BG_Alloc(sizeof(*ret));
 
     *ret = AIBoxToken(token);
 
@@ -403,7 +403,7 @@ static AIValue_t* parseFunctionParameters(pc_token_list** list, int* nparams, in
     int numParams = 0;
 
     // functions should always be proceeded by a '(' if they have parameters
-    if (!expectToken("(", &parenBegin, false) ) {
+    if (!expectToken("(", &parenBegin, false)) {
         *list = current;
         return nullptr;
     }
@@ -471,7 +471,7 @@ static AIValueFunc_t* newValueFunc(pc_token_list** list) {
     pc_token_list* parenBegin = nullptr;
     struct AIConditionMap_s* f;
 
-    memset(&v, 0, sizeof(v) );
+    memset(&v, 0, sizeof(v));
 
     f = (struct AIConditionMap_s*) bsearch(current->token.string, conditionFuncs, ARRAY_LEN(conditionFuncs), sizeof(*conditionFuncs), cmdcmp);
 
@@ -483,15 +483,15 @@ static AIValueFunc_t* newValueFunc(pc_token_list** list) {
 
     v.expType = EX_FUNC;
     v.retType = f->retType;
-    v.func =    f->func;
+    v.func = f->func;
     v.nparams = f->nparams;
 
     parenBegin = current->next;
 
     // if the function has no parameters, allow it to be used without parenthesis
     if (v.nparams == 0 && parenBegin->token.string[0] != '(') {
-        ret = (AIValueFunc_t*) BG_Alloc(sizeof(*ret) );
-        memcpy(ret, &v, sizeof(*ret) );
+        ret = (AIValueFunc_t*) BG_Alloc(sizeof(*ret));
+        memcpy(ret, &v, sizeof(*ret));
 
         *list = current->next;
         return ret;
@@ -504,19 +504,19 @@ static AIValueFunc_t* newValueFunc(pc_token_list** list) {
     }
 
     // create the value op
-    ret = (AIValueFunc_t*) BG_Alloc(sizeof(*ret) );
+    ret = (AIValueFunc_t*) BG_Alloc(sizeof(*ret));
 
     // copy the members
-    memcpy(ret, &v, sizeof(*ret) );
+    memcpy(ret, &v, sizeof(*ret));
 
     return ret;
 }
 
 static AIExpType_t* makeExpression(AIOp_t* op, AIExpType_t* exp1, AIExpType_t* exp2) {
-    if (isUnaryOp(op->opType) ) {
+    if (isUnaryOp(op->opType)) {
         AIUnaryOp_t* u = (AIUnaryOp_t*) op;
         u->exp = exp1;
-    } else if (isBinaryOp(op->opType) ) {
+    } else if (isBinaryOp(op->opType)) {
         AIBinaryOp_t* b = (AIBinaryOp_t*) op;
         b->exp1 = exp1;
         b->exp2 = exp2;
@@ -569,7 +569,7 @@ static AIExpType_t* Primary(pc_token_list** list) {
     pc_token_list* current = *list;
     AIExpType_t* tree = nullptr;
 
-    if (isUnaryOp(opTypeFromToken(&current->token) ) ) {
+    if (isUnaryOp(opTypeFromToken(&current->token))) {
         AIExpType_t* t;
         AIOp_t* op = newOp(current);
         *list = current->next;
@@ -585,7 +585,7 @@ static AIExpType_t* Primary(pc_token_list** list) {
     } else if (current->token.string[0] == '(') {
         *list = current->next;
         tree = ReadConditionExpression(list, OP_NONE);
-        if (!expectToken(")", list, true) ) {
+        if (!expectToken(")", list, true)) {
             return nullptr;
         }
     } else if (current->token.type == TT_NUMBER) {
@@ -627,7 +627,7 @@ AIGenericNode_t* ReadConditionNode(pc_token_list** tokenlist) {
 
     AIConditionNode_t* condition;
 
-    if (!expectToken("condition", &current, true) ) {
+    if (!expectToken("condition", &current, true)) {
         return nullptr;
     }
 
@@ -649,7 +649,7 @@ AIGenericNode_t* ReadConditionNode(pc_token_list** tokenlist) {
         return nullptr;
     }
 
-    if (Q_stricmp(current->token.string, "{") ) {
+    if (Q_stricmp(current->token.string, "{")) {
         // this condition node has no child nodes
         *tokenlist = current;
         return (AIGenericNode_t*) condition;
@@ -666,7 +666,7 @@ AIGenericNode_t* ReadConditionNode(pc_token_list** tokenlist) {
         return nullptr;
     }
 
-    if (!expectToken("}", &current, true) ) {
+    if (!expectToken("}", &current, true)) {
         *tokenlist = current;
         FreeConditionNode(condition);
         return nullptr;
@@ -682,7 +682,7 @@ static const struct AIDecoratorMap_s {
     AINodeRunner run;
     int minparams;
     int maxparams;
-} AIDecorators[] ={
+} AIDecorators[] = {
     { "return", BotDecoratorReturn, 1, 1 },
     { "timer", BotDecoratorTimer, 1, 1 }
 };
@@ -694,7 +694,7 @@ AIGenericNode_t* ReadDecoratorNode(pc_token_list** list) {
     AIDecoratorNode_t* ret;
     pc_token_list* parenBegin;
 
-    if (!expectToken("decorator", &current, true) ) {
+    if (!expectToken("decorator", &current, true)) {
         return nullptr;
     }
 
@@ -714,14 +714,14 @@ AIGenericNode_t* ReadDecoratorNode(pc_token_list** list) {
 
     parenBegin = current->next;
 
-    memset(&node, 0, sizeof(node) );
+    memset(&node, 0, sizeof(node));
 
     BotInitNode(DECORATOR_NODE, dec->run, &node);
 
     // allow dropping of parenthesis if we don't require any parameters
     if (dec->minparams == 0 && parenBegin->token.string[0] != '(') {
         ret = allocNode(AIDecoratorNode_t);
-        memcpy(ret, &node, sizeof(node) );
+        memcpy(ret, &node, sizeof(node));
         *list = parenBegin;
         return (AIGenericNode_t*) ret;
     }
@@ -733,7 +733,7 @@ AIGenericNode_t* ReadDecoratorNode(pc_token_list** list) {
         return nullptr;
     }
 
-    if (!expectToken("{", &current, true) ) {
+    if (!expectToken("{", &current, true)) {
         *list = current;
         return nullptr;
     }
@@ -746,14 +746,14 @@ AIGenericNode_t* ReadDecoratorNode(pc_token_list** list) {
         return nullptr;
     }
 
-    if (!expectToken("}", &current, true) ) {
+    if (!expectToken("}", &current, true)) {
         *list = current;
         return nullptr;
     }
 
     // create the decorator node
     ret = allocNode(AIDecoratorNode_t);
-    memcpy(ret, &node, sizeof(*ret) );
+    memcpy(ret, &node, sizeof(*ret));
 
     *list = current;
     return (AIGenericNode_t*) ret;
@@ -764,7 +764,7 @@ static const struct AIActionMap_s {
     AINodeRunner run;
     int minparams;
     int maxparams;
-} AIActions[] ={
+} AIActions[] = {
     { "activateUpgrade", BotActionActivateUpgrade, 1, 1 },
     { "aimAtGoal", BotActionAimAtGoal, 0, 0 },
     { "alternateStrafe", BotActionAlternateStrafe, 0, 0 },
@@ -810,7 +810,7 @@ AIGenericNode_t* ReadActionNode(pc_token_list** tokenlist) {
     AIActionNode_t node;
     struct AIActionMap_s* action = nullptr;
 
-    if (!expectToken("action", &current, true) ) {
+    if (!expectToken("action", &current, true)) {
         return nullptr;
     }
 
@@ -829,14 +829,14 @@ AIGenericNode_t* ReadActionNode(pc_token_list** tokenlist) {
 
     parenBegin = current->next;
 
-    memset(&node, 0, sizeof(node) );
+    memset(&node, 0, sizeof(node));
 
     BotInitNode(ACTION_NODE, action->run, &node);
 
     // allow dropping of parenthesis if we don't require any parameters
     if (action->minparams == 0 && parenBegin->token.string[0] != '(') {
         ret = allocNode(AIActionNode_t);
-        memcpy(ret, &node, sizeof(node) );
+        memcpy(ret, &node, sizeof(node));
         *tokenlist = parenBegin;
         return (AIGenericNode_t*) ret;
     }
@@ -849,7 +849,7 @@ AIGenericNode_t* ReadActionNode(pc_token_list** tokenlist) {
 
     // create the action node
     ret = allocNode(AIActionNode_t);
-    memcpy(ret, &node, sizeof(*ret) );
+    memcpy(ret, &node, sizeof(*ret));
 
     *tokenlist = current;
     return (AIGenericNode_t*) ret;
@@ -912,13 +912,13 @@ AIGenericNode_t* ReadNodeList(pc_token_list** tokenlist) {
     AINodeList_t* list;
     pc_token_list* current = *tokenlist;
 
-    if (!expectToken("{", &current, true) ) {
+    if (!expectToken("{", &current, true)) {
         return nullptr;
     }
 
     list = allocNode(AINodeList_t);
 
-    while (Q_stricmp(current->token.string, "}") ) {
+    while (Q_stricmp(current->token.string, "}")) {
         AIGenericNode_t* node = ReadNode(&current);
 
         if (node && list->numNodes >= MAX_NODE_LIST) {
@@ -956,7 +956,7 @@ AIGenericNode_t* ReadBehaviorTreeInclude(pc_token_list** tokenlist) {
 
     AIBehaviorTree_t* behavior;
 
-    if (!expectToken("behavior", &current, true) ) {
+    if (!expectToken("behavior", &current, true)) {
         return nullptr;
     }
 
@@ -1000,19 +1000,19 @@ AIGenericNode_t* ReadNode(pc_token_list** tokenlist) {
     pc_token_list* current = *tokenlist;
     AIGenericNode_t* node;
 
-    if (!Q_stricmp(current->token.string, "selector") ) {
+    if (!Q_stricmp(current->token.string, "selector")) {
         node = ReadSelector(&current);
-    } else if (!Q_stricmp(current->token.string, "sequence") ) {
+    } else if (!Q_stricmp(current->token.string, "sequence")) {
         node = ReadSequence(&current);
-    } else if (!Q_stricmp(current->token.string, "concurrent") ) {
+    } else if (!Q_stricmp(current->token.string, "concurrent")) {
         node = ReadConcurrent(&current);
-    } else if (!Q_stricmp(current->token.string, "action") ) {
+    } else if (!Q_stricmp(current->token.string, "action")) {
         node = ReadActionNode(&current);
-    } else if (!Q_stricmp(current->token.string, "condition") ) {
+    } else if (!Q_stricmp(current->token.string, "condition")) {
         node = ReadConditionNode(&current);
-    } else if (!Q_stricmp(current->token.string, "decorator") ) {
+    } else if (!Q_stricmp(current->token.string, "decorator")) {
         node = ReadDecoratorNode(&current);
-    } else if (!Q_stricmp(current->token.string, "behavior") ) {
+    } else if (!Q_stricmp(current->token.string, "behavior")) {
         node = ReadBehaviorTreeInclude(&current);
     } else {
         BotError("Invalid token on line %d found: %s\n", current->token.line, current->token.string);
@@ -1044,7 +1044,7 @@ AIBehaviorTree_t* ReadBehaviorTree(const char* name, AITreeList_t* list) {
     // check if this behavior tree has already been loaded
     for (i = 0; i < list->numTrees; i++) {
         AIBehaviorTree_t* tree = list->trees[i];
-        if (!Q_stricmp(tree->name, name) ) {
+        if (!Q_stricmp(tree->name, name)) {
             return tree;
         }
     }
@@ -1132,7 +1132,7 @@ AIBehaviorTree_t* ReadBehaviorTree(const char* name, AITreeList_t* list) {
     D(SAY_AREA);
     D(SAY_AREA_TEAM);
 
-    Q_strncpyz(treefilename, va("bots/%s.bt", name), sizeof(treefilename) );
+    Q_strncpyz(treefilename, va("bots/%s.bt", name), sizeof(treefilename));
 
     handle = trap_Parse_LoadSource(treefilename);
     if (!handle) {
@@ -1143,9 +1143,9 @@ AIBehaviorTree_t* ReadBehaviorTree(const char* name, AITreeList_t* list) {
     tokenlist = CreateTokenList(handle);
     trap_Parse_FreeSource(handle);
 
-    tree = (AIBehaviorTree_t*) BG_Alloc(sizeof(AIBehaviorTree_t) );
+    tree = (AIBehaviorTree_t*) BG_Alloc(sizeof(AIBehaviorTree_t));
 
-    Q_strncpyz(tree->name, name, sizeof(tree->name) );
+    Q_strncpyz(tree->name, name, sizeof(tree->name));
 
     tree->run = BotBehaviorNode;
     tree->type = BEHAVIOR_NODE;
@@ -1172,8 +1172,8 @@ pc_token_list* CreateTokenList(int handle) {
     pc_token_list* current = nullptr;
     pc_token_list* root = nullptr;
 
-    while (trap_Parse_ReadToken(handle, &token) ) {
-        pc_token_list* list = (pc_token_list*) BG_Alloc(sizeof(pc_token_list) );
+    while (trap_Parse_ReadToken(handle, &token)) {
+        pc_token_list* list = (pc_token_list*) BG_Alloc(sizeof(pc_token_list));
 
         if (current) {
             list->prev = current;
@@ -1233,9 +1233,9 @@ void RemoveTreeFromList(AITreeList_t* list, AIBehaviorTree_t* tree) {
 
     for (i = 0; i < list->numTrees; i++) {
         AIBehaviorTree_t* testTree = list->trees[i];
-        if (!Q_stricmp(testTree->name, tree->name) ) {
+        if (!Q_stricmp(testTree->name, tree->name)) {
             FreeBehaviorTree(testTree);
-            memmove(&list->trees[i], &list->trees[i + 1], sizeof(AIBehaviorTree_t*) * (list->numTrees - i - 1) );
+            memmove(&list->trees[i], &list->trees[i + 1], sizeof(AIBehaviorTree_t*) * (list->numTrees - i - 1));
             list->numTrees--;
         }
     }
@@ -1300,11 +1300,11 @@ void FreeOp(AIOp_t* op) {
         return;
     }
 
-    if (isBinaryOp(op->opType) ) {
+    if (isBinaryOp(op->opType)) {
         AIBinaryOp_t* b = (AIBinaryOp_t*) op;
         FreeExpression(b->exp1);
         FreeExpression(b->exp2);
-    } else if (isUnaryOp(op->opType) ) {
+    } else if (isUnaryOp(op->opType)) {
         AIUnaryOp_t* u = (AIUnaryOp_t*) op;
         FreeExpression(u->exp);
     }
@@ -1350,19 +1350,19 @@ void FreeNode(AIGenericNode_t* node) {
 
     switch (node->type) {
     case SELECTOR_NODE:
-        FreeNodeList( (AINodeList_t*) node);
+        FreeNodeList((AINodeList_t*) node);
         break;
 
     case CONDITION_NODE:
-        FreeConditionNode( (AIConditionNode_t*) node);
+        FreeConditionNode((AIConditionNode_t*) node);
         break;
 
     case ACTION_NODE:
-        FreeActionNode( (AIActionNode_t*) node);
+        FreeActionNode((AIActionNode_t*) node);
         break;
 
     case DECORATOR_NODE:
-        FreeDecoratorNode( (AIDecoratorNode_t*) node);
+        FreeDecoratorNode((AIDecoratorNode_t*) node);
         break;
 
     default:

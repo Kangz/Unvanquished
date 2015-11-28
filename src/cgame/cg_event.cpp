@@ -134,11 +134,11 @@ static void CG_Obituary(entityState_t* ent) {
     } else {
         attackerInfo = CG_ConfigString(CS_PLAYERS + attacker);
         attackerTeam = cgs.clientinfo[attacker].team;
-        Q_strncpyz(attackerName, Info_ValueForKey(attackerInfo, "n"), sizeof(attackerName) );
+        Q_strncpyz(attackerName, Info_ValueForKey(attackerInfo, "n"), sizeof(attackerName));
 
         // check for kill messages about the current clientNum
         if (target == cg.snap->ps.clientNum) {
-            Q_strncpyz(cg.killerName, attackerName, sizeof(cg.killerName) );
+            Q_strncpyz(cg.killerName, attackerName, sizeof(cg.killerName));
         }
     }
 
@@ -155,7 +155,7 @@ static void CG_Obituary(entityState_t* ent) {
     if (!assistantInfo) {
         strcpy(assistantName, "noname");
     } else {
-        Q_strncpyz(assistantName, Info_ValueForKey(assistantInfo, "n"), sizeof(assistantName) );
+        Q_strncpyz(assistantName, Info_ValueForKey(assistantInfo, "n"), sizeof(assistantName));
     }
 
     targetInfo = CG_ConfigString(CS_PLAYERS + target);
@@ -164,12 +164,12 @@ static void CG_Obituary(entityState_t* ent) {
         return;
     }
 
-    Q_strncpyz(targetName, Info_ValueForKey(targetInfo, "n"), sizeof(targetName) );
+    Q_strncpyz(targetName, Info_ValueForKey(targetInfo, "n"), sizeof(targetName));
 
     // check for single client messages
 
     if (cg_emoticonsInMessages.integer) {
-        if (mod < MOD_UNKNOWN || mod >= (int) ARRAY_LEN(meansOfDeath) ) {
+        if (mod < MOD_UNKNOWN || mod >= (int) ARRAY_LEN(meansOfDeath)) {
             mod = MOD_UNKNOWN;
         }
 
@@ -477,7 +477,7 @@ is_long_kill_message: // <- use of this label == needs a kill icon
             if (attackerClass == -1) {
                 *attackerClassName = 0;
             } else {
-                Q_strncpyz(attackerClassName, _(BG_ClassModelConfig(attackerClass)->humanName), sizeof(attackerClassName) );
+                Q_strncpyz(attackerClassName, _(BG_ClassModelConfig(attackerClass)->humanName), sizeof(attackerClassName));
             }
 
             // Argument order: victim, attacker, [class,] [assistant]. Each has team tag first.
@@ -534,7 +534,7 @@ void CG_PainEvent(centity_t* cent, int health) {
     }
 
     trap_S_StartSound(nullptr, cent->currentState.number, CHAN_VOICE,
-                      CG_CustomSound(cent->currentState.number, snd) );
+                      CG_CustomSound(cent->currentState.number, snd));
 
     // save pain time for programitic twitch animation
     cent->pe.painTime = cg.time;
@@ -610,10 +610,10 @@ void CG_Momentum(entityState_t* es) {
     float momentum;
     bool negative;
 
-    negative   = es->groundEntityNum;
+    negative = es->groundEntityNum;
     momentum = (negative ? -es->otherEntityNum2 : es->otherEntityNum2) / 10.0f;
 
-    cg.momentumGained     = momentum;
+    cg.momentumGained = momentum;
     cg.momentumGainedTime = cg.time;
 }
 
@@ -645,7 +645,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
 
     if (cg_debugEvents.integer) {
         CG_Printf("ent:%3i  event:%3i %s\n", es->number, event,
-                  BG_EventName(event) );
+                  BG_EventName(event));
     }
 
     if (!event) {
@@ -732,7 +732,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
 
     case EV_FALL_MEDIUM:
         // use a general pain sound
-        trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*pain100_1.wav") );
+        trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*pain100_1.wav"));
 
         if (clientNum == cg.predictedPlayerState.clientNum) {
             // smooth landing z changes
@@ -743,7 +743,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         break;
 
     case EV_FALL_FAR:
-        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*fall1.wav") );
+        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*fall1.wav"));
         cent->pe.painTime = cg.time; // don't play a pain sound right after this
 
         if (clientNum == cg.predictedPlayerState.clientNum) {
@@ -755,7 +755,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         break;
 
     case EV_FALLING:
-        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*falling1.wav") );
+        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*falling1.wav"));
         break;
 
     case EV_STEP_4:
@@ -810,9 +810,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     }
 
     case EV_JUMP:
-        trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav") );
+        trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 
-        if (BG_ClassHasAbility(cg.predictedPlayerState.stats[STAT_CLASS], SCA_WALLJUMPER) ) {
+        if (BG_ClassHasAbility(cg.predictedPlayerState.stats[STAT_CLASS], SCA_WALLJUMPER)) {
             vec3_t surfNormal, refNormal = { 0.0f, 0.0f, 1.0f };
             vec3_t rotAxis;
 
@@ -849,7 +849,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
 
     case EV_TAUNT:
         if (!cg_noTaunt.integer) {
-            trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*taunt.wav") );
+            trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*taunt.wav"));
         }
 
         break;
@@ -867,7 +867,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         break;
 
     case EV_WATER_CLEAR:
-        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*gasp.wav") );
+        trap_S_StartSound(nullptr, es->number, CHAN_AUTO, CG_CustomSound(es->number, "*gasp.wav"));
         break;
 
     case EV_JETPACK_ENABLE:
@@ -968,12 +968,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         break;
 
     case EV_HUMAN_BUILDABLE_DYING:
-        CG_HumanBuildableDying( (buildable_t) es->modelindex, position);
+        CG_HumanBuildableDying((buildable_t) es->modelindex, position);
         break;
 
     case EV_HUMAN_BUILDABLE_EXPLOSION:
         ByteToDir(es->eventParm, dir);
-        CG_HumanBuildableExplosion( (buildable_t) es->modelindex, position, dir);
+        CG_HumanBuildableExplosion((buildable_t) es->modelindex, position, dir);
         break;
 
     case EV_ALIEN_BUILDABLE_EXPLOSION:
@@ -985,10 +985,10 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         centity_t* source = &cg_entities[es->generic1];
         centity_t* target = &cg_entities[es->clientNum];
 
-        if (!CG_IsTrailSystemValid(&source->muzzleTS) ) {
+        if (!CG_IsTrailSystemValid(&source->muzzleTS)) {
             source->muzzleTS = CG_SpawnNewTrailSystem(cgs.media.teslaZapTS);
 
-            if (CG_IsTrailSystemValid(&source->muzzleTS) ) {
+            if (CG_IsTrailSystemValid(&source->muzzleTS)) {
                 CG_SetAttachmentCent(&source->muzzleTS->frontAttachment, source);
                 CG_SetAttachmentCent(&source->muzzleTS->backAttachment, target);
                 CG_AttachToCent(&source->muzzleTS->frontAttachment);
@@ -1005,7 +1005,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
             trap_S_StartSound(nullptr, es->number, CHAN_VOICE, cgs.gameSounds[es->eventParm]);
         } else {
             s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-            trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, s) );
+            trap_S_StartSound(nullptr, es->number, CHAN_VOICE, CG_CustomSound(es->number, s));
         }
 
         break;
@@ -1015,7 +1015,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
             trap_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, cgs.gameSounds[es->eventParm]);
         } else {
             s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-            trap_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, CG_CustomSound(es->number, s) );
+            trap_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, CG_CustomSound(es->number, s));
         }
 
         break;
@@ -1033,7 +1033,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     case EV_DEATH2:
     case EV_DEATH3:
         trap_S_StartSound(nullptr, es->number, CHAN_VOICE,
-                          CG_CustomSound(es->number, va("*death%i.wav", event - EV_DEATH1 + 1) ) );
+                          CG_CustomSound(es->number, va("*death%i.wav", event - EV_DEATH1 + 1)));
         break;
 
     case EV_OBITUARY:
@@ -1069,7 +1069,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     case EV_OVERMIND_ATTACK_2:
         if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_ALIENS) {
             trap_S_StartLocalSound(cgs.media.alienOvermindAttack, CHAN_ANNOUNCER);
-            CG_CenterPrint(va("^%c%s", "31"[event - EV_OVERMIND_ATTACK_1], _("The Overmind is under attack!") ), 200, GIANTCHAR_WIDTH * 4);
+            CG_CenterPrint(va("^%c%s", "31"[event - EV_OVERMIND_ATTACK_1], _("The Overmind is under attack!")), 200, GIANTCHAR_WIDTH * 4);
         }
 
         break;
@@ -1085,7 +1085,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     case EV_REACTOR_ATTACK_1:
     case EV_REACTOR_ATTACK_2:
         if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_HUMANS) {
-            CG_CenterPrint(va("^%c%s", "31"[event - EV_REACTOR_ATTACK_1], _("The reactor is under attack!") ), 200, GIANTCHAR_WIDTH * 4);
+            CG_CenterPrint(va("^%c%s", "31"[event - EV_REACTOR_ATTACK_1], _("The reactor is under attack!")), 200, GIANTCHAR_WIDTH * 4);
         }
 
         break;
@@ -1140,7 +1140,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
         {
             particleSystem_t* ps = CG_SpawnNewParticleSystem(cgs.media.alienEvolvePS);
 
-            if (CG_IsParticleSystemValid(&ps) ) {
+            if (CG_IsParticleSystemValid(&ps)) {
                 CG_SetAttachmentCent(&ps->attachment, cent);
                 CG_AttachToCent(&ps->attachment);
             }
@@ -1165,7 +1165,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     case EV_ALIEN_ACIDTUBE: {
         particleSystem_t* ps = CG_SpawnNewParticleSystem(cgs.media.alienAcidTubePS);
 
-        if (CG_IsParticleSystemValid(&ps) ) {
+        if (CG_IsParticleSystemValid(&ps)) {
             CG_SetAttachmentCent(&ps->attachment, cent);
             ByteToDir(es->eventParm, dir);
             CG_SetParticleSystemNormal(ps, dir);
@@ -1177,7 +1177,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
     case EV_ALIEN_BOOSTER: {
         particleSystem_t* ps = CG_SpawnNewParticleSystem(cgs.media.alienBoosterPS);
 
-        if (CG_IsParticleSystemValid(&ps) ) {
+        if (CG_IsParticleSystemValid(&ps)) {
             CG_SetAttachmentCent(&ps->attachment, cent);
             ByteToDir(es->eventParm, dir);
             CG_SetParticleSystemNormal(ps, dir);
@@ -1247,7 +1247,7 @@ void CG_CheckEvents(centity_t* cent) {
 
         cent->previousEvent = cent->currentState.event;
 
-        if ( (cent->currentState.event & ~EV_EVENT_BITS) == 0) {
+        if ((cent->currentState.event & ~EV_EVENT_BITS) == 0) {
             return;
         }
     }

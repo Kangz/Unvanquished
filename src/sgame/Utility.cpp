@@ -45,7 +45,7 @@ bool Utility::AntiHumanRadiusDamage(Entity& entity, float amount, float range, m
     ForEntities<HumanClassComponent>([&](Entity& other, HumanClassComponent& humanClassComponent) {
         // TODO: Add LocationComponent.
         float distance = G_Distance(entity.oldEnt, other.oldEnt);
-        float damage   = amount * (1.0f - distance / range);
+        float damage = amount * (1.0f - distance / range);
 
         if (damage <= 0.0f) {
             return;
@@ -70,7 +70,7 @@ bool Utility::KnockbackRadiusDamage(Entity& entity, float amount, float range, m
     ForEntities<HealthComponent>([&](Entity& other, HealthComponent& healthComponent) {
         // TODO: Add LocationComponent.
         float distance = G_Distance(entity.oldEnt, other.oldEnt);
-        float damage   = amount * (1.0f - distance / range);
+        float damage = amount * (1.0f - distance / range);
 
         if (damage <= 0.0f) {
             return;

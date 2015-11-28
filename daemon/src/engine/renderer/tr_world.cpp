@@ -123,7 +123,7 @@ static bool R_CullLightSurface(surfaceType_t* surface, shader_t* shader, trRefLi
     gen = (srfGeneric_t*) surface;
 
     // do a quick AABB cull
-    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], gen->bounds[0], gen->bounds[1]) ) {
+    if (!BoundsIntersect(light->worldBounds[0], light->worldBounds[1], gen->bounds[0], gen->bounds[1])) {
         return true;
     }
 
@@ -190,11 +190,11 @@ static void R_AddInteractionSurface(bspSurface_t* surf, trRefLight_t* light, int
     surf->interactionBits |= bits;
 
     // skip all surfaces that don't matter for lighting only pass
-    if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows) ) {
+    if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows)) {
         return;
     }
 
-    if (R_CullLightSurface(surf->data, surf->shader, light, &cubeSideBits) ) {
+    if (R_CullLightSurface(surf->data, surf->shader, light, &cubeSideBits)) {
         if (!light->isStatic && firstAddition) {
             tr.pc.c_dlightSurfacesCulled++;
         }
@@ -219,7 +219,7 @@ static void R_AddDecalSurface(bspSurface_t* surf, int decalBits) {
     if (decalBits) {
         // ydnar: project any decals
         for (i = 0; i < tr.refdef.numDecalProjectors; i++) {
-            if (decalBits & (1 << i) ) {
+            if (decalBits & (1 << i)) {
                 R_ProjectDecalOntoSurface(&tr.refdef.decalProjectors[i], surf, &tr.world->models[0]);
             }
         }
@@ -239,7 +239,7 @@ static bool R_AddWorldSurface(bspSurface_t* surf, int fogIndex, int planeBits) {
     surf->viewCount = tr.viewCountNoReset;
 
     // try to cull before lighting or adding
-    if (R_CullSurface(surf->data, surf->shader, planeBits) ) {
+    if (R_CullSurface(surf->data, surf->shader, planeBits)) {
         return true;
     }
 
@@ -359,7 +359,7 @@ static void R_AddLeafSurfaces(bspNode_t* node, int decalBits, int planeBits) {
     while (c--) {
         // the surface may have already been added if it
         // spans multiple leafs
-        if (R_AddWorldSurface(*view, (*view)->fogIndex, planeBits) ) {
+        if (R_AddWorldSurface(*view, (*view)->fogIndex, planeBits)) {
             R_AddDecalSurface(*mark, decalBits);
         }
 
@@ -394,7 +394,7 @@ static void R_RecursiveWorldNode(bspNode_t* node, int planeBits, int decalBits) 
             int r;
 
             for (i = 0; i < FRUSTUM_PLANES; i++) {
-                if (planeBits & (1 << i) ) {
+                if (planeBits & (1 << i)) {
                     r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustums[0][i]);
 
                     if (r == 2) {
@@ -415,10 +415,10 @@ static void R_RecursiveWorldNode(bspNode_t* node, int planeBits, int decalBits) 
             int i;
 
             for (i = 0; i < tr.refdef.numDecalProjectors; i++) {
-                if (decalBits & (1 << i) ) {
+                if (decalBits & (1 << i)) {
                     // test decal bounds against node bounds
                     if (tr.refdef.decalProjectors[i].shader == nullptr ||
-                        !R_TestDecalBoundingBox(&tr.refdef.decalProjectors[i], node->mins, node->maxs) ) {
+                        !R_TestDecalBoundingBox(&tr.refdef.decalProjectors[i], node->mins, node->maxs)) {
                         decalBits &= ~(1 << i);
                     }
                 }
@@ -465,7 +465,7 @@ static void R_RecursiveInteractionNode(bspNode_t* node, trRefLight_t* light, int
         // can cast shadows into the view frustum
         if (!r_nocull->integer) {
             for (i = 0; i < FRUSTUM_PLANES; i++) {
-                if (planeBits & (1 << i) ) {
+                if (planeBits & (1 << i)) {
                     r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustums[0][i]);
 
                     if (r == 2) {
@@ -606,7 +606,7 @@ bool R_inPVS(const vec3_t p1, const vec3_t p2) {
     vis = R_ClusterPVS(leaf->cluster);
     leaf = R_PointInLeaf(p2);
 
-    if (!(vis[leaf->cluster >> 3] & (1 << (leaf->cluster & 7) ) ) ) {
+    if (!(vis[leaf->cluster >> 3] & (1 << (leaf->cluster & 7)))) {
         return false;
     }
 
@@ -626,7 +626,7 @@ bool R_inPVVS(const vec3_t p1, const vec3_t p2) {
     vis = R_ClusterPVVS(leaf->cluster);
     leaf = R_PointInLeaf(p2);
 
-    if (!(vis[leaf->cluster >> 3] & (1 << (leaf->cluster & 7) ) ) ) {
+    if (!(vis[leaf->cluster >> 3] & (1 << (leaf->cluster & 7)))) {
         return false;
     }
 
@@ -711,14 +711,14 @@ static void R_MarkLeaves() {
 
             if (cluster >= 0 && cluster < tr.world->numClusters) {
                 // check general pvs
-                if (!(vis[cluster >> 3] & (1 << (cluster & 7) ) ) ) {
+                if (!(vis[cluster >> 3] & (1 << (cluster & 7)))) {
                     continue;
                 }
             }
         }
 
         // check for door connection
-        if ( (tr.refdef.areamask[leaf->area >> 3] & (1 << (leaf->area & 7) ) ) ) {
+        if ((tr.refdef.areamask[leaf->area >> 3] & (1 << (leaf->area & 7)))) {
             // not visible
             continue;
         }
@@ -847,7 +847,7 @@ void R_AddPrecachedWorldInteractions(trRefLight_t* light) {
 
     tr.currentEntity = &tr.worldEntity;
 
-    if ( (r_vboShadows->integer || r_vboLighting->integer) ) {
+    if ((r_vboShadows->integer || r_vboLighting->integer)) {
         interactionCache_t* iaCache;
         interactionVBO_t* iaVBO;
         srfVBOMesh_t* srf;

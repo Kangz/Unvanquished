@@ -116,7 +116,7 @@ static void MakeMeshNormals(int width, int height, srfVert_t ctrl[MAX_GRID_SIZE]
     vec2_t st[8];
     bool wrapWidth, wrapHeight;
     float len;
-    static int neighbors[8][2] ={
+    static int neighbors[8][2] = {
         { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }
     };
 
@@ -306,7 +306,7 @@ static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int 
     int i;
     float copy[2][MAX_GRID_SIZE];
 
-    Com_Memcpy(copy, errorTable, sizeof(copy) );
+    Com_Memcpy(copy, errorTable, sizeof(copy));
 
     for (i = 0; i < width; i++) {
         errorTable[1][i] = copy[0][i]; // [width-1-i];
@@ -371,11 +371,11 @@ static srfGridMesh_t* R_CreateSurfaceGridMesh(int width, int height,
         Com_Memcpy(grid->heightLodError, errorTable[1], height * 4);
 
         grid->numTriangles = numTriangles;
-        grid->triangles = (srfTriangle_t*) Com_Allocate(grid->numTriangles * sizeof(srfTriangle_t) );
-        Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t) );
+        grid->triangles = (srfTriangle_t*) Com_Allocate(grid->numTriangles * sizeof(srfTriangle_t));
+        Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
 
         grid->numVerts = (width * height);
-        grid->verts = (srfVert_t*) Com_Allocate(grid->numVerts * sizeof(srfVert_t) );
+        grid->verts = (srfVert_t*) Com_Allocate(grid->numVerts * sizeof(srfVert_t));
     } else {
         grid = (srfGridMesh_t*) ri.Hunk_Alloc(size, h_low);
         Com_Memset(grid, 0, size);
@@ -388,7 +388,7 @@ static srfGridMesh_t* R_CreateSurfaceGridMesh(int width, int height,
 
         grid->numTriangles = numTriangles;
         grid->triangles = (srfTriangle_t*) ri.Hunk_Alloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
-        Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t) );
+        Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
 
         grid->numVerts = (width * height);
         grid->verts = (srfVert_t*) ri.Hunk_Alloc(grid->numVerts * sizeof(srfVert_t), h_low);

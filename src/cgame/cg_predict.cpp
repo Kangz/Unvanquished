@@ -133,7 +133,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins,
             continue;
         }
 
-        if (!(cent->contents & mask) ) {
+        if (!(cent->contents & mask)) {
             continue;
         }
 
@@ -149,8 +149,8 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins,
         } else {
             // encoded bbox
             x = (ent->solid & 255);
-            zd = ( (ent->solid >> 8) & 255);
-            zu = ( (ent->solid >> 16) & 255) - 32;
+            zd = ((ent->solid >> 8) & 255);
+            zu = ((ent->solid >> 16) & 255) - 32;
 
             bmins[0] = bmins[1] = -x;
             bmaxs[0] = bmaxs[1] = x;
@@ -158,13 +158,13 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins,
             bmaxs[2] = zu;
 
             if (i == cg_numSolidEntities) {
-                BG_ClassBoundingBox( (ent->misc >> 8) & 0xFF, bmins, bmaxs, nullptr, nullptr, nullptr);
+                BG_ClassBoundingBox((ent->misc >> 8) & 0xFF, bmins, bmaxs, nullptr, nullptr, nullptr);
             }
 
             VectorAdd(cent->lerpOrigin, bmins, bmins);
             VectorAdd(cent->lerpOrigin, bmaxs, bmaxs);
 
-            if (!BoundsIntersect(bmins, bmaxs, tmins, tmaxs) ) {
+            if (!BoundsIntersect(bmins, bmaxs, tmins, tmaxs)) {
                 continue;
             }
 
@@ -460,7 +460,7 @@ static int CG_IsUnacceptableError(playerState_t* ps, playerState_t* pps) {
 
     if (VectorLengthSquared(delta) > 0.1f * 0.1f) {
         if (cg_showmiss.integer) {
-            CG_Printf("origin delta: %.2f  ", VectorLength(delta) );
+            CG_Printf("origin delta: %.2f  ", VectorLength(delta));
         }
 
         return 2;
@@ -470,7 +470,7 @@ static int CG_IsUnacceptableError(playerState_t* ps, playerState_t* pps) {
 
     if (VectorLengthSquared(delta) > 0.1f * 0.1f) {
         if (cg_showmiss.integer) {
-            CG_Printf("velocity delta: %.2f  ", VectorLength(delta) );
+            CG_Printf("velocity delta: %.2f  ", VectorLength(delta));
         }
 
         return 3;
@@ -527,9 +527,9 @@ static int CG_IsUnacceptableError(playerState_t* ps, playerState_t* pps) {
         return 11;
     }
 
-    if (fabs(AngleDelta(ps->viewangles[0], pps->viewangles[0]) ) > 1.0f ||
-        fabs(AngleDelta(ps->viewangles[1], pps->viewangles[1]) ) > 1.0f ||
-        fabs(AngleDelta(ps->viewangles[2], pps->viewangles[2]) ) > 1.0f) {
+    if (fabs(AngleDelta(ps->viewangles[0], pps->viewangles[0])) > 1.0f ||
+        fabs(AngleDelta(ps->viewangles[1], pps->viewangles[1])) > 1.0f ||
+        fabs(AngleDelta(ps->viewangles[2], pps->viewangles[2])) > 1.0f) {
         return 12;
     }
 
@@ -608,7 +608,7 @@ void CG_PredictPlayerState() {
     }
 
     // demo playback just copies the moves
-    if (cg.demoPlayback || (cg.snap->ps.pm_flags & PMF_FOLLOW) ) {
+    if (cg.demoPlayback || (cg.snap->ps.pm_flags & PMF_FOLLOW)) {
         CG_InterpolatePlayerState(false);
         return;
     }
@@ -806,7 +806,7 @@ void CG_PredictPlayerState() {
                                           cg.predictedPlayerState.groundEntityNum, cg.physicsTime, cg.oldTime, adjusted, cg.predictedPlayerState.viewangles, new_angles);
 
                 if (cg_showmiss.integer) {
-                    if (!VectorCompare(oldPlayerState.origin, adjusted) ) {
+                    if (!VectorCompare(oldPlayerState.origin, adjusted)) {
                         CG_Printf("prediction error\n");
                     }
                 }
@@ -852,20 +852,20 @@ void CG_PredictPlayerState() {
         }
 
         if (cg_pmove.pmove_fixed) {
-            cg_pmove.cmd.serverTime = ( (cg_pmove.cmd.serverTime + cg.pmoveParams.msec - 1) /
-                                        cg.pmoveParams.msec) * cg.pmoveParams.msec;
+            cg_pmove.cmd.serverTime = ((cg_pmove.cmd.serverTime + cg.pmoveParams.msec - 1) /
+                                       cg.pmoveParams.msec) * cg.pmoveParams.msec;
         }
 
         if (!cg_optimizePrediction.integer) {
             Pmove(&cg_pmove);
         } else if (cg_optimizePrediction.integer && (cmdNum >= predictCmd ||
-                                                     (stateIndex + 1) % NUM_SAVED_STATES == cg.stateHead) ) {
+                                                     (stateIndex + 1) % NUM_SAVED_STATES == cg.stateHead)) {
             Pmove(&cg_pmove);
             // record the last predicted command
             cg.lastPredictedCommand = cmdNum;
 
             // if we haven't run out of space in the saved states queue
-            if ( (stateIndex + 1) % NUM_SAVED_STATES != cg.stateHead) {
+            if ((stateIndex + 1) % NUM_SAVED_STATES != cg.stateHead) {
                 // save the state for the false case ( of cmdNum >= predictCmd )
                 // in later calls to this function
                 cg.savedPmoveStates[stateIndex] = *cg_pmove.ps;

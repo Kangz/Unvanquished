@@ -96,7 +96,7 @@ static glyphInfo_t* Glyph(int ch) {
 
 void SCR_DrawConsoleFontUnichar(float x, float y, int ch) {
     if (cls.useLegacyConsoleFont) {
-        SCR_DrawSmallUnichar( (int) x, (int) y, ch);
+        SCR_DrawSmallUnichar((int) x, (int) y, ch);
         return;
     }
 
@@ -142,7 +142,7 @@ void SCR_DrawSmallUnichar(int x, int y, int ch) {
         size = 0.0625;
 
         // adjust for baseline
-        re.DrawStretchPic(x, y - (int)(SMALLCHAR_HEIGHT / (CONSOLE_FONT_VPADDING + 1) ),
+        re.DrawStretchPic(x, y - (int)(SMALLCHAR_HEIGHT / (CONSOLE_FONT_VPADDING + 1)),
                           SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT,
                           fcol, frow,
                           fcol + size, frow + size,
@@ -177,11 +177,11 @@ void SCR_DrawSmallStringExt(int x, int y, const char* string,
     xx = x;
     re.SetColor(setColor);
 
-    for (const auto& token : Color::Parser(string, setColor) ) {
+    for (const auto& token : Color::Parser(string, setColor)) {
         if (token.Type() == Color::Token::COLOR) {
             if (!forceColor) {
                 Color::Color color = token.Color();
-                color.SetAlpha(setColor.Alpha() );
+                color.SetAlpha(setColor.Alpha());
                 re.SetColor(color);
             }
 
@@ -200,7 +200,7 @@ void SCR_DrawSmallStringExt(int x, int y, const char* string,
                 xx += SCR_ConsoleFontUnicharWidth(Color::Constants::ESCAPE);
             }
         } else {
-            int ch = Q_UTF8_CodePoint(token.Begin() );
+            int ch = Q_UTF8_CodePoint(token.Begin());
             SCR_DrawConsoleFontUnichar(xx, y, ch);
             xx += SCR_ConsoleFontUnicharWidth(ch);
         }
@@ -222,7 +222,7 @@ void SCR_DrawDemoRecording() {
     }
 
     // bani
-    Cvar_Set("cl_demooffset", va("%d", FS_FTell(clc.demofile) ) );
+    Cvar_Set("cl_demooffset", va("%d", FS_FTell(clc.demofile)));
 }
 
 // =============================================================================
@@ -256,7 +256,7 @@ void SCR_DrawScreenField() {
         }
     }
 
-    if (cgvm.IsActive() ) {
+    if (cgvm.IsActive()) {
         switch (cls.state) {
         default:
             Com_Error(ERR_FATAL, "SCR_DrawScreenField: bad cls.state");
@@ -326,7 +326,7 @@ void SCR_UpdateScreen() {
 
     // If there is no VM, there are also no rendering commands issued. Stop the renderer in
     // that case.
-    if (cgvm.IsActive() ) {
+    if (cgvm.IsActive()) {
         SCR_DrawScreenField();
         SCR_DrawConsoleAndPointer();
 
@@ -347,7 +347,7 @@ float SCR_ConsoleFontUnicharWidth(int ch) {
 }
 
 float SCR_ConsoleFontCharWidth(const char* s) {
-    return SCR_ConsoleFontUnicharWidth(Q_UTF8_CodePoint(s) );
+    return SCR_ConsoleFontUnicharWidth(Q_UTF8_CodePoint(s));
 }
 
 float SCR_ConsoleFontCharHeight() {

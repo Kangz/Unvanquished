@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define NOISE_MASK (NOISE_SIZE - 1)
 
 #define VAL(a)            s_noise_perm[(a) & (NOISE_MASK)]
-#define INDEX(x, y, z, t) VAL(x + VAL(y + VAL(z + VAL(t) ) ) )
+#define INDEX(x, y, z, t) VAL(x + VAL(y + VAL(z + VAL(t))))
 
 static float s_noise_table[NOISE_SIZE];
 static int s_noise_perm[NOISE_SIZE];
@@ -35,7 +35,7 @@ static int s_noise_perm[NOISE_SIZE];
 #define LERP(a, b, w) (a * (1.0f - w) + b * w)
 
 static float GetNoiseValue(int x, int y, int z, int t) {
-    int index = INDEX( (int) x, (int) y, (int) z, (int) t);
+    int index = INDEX((int) x, (int) y, (int) z, (int) t);
 
     return s_noise_table[index];
 }
@@ -46,7 +46,7 @@ void R_NoiseInit() {
     srand(1001);
 
     for (i = 0; i < NOISE_SIZE; i++) {
-        s_noise_table[i] = (float)( ( (rand() / (float) RAND_MAX) * 2.0 - 1.0) );
+        s_noise_table[i] = (float)(((rand() / (float) RAND_MAX) * 2.0 - 1.0));
         s_noise_perm[i] = (unsigned char)(rand() / (float) RAND_MAX * 255);
     }
 }

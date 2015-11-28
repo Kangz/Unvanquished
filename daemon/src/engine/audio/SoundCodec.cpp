@@ -39,7 +39,7 @@ namespace Audio {
 
     // Note that the ordering indicates the order of preference used
     // when there are multiple sound files of different formats available
-    static const soundExtToLoaderMap_t soundLoaders[] ={
+    static const soundExtToLoaderMap_t soundLoaders[] = {
         { ".wav", LoadWavCodec },
         { ".opus", LoadOpusCodec  },
         { ".ogg", LoadOggCodec  },

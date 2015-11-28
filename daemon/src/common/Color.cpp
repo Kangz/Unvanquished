@@ -34,20 +34,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Color {
 
-    Color Black    = { 0.00, 0.00, 0.00, 1.00 };
-    Color Red      = { 1.00, 0.00, 0.00, 1.00 };
-    Color Green    = { 0.00, 1.00, 0.00, 1.00 };
-    Color Blue     = { 0.00, 0.00, 1.00, 1.00 };
-    Color Yellow   = { 1.00, 1.00, 0.00, 1.00 };
-    Color Orange   = { 1.00, 0.50, 0.00, 1.00 };
-    Color Magenta  = { 1.00, 0.00, 1.00, 1.00 };
-    Color Cyan     = { 0.00, 1.00, 1.00, 1.00 };
-    Color White    = { 1.00, 1.00, 1.00, 1.00 };
-    Color LtGrey   = { 0.75, 0.75, 0.75, 1.00 };
-    Color MdGrey   = { 0.50, 0.50, 0.50, 1.00 };
+    Color Black = { 0.00, 0.00, 0.00, 1.00 };
+    Color Red = { 1.00, 0.00, 0.00, 1.00 };
+    Color Green = { 0.00, 1.00, 0.00, 1.00 };
+    Color Blue = { 0.00, 0.00, 1.00, 1.00 };
+    Color Yellow = { 1.00, 1.00, 0.00, 1.00 };
+    Color Orange = { 1.00, 0.50, 0.00, 1.00 };
+    Color Magenta = { 1.00, 0.00, 1.00, 1.00 };
+    Color Cyan = { 0.00, 1.00, 1.00, 1.00 };
+    Color White = { 1.00, 1.00, 1.00, 1.00 };
+    Color LtGrey = { 0.75, 0.75, 0.75, 1.00 };
+    Color MdGrey = { 0.50, 0.50, 0.50, 1.00 };
     Color LtOrange = { 0.50, 0.25, 0.00, 1.00 };
 
-    static Color g_color_table[32] ={
+    static Color g_color_table[32] = {
         { 0.20f, 0.20f, 0.20f, 1.00f }, // 0 - black    0
         { 1.00f, 0.00f, 0.00f, 1.00f }, // 1 - red      1
         { 0.00f, 1.00f, 0.00f, 1.00f }, // 2 - green    2
@@ -84,7 +84,7 @@ namespace Color {
 
     int StrlenNocolor(const char* string) {
         int len = 0;
-        for (const auto& token : Parser(string) ) {
+        for (const auto& token : Parser(string)) {
             if (token.Type() == Token::CHARACTER || token.Type() == Token::ESCAPE) {
                 len++;
             }
@@ -96,15 +96,15 @@ namespace Color {
     char* StripColors(char* string) {
         std::string output;
 
-        for (const auto& token : Parser(string) ) {
+        for (const auto& token : Parser(string)) {
             if (token.Type() == Token::CHARACTER) {
-                output.append(token.Begin(), token.Size() );
+                output.append(token.Begin(), token.Size());
             } else if (token.Type() == Token::ESCAPE) {
                 output.push_back(Constants::ESCAPE);
             }
         }
 
-        strcpy(string, output.c_str() );
+        strcpy(string, output.c_str());
 
         return string;
     }
@@ -112,13 +112,13 @@ namespace Color {
     void StripColors(const char* in, char* out, int len) {
         --len;
 
-        for (const auto& token : Parser(in) ) {
+        for (const auto& token : Parser(in)) {
             if (token.Type() == Token::CHARACTER) {
-                if (len < token.Size() ) {
+                if (len < token.Size()) {
                     break;
                 }
 
-                strncpy(out, token.Begin(), token.Size() );
+                strncpy(out, token.Begin(), token.Size());
                 out += token.Size();
                 len -= token.Size();
             } else if (token.Type() == Token::ESCAPE) {
@@ -135,9 +135,9 @@ namespace Color {
     std::string StripColors(const std::string& input) {
         std::string output;
 
-        for (const auto& token : Parser(input.c_str() ) ) {
+        for (const auto& token : Parser(input.c_str())) {
             if (token.Type() == Token::CHARACTER) {
-                output.append(token.Begin(), token.Size() );
+                output.append(token.Begin(), token.Size());
             } else if (token.Type() == Token::ESCAPE) {
                 output.push_back(Constants::ESCAPE);
             }
@@ -174,7 +174,7 @@ namespace Color {
 
             Color32Bit intcolor(color);
 
-            if (Has8Bits(intcolor.Red() ) || Has8Bits(intcolor.Green() ) || Has8Bits(intcolor.Blue() ) ) {
+            if (Has8Bits(intcolor.Red()) || Has8Bits(intcolor.Green()) || Has8Bits(intcolor.Blue())) {
                 sprintf(text[i], "^#%02x%02x%02x",
                         (int)intcolor.Red(),
                         (int)intcolor.Green(),
@@ -223,31 +223,31 @@ namespace Color {
             if (input[1] == Constants::ESCAPE) {
                 return value_type(input, input+2, value_type::ESCAPE);
             } else if (input[1] == Constants::NULL_COLOR) {
-                return value_type(input, input+2, parent->DefaultColor() );
+                return value_type(input, input+2, parent->DefaultColor());
             } else if (std::toupper(input[1]) >= '0' && std::toupper(input[1]) < 'P') {
-                return value_type(input, input+2, detail::Indexed(input[1] - '0') );
-            } else if (std::tolower(input[1]) == 'x' && ishex(input[2]) && ishex(input[3]) && ishex(input[4]) ) {
+                return value_type(input, input+2, detail::Indexed(input[1] - '0'));
+            } else if (std::tolower(input[1]) == 'x' && ishex(input[2]) && ishex(input[3]) && ishex(input[4])) {
                 return value_type(input, input+5, Color(
                                       gethex(input[2]) / 15.f,
                                       gethex(input[3]) / 15.f,
                                       gethex(input[4]) / 15.f,
                                       1
-                                      ) );
+                                      ));
             } else if (input[1] == '#') {
                 bool long_hex = true;
                 for (int i = 0; i < 6; i++) {
-                    if (!ishex(input[i+2]) ) {
+                    if (!ishex(input[i+2])) {
                         long_hex = false;
                         break;
                     }
                 }
                 if (long_hex) {
                     return value_type(input, input+8, Color(
-                                          ( (gethex(input[2]) << 4) | gethex(input[3]) ) / 255.f,
-                                          ( (gethex(input[4]) << 4) | gethex(input[5]) ) / 255.f,
-                                          ( (gethex(input[6]) << 4) | gethex(input[7]) ) / 255.f,
+                                          ((gethex(input[2]) << 4) | gethex(input[3])) / 255.f,
+                                          ((gethex(input[4]) << 4) | gethex(input[5])) / 255.f,
+                                          ((gethex(input[6]) << 4) | gethex(input[7])) / 255.f,
                                           1
-                                          ) );
+                                          ));
                 }
             }
         }

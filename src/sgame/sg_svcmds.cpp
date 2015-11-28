@@ -50,7 +50,7 @@ void Svcmd_EntityFire_f() {
         return;
     }
 
-    trap_Argv(1, argument, sizeof(argument) );
+    trap_Argv(1, argument, sizeof(argument));
     entityNum = atoi(argument);
 
     if (entityNum >= level.num_entities || entityNum < MAX_CLIENTS) {
@@ -66,7 +66,7 @@ void Svcmd_EntityFire_f() {
     }
 
     if (trap_Argc() >= 3) {
-        trap_Argv(2, argument, sizeof(argument) );
+        trap_Argv(2, argument, sizeof(argument));
         callDefinition.action = argument;
         callDefinition.actionType = G_GetCallActionTypeFor(callDefinition.action);
     }
@@ -109,7 +109,7 @@ void Svcmd_EntityShow_f() {
         return;
     }
 
-    trap_Argv(1, argument, sizeof(argument) );
+    trap_Argv(1, argument, sizeof(argument));
     entityNum = atoi(argument);
 
     if (entityNum >= level.num_entities || entityNum < MAX_CLIENTS) {
@@ -125,9 +125,9 @@ void Svcmd_EntityShow_f() {
     }
 
     G_Printf("⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\n");
-    G_Printf("^5#%3i^*: %16s", entityNum, Com_EntityTypeName(selection->s.eType) );
+    G_Printf("^5#%3i^*: %16s", entityNum, Com_EntityTypeName(selection->s.eType));
     if (IS_NON_NULL_VEC3(selection->s.origin)) {
-        G_Printf("%26s", vtos(selection->s.origin) );
+        G_Printf("%26s", vtos(selection->s.origin));
     }
     G_Printf("\n⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\n");
     G_Printf("Classname: ^5%s^*\n", selection->classname);
@@ -211,9 +211,9 @@ void  Svcmd_EntityList_f() {
         }
         currentEntityCount++;
 
-        if (filter && !Com_Filter(filter, displayedEntity->classname, false) ) {
+        if (filter && !Com_Filter(filter, displayedEntity->classname, false)) {
             for (i = 0; i < MAX_ENTITY_ALIASES && displayedEntity->names[i]; ++i) {
-                if (Com_Filter(filter, displayedEntity->names[i], false) ) {
+                if (Com_Filter(filter, displayedEntity->names[i], false)) {
                     PrintEntityOverviewLine(displayedEntity);
                     break;
                 }
@@ -230,7 +230,7 @@ static gclient_t* ClientForString(char* s) {
     int idnum;
     char err[MAX_STRING_CHARS];
 
-    idnum = G_ClientNumberFromString(s, err, sizeof(err) );
+    idnum = G_ClientNumberFromString(s, err, sizeof(err));
 
     if (idnum == -1) {
         G_Printf("%s", err);
@@ -257,14 +257,14 @@ static void Svcmd_ForceTeam_f() {
         return;
     }
 
-    trap_Argv(1, str, sizeof(str) );
+    trap_Argv(1, str, sizeof(str));
     cl = ClientForString(str);
 
     if (!cl) {
         return;
     }
 
-    trap_Argv(2, str, sizeof(str) );
+    trap_Argv(2, str, sizeof(str));
     team = G_TeamFromString(str);
 
     if (team == NUM_TEAMS) {
@@ -293,7 +293,7 @@ static void Svcmd_LayoutSave_f() {
         return;
     }
 
-    trap_Argv(1, str, sizeof(str) );
+    trap_Argv(1, str, sizeof(str));
 
     // sanitize name
     s = &str[0];
@@ -339,7 +339,7 @@ static void Svcmd_LayoutLoad_f() {
     }
 
     s = ConcatArgs(1);
-    Q_strncpyz(layouts, s, sizeof(layouts) );
+    Q_strncpyz(layouts, s, sizeof(layouts));
     trap_Cvar_Set("g_layouts", layouts);
     trap_SendConsoleCommand("map_restart\n");
     level.restarted = true;
@@ -354,7 +354,7 @@ static void Svcmd_AdmitDefeat_f() {
         return;
     }
 
-    trap_Argv(1, teamNum, sizeof(teamNum) );
+    trap_Argv(1, teamNum, sizeof(teamNum));
     team = G_TeamFromString(teamNum);
 
     if (team == TEAM_ALIENS) {
@@ -369,14 +369,14 @@ static void Svcmd_AdmitDefeat_f() {
     }
 
     level.surrenderTeam = (team_t) team;
-    G_BaseSelfDestruct( (team_t) team);
+    G_BaseSelfDestruct((team_t) team);
 }
 
 static void Svcmd_TeamWin_f() {
     // this is largely made redundant by admitdefeat <team>
     char cmd[6];
     team_t team;
-    trap_Argv(0, cmd, sizeof(cmd) );
+    trap_Argv(0, cmd, sizeof(cmd));
 
     team = G_TeamFromString(cmd);
 
@@ -407,9 +407,9 @@ static void Svcmd_MapRotation_f() {
 
     G_ClearRotationStack();
 
-    trap_Argv(1, rotationName, sizeof(rotationName) );
+    trap_Argv(1, rotationName, sizeof(rotationName));
 
-    if (!G_StartMapRotation(rotationName, false, true, false, 0) ) {
+    if (!G_StartMapRotation(rotationName, false, true, false, 0)) {
         G_Printf("maprotation: invalid map rotation \"%s\"\n", rotationName);
     }
 }
@@ -424,7 +424,7 @@ static void Svcmd_TeamMessage_f() {
         return;
     }
 
-    trap_Argv(1, teamNum, sizeof(teamNum) );
+    trap_Argv(1, teamNum, sizeof(teamNum));
     team = G_TeamFromString(teamNum);
 
     if (team == NUM_TEAMS) {
@@ -433,7 +433,7 @@ static void Svcmd_TeamMessage_f() {
     }
 
     arg = ConcatArgs(2);
-    G_TeamCommand(team, va("chat -1 %d %s", SAY_TEAM, Quote(arg) ) );
+    G_TeamCommand(team, va("chat -1 %d %s", SAY_TEAM, Quote(arg)));
     G_LogPrintf("SayTeam: -1 \"console\": %s\n", arg);
 }
 
@@ -443,7 +443,7 @@ static void Svcmd_CenterPrint_f() {
         return;
     }
 
-    trap_SendServerCommand(-1, va("cp %s", Quote(ConcatArgs(1) ) ) );
+    trap_SendServerCommand(-1, va("cp %s", Quote(ConcatArgs(1))));
 }
 
 static void Svcmd_EjectClient_f() {
@@ -454,7 +454,7 @@ static void Svcmd_EjectClient_f() {
         return;
     }
 
-    trap_Argv(1, name, sizeof(name) );
+    trap_Argv(1, name, sizeof(name));
     reason = ConcatArgs(2);
 
     if (atoi(name) == -1) {
@@ -498,14 +498,14 @@ static void Svcmd_DumpUser_f() {
         return;
     }
 
-    trap_Argv(1, name, sizeof(name) );
+    trap_Argv(1, name, sizeof(name));
     cl = ClientForString(name);
 
     if (!cl) {
         return;
     }
 
-    trap_GetUserinfo(cl - level.clients, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(cl - level.clients, userinfo, sizeof(userinfo));
     info = &userinfo[0];
     G_Printf("userinfo\n--------\n");
 
@@ -530,7 +530,7 @@ static void Svcmd_Pr_f() {
         return;
     }
 
-    trap_Argv(1, targ, sizeof(targ) );
+    trap_Argv(1, targ, sizeof(targ));
     cl = atoi(targ);
 
     if (cl >= MAX_CLIENTS || cl < -1) {
@@ -538,7 +538,7 @@ static void Svcmd_Pr_f() {
         return;
     }
 
-    trap_SendServerCommand(cl, va("print %s\\\n", Quote(ConcatArgs(2) ) ) );
+    trap_SendServerCommand(cl, va("print %s\\\n", Quote(ConcatArgs(2))));
 }
 
 static void Svcmd_PrintQueue_f() {
@@ -550,7 +550,7 @@ static void Svcmd_PrintQueue_f() {
         return;
     }
 
-    trap_Argv(1, teamName, sizeof(teamName) );
+    trap_Argv(1, teamName, sizeof(teamName));
 
     team = G_TeamFromString(teamName);
     if (TEAM_ALIENS == team || TEAM_HUMANS == team) {
@@ -563,18 +563,18 @@ static void Svcmd_PrintQueue_f() {
 // dumb wrapper for "a", "m", "chat", and "say"
 static void Svcmd_MessageWrapper() {
     char cmd[5];
-    trap_Argv(0, cmd, sizeof(cmd) );
+    trap_Argv(0, cmd, sizeof(cmd));
 
-    if (!Q_stricmp(cmd, "a") ) {
+    if (!Q_stricmp(cmd, "a")) {
         Cmd_AdminMessage_f(nullptr);
-    } else if (!Q_stricmp(cmd, "asay") ) {
-        G_Say(nullptr, SAY_ALL_ADMIN, ConcatArgs(1) );
-    } else if (!Q_stricmp(cmd, "m") ) {
+    } else if (!Q_stricmp(cmd, "asay")) {
+        G_Say(nullptr, SAY_ALL_ADMIN, ConcatArgs(1));
+    } else if (!Q_stricmp(cmd, "m")) {
         Cmd_PrivateMessage_f(nullptr);
-    } else if (!Q_stricmp(cmd, "say") ) {
-        G_Say(nullptr, SAY_ALL, ConcatArgs(1) );
-    } else if (!Q_stricmp(cmd, "chat") ) {
-        G_Say(nullptr, SAY_RAW, ConcatArgs(1) );
+    } else if (!Q_stricmp(cmd, "say")) {
+        G_Say(nullptr, SAY_ALL, ConcatArgs(1));
+    } else if (!Q_stricmp(cmd, "chat")) {
+        G_Say(nullptr, SAY_RAW, ConcatArgs(1));
     }
 }
 
@@ -590,7 +590,7 @@ static const struct svcmd {
     const char* cmd;
     bool conflicts; // With a command registered by cgame
     void ( * function )();
-} svcmds[] ={
+} svcmds[] = {
     { "a", true, Svcmd_MessageWrapper         },
     { "admitDefeat", false, Svcmd_AdmitDefeat_f          },
     { "advanceMapRotation", false, Svcmd_G_AdvanceMapRotation_f },
@@ -628,14 +628,14 @@ bool  ConsoleCommand() {
     char cmd[MAX_TOKEN_CHARS];
     struct svcmd* command;
 
-    trap_Argv(0, cmd, sizeof(cmd) );
+    trap_Argv(0, cmd, sizeof(cmd));
 
     command = (struct svcmd*) bsearch(cmd, svcmds, ARRAY_LEN(svcmds),
                                       sizeof(struct svcmd), cmdcmp);
 
     if (!command) {
         // see if this is an admin command
-        if (G_admin_cmd_check(nullptr) ) {
+        if (G_admin_cmd_check(nullptr)) {
             return true;
         }
 

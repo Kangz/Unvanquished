@@ -48,7 +48,7 @@ This is called at startup and for tournement restarts
 void CG_InitMarkPolys() {
     int i;
 
-    memset(cg_markPolys, 0, sizeof(cg_markPolys) );
+    memset(cg_markPolys, 0, sizeof(cg_markPolys));
 
     cg_activeMarkPolys.nextMark = &cg_activeMarkPolys;
     cg_activeMarkPolys.prevMark = &cg_activeMarkPolys;
@@ -102,7 +102,7 @@ markPoly_t* CG_AllocMark() {
     le = cg_freeMarkPolys;
     cg_freeMarkPolys = cg_freeMarkPolys->nextMark;
 
-    memset(le, 0, sizeof(*le) );
+    memset(le, 0, sizeof(*le));
 
     // link into the active list
     le->nextMark = cg_activeMarkPolys.nextMark;
@@ -144,7 +144,7 @@ void CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
     }
 
     if (temporary) {
-        if (CG_CullPointAndRadius(origin, M_SQRT2 * radius) ) {
+        if (CG_CullPointAndRadius(origin, M_SQRT2 * radius)) {
             return;
         }
     }
@@ -222,7 +222,7 @@ void CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
         mark->color[1] = green;
         mark->color[2] = blue;
         mark->color[3] = alpha;
-        memcpy(mark->verts, verts, mf->numPoints * sizeof(verts[0]) );
+        memcpy(mark->verts, verts, mf->numPoints * sizeof(verts[0]));
         markTotal++;
     }
 }

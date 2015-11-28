@@ -33,8 +33,8 @@ R_PerformanceCounters
 void R_PerformanceCounters() {
     if (!r_speeds->integer) {
         // clear the counters even if we aren't printing
-        Com_Memset(&tr.pc, 0, sizeof(tr.pc) );
-        Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc) );
+        Com_Memset(&tr.pc, 0, sizeof(tr.pc));
+        Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
         return;
     }
 
@@ -96,8 +96,8 @@ void R_PerformanceCounters() {
                   tr.pc.c_decalSurfacesCreated);
     }
 
-    Com_Memset(&tr.pc, 0, sizeof(tr.pc) );
-    Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc) );
+    Com_Memset(&tr.pc, 0, sizeof(tr.pc));
+    Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
 }
 
 /*
@@ -195,8 +195,8 @@ void* R_GetCommandBuffer(unsigned bytes) {
 
     // always leave room for the swap buffers and end of list commands
     // RB: added swapBuffers_t from ET
-    if (cmdList->used + bytes + (sizeof(swapBuffersCommand_t) + sizeof(int) ) > MAX_RENDER_COMMANDS) {
-        if (bytes > MAX_RENDER_COMMANDS - (sizeof(swapBuffersCommand_t) + sizeof(int) ) ) {
+    if (cmdList->used + bytes + (sizeof(swapBuffersCommand_t) + sizeof(int)) > MAX_RENDER_COMMANDS) {
+        if (bytes > MAX_RENDER_COMMANDS - (sizeof(swapBuffersCommand_t) + sizeof(int))) {
             ri.Error(ERR_FATAL, "R_GetCommandBuffer: bad size %i", bytes);
         }
 
@@ -217,7 +217,7 @@ R_AddDrawViewCmd
 void R_AddDrawViewCmd() {
     drawViewCommand_t* cmd;
 
-    cmd = (drawViewCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (drawViewCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -238,7 +238,7 @@ R_AddRunVisTestsCmd
 void R_AddRunVisTestsCmd() {
     runVisTestsCommand_t* cmd;
 
-    cmd = (runVisTestsCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (runVisTestsCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -264,7 +264,7 @@ void RE_SetColor(const Color::Color& rgba) {
         return;
     }
 
-    cmd = (setColorCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (setColorCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -311,7 +311,7 @@ void RE_SetColorGrading(int slot, qhandle_t hShader) {
         return;
     }
 
-    cmd = (setColorGradingCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (setColorGradingCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -361,7 +361,7 @@ static bool R_ClipRegion(float* x, float* y, float* w, float* h, float* s1, floa
     // Clip left edge
     if (left < clipLeft) {
         float f = (clipLeft - left) / (right - left);
-        *s1 = (f * (_s2 - _s1) ) + _s1;
+        *s1 = (f * (_s2 - _s1)) + _s1;
         *x = clipLeft;
         *w -= (clipLeft - left);
     }
@@ -369,14 +369,14 @@ static bool R_ClipRegion(float* x, float* y, float* w, float* h, float* s1, floa
     // Clip right edge
     if (right > clipRight) {
         float f = (clipRight - right) / (left - right);
-        *s2 = (f * (_s1 - _s2) ) + _s2;
+        *s2 = (f * (_s1 - _s2)) + _s2;
         *w = clipRight - *x;
     }
 
     // Clip top edge
     if (top < clipTop) {
         float f = (clipTop - top) / (bottom - top);
-        *t1 = (f * (_t2 - _t1) ) + _t1;
+        *t1 = (f * (_t2 - _t1)) + _t1;
         *y = clipTop;
         *h -= (clipTop - top);
     }
@@ -384,7 +384,7 @@ static bool R_ClipRegion(float* x, float* y, float* w, float* h, float* s1, floa
     // Clip bottom edge
     if (bottom > clipBottom) {
         float f = (clipBottom - bottom) / (top - bottom);
-        *t2 = (f * (_t1 - _t2) ) + _t2;
+        *t2 = (f * (_t1 - _t2)) + _t2;
         *h = clipBottom - *y;
     }
 
@@ -399,7 +399,7 @@ RE_SetClipRegion
 */
 void RE_SetClipRegion(const float* region) {
     if (region == nullptr) {
-        Com_Memset(tr.clipRegion, 0, sizeof(vec4_t) );
+        Com_Memset(tr.clipRegion, 0, sizeof(vec4_t));
     } else {
         Vector4Copy(region, tr.clipRegion);
     }
@@ -417,11 +417,11 @@ void RE_StretchPic(float x, float y, float w, float h,
     if (!tr.registered) {
         return;
     }
-    if (R_ClipRegion(&x, &y, &w, &h, &s1, &t1, &s2, &t2) ) {
+    if (R_ClipRegion(&x, &y, &w, &h, &s1, &t1, &s2, &t2)) {
         return;
     }
 
-    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
     if (!cmd) {
         return;
     }
@@ -453,7 +453,7 @@ void RE_2DPolyies(polyVert_t* verts, int numverts, qhandle_t hShader) {
         return;
     }
 
-    cmd = (poly2dCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (poly2dCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -479,7 +479,7 @@ void RE_2DPolyiesIndexed(polyVert_t* verts, int numverts, int* indexes, int numi
         return;
     }
 
-    cmd = (poly2dIndexedCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (poly2dIndexedCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -521,7 +521,7 @@ RE_ScissorSet
 void RE_ScissorSet(int x, int y, int w, int h) {
     scissorSetCommand_t* cmd;
 
-    cmd = (scissorSetCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (scissorSetCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -542,7 +542,7 @@ RE_RotatedPic
 void RE_RotatedPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader, float angle) {
     stretchPicCommand_t* cmd;
 
-    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -575,7 +575,7 @@ void RE_StretchPicGradient(float x, float y, float w, float h,
                            int gradientType) {
     stretchPicCommand_t* cmd;
 
-    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (stretchPicCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -656,7 +656,7 @@ void RE_BeginFrame() {
 
         R_SyncRenderThread();
 
-        if ( (err = glGetError() ) != GL_NO_ERROR) {
+        if ((err = glGetError()) != GL_NO_ERROR) {
             switch (err) {
             case GL_INVALID_ENUM:
                 strcpy(s, "GL_INVALID_ENUM");
@@ -701,7 +701,7 @@ void RE_BeginFrame() {
     }
 
     // draw buffer stuff
-    cmd = (drawBufferCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (drawBufferCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -709,7 +709,7 @@ void RE_BeginFrame() {
 
     cmd->commandId = RC_DRAW_BUFFER;
 
-    if (!Q_stricmp(r_drawBuffer->string, "GL_FRONT") ) {
+    if (!Q_stricmp(r_drawBuffer->string, "GL_FRONT")) {
         cmd->buffer = (int) GL_FRONT;
     } else {
         cmd->buffer = (int) GL_BACK;
@@ -732,7 +732,7 @@ void RE_EndFrame(int* frontEndMsec, int* backEndMsec) {
 
     GLimp_HandleCvars();
 
-    cmd = (swapBuffersCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (swapBuffersCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -774,7 +774,7 @@ void RE_TakeVideoFrame(int width, int height, byte* captureBuffer, byte* encodeB
         return;
     }
 
-    cmd = (videoFrameCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (videoFrameCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -801,7 +801,7 @@ void RE_Finish() {
 
     ri.Printf(PRINT_ALL, "RE_Finish\n");
 
-    cmd = (renderFinishCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (renderFinishCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;

@@ -201,7 +201,7 @@ typedef struct {
     int cvarFlags;
 } cvarTable_t;
 
-static const cvarTable_t cvarTable[] ={
+static const cvarTable_t cvarTable[] = {
     { &cg_drawGun, "cg_drawGun", "1", 0                            },
     { &cg_viewsize, "cg_viewsize", "100", 0                            },
     { &cg_shadows, "cg_shadows", "1", CVAR_LATCH                   },
@@ -408,11 +408,11 @@ static void CG_SetPVars() {
     ps = &cg.snap->ps;
 
     /* if we follow someone, the stats won't be about us, but the followed player instead */
-    if ( (ps->pm_flags & PMF_FOLLOW) ) {
+    if ((ps->pm_flags & PMF_FOLLOW)) {
         return;
     }
 
-    trap_Cvar_Set("p_teamname", BG_TeamName(ps->persistant[PERS_TEAM]) );
+    trap_Cvar_Set("p_teamname", BG_TeamName(ps->persistant[PERS_TEAM]));
 
     switch (ps->persistant[PERS_TEAM]) {
     case TEAM_ALIENS:
@@ -438,20 +438,20 @@ static void CG_SetPVars() {
         return;
     }
 
-    trap_Cvar_Set("p_class", va("%d", ps->stats[STAT_CLASS]) );
+    trap_Cvar_Set("p_class", va("%d", ps->stats[STAT_CLASS]));
 
     trap_Cvar_Set("p_classname", BG_Class(ps->stats[STAT_CLASS])->name);
 
 
-    trap_Cvar_Set("p_weapon", va("%d", ps->stats[STAT_WEAPON]) );
+    trap_Cvar_Set("p_weapon", va("%d", ps->stats[STAT_WEAPON]));
     trap_Cvar_Set("p_weaponname", BG_Weapon(ps->stats[STAT_WEAPON])->humanName);
-    trap_Cvar_Set("p_credits", va("%d", ps->persistant[PERS_CREDIT]) );
-    trap_Cvar_Set("p_score", va("%d", ps->persistant[PERS_SCORE]) );
+    trap_Cvar_Set("p_credits", va("%d", ps->persistant[PERS_CREDIT]));
+    trap_Cvar_Set("p_score", va("%d", ps->persistant[PERS_SCORE]));
 
-    trap_Cvar_Set("p_hp", va("%d", ps->stats[STAT_HEALTH]) );
-    trap_Cvar_Set("p_maxhp", va("%d", ps->stats[STAT_MAX_HEALTH]) );
-    trap_Cvar_Set("p_ammo", va("%d", ps->ammo) );
-    trap_Cvar_Set("p_clips", va("%d", ps->clips) );
+    trap_Cvar_Set("p_hp", va("%d", ps->stats[STAT_HEALTH]));
+    trap_Cvar_Set("p_maxhp", va("%d", ps->stats[STAT_MAX_HEALTH]));
+    trap_Cvar_Set("p_ammo", va("%d", ps->ammo));
+    trap_Cvar_Set("p_clips", va("%d", ps->clips));
 
     // set p_availableBuildings to a space-separated list of buildings
     first = true;
@@ -462,8 +462,8 @@ static void CG_SetPVars() {
 
         if (buildable->team == ps->persistant[PERS_TEAM] &&
             BG_BuildableUnlocked(i) &&
-            (buildable->buildWeapon & (1 << ps->stats[STAT_WEAPON]) ) ) {
-            Q_strcat(buffer, sizeof(buffer), first ? buildable->name : va(" %s", buildable->name) );
+            (buildable->buildWeapon & (1 << ps->stats[STAT_WEAPON]))) {
+            Q_strcat(buffer, sizeof(buffer), first ? buildable->name : va(" %s", buildable->name));
             first = false;
         }
     }
@@ -485,7 +485,7 @@ static void CG_SetUIVars() {
     }
 
     trap_Cvar_Set("ui_carriage", va("%d %d %d", cg.snap->ps.stats[STAT_WEAPON],
-                                    cg.snap->ps.stats[STAT_ITEMS], cg.snap->ps.persistant[PERS_CREDIT]) );
+                                    cg.snap->ps.stats[STAT_ITEMS], cg.snap->ps.persistant[PERS_CREDIT]));
 }
 
 /*
@@ -510,7 +510,7 @@ void CG_UpdateBuildableRangeMarkerMask() {
             goto empty;
         }
 
-        Q_strncpyz(buffer, cg_rangeMarkerBuildableTypes.string, sizeof(buffer) );
+        Q_strncpyz(buffer, cg_rangeMarkerBuildableTypes.string, sizeof(buffer));
         p = &buffer[0];
 
         for (;; ) {
@@ -528,22 +528,22 @@ void CG_UpdateBuildableRangeMarkerMask() {
 
             if (buildable != BA_NONE) {
                 brmMask |= 1 << buildable;
-            } else if (!Q_stricmp(p, "all") ) {
+            } else if (!Q_stricmp(p, "all")) {
                 brmMask |= (1 << BA_A_OVERMIND) | (1 << BA_A_SPAWN) | (1 << BA_A_ACIDTUBE) |
                            (1 << BA_A_TRAPPER) | (1 << BA_A_HIVE) | (1 << BA_A_LEECH) |
                            (1 << BA_A_BOOSTER) | (1 << BA_H_REACTOR) | (1 << BA_H_REPEATER) |
                            (1 << BA_H_MGTURRET) | (1 << BA_H_ROCKETPOD) | (1 << BA_H_DRILL);
-            } else if (!Q_stricmp(p, "none") ) {
+            } else if (!Q_stricmp(p, "none")) {
                 brmMask = 0;
             } else {
                 char* pp;
                 int only;
 
-                if (!Q_strnicmp(p, "alien", 5) ) {
+                if (!Q_strnicmp(p, "alien", 5)) {
                     pp = p + 5;
                     only = (1 << BA_A_OVERMIND) | (1 << BA_A_SPAWN) |
                            (1 << BA_A_ACIDTUBE) | (1 << BA_A_TRAPPER) | (1 << BA_A_HIVE) | (1 << BA_A_LEECH) | (1 << BA_A_BOOSTER);
-                } else if (!Q_strnicmp(p, "human", 5) ) {
+                } else if (!Q_strnicmp(p, "human", 5)) {
                     pp = p + 5;
                     only = (1 << BA_H_REACTOR) | (1 << BA_H_REPEATER) |
                            (1 << BA_H_MGTURRET) | (1 << BA_H_ROCKETPOD) | (1 << BA_H_DRILL);
@@ -554,12 +554,12 @@ void CG_UpdateBuildableRangeMarkerMask() {
 
                 if (pp != p && !*pp) {
                     brmMask |= only;
-                } else if (!Q_stricmp(pp, "support") ) {
-                    brmMask |= only & ( (1 << BA_A_OVERMIND) | (1 << BA_A_SPAWN) | (1 << BA_A_LEECH) | (1 << BA_A_BOOSTER) |
-                                        (1 << BA_H_REACTOR) | (1 << BA_H_REPEATER) | (1 << BA_H_DRILL) );
-                } else if (!Q_stricmp(pp, "offensive") ) {
-                    brmMask |= only & ( (1 << BA_A_ACIDTUBE) | (1 << BA_A_TRAPPER) | (1 << BA_A_HIVE) |
-                                        (1 << BA_H_MGTURRET) | (1 << BA_H_ROCKETPOD) );
+                } else if (!Q_stricmp(pp, "support")) {
+                    brmMask |= only & ((1 << BA_A_OVERMIND) | (1 << BA_A_SPAWN) | (1 << BA_A_LEECH) | (1 << BA_A_BOOSTER) |
+                                       (1 << BA_H_REACTOR) | (1 << BA_H_REPEATER) | (1 << BA_H_DRILL));
+                } else if (!Q_stricmp(pp, "offensive")) {
+                    brmMask |= only & ((1 << BA_A_ACIDTUBE) | (1 << BA_A_TRAPPER) | (1 << BA_A_HIVE) |
+                                       (1 << BA_H_MGTURRET) | (1 << BA_H_ROCKETPOD));
                 } else {
                     Com_Printf(S_WARNING "unknown buildable or group: %s\n", p);
                 }
@@ -573,7 +573,7 @@ void CG_UpdateBuildableRangeMarkerMask() {
         }
 
 empty:
-        trap_Cvar_Set("cg_buildableRangeMarkerMask", va("%i", brmMask) );
+        trap_Cvar_Set("cg_buildableRangeMarkerMask", va("%i", brmMask));
 
         btmc = cg_rangeMarkerBuildableTypes.modificationCount;
         spmc = cg_rangeMarkerWhenSpectating.modificationCount;
@@ -590,14 +590,14 @@ void CG_NotifyHooks() {
     }
 
     ps = &cg.snap->ps;
-    if (!(ps->pm_flags & PMF_FOLLOW) ) {
+    if (!(ps->pm_flags & PMF_FOLLOW)) {
         if (lastTeam != ps->persistant[PERS_TEAM]) {
             trap_notify_onTeamChange(ps->persistant[PERS_TEAM]);
 
             /* execute team-specific config files */
-            trap_Cvar_VariableStringBuffer(va("cg_%sConfig", BG_TeamName(ps->persistant[PERS_TEAM]) ), config, sizeof(config) );
+            trap_Cvar_VariableStringBuffer(va("cg_%sConfig", BG_TeamName(ps->persistant[PERS_TEAM])), config, sizeof(config));
             if (config[0]) {
-                trap_SendConsoleCommand(va("exec %s\n", Quote(config) ) );
+                trap_SendConsoleCommand(va("exec %s\n", Quote(config)));
             }
 
             lastTeam = ps->persistant[PERS_TEAM];
@@ -627,7 +627,7 @@ void CG_UpdateCvars() {
 }
 
 int CG_CrosshairPlayer() {
-    if (cg.time > (cg.crosshairClientTime + 1000) ) {
+    if (cg.time > (cg.crosshairClientTime + 1000)) {
         return -1;
     }
 
@@ -688,7 +688,7 @@ void CG_AddNotifyText() {
 
     // Ignore console messages that were just printed
     if (cg_noPrintDuplicate.integer && textLen >= bufferLen &&
-        !strcmp(cg.consoleText + textLen - bufferLen, buffer) ) {
+        !strcmp(cg.consoleText + textLen - bufferLen, buffer)) {
         return;
     }
 
@@ -758,7 +758,7 @@ CG_Argv
 const char* CG_Argv(int arg) {
     static char buffer[MAX_STRING_CHARS];
 
-    trap_Argv(arg, buffer, sizeof(buffer) );
+    trap_Argv(arg, buffer, sizeof(buffer));
 
     return buffer;
 }
@@ -771,7 +771,7 @@ CG_Args
 const char* CG_Args() {
     static char buffer[MAX_STRING_CHARS];
 
-    trap_LiteralArgs(buffer, sizeof(buffer) );
+    trap_LiteralArgs(buffer, sizeof(buffer));
 
     return buffer;
 }
@@ -784,7 +784,7 @@ static const char* choose(const char* first, ...) {
     const char* ret;
 
     va_start(ap, first);
-    while (va_arg(ap, const char*) ) {
+    while (va_arg(ap, const char*)) {
         ++count;
     }
     va_end(ap);
@@ -852,7 +852,7 @@ static void CG_UpdateLoadingProgress(loadingBar_t progressBar, float progress, c
         break;
     }
 
-    Q_strncpyz(cg.currentLoadingLabel, label, sizeof(cg.currentLoadingLabel) );
+    Q_strncpyz(cg.currentLoadingLabel, label, sizeof(cg.currentLoadingLabel));
 
     trap_UpdateScreen();
 }
@@ -910,46 +910,46 @@ static void CG_UpdateLoadingStep(cgLoadingStep_t step) {
         break;
 
     case LOAD_TRAILS:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.0f, choose("Tracking your movements", "Letting out the magic smoke", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.0f, choose("Tracking your movements", "Letting out the magic smoke", nullptr));
         break;
 
     case LOAD_PARTICLES:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.05f, choose("Collecting bees for the hives", "Initialising fireworks", "Causing electrical faults", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.05f, choose("Collecting bees for the hives", "Initialising fireworks", "Causing electrical faults", nullptr));
         break;
 
     case LOAD_SOUNDS:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.08f, choose("Recording granger purring", "Generating annoying noises", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.08f, choose("Recording granger purring", "Generating annoying noises", nullptr));
         break;
 
     case LOAD_GEOMETRY:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.60f, choose("Hello World!", "Making a scene.", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.60f, choose("Hello World!", "Making a scene.", nullptr));
         break;
 
     case LOAD_ASSETS:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.63f, choose("Taking pictures of the world", "Using your laptop's camera", "Adding texture to concrete", "Drawing smiley faces", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.63f, choose("Taking pictures of the world", "Using your laptop's camera", "Adding texture to concrete", "Drawing smiley faces", nullptr));
         break;
 
     case LOAD_CONFIGS:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.80f, choose("Reading the manual", "Looking at blueprints", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.80f, choose("Reading the manual", "Looking at blueprints", nullptr));
         break;
 
     case LOAD_WEAPONS:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.90f, choose("Setting up the armoury", "Sharpening the aliens' claws", "Overloading lucifer cannons", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.90f, choose("Setting up the armoury", "Sharpening the aliens' claws", "Overloading lucifer cannons", nullptr));
         break;
 
     case LOAD_UPGRADES:
     case LOAD_CLASSES:
-        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.95f, choose("Charging battery packs", "Replicating alien DNA", "Packing tents for jetcampers", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_MEDIA, 0.95f, choose("Charging battery packs", "Replicating alien DNA", "Packing tents for jetcampers", nullptr));
         break;
 
     case LOAD_BUILDINGS:
         cg.mediaFraction = 1.0f;
-        CG_UpdateLoadingProgress(LOADBAR_BUILDABLES, 0.0f, choose("Finishing construction", "Adding turret spam", "Awakening the overmind", nullptr) );
+        CG_UpdateLoadingProgress(LOADBAR_BUILDABLES, 0.0f, choose("Finishing construction", "Adding turret spam", "Awakening the overmind", nullptr));
         break;
 
     case LOAD_DONE:
         cg.mediaFraction = cg.charModelFraction = cg.buildablesFraction = 1.0f;
-        Q_strncpyz(cg.currentLoadingLabel, "Done!", sizeof(cg.currentLoadingLabel) );
+        Q_strncpyz(cg.currentLoadingLabel, "Done!", sizeof(cg.currentLoadingLabel));
         trap_UpdateScreen();
         cg.loading = false;
         break;
@@ -1071,15 +1071,15 @@ void CG_RegisterGrading(int slot, const char* str) {
     char texture[MAX_QPATH];
 
     if (!str || !*str) {
-        cgs.gameGradingTextures[slot]  = 0;
-        cgs.gameGradingModels[slot]    = 0;
+        cgs.gameGradingTextures[slot] = 0;
+        cgs.gameGradingModels[slot] = 0;
         cgs.gameGradingDistances[slot] = 0.0f;
         return;
     }
 
     sscanf(str, "%d %f %s", &model, &dist, texture);
     cgs.gameGradingTextures[slot] =
-        trap_R_RegisterShader(texture, (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+        trap_R_RegisterShader(texture, (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
     cgs.gameGradingModels[slot] = model;
     cgs.gameGradingDistances[slot] = dist;
 }
@@ -1096,9 +1096,9 @@ void CG_RegisterReverb(int slot, const char* str) {
 
     if (!str || !*str) {
         Q_strncpyz(cgs.gameReverbEffects[slot], "none", MAX_NAME_LENGTH);
-        cgs.gameReverbModels[slot]        = 0;
-        cgs.gameReverbDistances[slot]     = 0.0f;
-        cgs.gameReverbIntensities[slot]   = 0.0f;
+        cgs.gameReverbModels[slot] = 0;
+        cgs.gameReverbDistances[slot] = 0.0f;
+        cgs.gameReverbIntensities[slot] = 0.0f;
         return;
     }
 
@@ -1116,7 +1116,7 @@ CG_RegisterGraphics
 */
 static void CG_RegisterGraphics() {
     int i;
-    static const char* const sb_nums[11] ={
+    static const char* const sb_nums[11] = {
         "gfx/2d/numbers/zero_32b",
         "gfx/2d/numbers/one_32b",
         "gfx/2d/numbers/two_32b",
@@ -1129,7 +1129,7 @@ static void CG_RegisterGraphics() {
         "gfx/2d/numbers/nine_32b",
         "gfx/2d/numbers/minus_32b",
     };
-    static const char* const buildWeaponTimerPieShaders[8] ={
+    static const char* const buildWeaponTimerPieShaders[8] = {
         "ui/assets/neutral/1_5pie",
         "ui/assets/neutral/3_0pie",
         "ui/assets/neutral/4_5pie",
@@ -1141,11 +1141,11 @@ static void CG_RegisterGraphics() {
     };
 
     // clear any references to old media
-    memset(&cg.refdef, 0, sizeof(cg.refdef) );
+    memset(&cg.refdef, 0, sizeof(cg.refdef));
     trap_R_ClearScene();
 
     CG_UpdateLoadingStep(LOAD_GEOMETRY);
-    trap_R_LoadWorldMap(va("maps/%s.bsp", cgs.mapname) );
+    trap_R_LoadWorldMap(va("maps/%s.bsp", cgs.mapname));
 
     CG_UpdateLoadingStep(LOAD_ASSETS);
     for (i = 0; i < 11; i++) {
@@ -1205,28 +1205,28 @@ static void CG_RegisterGraphics() {
                                                           (RegisterShaderFlags_t) RSF_DEFAULT);
 
     cgs.media.desaturatedCgrade = trap_R_RegisterShader("gfx/cgrading/desaturated",
-                                                        (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+                                                        (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
 
     cgs.media.neutralCgrade = trap_R_RegisterShader("gfx/cgrading/neutral",
-                                                    (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+                                                    (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
 
     cgs.media.redCgrade = trap_R_RegisterShader("gfx/cgrading/red-only",
-                                                (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+                                                (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
 
     cgs.media.tealCgrade = trap_R_RegisterShader("gfx/cgrading/teal-only",
-                                                 (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+                                                 (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
 
     cgs.media.balloonShader = trap_R_RegisterShader("gfx/sprites/chatballoon",
                                                     (RegisterShaderFlags_t) RSF_SPRITE);
 
     cgs.media.disconnectPS = CG_RegisterParticleSystem("disconnectPS");
 
-    cgs.media.scopeShader = trap_R_RegisterShader("scope", (RegisterShaderFlags_t) (RSF_DEFAULT | RSF_NOMIP) );
+    cgs.media.scopeShader = trap_R_RegisterShader("scope", (RegisterShaderFlags_t) (RSF_DEFAULT | RSF_NOMIP));
 
     CG_UpdateMediaFraction(0.7f);
 
-    memset(cg_weapons, 0, sizeof(cg_weapons) );
-    memset(cg_upgrades, 0, sizeof(cg_upgrades) );
+    memset(cg_weapons, 0, sizeof(cg_weapons));
+    memset(cg_upgrades, 0, sizeof(cg_upgrades));
 
     cgs.media.shadowMarkShader = trap_R_RegisterShader("gfx/marks/shadow",
                                                        (RegisterShaderFlags_t) RSF_DEFAULT);
@@ -1247,7 +1247,7 @@ static void CG_RegisterGraphics() {
 
     cgs.media.humanBuildableBleedPS = CG_RegisterParticleSystem("humanBuildableBleedPS");
     cgs.media.alienBuildableBleedPS = CG_RegisterParticleSystem("alienBuildableBleedPS");
-    cgs.media.alienBuildableBurnPS  = CG_RegisterParticleSystem("alienBuildableBurnPS");
+    cgs.media.alienBuildableBurnPS = CG_RegisterParticleSystem("alienBuildableBurnPS");
 
     cgs.media.floorFirePS = CG_RegisterParticleSystem("floorFirePS");
 
@@ -1341,13 +1341,13 @@ static void CG_RegisterGraphics() {
     // register all the server specified grading textures
     // starting with the world wide one
     for (i = 0; i < MAX_GRADING_TEXTURES; i++) {
-        CG_RegisterGrading(i, CG_ConfigString(CS_GRADING_TEXTURES + i) );
+        CG_RegisterGrading(i, CG_ConfigString(CS_GRADING_TEXTURES + i));
     }
 
     // register all the server specified reverb effects
     // starting with the world wide one
     for (i = 0; i < MAX_REVERB_EFFECTS; i++) {
-        CG_RegisterReverb(i, CG_ConfigString(CS_REVERB_EFFECTS + i) );
+        CG_RegisterReverb(i, CG_ConfigString(CS_REVERB_EFFECTS + i));
     }
 
     CG_UpdateMediaFraction(0.79f);
@@ -1362,7 +1362,7 @@ static void CG_RegisterGraphics() {
             break;
         }
 
-        cgs.gameParticleSystems[i] = CG_RegisterParticleSystem( (char*) psName);
+        cgs.gameParticleSystems[i] = CG_RegisterParticleSystem((char*) psName);
     }
 }
 
@@ -1380,7 +1380,7 @@ void CG_BuildSpectatorString() {
     for (i = 0; i < MAX_CLIENTS; i++) {
         if (cgs.clientinfo[i].infoValid && cgs.clientinfo[i].team == TEAM_NONE) {
             Q_strcat(cg.spectatorList, sizeof(cg.spectatorList),
-                     va("^*%s     ", cgs.clientinfo[i].name) );
+                     va("^*%s     ", cgs.clientinfo[i].name));
         }
     }
 }
@@ -1398,8 +1398,8 @@ static void CG_RegisterClients() {
 
     // precache all the models/sounds/etc
     for (i = PCL_NONE + 1; i < PCL_NUM_CLASSES; i++) {
-        CG_PrecacheClientInfo( (class_t) i, BG_ClassModelConfig(i)->modelName,
-                               BG_ClassModelConfig(i)->skinName);
+        CG_PrecacheClientInfo((class_t) i, BG_ClassModelConfig(i)->modelName,
+                              BG_ClassModelConfig(i)->skinName);
 
         cg.charModelFraction = (float) i / (float) PCL_NUM_CLASSES;
         trap_UpdateScreen();
@@ -1484,8 +1484,8 @@ void CG_StartMusic() {
 
     // start the background music
     s = (char*) CG_ConfigString(CS_MUSIC);
-    Q_strncpyz(parm1, COM_Parse(&s), sizeof(parm1) );
-    Q_strncpyz(parm2, COM_Parse(&s), sizeof(parm2) );
+    Q_strncpyz(parm1, COM_Parse(&s), sizeof(parm1));
+    Q_strncpyz(parm2, COM_Parse(&s), sizeof(parm2));
 
     trap_S_StartBackgroundTrack(parm1, parm2);
 }
@@ -1493,7 +1493,7 @@ void CG_StartMusic() {
 bool CG_ClientIsReady(int clientNum) {
     clientList_t ready;
 
-    Com_ClientListParse(&ready, CG_ConfigString(CS_CLIENTS_READY) );
+    Com_ClientListParse(&ready, CG_ConfigString(CS_CLIENTS_READY));
 
     return Com_ClientListContains(&ready, clientNum);
 }
@@ -1517,7 +1517,7 @@ void CG_Init(int serverMessageNum, int clientNum, glconfig_t gl, GameStateCSs ga
     new (&cgs)cgs_t {}; // Using {} instead of () to work around MSVC bug
     cg.~cg_t();
     new (&cg)cg_t {};
-    memset(cg_entities, 0, sizeof(cg_entities) );
+    memset(cg_entities, 0, sizeof(cg_entities));
 
     // Set up the pmove params with sensible default values, the server params will
     // be communicated with the "pmove_params" server commands.
@@ -1537,8 +1537,8 @@ void CG_Init(int serverMessageNum, int clientNum, glconfig_t gl, GameStateCSs ga
     cgs.glconfig = gl;
     cgs.screenXScale = cgs.glconfig.vidWidth / 640.0f;
     cgs.screenYScale = cgs.glconfig.vidHeight / 480.0f;
-    cgs.aspectScale = ( (640.0f * cgs.glconfig.vidHeight) /
-                        (480.0f * cgs.glconfig.vidWidth) );
+    cgs.aspectScale = ((640.0f * cgs.glconfig.vidHeight) /
+                       (480.0f * cgs.glconfig.vidWidth));
 
     // load a few needed things before we do any screen updates
     trap_R_SetAltShaderTokens("unpowered,destroyed");
@@ -1569,13 +1569,13 @@ void CG_Init(int serverMessageNum, int clientNum, glconfig_t gl, GameStateCSs ga
     // the same one directly after connecting
     Q_strncpyz(cgs.voteString[TEAM_NONE],
                CG_ConfigString(CS_VOTE_STRING + TEAM_NONE),
-               sizeof(cgs.voteString) );
+               sizeof(cgs.voteString));
     Q_strncpyz(cgs.voteString[TEAM_ALIENS],
                CG_ConfigString(CS_VOTE_STRING + TEAM_ALIENS),
-               sizeof(cgs.voteString[TEAM_ALIENS]) );
+               sizeof(cgs.voteString[TEAM_ALIENS]));
     Q_strncpyz(cgs.voteString[TEAM_HUMANS],
                CG_ConfigString(CS_VOTE_STRING + TEAM_HUMANS),
-               sizeof(cgs.voteString[TEAM_HUMANS]) );
+               sizeof(cgs.voteString[TEAM_HUMANS]));
 
     // check version
     s = CG_ConfigString(CS_GAME_VERSION);
@@ -1664,7 +1664,7 @@ void CG_Shutdown() {
     BG_UnloadAllConfigs();
 }
 
-const vec3_t cg_shaderColors[SHC_NUM_SHADER_COLORS] ={
+const vec3_t cg_shaderColors[SHC_NUM_SHADER_COLORS] = {
     { 0.0f, 0.0f, 0.75f    }, // dark blue
     { 0.3f, 0.35f, 0.625f   }, // light blue
     { 0.0f, 0.625f, 0.563f   }, // green-cyan

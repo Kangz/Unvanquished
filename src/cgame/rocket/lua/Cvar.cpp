@@ -68,20 +68,20 @@ namespace Rocket {
             }
 
             int Cvararchive(lua_State* L) {
-                const char* cvar  = luaL_checkstring(L, 1);
+                const char* cvar = luaL_checkstring(L, 1);
                 ::Cvar::AddFlags(cvar, ::Cvar::USER_ARCHIVE);
                 return 0;
             }
 
-            RegType<Cvar> CvarMethods[] ={
+            RegType<Cvar> CvarMethods[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg CvarGetters[] ={
+            luaL_Reg CvarGetters[] = {
                 { NULL, NULL },
             };
 
-            luaL_Reg CvarSetters[] ={
+            luaL_Reg CvarSetters[] = {
                 { NULL, NULL },
             };
 

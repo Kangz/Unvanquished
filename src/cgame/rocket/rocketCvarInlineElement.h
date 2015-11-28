@@ -51,12 +51,12 @@ class RocketCvarInlineElement : public Rocket::Core::Element {
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList& changed_attributes) {
             Rocket::Core::Element::OnAttributeChange(changed_attributes);
 
-            if (changed_attributes.find("cvar") != changed_attributes.end() ) {
+            if (changed_attributes.find("cvar") != changed_attributes.end()) {
                 cvar = GetAttribute< Rocket::Core::String >("cvar", "");
                 dirty_value = true;
             }
 
-            if (changed_attributes.find("type") != changed_attributes.end() ) {
+            if (changed_attributes.find("type") != changed_attributes.end()) {
                 Rocket::Core::String typeString = GetAttribute< Rocket::Core::String >("type", "");
 
                 if (typeString == "number") {
@@ -67,19 +67,19 @@ class RocketCvarInlineElement : public Rocket::Core::Element {
                 dirty_value = true;
             }
 
-            if (changed_attributes.find("format") != changed_attributes.end() ) {
+            if (changed_attributes.find("format") != changed_attributes.end()) {
                 format = GetAttribute<Rocket::Core::String>("format", "");
                 dirty_value = true;
             }
         }
 
         virtual void OnUpdate() {
-            if (dirty_value || (!cvar.Empty() && cvar_value.CString() != Cvar::GetValue(cvar.CString() ) ) ) {
-                Rocket::Core::String value = cvar_value = Cvar::GetValue(cvar.CString() ).c_str();
+            if (dirty_value || (!cvar.Empty() && cvar_value.CString() != Cvar::GetValue(cvar.CString()))) {
+                Rocket::Core::String value = cvar_value = Cvar::GetValue(cvar.CString()).c_str();
 
                 if (!format.Empty()) {
                     if (type == NUMBER) {
-                        value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), atof(Cvar::GetValue(cvar.CString() ).c_str() ) );
+                        value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), atof(Cvar::GetValue(cvar.CString()).c_str()));
                     } else {
                         value = Rocket::Core::String(cvar_value.Length() + format.Length(), format.CString(), Cvar::GetValue(cvar.CString()).c_str());
                     }

@@ -32,11 +32,11 @@ class KnockbackComponent : public KnockbackComponentBase {
 
         /////////////////////// //
 
-        constexpr static float DAMAGE_TO_KNOCKBACK   = 5.0f;
+        constexpr static float DAMAGE_TO_KNOCKBACK = 5.0f;
         constexpr static float KNOCKBACK_MIN_MASSMOD = 0.5f;
         constexpr static float KNOCKBACK_MAX_MASSMOD = 2.0f;
         constexpr static float KNOCKBACK_NORMAL_MASS = 100.0f;
-        constexpr static int KNOCKBACK_PMOVE_TIME  = 50;
+        constexpr static int KNOCKBACK_PMOVE_TIME = 50;
 
     private:
 

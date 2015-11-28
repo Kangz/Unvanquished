@@ -210,7 +210,7 @@ int CM_PointContents(const vec3_t p, clipHandle_t model) {
         b = &cm.brushes[brushnum];
 
         // XreaL BEGIN
-        if (!CM_BoundsIntersectPoint(b->bounds[0], b->bounds[1], p) ) {
+        if (!CM_BoundsIntersectPoint(b->bounds[0], b->bounds[1], p)) {
             continue;
         }
 
@@ -252,7 +252,7 @@ int CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t
     VectorSubtract(p, origin, p_l);
 
     // rotate start and end into the models frame of reference
-    if (model != BOX_MODEL_HANDLE && (angles[0] || angles[1] || angles[2]) ) {
+    if (model != BOX_MODEL_HANDLE && (angles[0] || angles[1] || angles[2])) {
         AngleVectors(angles, forward, right, up);
 
         VectorCopy(p_l, temp);
@@ -379,7 +379,7 @@ CM_AreasConnected
 ====================
 */
 bool CM_AreasConnected(int area1, int area2) {
-    if (cm_noAreas.Get() ) {
+    if (cm_noAreas.Get()) {
         return true;
     }
 

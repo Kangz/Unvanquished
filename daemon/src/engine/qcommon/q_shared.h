@@ -163,7 +163,7 @@ void ignore_result(T) {
 
 // msvc does not have roundf
 #ifdef _MSC_VER
-    #define roundf(f) (floor( (f) + 0.5) )
+    #define roundf(f) (floor((f) + 0.5))
 #endif
 
 // =============================================================
@@ -194,7 +194,7 @@ typedef int clipHandle_t;
 #define PADP(base, alignment)   ((void*) PAD((intptr_t) (base), (alignment)))
 
 #ifndef NULL
-    #define NULL ( (void*)0)
+    #define NULL ((void*)0)
 #endif
 
 #define STRING(s)  #s
@@ -207,7 +207,7 @@ typedef int clipHandle_t;
 #define HUGE_QFLT 3e38f // TODO: Replace HUGE_QFLT with MAX_QFLT
 
 #ifndef BIT
-    #define BIT(x) (1 << (x) )
+    #define BIT(x) (1 << (x))
 #endif
 
 // the game guarantees that no string from the network will ever
@@ -371,7 +371,7 @@ typedef int fixed16_t;
     #define M_ROOT3 1.732050808f
 #endif
 
-#define ARRAY_LEN(x) (sizeof(x) / sizeof(*(x) ) )
+#define ARRAY_LEN(x) (sizeof(x) / sizeof(*(x)))
 
 // angle indexes
 #define PITCH 0 // up / down
@@ -414,11 +414,11 @@ extern vec3_t bytedirs[NUMVERTEXNORMALS];
 
 #include "logging.h"
 
-#define DEG2RAD(a)                  ( ( (a) * M_PI) / 180.0F)
-#define RAD2DEG(a)                  ( ( (a) * 180.0f) / M_PI)
+#define DEG2RAD(a)                  (((a) * M_PI) / 180.0F)
+#define RAD2DEG(a)                  (((a) * 180.0f) / M_PI)
 
-#define Q_clamp(a, b, c)            Math::Clamp( (a), (b), (c) )
-#define Q_lerp(from, to, frac)      ( (from) + (frac) * ( (to) - (from) ) )
+#define Q_clamp(a, b, c)            Math::Clamp((a), (b), (c))
+#define Q_lerp(from, to, frac)      ((from) + (frac) * ((to) - (from)))
 
 struct cplane_s;
 
@@ -429,7 +429,7 @@ extern quat_t quatIdentity;
 
 #define nanmask (255 << 23)
 
-#define IS_NAN(x) ( ( (*(int*)&(x) ) & nanmask) == nanmask)
+#define IS_NAN(x) (((*(int*)&(x)) & nanmask) == nanmask)
 
 #define Q_ftol(x) ((long)(x))
 
@@ -477,20 +477,20 @@ inline float Q_rsqrt(float number) {
 
     // compute approximate inverse square root
     #if defined(idx86_sse)
-    _mm_store_ss(&y, _mm_rsqrt_ss(_mm_load_ss(&number) ) );
+    _mm_store_ss(&y, _mm_rsqrt_ss(_mm_load_ss(&number)));
     #elif idppc
 
     #ifdef __GNUC__
-    asm ("frsqrte %0, %1" : "=f" (y) : "f" (number) );
+    asm ("frsqrte %0, %1" : "=f" (y) : "f" (number));
     #else
     y = __frsqrte(number);
     #endif
     #else
-    y = Q_uintBitsToFloat(0x5f3759df - (Q_floatBitsToUint(number) >> 1) );
-    y *= (1.5f - (x * y * y) ); // initial iteration
+    y = Q_uintBitsToFloat(0x5f3759df - (Q_floatBitsToUint(number) >> 1));
+    y *= (1.5f - (x * y * y)); // initial iteration
     #endif
     #ifdef RSQRT_PRECISE
-    y *= (1.5f - (x * y * y) ); // second iteration for higher precision
+    y *= (1.5f - (x * y * y)); // second iteration for higher precision
     #endif
     return y;
 }
@@ -499,7 +499,7 @@ inline float Q_fabs(float x) {
     return fabsf(x);
 }
 
-#define Q_recip(x) (1.0f / (x) )
+#define Q_recip(x) (1.0f / (x))
 
 byte         ClampByte(int i);
 signed char  ClampChar(int i);
@@ -510,12 +510,12 @@ void         ByteToDir(int b, vec3_t dir);
 
 #if 1
 
-    #define DotProduct(x, y)            ( (x)[0] * (y)[0] + (x)[1] * (y)[1] + (x)[2] * (y)[2])
-    #define VectorSubtract(a, b, c)      ( (c)[0] = (a)[0] - (b)[0], (c)[1] = (a)[1] - (b)[1], (c)[2] = (a)[2] - (b)[2])
-    #define VectorAdd(a, b, c)           ( (c)[0] = (a)[0] + (b)[0], (c)[1] = (a)[1] + (b)[1], (c)[2] = (a)[2] + (b)[2])
-    #define VectorCopy(a, b)            ( (b)[0] = (a)[0], (b)[1] = (a)[1], (b)[2] = (a)[2])
-    #define VectorScale(v, s, o)       ( (o)[0] = (v)[0] * (s), (o)[1] = (v)[1] * (s), (o)[2] = (v)[2] * (s) )
-    #define VectorMA(v, s, b, o)       ( (o)[0] = (v)[0] + (b)[0] * (s), (o)[1] = (v)[1] + (b)[1] * (s), (o)[2] = (v)[2] + (b)[2] * (s) )
+    #define DotProduct(x, y)            ((x)[0] * (y)[0] + (x)[1] * (y)[1] + (x)[2] * (y)[2])
+    #define VectorSubtract(a, b, c)      ((c)[0] = (a)[0] - (b)[0], (c)[1] = (a)[1] - (b)[1], (c)[2] = (a)[2] - (b)[2])
+    #define VectorAdd(a, b, c)           ((c)[0] = (a)[0] + (b)[0], (c)[1] = (a)[1] + (b)[1], (c)[2] = (a)[2] + (b)[2])
+    #define VectorCopy(a, b)            ((b)[0] = (a)[0], (b)[1] = (a)[1], (b)[2] = (a)[2])
+    #define VectorScale(v, s, o)       ((o)[0] = (v)[0] * (s), (o)[1] = (v)[1] * (s), (o)[2] = (v)[2] * (s))
+    #define VectorMA(v, s, b, o)       ((o)[0] = (v)[0] + (b)[0] * (s), (o)[1] = (v)[1] + (b)[1] * (s), (o)[2] = (v)[2] + (b)[2] * (s))
     #define VectorLerpTrem(f, s, e, r) \
     ((r)[0] = (s)[0] + (f) * ((e)[0] - (s)[0]), \
      (r)[1] = (s)[1] + (f) * ((e)[1] - (s)[1]), \
@@ -532,22 +532,22 @@ void         ByteToDir(int b, vec3_t dir);
 
 #endif
 
-#define VectorClear(a)             ( (a)[0] = (a)[1] = (a)[2] = 0)
-#define VectorNegate(a, b)          ( (b)[0] = -(a)[0], (b)[1] = -(a)[1], (b)[2] = -(a)[2])
-#define VectorSet(v, x, y, z)      ( (v)[0] = (x), (v)[1] = (y), (v)[2] = (z) )
+#define VectorClear(a)             ((a)[0] = (a)[1] = (a)[2] = 0)
+#define VectorNegate(a, b)          ((b)[0] = -(a)[0], (b)[1] = -(a)[1], (b)[2] = -(a)[2])
+#define VectorSet(v, x, y, z)      ((v)[0] = (x), (v)[1] = (y), (v)[2] = (z))
 
-#define Vector2Set(v, x, y)        ( (v)[0] = (x), (v)[1] = (y) )
-#define Vector2Copy(a, b)           ( (b)[0] = (a)[0], (b)[1] = (a)[1])
-#define Vector2Subtract(a, b, c)     ( (c)[0] = (a)[0] - (b)[0], (c)[1] = (a)[1] - (b)[1])
+#define Vector2Set(v, x, y)        ((v)[0] = (x), (v)[1] = (y))
+#define Vector2Copy(a, b)           ((b)[0] = (a)[0], (b)[1] = (a)[1])
+#define Vector2Subtract(a, b, c)     ((c)[0] = (a)[0] - (b)[0], (c)[1] = (a)[1] - (b)[1])
 
-#define Vector4Set(v, x, y, z, n)  ( (v)[0] = (x), (v)[1] = (y), (v)[2] = (z), (v)[3] = (n) )
-#define Vector4Copy(a, b)           ( (b)[0] = (a)[0], (b)[1] = (a)[1], (b)[2] = (a)[2], (b)[3] = (a)[3])
-#define Vector4MA(v, s, b, o)      ( (o)[0] = (v)[0] + (b)[0] * (s), (o)[1] = (v)[1] + (b)[1] * (s), (o)[2] = (v)[2] + (b)[2] * (s), (o)[3] = (v)[3] + (b)[3] * (s) )
-#define Vector4Average(v, b, s, o) ( (o)[0] = ( (v)[0] * (1 - (s) ) ) + ( (b)[0] * (s) ), (o)[1] = ( (v)[1] * (1 - (s) ) ) + ( (b)[1] * (s) ), (o)[2] = ( (v)[2] * (1 - (s) ) ) + ( (b)[2] * (s) ), (o)[3] = ( (v)[3] * (1 - (s) ) ) + ( (b)[3] * (s) ) )
+#define Vector4Set(v, x, y, z, n)  ((v)[0] = (x), (v)[1] = (y), (v)[2] = (z), (v)[3] = (n))
+#define Vector4Copy(a, b)           ((b)[0] = (a)[0], (b)[1] = (a)[1], (b)[2] = (a)[2], (b)[3] = (a)[3])
+#define Vector4MA(v, s, b, o)      ((o)[0] = (v)[0] + (b)[0] * (s), (o)[1] = (v)[1] + (b)[1] * (s), (o)[2] = (v)[2] + (b)[2] * (s), (o)[3] = (v)[3] + (b)[3] * (s))
+#define Vector4Average(v, b, s, o) ((o)[0] = ((v)[0] * (1 - (s))) + ((b)[0] * (s)), (o)[1] = ((v)[1] * (1 - (s))) + ((b)[1] * (s)), (o)[2] = ((v)[2] * (1 - (s))) + ((b)[2] * (s)), (o)[3] = ((v)[3] * (1 - (s))) + ((b)[3] * (s)))
 
 #define DotProduct4(x, y)            ((x)[0] * (y)[0] + (x)[1] * (y)[1] + (x)[2] * (y)[2] + (x)[3] * (y)[3])
 
-#define SnapVector(v)              do { (v)[0] = (floor( (v)[0] + 0.5f) ); (v)[1] = (floor( (v)[1] + 0.5f) ); (v)[2] = (floor( (v)[2] + 0.5f) ); } while (0)
+#define SnapVector(v)              do { (v)[0] = (floor((v)[0] + 0.5f)); (v)[1] = (floor((v)[1] + 0.5f)); (v)[2] = (floor((v)[2] + 0.5f)); } while (0)
 
 // just in case you don't want to use the macros
 // Maybe these _Functions should be inlined and replace te macros defined above
@@ -592,9 +592,9 @@ inline int Vector4Compare(const vec4_t v1, const vec4_t v2) {
 }
 
 inline void VectorLerp(const vec3_t from, const vec3_t to, float frac, vec3_t out) {
-    out[0] = from[0] + ( (to[0] - from[0]) * frac);
-    out[1] = from[1] + ( (to[1] - from[1]) * frac);
-    out[2] = from[2] + ( (to[2] - from[2]) * frac);
+    out[0] = from[0] + ((to[0] - from[0]) * frac);
+    out[1] = from[1] + ((to[1] - from[1]) * frac);
+    out[2] = from[2] + ((to[2] - from[2]) * frac);
 }
 
 inline int VectorCompareEpsilon(const vec3_t v1, const vec3_t v2, float epsilon) {
@@ -628,8 +628,8 @@ int   Q_rand(int* seed);
 float Q_random(int* seed);
 float Q_crandom(int* seed);
 
-#define random()  ( (rand() & 0x7fff) / ( (float)0x7fff) )
-#define crandom() (2.0 * (random() - 0.5) )
+#define random()  ((rand() & 0x7fff) / ((float)0x7fff))
+#define crandom() (2.0 * (random() - 0.5))
 
 void vectoangles(const vec3_t value1, vec3_t angles);
 
@@ -831,7 +831,7 @@ inline void QuatCalcW(quat_t q) {
     }
 
     #else
-    q[3] = sqrt(fabs(1.0f - (q[0] * q[0] + q[1] * q[1] + q[2] * q[2]) ) );
+    q[3] = sqrt(fabs(1.0f - (q[0] * q[0] + q[1] * q[1] + q[2] * q[2])));
     #endif
 }
 
@@ -1149,7 +1149,7 @@ void QuatTransformVectorInverse(const quat_t q, const vec3_t in, vec3_t out);
     #define SWZ_YWWW 0xfd
     #define SWZ_ZWWW 0xfe
     #define SWZ_WWWW 0xff
-    #define sseSwizzle(a, mask) _mm_shuffle_ps( (a), (a), SWZ_ ## mask)
+    #define sseSwizzle(a, mask) _mm_shuffle_ps((a), (a), SWZ_ ## mask)
 
 inline __m128 unitQuat() {
     return _mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f); // order is reversed
@@ -1185,15 +1185,15 @@ inline __m128 sign_XYZW() {
 
 inline __m128 sseDot4(__m128 a, __m128 b) {
     __m128 prod = _mm_mul_ps(a, b);
-    __m128 sum1 = _mm_add_ps(prod, sseSwizzle(prod, YXWZ) );
-    __m128 sum2 = _mm_add_ps(sum1, sseSwizzle(sum1, ZWXY) );
+    __m128 sum1 = _mm_add_ps(prod, sseSwizzle(prod, YXWZ));
+    __m128 sum2 = _mm_add_ps(sum1, sseSwizzle(sum1, ZWXY));
     return sum2;
 }
 inline __m128 sseCrossProduct(__m128 a, __m128 b) {
     __m128 a_yzx = sseSwizzle(a, YZXW);
     __m128 b_yzx = sseSwizzle(b, YZXW);
     __m128 c_zxy = _mm_sub_ps(_mm_mul_ps(a, b_yzx),
-                              _mm_mul_ps(a_yzx, b) );
+                              _mm_mul_ps(a_yzx, b));
     return sseSwizzle(c_zxy, YZXW);
 }
 inline __m128 sseQuatMul(__m128 a, __m128 b) {
@@ -1201,22 +1201,22 @@ inline __m128 sseQuatMul(__m128 a, __m128 b) {
     __m128 c1 = _mm_mul_ps(a1, b);
     __m128 a2 = sseSwizzle(a, XYZX);
     __m128 b2 = sseSwizzle(b, WWWX);
-    __m128 c2 = _mm_xor_ps(_mm_mul_ps(a2, b2), sign_000W() );
+    __m128 c2 = _mm_xor_ps(_mm_mul_ps(a2, b2), sign_000W());
     __m128 a3 = sseSwizzle(a, YZXY);
     __m128 b3 = sseSwizzle(b, ZXYY);
-    __m128 c3 = _mm_xor_ps(_mm_mul_ps(a3, b3), sign_000W() );
+    __m128 c3 = _mm_xor_ps(_mm_mul_ps(a3, b3), sign_000W());
     __m128 a4 = sseSwizzle(a, ZXYZ);
     __m128 b4 = sseSwizzle(b, YZXZ);
     __m128 c4 = _mm_mul_ps(a4, b4);
-    return _mm_add_ps(_mm_add_ps(c1, c2), _mm_sub_ps(c3, c4) );
+    return _mm_add_ps(_mm_add_ps(c1, c2), _mm_sub_ps(c3, c4));
 }
 inline __m128 sseQuatNormalize(__m128 q) {
     __m128 p = _mm_mul_ps(q, q);
     __m128 t, h;
     p = _mm_add_ps(sseSwizzle(p, XXZZ),
-                   sseSwizzle(p, YYWW) );
+                   sseSwizzle(p, YYWW));
     p = _mm_add_ps(sseSwizzle(p, XXXX),
-                   sseSwizzle(p, ZZZZ) );
+                   sseSwizzle(p, ZZZZ));
     t = _mm_rsqrt_ps(p);
     #ifdef RSQRT_PRECISE
     h = _mm_mul_ps(_mm_set1_ps(0.5f), t);
@@ -1249,7 +1249,7 @@ inline __m128 sseLoadVec3(const vec3_t vec) {
     return v;
 }
 inline void sseStoreVec3(__m128 in, vec3_t out) {
-    _mm_storel_pi( (__m64*)out, in);
+    _mm_storel_pi((__m64*)out, in);
     __m128 v = sseSwizzle(in, ZZZZ);
     _mm_store_ss(&out[2], v);
 }
@@ -1265,8 +1265,8 @@ inline void TransCopy(const transform_t* in, transform_t* out) {
 inline void TransformPoint(const transform_t* t,
                            const vec3_t in, vec3_t out) {
     __m128 ts = t->sseTransScale;
-    __m128 tmp = sseQuatTransform(t->sseRot, _mm_loadu_ps(in) );
-    tmp = _mm_mul_ps(tmp, sseSwizzle(ts, WWWW) );
+    __m128 tmp = sseQuatTransform(t->sseRot, _mm_loadu_ps(in));
+    tmp = _mm_mul_ps(tmp, sseSwizzle(ts, WWWW));
     tmp = _mm_add_ps(tmp, ts);
     sseStoreVec3(tmp, out);
 }
@@ -1274,7 +1274,7 @@ inline void TransformPointInverse(const transform_t* t,
                                   const vec3_t in, vec3_t out) {
     __m128 ts = t->sseTransScale;
     __m128 v = _mm_sub_ps(_mm_loadu_ps(in), ts);
-    v = _mm_mul_ps(v, _mm_rcp_ps(sseSwizzle(ts, WWWW) ) );
+    v = _mm_mul_ps(v, _mm_rcp_ps(sseSwizzle(ts, WWWW)));
     v = sseQuatTransformInverse(t->sseRot, v);
     sseStoreVec3(v, out);
 }
@@ -1291,12 +1291,12 @@ inline void TransformNormalVectorInverse(const transform_t* t,
     sseStoreVec3(v, out);
 }
 inline __m128 sseAxisAngleToQuat(const vec3_t axis, float angle) {
-    __m128 sa = _mm_set1_ps(sin(0.5f * angle) );
-    __m128 ca = _mm_set1_ps(cos(0.5f * angle) );
+    __m128 sa = _mm_set1_ps(sin(0.5f * angle));
+    __m128 ca = _mm_set1_ps(cos(0.5f * angle));
     __m128 a = _mm_loadu_ps(axis);
-    a = _mm_and_ps(a, mask_XYZ0() );
+    a = _mm_and_ps(a, mask_XYZ0());
     a = _mm_mul_ps(a, sa);
-    return _mm_or_ps(a, _mm_and_ps(ca, mask_000W() ) );
+    return _mm_or_ps(a, _mm_and_ps(ca, mask_000W()));
 }
 inline void TransInitRotationQuat(const quat_t quat,
                                   transform_t* t) {
@@ -1310,13 +1310,13 @@ inline void TransInitRotation(const vec3_t axis, float angle,
 }
 inline void TransInitTranslation(const vec3_t vec, transform_t* t) {
     __m128 v = _mm_loadu_ps(vec);
-    v = _mm_and_ps(v, mask_XYZ0() );
+    v = _mm_and_ps(v, mask_XYZ0());
     t->sseRot = unitQuat();
-    t->sseTransScale = _mm_or_ps(v, unitQuat() );
+    t->sseTransScale = _mm_or_ps(v, unitQuat());
 }
 inline void TransInitScale(float factor, transform_t* t) {
     __m128 f = _mm_set1_ps(factor);
-    f = _mm_and_ps(f, mask_000W() );
+    f = _mm_and_ps(f, mask_000W());
     t->sseRot = unitQuat();
     t->sseTransScale = f;
 }
@@ -1333,16 +1333,16 @@ inline void TransAddRotationQuat(const quat_t quat, transform_t* t) {
     __m128 q = _mm_loadu_ps(quat);
     __m128 transformed = sseQuatTransform(q, t->sseTransScale);
     t->sseRot = sseQuatMul(q, t->sseRot);
-    t->sseTransScale = _mm_or_ps(_mm_and_ps(transformed, mask_XYZ0() ),
-                                 _mm_and_ps(t->sseTransScale, mask_000W() ) );
+    t->sseTransScale = _mm_or_ps(_mm_and_ps(transformed, mask_XYZ0()),
+                                 _mm_and_ps(t->sseTransScale, mask_000W()));
 }
 inline void TransAddRotation(const vec3_t axis, float angle,
                              transform_t* t) {
     __m128 q = sseAxisAngleToQuat(axis, angle);
     __m128 transformed = sseQuatTransform(q, t->sseTransScale);
     t->sseRot = sseQuatMul(t->sseRot, q);
-    t->sseTransScale = _mm_or_ps(_mm_and_ps(transformed, mask_XYZ0() ),
-                                 _mm_and_ps(t->sseTransScale, mask_000W() ) );
+    t->sseTransScale = _mm_or_ps(_mm_and_ps(transformed, mask_XYZ0()),
+                                 _mm_and_ps(t->sseTransScale, mask_000W()));
 }
 inline void TransInsScale(float factor, transform_t* t) {
     t->scale *= factor;
@@ -1356,14 +1356,14 @@ inline void TransInsTranslation(const vec3_t vec,
     __m128 v = _mm_loadu_ps(vec);
     __m128 ts = t->sseTransScale;
     v = sseQuatTransform(t->sseRot, v);
-    v = _mm_mul_ps(v, sseSwizzle(ts, WWWW) );
-    v = _mm_and_ps(v, mask_XYZ0() );
+    v = _mm_mul_ps(v, sseSwizzle(ts, WWWW));
+    v = _mm_and_ps(v, mask_XYZ0());
     t->sseTransScale = _mm_add_ps(ts, v);
 }
 inline void TransAddTranslation(const vec3_t vec,
                                 transform_t* t) {
     __m128 v = _mm_loadu_ps(vec);
-    v = _mm_and_ps(v, mask_XYZ0() );
+    v = _mm_and_ps(v, mask_XYZ0());
     t->sseTransScale = _mm_add_ps(t->sseTransScale, v);
 }
 inline void TransCombine(const transform_t* a,
@@ -1374,24 +1374,24 @@ inline void TransCombine(const transform_t* a,
     __m128 bRot = b->sseRot;
     __m128 bTS = b->sseTransScale;
     __m128 tmp = sseQuatTransform(bRot, aTS);
-    tmp = _mm_or_ps(_mm_and_ps(tmp, mask_XYZ0() ),
-                    _mm_and_ps(aTS, mask_000W() ) );
-    tmp = _mm_mul_ps(tmp, sseSwizzle(bTS, WWWW) );
-    out->sseTransScale = _mm_add_ps(tmp, _mm_and_ps(bTS, mask_XYZ0() ) );
+    tmp = _mm_or_ps(_mm_and_ps(tmp, mask_XYZ0()),
+                    _mm_and_ps(aTS, mask_000W()));
+    tmp = _mm_mul_ps(tmp, sseSwizzle(bTS, WWWW));
+    out->sseTransScale = _mm_add_ps(tmp, _mm_and_ps(bTS, mask_XYZ0()));
     out->sseRot = sseQuatMul(bRot, aRot);
 }
 inline void TransInverse(const transform_t* in,
                          transform_t* out) {
     __m128 rot = in->sseRot;
     __m128 ts = in->sseTransScale;
-    __m128 invS = _mm_rcp_ps(sseSwizzle(ts, WWWW) );
-    __m128 invRot = _mm_xor_ps(rot, sign_XYZ0() );
-    __m128 invT = _mm_xor_ps(ts, sign_XYZ0() );
+    __m128 invS = _mm_rcp_ps(sseSwizzle(ts, WWWW));
+    __m128 invRot = _mm_xor_ps(rot, sign_XYZ0());
+    __m128 invT = _mm_xor_ps(ts, sign_XYZ0());
     __m128 tmp = sseQuatTransform(invRot, invT);
     tmp = _mm_mul_ps(tmp, invS);
     out->sseRot = invRot;
-    out->sseTransScale = _mm_or_ps(_mm_and_ps(tmp, mask_XYZ0() ),
-                                   _mm_and_ps(invS, mask_000W() ) );
+    out->sseTransScale = _mm_or_ps(_mm_and_ps(tmp, mask_XYZ0()),
+                                   _mm_and_ps(invS, mask_000W()));
 }
 inline void TransStartLerp(transform_t* t) {
     t->sseRot = mask_0000();
@@ -1402,10 +1402,10 @@ inline void TransAddWeight(float weight, const transform_t* a,
     __m128 w = _mm_set1_ps(weight);
     __m128 d = sseDot4(a->sseRot, out->sseRot);
     out->sseTransScale = _mm_add_ps(out->sseTransScale,
-                                    _mm_mul_ps(w, a->sseTransScale) );
-    w = _mm_xor_ps(w, _mm_and_ps(d, sign_XYZW() ) );
+                                    _mm_mul_ps(w, a->sseTransScale));
+    w = _mm_xor_ps(w, _mm_and_ps(d, sign_XYZW()));
     out->sseRot = _mm_add_ps(out->sseRot,
-                             _mm_mul_ps(w, a->sseRot) );
+                             _mm_mul_ps(w, a->sseRot));
 }
 inline void TransEndLerp(transform_t* t) {
     t->sseRot = sseQuatNormalize(t->sseRot);
@@ -1701,7 +1701,7 @@ PlaneTypeForNormal
 */
 
 // #define PlaneTypeForNormal(x) (x[0] == 1.0 ? PLANE_X : (x[1] == 1.0 ? PLANE_Y : (x[2] == 1.0 ? PLANE_Z : PLANE_NON_AXIAL) ) )
-#define PlaneTypeForNormal(x) (x[0] == 1.0 ? PLANE_X : (x[1] == 1.0 ? PLANE_Y : (x[2] == 1.0 ? PLANE_Z : (x[0] == 0.f && x[1] == 0.f && x[2] == 0.f ? PLANE_NON_PLANAR : PLANE_NON_AXIAL) ) ) )
+#define PlaneTypeForNormal(x) (x[0] == 1.0 ? PLANE_X : (x[1] == 1.0 ? PLANE_Y : (x[2] == 1.0 ? PLANE_Z : (x[0] == 0.f && x[1] == 0.f && x[2] == 0.f ? PLANE_NON_PLANAR : PLANE_NON_AXIAL))))
 
 /*
 inline int PlaneTypeForNormal(vec3_t normal)
@@ -1803,8 +1803,8 @@ typedef enum {
 */
 #define ANIM_BITS 10
 
-#define ANGLE2SHORT(x) ( (int)( (x) * 65536 / 360) & 65535)
-#define SHORT2ANGLE(x) ( (x) * (360.0 / 65536) )
+#define ANGLE2SHORT(x) ((int)((x) * 65536 / 360) & 65535)
+#define SHORT2ANGLE(x) ((x) * (360.0 / 65536))
 
 #define SNAPFLAG_RATE_DELAYED 1
 #define SNAPFLAG_NOT_ACTIVE   2 // snapshot used during connection and for zombies
@@ -2024,7 +2024,7 @@ inline void usercmdPressButton(byte* buttons, int bit) {
 }
 
 inline void usercmdReleaseButton(byte* buttons, int bit) {
-    buttons[bit / 8] &= ~(1 << (bit & 7) );
+    buttons[bit / 8] &= ~(1 << (bit & 7));
 }
 
 inline void usercmdClearButtons(byte* buttons) {
@@ -2043,7 +2043,7 @@ inline void usercmdLatchButtons(byte* dest, const byte* srcNew, const byte* srcO
 }
 
 inline bool usercmdButtonPressed(const byte* buttons, int bit) {
-    return (buttons[bit / 8] & (1 << (bit & 7) ) ) ? true : false;
+    return (buttons[bit / 8] & (1 << (bit & 7))) ? true : false;
 }
 
 inline bool usercmdButtonsDiffer(const byte* a, const byte* b) {
@@ -2230,7 +2230,7 @@ typedef struct {
     float glyphScale;
 } fontMetrics_t;
 
-#define Square(x) ( (x) * (x) )
+#define Square(x) ((x) * (x))
 
 // real time
 // =============================================

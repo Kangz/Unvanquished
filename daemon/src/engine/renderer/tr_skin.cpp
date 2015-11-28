@@ -58,7 +58,7 @@ static const char* CommaParse(char** data_p) {
 
     while (1) {
         // skip whitespace
-        while ( (c = *data) <= ' ') {
+        while ((c = *data) <= ' ') {
             if (!c) {
                 break;
             }
@@ -76,7 +76,7 @@ static const char* CommaParse(char** data_p) {
         }
         // skip /* */ comments
         else if (c == '/' && data[1] == '*') {
-            while (*data && (*data != '*' || data[1] != '/') ) {
+            while (*data && (*data != '*' || data[1] != '/')) {
                 data++;
             }
 
@@ -162,7 +162,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
     for (hSkin = 1; hSkin < tr.numSkins; hSkin++) {
         skin = tr.skins[hSkin];
 
-        if (!Q_stricmp(skin->name, name) ) {
+        if (!Q_stricmp(skin->name, name)) {
             if (skin->numSurfaces == 0) {
                 return 0; // default skin
             }
@@ -194,7 +194,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
     tr.numSkins++;
     skin = (skin_t*) ri.Hunk_Alloc(sizeof(skin_t), h_low);
     tr.skins[hSkin] = skin;
-    Q_strncpyz(skin->name, name, sizeof(skin->name) );
+    Q_strncpyz(skin->name, name, sizeof(skin->name));
     skin->numSurfaces = 0;
     skin->numModels = 0; // ----(SA) added
 
@@ -205,7 +205,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
     while (text_p && *text_p) {
         // get surface name
         token = CommaParse(&text_p);
-        Q_strncpyz(surfName, token, sizeof(surfName) );
+        Q_strncpyz(surfName, token, sizeof(surfName));
 
         if (!token[0]) {
             break;
@@ -218,20 +218,20 @@ qhandle_t RE_RegisterSkin(const char* name) {
             text_p++;
         }
 
-        if (!Q_strnicmp(token, "tag_", 4) ) {
+        if (!Q_strnicmp(token, "tag_", 4)) {
             continue;
         }
 
-        if (!Q_strnicmp(token, "md3_", 4) ) {
+        if (!Q_strnicmp(token, "md3_", 4)) {
             // this is specifying a model
             model = skin->models[skin->numModels] = (skinModel_t*) ri.Hunk_Alloc(sizeof(*skin->models[0]), h_low);
-            Q_strncpyz(model->type, token, sizeof(model->type) );
-            model->hash = Com_HashKey(model->type, sizeof(model->type) );
+            Q_strncpyz(model->type, token, sizeof(model->type));
+            model->hash = Com_HashKey(model->type, sizeof(model->type));
 
             // get the model name
             token = CommaParse(&text_p);
 
-            Q_strncpyz(model->model, token, sizeof(model->model) );
+            Q_strncpyz(model->model, token, sizeof(model->model));
 
             skin->numModels++;
             continue;
@@ -241,7 +241,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
         token = CommaParse(&text_p);
 
         surf = skin->surfaces[skin->numSurfaces] = (skinSurface_t*) ri.Hunk_Alloc(sizeof(*skin->surfaces[0]), h_low);
-        Q_strncpyz(surf->name, surfName, sizeof(surf->name) );
+        Q_strncpyz(surf->name, surfName, sizeof(surf->name));
 
         // RB: bspSurface_t does not have ::hash yet
         surf->shader = R_FindShader(token, SHADER_3D_DYNAMIC, RSF_DEFAULT);
@@ -270,7 +270,7 @@ void R_InitSkins() {
 
     // make the default skin have all default shaders
     skin = tr.skins[0] = (skin_t*) ri.Hunk_Alloc(sizeof(skin_t), h_low);
-    Q_strncpyz(skin->name, "<default skin>", sizeof(skin->name) );
+    Q_strncpyz(skin->name, "<default skin>", sizeof(skin->name));
     skin->numSurfaces = 1;
     skin->surfaces[0] = (skinSurface_t*) ri.Hunk_Alloc(sizeof(*skin->surfaces[0]), h_low);
     skin->surfaces[0]->shader = tr.defaultShader;

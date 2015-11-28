@@ -88,15 +88,15 @@ namespace Rocket {
             }
 
 
-            RegType<Timer> TimerMethods[] ={
+            RegType<Timer> TimerMethods[] = {
                 { nullptr, nullptr },
             };
 
-            luaL_Reg TimerGetters[] ={
+            luaL_Reg TimerGetters[] = {
                 { nullptr, nullptr },
             };
 
-            luaL_Reg TimerSetters[] ={
+            luaL_Reg TimerSetters[] = {
                 { nullptr, nullptr },
             };
             LUACORETYPEDEFINE(Timer, false)

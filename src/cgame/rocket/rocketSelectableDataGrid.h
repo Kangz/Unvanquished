@@ -63,8 +63,8 @@ class SelectableDataGrid : public Rocket::Controls::ElementDataGrid {
             if (evt == "click" || evt == "dblclick") {
                 Element* elem;
                 int column = -1;
-                Rocket::Core::String dsName = dataSource.Substring(0, dataSource.Find(".") );
-                Rocket::Core::String tableName =  dataSource.Substring(dataSource.Find(".") + 1, dataSource.Length() );
+                Rocket::Core::String dsName = dataSource.Substring(0, dataSource.Find("."));
+                Rocket::Core::String tableName = dataSource.Substring(dataSource.Find(".") + 1, dataSource.Length());
 
 
                 // get the column index
@@ -97,10 +97,10 @@ class SelectableDataGrid : public Rocket::Controls::ElementDataGrid {
                 if (elem) {
                     Rocket::Controls::ElementDataGridRow* row = dynamic_cast<Rocket::Controls::ElementDataGridRow*>(elem);
                     int index = row->GetTableRelativeIndex();
-                    Rocket::Core::String indexStr(va("%d", index) );
+                    Rocket::Core::String indexStr(va("%d", index));
 
                     // this should never happen
-                    if (index >= this->GetNumRows() ) {
+                    if (index >= this->GetNumRows()) {
                         return;
                     }
                     if (index >= 0) {
@@ -123,7 +123,7 @@ class SelectableDataGrid : public Rocket::Controls::ElementDataGrid {
 
 
 
-                        eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("setDS %s %s %d", dsName.CString(), tableName.CString(), index) ) ) );
+                        eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("setDS %s %s %d", dsName.CString(), tableName.CString(), index))));
                     }
 
                     Rocket::Core::Dictionary parameters;
@@ -140,7 +140,7 @@ class SelectableDataGrid : public Rocket::Controls::ElementDataGrid {
                 }
 
                 if (evt == "dblclick") {
-                    eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("execDS %s %s", dataSource.Substring(0, dataSource.Find(".") ).CString(), tableName.CString() ) ) ) );
+                    eventQueue.push(new RocketEvent_t(Rocket::Core::String(va("execDS %s %s", dataSource.Substring(0, dataSource.Find(".")).CString(), tableName.CString()))));
                 }
             } else if (evt == "rowremove") {
                 int numRowsRemoved = evt.GetParameter< int >("num_rows_removed", 0);

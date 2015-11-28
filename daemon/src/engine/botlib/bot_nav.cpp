@@ -64,7 +64,7 @@ void BotSetPolyFlags(qVec origin, qVec mins, qVec maxs, unsigned short flags) {
 
     // find extents
     for (int j = 0; j < 3; j++) {
-        qExtents[j] = std::max(fabsf(realMin[j]), fabsf(realMax[j]) );
+        qExtents[j] = std::max(fabsf(realMin[j]), fabsf(realMax[j]));
     }
 
     // convert to recast coordinates
@@ -164,7 +164,7 @@ void UpdatePathCorridor(Bot_t* bot, rVec spos, botRouteTargetInternal target) {
         bot->corridor.moveTargetPosition(target.pos, bot->nav->query, &bot->nav->filter);
     }
 
-    if (!bot->corridor.isValid(MAX_PATH_LOOKAHEAD, bot->nav->query, &bot->nav->filter) ) {
+    if (!bot->corridor.isValid(MAX_PATH_LOOKAHEAD, bot->nav->query, &bot->nav->filter)) {
         bot->corridor.trimInvalidPath(bot->corridor.getFirstPoly(), spos, bot->nav->query, &bot->nav->filter);
         bot->needReplan = true;
     }
@@ -191,21 +191,21 @@ void BotUpdateCorridor(int botClientNum, const botRouteTarget_t* target, botNavC
 
     if (!bot->offMesh) {
         if (bot->needReplan) {
-            if (FindRoute(bot, spos, rtarget, false) ) {
+            if (FindRoute(bot, spos, rtarget, false)) {
                 bot->needReplan = false;
             }
         }
 
         cmd->havePath = !bot->needReplan;
 
-        if (overOffMeshConnectionStart(bot, spos) ) {
+        if (overOffMeshConnectionStart(bot, spos)) {
             dtPolyRef refs[2];
             rVec start;
             rVec end;
             int corner = bot->numCorners - 1;
             dtPolyRef con = bot->cornerPolys[corner];
 
-            if (bot->corridor.moveOverOffmeshConnection(con, refs, start, end, bot->nav->query) ) {
+            if (bot->corridor.moveOverOffmeshConnection(con, refs, start, end, bot->nav->query)) {
                 bot->offMesh = true;
                 bot->offMeshPoly = con;
                 bot->offMeshEnd = end;
@@ -216,12 +216,12 @@ void BotUpdateCorridor(int botClientNum, const botRouteTarget_t* target, botNavC
         dtPolyRef firstPoly = bot->corridor.getFirstPoly();
         dtPolyRef lastPoly = bot->corridor.getLastPoly();
 
-        if (!PointInPoly(bot, firstPoly, spos) ) {
+        if (!PointInPoly(bot, firstPoly, spos)) {
             bot->needReplan = true;
         }
 
         if (rtarget.type == BOT_TARGET_DYNAMIC) {
-            if (!PointInPolyExtents(bot, lastPoly, epos, rtarget.polyExtents) ) {
+            if (!PointInPolyExtents(bot, lastPoly, epos, rtarget.polyExtents)) {
                 bot->needReplan = true;
             }
         }
@@ -246,7 +246,7 @@ void BotUpdateCorridor(int botClientNum, const botRouteTarget_t* target, botNavC
             VectorCopy(bot->corridor.getTarget(), cmd->tpos);
 
             float height;
-            if (dtStatusSucceed(bot->nav->query->getPolyHeight(bot->corridor.getLastPoly(), cmd->tpos, &height) ) ) {
+            if (dtStatusSucceed(bot->nav->query->getPolyHeight(bot->corridor.getLastPoly(), cmd->tpos, &height))) {
                 cmd->tpos[1] = height;
             }
             recast2quake(cmd->tpos);
@@ -273,14 +273,14 @@ void BotUpdateCorridor(int botClientNum, const botRouteTarget_t* target, botNavC
 
         VectorCopy(bot->corridor.getTarget(), cmd->tpos);
         float height;
-        if (dtStatusSucceed(bot->nav->query->getPolyHeight(bot->corridor.getLastPoly(), cmd->tpos, &height) ) ) {
+        if (dtStatusSucceed(bot->nav->query->getPolyHeight(bot->corridor.getLastPoly(), cmd->tpos, &height))) {
             cmd->tpos[1] = height;
         }
         recast2quake(cmd->tpos);
 
         cmd->havePath = true;
 
-        if (withinRadiusOfOffMeshConnection(bot, spos, bot->offMeshEnd, bot->offMeshPoly) ) {
+        if (withinRadiusOfOffMeshConnection(bot, spos, bot->offMeshEnd, bot->offMeshPoly)) {
             bot->offMesh = false;
         }
     }
@@ -293,7 +293,7 @@ float frand() {
 void BotFindRandomPoint(int botClientNum, vec3_t point) {
     qVec origin = SV_GentityNum(botClientNum)->s.origin;
 
-    if (!BotFindRandomPointInRadius(botClientNum, origin, point, 2000) ) {
+    if (!BotFindRandomPointInRadius(botClientNum, origin, point, 2000)) {
         VectorCopy(origin, point);
     }
 }
@@ -307,14 +307,14 @@ bool BotFindRandomPointInRadius(int botClientNum, const vec3_t origin, vec3_t po
 
     Bot_t* bot = &agents[botClientNum];
 
-    if (!BotFindNearestPoly(bot, rorigin, &nearPoly, nearPoint) ) {
+    if (!BotFindNearestPoly(bot, rorigin, &nearPoly, nearPoint)) {
         return false;
     }
 
     dtPolyRef randRef;
     dtStatus status = bot->nav->query->findRandomPointAroundCircle(nearPoly, rorigin, radius, &bot->nav->filter, frand, &randRef, nearPoint);
 
-    if (dtStatusFailed(status) ) {
+    if (dtStatusFailed(status)) {
         return false;
     }
 
@@ -330,7 +330,7 @@ bool BotNavTrace(int botClientNum, botTrace_t* trace, const vec3_t start, const 
     rVec spos = qVec(start);
     rVec epos = qVec(end);
 
-    memset(trace, 0, sizeof(*trace) );
+    memset(trace, 0, sizeof(*trace));
 
     Bot_t* bot = &agents[botClientNum];
 
@@ -345,7 +345,7 @@ bool BotNavTrace(int botClientNum, botTrace_t* trace, const vec3_t start, const 
     }
 
     status = bot->nav->query->raycast(startRef, spos, epos, &bot->nav->filter, &trace->frac, trace->normal, nullptr, nullptr, 0);
-    if (dtStatusFailed(status) ) {
+    if (dtStatusFailed(status)) {
         return false;
     }
 

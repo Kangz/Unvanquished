@@ -261,18 +261,18 @@ cvar_t* r_fontScale;
 
 static void AssertCvarRange(cvar_t* cv, float minVal, float maxVal, bool shouldBeIntegral) {
     if (shouldBeIntegral) {
-        if ( (int) cv->value != cv->integer) {
+        if ((int) cv->value != cv->integer) {
             ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' must be integral (%f)\n", cv->name, cv->value);
-            ri.Cvar_Set(cv->name, va("%d", cv->integer) );
+            ri.Cvar_Set(cv->name, va("%d", cv->integer));
         }
     }
 
     if (cv->value < minVal) {
         ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' out of range (%f < %f)\n", cv->name, cv->value, minVal);
-        ri.Cvar_Set(cv->name, va("%f", minVal) );
+        ri.Cvar_Set(cv->name, va("%f", minVal));
     } else if (cv->value > maxVal) {
         ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' out of range (%f > %f)\n", cv->name, cv->value, maxVal);
-        ri.Cvar_Set(cv->name, va("%f", maxVal) );
+        ri.Cvar_Set(cv->name, va("%f", maxVal));
     }
 }
 
@@ -299,7 +299,7 @@ static bool InitOpenGL() {
     if (glConfig.vidWidth == 0) {
         GLint temp;
 
-        if (!GLimp_Init() ) {
+        if (!GLimp_Init()) {
             return false;
         }
 
@@ -328,7 +328,7 @@ static bool InitOpenGL() {
         if (r_smp->integer) {
             ri.Printf(PRINT_ALL, "Trying SMP acceleration...\n");
 
-            if (GLimp_SpawnRenderThread(RB_RenderThread) ) {
+            if (GLimp_SpawnRenderThread(RB_RenderThread)) {
                 ri.Printf(PRINT_ALL, "...succeeded.\n");
                 glConfig.smpActive = true;
             } else {
@@ -420,7 +420,7 @@ typedef struct vidmode_s {
     float pixelAspect; // pixel width / height
 } vidmode_t;
 
-static const vidmode_t r_vidModes[] ={
+static const vidmode_t r_vidModes[] = {
     { " 320x240", 320, 240, 1 },
     { " 400x300", 400, 300, 1 },
     { " 512x384", 512, 384, 1 },
@@ -632,7 +632,7 @@ void R_TakeScreenshot(const char* name, ssFormat_t format) {
     screenshotCommand_t* cmd;
     int lastNumber;
 
-    cmd = (screenshotCommand_t*) R_GetCommandBuffer(sizeof(*cmd) );
+    cmd = (screenshotCommand_t*) R_GetCommandBuffer(sizeof(*cmd));
 
     if (!cmd) {
         return;
@@ -650,7 +650,7 @@ void R_TakeScreenshot(const char* name, ssFormat_t format) {
             Com_sprintf(fileName, sizeof(fileName), "screenshots/" PRODUCT_NAME_LOWER "_%04d-%02d-%02d_%02d%02d%02d_%03d.%s",
                         1900 + t.tm_year, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec, lastNumber, name);
 
-            if (!ri.FS_FileExists(fileName) ) {
+            if (!ri.FS_FileExists(fileName)) {
                 break; // file doesn't exist
             }
         }
@@ -715,7 +715,7 @@ const void* RB_TakeVideoFrameCmd(const void* data) {
 
     // RB: it is possible to we still have a videoFrameCommand_t but we already stopped
     // video recording
-    if (ri.CL_VideoRecording() ) {
+    if (ri.CL_VideoRecording()) {
         // take care of alignment issues for reading RGB images..
 
         glGetIntegerv(GL_PACK_ALIGNMENT, &packAlign);
@@ -859,7 +859,7 @@ GfxInfo_f
 ================
 */
 void GfxInfo_f() {
-    static const char fsstrings[][16] ={
+    static const char fsstrings[][16] = {
         "windowed",
         "fullscreen"
     };
@@ -909,22 +909,22 @@ void GfxInfo_f() {
     if (glConfig.driverType == GLDRV_OPENGL3) {
         int contextFlags, profile;
 
-        ri.Printf(PRINT_ALL, "%sUsing OpenGL 3.x context\n", Color::CString(Color::Green) );
+        ri.Printf(PRINT_ALL, "%sUsing OpenGL 3.x context\n", Color::CString(Color::Green));
 
         // check if we have a core-profile
         glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 
         if (profile == GL_CONTEXT_CORE_PROFILE_BIT) {
-            ri.Printf(PRINT_DEVELOPER, "%sHaving a core profile\n", Color::CString(Color::Green) );
+            ri.Printf(PRINT_DEVELOPER, "%sHaving a core profile\n", Color::CString(Color::Green));
         } else {
-            ri.Printf(PRINT_DEVELOPER, "%sHaving a compatibility profile\n", Color::CString(Color::Red) );
+            ri.Printf(PRINT_DEVELOPER, "%sHaving a compatibility profile\n", Color::CString(Color::Red));
         }
 
         // check if context is forward compatible
         glGetIntegerv(GL_CONTEXT_FLAGS, &contextFlags);
 
         if (contextFlags & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT) {
-            ri.Printf(PRINT_DEVELOPER, "%sContext is forward compatible\n", Color::CString(Color::Green) );
+            ri.Printf(PRINT_DEVELOPER, "%sContext is forward compatible\n", Color::CString(Color::Green));
         } else {
             ri.Printf(PRINT_DEVELOPER, "%sContext is NOT forward compatible\n", Color::CString(Color::Red));
         }
@@ -1280,17 +1280,17 @@ bool R_Init() {
     ri.Printf(PRINT_DEVELOPER, "----- R_Init -----\n");
 
     // clear all our internal state
-    Com_Memset(&tr, 0, sizeof(tr) );
-    Com_Memset(&backEnd, 0, sizeof(backEnd) );
-    Com_Memset(&tess, 0, sizeof(tess) );
+    Com_Memset(&tr, 0, sizeof(tr));
+    Com_Memset(&backEnd, 0, sizeof(backEnd));
+    Com_Memset(&tess, 0, sizeof(tess));
 
-    if ( (intptr_t) tess.verts & 15) {
+    if ((intptr_t) tess.verts & 15) {
         Com_DPrintf("WARNING: tess.verts not 16 byte aligned\n");
     }
 
     // init function tables
     for (i = 0; i < FUNCTABLE_SIZE; i++) {
-        tr.sinTable[i] = sin(DEG2RAD(i * 360.0f / ( (float)(FUNCTABLE_SIZE - 1) ) ) );
+        tr.sinTable[i] = sin(DEG2RAD(i * 360.0f / ((float)(FUNCTABLE_SIZE - 1))));
         tr.squareTable[i] = (i < FUNCTABLE_SIZE / 2) ? 1.0f : -1.0f;
         tr.sawToothTable[i] = (float) i / FUNCTABLE_SIZE;
         tr.inverseSawToothTable[i] = 1.0f - tr.sawToothTable[i];
@@ -1312,7 +1312,7 @@ bool R_Init() {
 
     R_Register();
 
-    if (!InitOpenGL() ) {
+    if (!InitOpenGL()) {
         return false;
     }
 
@@ -1463,7 +1463,7 @@ Q_EXPORT refexport_t* GetRefAPI(int apiVersion, refimport_t* rimp) {
 
     ri.Printf(PRINT_DEVELOPER, "GetRefAPI()\n");
 
-    Com_Memset(&re, 0, sizeof(re) );
+    Com_Memset(&re, 0, sizeof(re));
 
     if (apiVersion != REF_API_VERSION) {
         ri.Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, apiVersion);

@@ -135,11 +135,11 @@ bool G_CM_inPVS(const vec3_t p1, const vec3_t p2) {
     cluster = CM_LeafCluster(leafnum);
     area2 = CM_LeafArea(leafnum);
 
-    if (mask && (!(mask[cluster >> 3] & (1 << (cluster & 7) ) ) ) ) {
+    if (mask && (!(mask[cluster >> 3] & (1 << (cluster & 7))))) {
         return false;
     }
 
-    if (!CM_AreasConnected(area1, area2) ) {
+    if (!CM_AreasConnected(area1, area2)) {
         return false; // a door blocks sight
     }
 
@@ -168,7 +168,7 @@ bool G_CM_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2) {
     cluster = CM_LeafCluster(leafnum);
     // area2 = CM_LeafArea(leafnum); //Doesn't modify anything.
 
-    if (mask && (!(mask[cluster >> 3] & (1 << (cluster & 7) ) ) ) ) {
+    if (mask && (!(mask[cluster >> 3] & (1 << (cluster & 7))))) {
         return false;
     }
 
@@ -311,8 +311,8 @@ void G_CM_ClearWorld() {
     clipHandle_t h;
     vec3_t mins, maxs;
 
-    memset(sv_worldSectors, 0, sizeof(sv_worldSectors) );
-    memset(wentities, 0, sizeof(wentities) );
+    memset(sv_worldSectors, 0, sizeof(sv_worldSectors));
+    memset(wentities, 0, sizeof(wentities));
     sv_numworldSectors = 0;
 
     // get world map bounds
@@ -386,8 +386,8 @@ void G_CM_LinkEntity(gentity_t* gEnt) {
         gEnt->s.solid = SOLID_BMODEL; // a solid_box will never create this value
 
         // Gordon: for the origin only bmodel checks
-        gEnt->r.originCluster = CM_LeafCluster(CM_PointLeafnum(gEnt->r.currentOrigin) );
-    } else if (gEnt->r.contents & (CONTENTS_SOLID | CONTENTS_BODY) ) {
+        gEnt->r.originCluster = CM_LeafCluster(CM_PointLeafnum(gEnt->r.currentOrigin));
+    } else if (gEnt->r.contents & (CONTENTS_SOLID | CONTENTS_BODY)) {
         // assume that x/y are equal and symetric
         i = gEnt->r.maxs[0];
 
@@ -431,7 +431,7 @@ void G_CM_LinkEntity(gentity_t* gEnt) {
     angles = gEnt->r.currentAngles;
 
     // set the abs box
-    if (gEnt->r.bmodel && (angles[0] || angles[1] || angles[2]) ) {
+    if (gEnt->r.bmodel && (angles[0] || angles[1] || angles[2])) {
         // expand for rotation
         float max;
         int i;
@@ -650,11 +650,11 @@ void G_CM_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, co
 
     touch = &g_entities[entityNum];
 
-    memset(trace, 0, sizeof(trace_t) );
+    memset(trace, 0, sizeof(trace_t));
 
     // if it doesn't have any brushes of a type we
     // are looking for, ignore it
-    if (!(contentmask & touch->r.contents) ) {
+    if (!(contentmask & touch->r.contents)) {
         trace->fraction = 1.0;
         return;
     }
@@ -731,7 +731,7 @@ void G_CM_ClipMoveToEntities(moveclip_t* clip) {
 
         // if it doesn't have any brushes of a type we
         // are looking for, ignore it
-        if (!(clip->contentmask & touch->r.contents) ) {
+        if (!(clip->contentmask & touch->r.contents)) {
             continue;
         }
 
@@ -799,7 +799,7 @@ void G_CM_Trace(trace_t* results, const vec3_t start, const vec3_t mins2, const 
     VectorCopy(mins2, mins);
     VectorCopy(maxs2, maxs);
 
-    memset(&clip, 0, sizeof(moveclip_t) );
+    memset(&clip, 0, sizeof(moveclip_t));
 
     // clip to world
     // -------------

@@ -89,7 +89,7 @@ void Tess_CheckOverflow(int verts, int indexes) {
         // a call to va() every frame!
         GLimp_LogComment(va
                              ("--- Tess_CheckOverflow(%i + %i vertices, %i + %i triangles ) ---\n", tess.numVertexes, verts,
-                             (tess.numIndexes / 3), indexes) );
+                             (tess.numIndexes / 3), indexes));
     }
 
     Tess_End();
@@ -119,7 +119,7 @@ static void Tess_SurfaceVertsAndTris(const srfVert_t* verts, const srfTriangle_t
 
     Tess_CheckOverflow(numVerts, numIndexes);
 
-    for (i = 0; i < numIndexes; i+=3, tri++) {
+    for (i = 0; i < numIndexes; i += 3, tri++) {
         tess.indexes[tess.numIndexes + i + 0] = tess.numVertexes + tri->indexes[0];
         tess.indexes[tess.numIndexes + i + 1] = tess.numVertexes + tri->indexes[1];
         tess.indexes[tess.numIndexes + i + 2] = tess.numVertexes + tri->indexes[2];
@@ -141,7 +141,7 @@ static void Tess_SurfaceVertsAndTris(const srfVert_t* verts, const srfTriangle_t
     }
 
     tess.numVertexes += numVerts;
-    tess.attribsSet =  ATTR_POSITION | ATTR_TEXCOORD | ATTR_COLOR | ATTR_QTANGENT;
+    tess.attribsSet = ATTR_POSITION | ATTR_TEXCOORD | ATTR_COLOR | ATTR_QTANGENT;
 }
 
 static bool Tess_SurfaceVBO(VBO_t* vbo, IBO_t* ibo, int numIndexes, int firstIndex) {
@@ -159,7 +159,7 @@ static bool Tess_SurfaceVBO(VBO_t* vbo, IBO_t* ibo, int numIndexes, int firstInd
     bool mergeBack = false;
     bool mergeFront = false;
 
-    glIndex_t* firstIndexOffset = (glIndex_t*) BUFFER_OFFSET(firstIndex * sizeof(glIndex_t) );
+    glIndex_t* firstIndexOffset = (glIndex_t*) BUFFER_OFFSET(firstIndex * sizeof(glIndex_t));
 
     if (tess.multiDrawPrimitives > 0) {
         int lastPrimitive = tess.multiDrawPrimitives - 1;
@@ -382,8 +382,8 @@ void Tess_AddSprite(const vec3_t center, const Color::Color32Bit color, float ra
         vec4_t texCoord;
         vec4_t orientation;
 
-        Vector4Set(texCoord, 0.5f * (i & 2), 0.5f * ( (i + 1) & 2),
-                   0.5f * (i & 2), 0.5f * ( (i + 1) & 2) );
+        Vector4Set(texCoord, 0.5f * (i & 2), 0.5f * ((i + 1) & 2),
+                   0.5f * (i & 2), 0.5f * ((i + 1) & 2));
 
         VectorCopy(center, tess.verts[ndx + i].xyz);
         tess.verts[ndx + i].color = color;
@@ -647,7 +647,7 @@ static void Tess_SurfacePolychain(srfPoly_t* p) {
 
     GLimp_LogComment("--- Tess_SurfacePolychain ---\n");
 
-    Tess_CheckOverflow(p->numVerts, 3 * (p->numVerts - 2) );
+    Tess_CheckOverflow(p->numVerts, 3 * (p->numVerts - 2));
 
     // fan triangles into the tess array
     numVertexes = 0;
@@ -686,9 +686,9 @@ static void Tess_SurfacePolychain(srfPoly_t* p) {
         vec3_t normal, * normals;
         glIndex_t* indices;
 
-        tangents = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
-        binormals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
-        normals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
+        tangents = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
+        binormals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
+        normals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
 
         for (i = 0; i < numVertexes; i++) {
             VectorClear(tangents[i]);
@@ -781,7 +781,7 @@ void Tess_SurfaceDecal(srfDecal_t* srf) {
 
     GLimp_LogComment("--- Tess_SurfaceDecal ---\n");
 
-    Tess_CheckOverflow(srf->numVerts, 3 * (srf->numVerts - 2) );
+    Tess_CheckOverflow(srf->numVerts, 3 * (srf->numVerts - 2));
 
     // fan triangles into the tess array
     for (i = 0; i < srf->numVerts; i++) {
@@ -813,7 +813,7 @@ Tess_SurfaceFace
 static void Tess_SurfaceFace(srfSurfaceFace_t* srf) {
     GLimp_LogComment("--- Tess_SurfaceFace ---\n");
 
-    if (!r_vboFaces->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3) ) {
+    if (!r_vboFaces->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3)) {
         Tess_SurfaceVertsAndTris(srf->verts, srf->triangles, srf->numVerts, srf->numTriangles);
     }
 }
@@ -826,7 +826,7 @@ Tess_SurfaceGrid
 static void Tess_SurfaceGrid(srfGridMesh_t* srf) {
     GLimp_LogComment("--- Tess_SurfaceGrid ---\n");
 
-    if (!r_vboCurves->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3) ) {
+    if (!r_vboCurves->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3)) {
         Tess_SurfaceVertsAndTris(srf->verts, srf->triangles, srf->numVerts, srf->numTriangles);
     }
 }
@@ -839,7 +839,7 @@ Tess_SurfaceTriangles
 static void Tess_SurfaceTriangles(srfTriangles_t* srf) {
     GLimp_LogComment("--- Tess_SurfaceTriangles ---\n");
 
-    if (!r_vboTriangles->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3) ) {
+    if (!r_vboTriangles->integer || !Tess_SurfaceVBO(srf->vbo, srf->ibo, srf->numTriangles * 3, srf->firstTriangle * 3)) {
         Tess_SurfaceVertsAndTris(srf->verts, srf->triangles, srf->numVerts, srf->numTriangles);
     }
 }
@@ -926,9 +926,9 @@ static void Tess_SurfaceMDV(mdvSurface_t* srf) {
 
         tess.attribsSet |= ATTR_QTANGENT;
 
-        tangents = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
-        binormals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
-        normals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t) );
+        tangents = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
+        binormals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
+        normals = (vec3_t*)ri.Hunk_AllocateTempMemory(numVertexes * sizeof(vec3_t));
 
         for (i = 0; i < numVertexes; i++) {
             VectorClear(tangents[i]);
@@ -1143,7 +1143,7 @@ void Tess_SurfaceIQM(srfIQModel_t* surf) {
 
     if (surf->vbo && surf->ibo) {
         if (model->num_joints > 0) {
-            Com_Memcpy(tess.bones, bones, model->num_joints * sizeof(transform_t) );
+            Com_Memcpy(tess.bones, bones, model->num_joints * sizeof(transform_t));
             tess.numBones = model->num_joints;
         } else {
             TransInitScale(model->internalScale * backEnd.currentEntity->e.skeleton.scale, &tess.bones[0]);
@@ -1233,7 +1233,7 @@ void Tess_SurfaceIQM(srfIQModel_t* surf) {
         }
     }
 
-    tess.numIndexes  += 3 * surf->num_triangles;
+    tess.numIndexes += 3 * surf->num_triangles;
     tess.numVertexes += surf->num_vertexes;
 }
 
@@ -1284,7 +1284,7 @@ static void Tess_SurfaceFlare(srfFlare_t* surf) {
         return;
     }
 
-    RB_AddFlare( (void*) surf, tess.fogNum, origin, surf->color, surf->normal);
+    RB_AddFlare((void*) surf, tess.fogNum, origin, surf->color, surf->normal);
 }
 
 /*

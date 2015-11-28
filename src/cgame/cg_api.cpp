@@ -412,8 +412,8 @@ void trap_R_AddPolysToScene(qhandle_t hShader, int numVerts, const polyVert_t* v
 void trap_R_Add2dPolysIndexedToScene(polyVert_t* polys, int numPolys, int* indexes, int numIndexes, int trans_x, int trans_y, qhandle_t shader) {
     std::vector<polyVert_t> mypolys(numPolys);
     std::vector<int> myindices(numIndexes);
-    memcpy(mypolys.data(), polys, numPolys * sizeof(polyVert_t) );
-    memcpy(myindices.data(), indexes, numIndexes * sizeof(int) );
+    memcpy(mypolys.data(), polys, numPolys * sizeof(polyVert_t));
+    memcpy(myindices.data(), indexes, numIndexes * sizeof(int));
     cmdBuffer.SendMsg<Render::Add2dPolysIndexedMsg>(mypolys, numPolys, myindices, numIndexes, trans_x, trans_y, shader);
 }
 
@@ -584,7 +584,7 @@ void trap_R_GetTextureSize(qhandle_t handle, int* x, int* y) {
 qhandle_t trap_R_GenerateTexture(const byte* data, int x, int y) {
     qhandle_t handle;
     std::vector<byte> mydata(x * y * 4);
-    memcpy(mydata.data(), data, x * y * 4 * sizeof(byte) );
+    memcpy(mydata.data(), data, x * y * 4 * sizeof(byte));
     VM::SendMsg<Render::GenerateTextureMsg>(mydata, x, y, handle);
     return handle;
 }

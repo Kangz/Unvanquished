@@ -31,10 +31,10 @@ along with Unvanquished. If not, see <http://www.gnu.org/licenses/>.
  * @return Efficiency loss as negative value.
  */
 static float RGSPredictInterferenceLoss(Entity& miner, vec3_t newMinerOrigin) {
-    float distance      = Distance(miner.oldEnt->s.origin, newMinerOrigin);
-    float currentRate   = miner.Get<MiningComponent>()->MineRate();
+    float distance = Distance(miner.oldEnt->s.origin, newMinerOrigin);
+    float currentRate = miner.Get<MiningComponent>()->MineRate();
     float predictedRate = currentRate * MiningComponent::InterferenceMod(distance);
-    float rateLoss      = predictedRate - currentRate;
+    float rateLoss = predictedRate - currentRate;
 
     return rateLoss / level.mineRate;
 }
@@ -134,7 +134,7 @@ void G_MineBuildPoints() {
         }
 
         if (mainStructure && (deltaEff = minEff - level.team[TEAM_HUMANS].mineEfficiency) > 0) {
-            level.team[team].mineEfficiency       += deltaEff;
+            level.team[team].mineEfficiency += deltaEff;
             level.team[team].mainStructAcquiredBP += deltaEff * mineMod;
 
             // Copy acquired build points to the current main structure's ResourceStorageComponent.
@@ -181,7 +181,7 @@ void G_MineBuildPoints() {
  * @brief Get the number of build points for a team.
  */
 int G_GetBuildPointsInt(team_t team) {
-    if (G_IsPlayableTeam(team) ) {
+    if (G_IsPlayableTeam(team)) {
         return (int)level.team[team].buildPoints;
     } else {
         return 0;
@@ -199,7 +199,7 @@ int G_GetMarkedBuildPointsInt(team_t team) {
 
     for (i = MAX_CLIENTS, ent = g_entities + i; i < level.num_entities; i++, ent++) {
         if (!ent->inuse || ent->s.eType != ET_BUILDABLE || G_Dead(ent) ||
-            ent->buildableTeam != team || !ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction() ) {
+            ent->buildableTeam != team || !ent->entity->Get<BuildableComponent>()->MarkedForDeconstruction()) {
             continue;
         }
 
@@ -217,7 +217,7 @@ int G_GetMarkedBuildPointsInt(team_t team) {
 bool G_CanAffordBuildPoints(team_t team, float amount) {
     float* bp;
 
-    if (G_IsPlayableTeam(team) ) {
+    if (G_IsPlayableTeam(team)) {
         bp = &level.team[team].buildPoints;
     } else {
         return false;
@@ -239,7 +239,7 @@ void G_GetBuildableResourceValue(int* teamValue) {
     team_t team;
     const buildableAttributes_t* attr;
 
-    for (team = TEAM_NONE; (team = G_IterateTeams(team) ); ) {
+    for (team = TEAM_NONE; (team = G_IterateTeams(team)); ) {
         teamValue[team] = 0;
     }
 
@@ -260,14 +260,14 @@ void G_GetBuildableResourceValue(int* teamValue) {
 static void ModifyBuildPoints(team_t team, float amount, bool acquired) {
     float* availBP, * acquiredBP;
 
-    if (G_IsPlayableTeam(team) ) {
-        availBP    = &level.team[team].buildPoints;
+    if (G_IsPlayableTeam(team)) {
+        availBP = &level.team[team].buildPoints;
         acquiredBP = &level.team[team].acquiredBuildPoints;
     } else {
         return;
     }
 
-    *availBP    = acquired ? *availBP : std::max(*availBP + amount, 0.0f);
+    *availBP = acquired ? *availBP : std::max(*availBP + amount, 0.0f);
     *acquiredBP = acquired ? std::max(*acquiredBP + amount, 0.0f) : *acquiredBP;
 }
 

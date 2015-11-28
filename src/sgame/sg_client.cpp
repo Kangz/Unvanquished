@@ -112,8 +112,8 @@ gentity_t* G_SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, ve
 
     numSpots = 0;
 
-    while ( (spot = G_IterateEntitiesOfClass(spot, S_POS_PLAYER_SPAWN) ) != nullptr) {
-        if (SpotWouldTelefrag(spot) ) {
+    while ((spot = G_IterateEntitiesOfClass(spot, S_POS_PLAYER_SPAWN)) != nullptr) {
+        if (SpotWouldTelefrag(spot)) {
             continue;
         }
 
@@ -185,12 +185,12 @@ static gentity_t* G_SelectSpawnBuildable(vec3_t preference, buildable_t buildabl
     gentity_t* search = nullptr;
     gentity_t* spot = nullptr;
 
-    while ( (search = G_IterateEntitiesOfClass(search, BG_Buildable(buildable)->entityName) ) != nullptr) {
+    while ((search = G_IterateEntitiesOfClass(search, BG_Buildable(buildable)->entityName)) != nullptr) {
         if (!search->spawned) {
             continue;
         }
 
-        if (G_Dead(search) ) {
+        if (G_Dead(search)) {
             continue;
         }
 
@@ -208,7 +208,7 @@ static gentity_t* G_SelectSpawnBuildable(vec3_t preference, buildable_t buildabl
         }
 
         if (!spot || DistanceSquared(preference, search->s.origin) <
-            DistanceSquared(preference, spot->s.origin) ) {
+            DistanceSquared(preference, spot->s.origin)) {
             spot = search;
         }
     }
@@ -491,8 +491,8 @@ void respawn(gentity_t* ent) {
     for (i = 0; i < level.maxclients; i++) {
         if (level.clients[i].sess.spectatorState == SPECTATOR_FOLLOW &&
             level.clients[i].sess.spectatorClient == ent - g_entities) {
-            if (!(level.clients[i].pers.stickySpec) ) {
-                if (!G_FollowNewClient(&g_entities[i], 1) ) {
+            if (!(level.clients[i].pers.stickySpec)) {
+                if (!G_FollowNewClient(&g_entities[i], 1)) {
                     G_StopFollowing(&g_entities[i]);
                 }
             } else {
@@ -521,10 +521,10 @@ static bool G_IsEmoticon(const char* s, bool* escaped) {
 
     i = 0;
 
-    while (*p && i < (MAX_EMOTICON_NAME_LEN - 1) ) {
+    while (*p && i < (MAX_EMOTICON_NAME_LEN - 1)) {
         if (*p == ']') {
             for (j = 0; j < level.emoticonCount; j++) {
-                if (!Q_stricmp(emoticon, level.emoticons[j].name) ) {
+                if (!Q_stricmp(emoticon, level.emoticons[j].name)) {
                     *escaped = escape;
                     return true;
                 }
@@ -550,16 +550,16 @@ bool G_IsUnnamed(const char* name) {
     char testName[MAX_NAME_LENGTH];
     int length;
 
-    Color::StripColors( (char*)name, testName, sizeof(testName) );
+    Color::StripColors((char*)name, testName, sizeof(testName));
 
-    if (!Q_stricmp(testName, UNNAMED_PLAYER) ) {
+    if (!Q_stricmp(testName, UNNAMED_PLAYER)) {
         return true;
     }
 
     length = strlen(g_unnamedNamePrefix.string);
 
     if (g_unnamedNumbering.integer && length &&
-        !Q_strnicmp(testName, g_unnamedNamePrefix.string, length) ) {
+        !Q_strnicmp(testName, g_unnamedNamePrefix.string, length)) {
         return true;
     }
 
@@ -607,7 +607,7 @@ static const char* G_UnnamedClientName(gclient_t* client) {
         if (g_unnamedNumbering.integer > 0) {
             // server op may have reset this, so check for numbers in use
             number = G_FindFreeUnnamed(g_unnamedNumbering.integer);
-            trap_Cvar_Set("g_unnamedNumbering", va("%d", (number + 1 < 0 ? 1 : number + 1) ) );
+            trap_Cvar_Set("g_unnamedNumbering", va("%d", (number + 1 < 0 ? 1 : number + 1)));
         } else {
             // checking for numbers in use here is probably overkill...
             // however, belt and braces - could be a Long Game
@@ -637,7 +637,7 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
     bool hasletter = false;
     int spaces = 0;
 
-    for (const auto& token : Color::Parser(in) ) {
+    for (const auto& token : Color::Parser(in)) {
         if (out_string.size() + token.Size() > outSize) {
             break;
         }
@@ -646,7 +646,7 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
             int cp = Q_UTF8_CodePoint(token.Begin());
 
             // don't allow leading spaces
-            if (!has_visible_characters && std::isspace(cp) ) {
+            if (!has_visible_characters && std::isspace(cp)) {
                 continue;
             }
 
@@ -658,12 +658,12 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
 
             bool escaped_emote = false;
             // single trailing ^ will mess up some things
-            if (cp == Color::Constants::ESCAPE && !*token.End() ) {
+            if (cp == Color::Constants::ESCAPE && !*token.End()) {
                 if (out_string.size() + 2 > outSize) {
                     break;
                 }
                 out_string += Color::Constants::ESCAPE;
-            } else if (!g_emoticonsAllowedInNames.integer && G_IsEmoticon(in, &escaped_emote) ) {
+            } else if (!g_emoticonsAllowedInNames.integer && G_IsEmoticon(in, &escaped_emote)) {
                 if (out_string.size() + 2 + token.Size() > outSize) {
                     break;
                 }
@@ -674,12 +674,12 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
                 }
             }
 
-            if (Q_Unicode_IsAlphaOrIdeo(cp) ) {
+            if (Q_Unicode_IsAlphaOrIdeo(cp)) {
                 hasletter = true;
             }
 
             // don't allow too many consecutive spaces
-            if (std::isspace(cp) ) {
+            if (std::isspace(cp)) {
                 spaces++;
                 if (spaces > 3) {
                     continue;
@@ -698,14 +698,14 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
     bool invalid = false;
 
     // don't allow names beginning with S_SKIPNOTIFY because it messes up /ignore-related code
-    if (!out_string.compare(0, 12, S_SKIPNOTIFY) ) {
+    if (!out_string.compare(0, 12, S_SKIPNOTIFY)) {
         invalid = true;
     }
 
     // don't allow comment-beginning strings because it messes up various parsers
     if (out_string.find("//") != std::string::npos ||
         out_string.find("/*") != std::string::npos) {
-        out_string.erase(std::remove(out_string.begin(), out_string.end(), '/') );
+        out_string.erase(std::remove(out_string.begin(), out_string.end(), '/'));
     }
 
     // don't allow empty names
@@ -713,10 +713,10 @@ static void G_ClientCleanName(const char* in, char* out, int outSize, gclient_t*
         invalid = true;
     }
     // don't allow names beginning with digits
-    else if (std::isdigit(out_string[0]) ) {
+    else if (std::isdigit(out_string[0])) {
         out_string.erase(out_string.begin(),
                          std::find_if_not(out_string.begin(), out_string.end(),
-                                          (int (*)(int)) std::isdigit) );
+                                          (int (*)(int)) std::isdigit));
     }
 
     // if something made the name bad, put them back to UnnamedPlayer
@@ -753,10 +753,10 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     ent = g_entities + clientNum;
     client = ent->client;
 
-    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 
     // check for malformed or illegal info strings
-    if (!Info_Validate(userinfo) ) {
+    if (!Info_Validate(userinfo)) {
         trap_SendServerCommand(ent - g_entities,
                                "disconnect \"illegal or malformed userinfo\n\"");
         trap_DropClient(ent - g_entities,
@@ -775,41 +775,41 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     client->pers.stickySpec = atoi(s) != 0;
 
     // set name
-    Q_strncpyz(oldname, client->pers.netname, sizeof(oldname) );
+    Q_strncpyz(oldname, client->pers.netname, sizeof(oldname));
     s = Info_ValueForKey(userinfo, "name");
     G_ClientCleanName(s, newname, sizeof(newname), client);
 
-    if (strcmp(oldname, newname) ) {
+    if (strcmp(oldname, newname)) {
         if (!forceName && client->pers.namelog->nameChangeTime &&
             level.time - client->pers.namelog->nameChangeTime <=
             g_minNameChangePeriod.value * 1000) {
             trap_SendServerCommand(ent - g_entities, va(
-                                       "print_tr %s %d", QQ(N_("Name change spam protection (g_minNameChangePeriod = $1$)\n") ),
-                                       g_minNameChangePeriod.integer) );
+                                       "print_tr %s %d", QQ(N_("Name change spam protection (g_minNameChangePeriod = $1$)\n")),
+                                       g_minNameChangePeriod.integer));
             revertName = true;
         } else if (!forceName && g_maxNameChanges.integer > 0 &&
                    client->pers.namelog->nameChanges >= g_maxNameChanges.integer) {
             trap_SendServerCommand(ent - g_entities, va(
-                                       "print_tr %s %d", QQ(N_("Maximum name changes reached (g_maxNameChanges = $1$)\n") ),
-                                       g_maxNameChanges.integer) );
+                                       "print_tr %s %d", QQ(N_("Maximum name changes reached (g_maxNameChanges = $1$)\n")),
+                                       g_maxNameChanges.integer));
             revertName = true;
         } else if (!forceName && client->pers.namelog->muted) {
             trap_SendServerCommand(ent - g_entities,
-                                   va("print_tr %s", QQ(N_("You cannot change your name while you are muted\n") ) ) );
+                                   va("print_tr %s", QQ(N_("You cannot change your name while you are muted\n"))));
             revertName = true;
-        } else if (!G_admin_name_check(ent, newname, err, sizeof(err) ) ) {
-            trap_SendServerCommand(ent - g_entities, va("print_tr %s %s %s", QQ("$1t$ $2$\n"), Quote(err), Quote(newname) ) );
+        } else if (!G_admin_name_check(ent, newname, err, sizeof(err))) {
+            trap_SendServerCommand(ent - g_entities, va("print_tr %s %s %s", QQ("$1t$ $2$\n"), Quote(err), Quote(newname)));
             revertName = true;
         }
 
         if (revertName) {
             Q_strncpyz(client->pers.netname, *oldname ? oldname : G_UnnamedClientName(client),
-                       sizeof(client->pers.netname) );
+                       sizeof(client->pers.netname));
         } else {
-            if (G_IsUnnamed(newname) ) {
-                Q_strncpyz(client->pers.netname, G_UnnamedClientName(client), sizeof(client->pers.netname) );
+            if (G_IsUnnamed(newname)) {
+                Q_strncpyz(client->pers.netname, G_UnnamedClientName(client), sizeof(client->pers.netname));
             } else {
-                Q_strncpyz(client->pers.netname, newname, sizeof(client->pers.netname) );
+                Q_strncpyz(client->pers.netname, newname, sizeof(client->pers.netname));
             }
 
             if (!forceName && client->pers.connected == CON_CONNECTED) {
@@ -849,12 +849,12 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
         }
     }
 
-    Q_strncpyz(model, buffer, sizeof(model) );
+    Q_strncpyz(model, buffer, sizeof(model));
 
     // wallwalk follow
     s = Info_ValueForKey(userinfo, "cg_wwFollow");
 
-    if (atoi(s) ) {
+    if (atoi(s)) {
         client->ps.persistant[PERS_STATE] |= PS_WALLCLIMBINGFOLLOW;
     } else {
         client->ps.persistant[PERS_STATE] &= ~PS_WALLCLIMBINGFOLLOW;
@@ -863,7 +863,7 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     // wallwalk toggle
     s = Info_ValueForKey(userinfo, "cg_wwToggle");
 
-    if (atoi(s) ) {
+    if (atoi(s)) {
         client->ps.persistant[PERS_STATE] |= PS_WALLCLIMBINGTOGGLE;
     } else {
         client->ps.persistant[PERS_STATE] &= ~PS_WALLCLIMBINGTOGGLE;
@@ -872,7 +872,7 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     // always sprint
     s = Info_ValueForKey(userinfo, "cg_sprintToggle");
 
-    if (atoi(s) ) {
+    if (atoi(s)) {
         client->ps.persistant[PERS_STATE] |= PS_SPRINTTOGGLE;
     } else {
         client->ps.persistant[PERS_STATE] &= ~PS_SPRINTTOGGLE;
@@ -890,7 +890,7 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     // disable blueprint errors
     s = Info_ValueForKey(userinfo, "cg_disableBlueprintErrors");
 
-    if (atoi(s) ) {
+    if (atoi(s)) {
         client->pers.disableBlueprintErrors = true;
     } else {
         client->pers.disableBlueprintErrors = false;
@@ -917,7 +917,7 @@ const char* ClientUserinfoChanged(int clientNum, bool forceName) {
     }
 
     Q_strncpyz(client->pers.voice, Info_ValueForKey(userinfo, "voice"),
-               sizeof(client->pers.voice) );
+               sizeof(client->pers.voice));
 
     // send over a subset of the userinfo keys so other clients can
     // print scoreboards, display models, and play custom sounds
@@ -975,26 +975,26 @@ const char* ClientConnect(int clientNum, bool firstTime) {
     }
 
     ent->client = client;
-    memset(client, 0, sizeof(*client) );
+    memset(client, 0, sizeof(*client));
 
-    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 
     value = Info_ValueForKey(userinfo, "ip");
 
     // check for local client
-    if (!strcmp(value, "localhost") ) {
+    if (!strcmp(value, "localhost")) {
         client->pers.localClient = true;
     }
 
     G_AddressParse(value, &client->pers.ip);
 
-    trap_GetPlayerPubkey(clientNum, pubkey, sizeof(pubkey) );
+    trap_GetPlayerPubkey(clientNum, pubkey, sizeof(pubkey));
 
     if (strlen(pubkey) != RSA_STRING_LENGTH - 1) {
         return "Invalid pubkey key";
     }
 
-    trap_GenFingerprint(pubkey, sizeof(pubkey), client->pers.guid, sizeof(client->pers.guid) );
+    trap_GenFingerprint(pubkey, sizeof(pubkey), client->pers.guid, sizeof(client->pers.guid));
     client->pers.admin = G_admin_admin(client->pers.guid);
 
     client->pers.pubkey_authenticated = false;
@@ -1004,7 +1004,7 @@ const char* ClientConnect(int clientNum, bool firstTime) {
     }
 
     // check for admin ban
-    if (G_admin_ban_check(ent, reason, sizeof(reason) ) ) {
+    if (G_admin_ban_check(ent, reason, sizeof(reason))) {
         return va("%s", reason); // reason is local
     }
 
@@ -1018,7 +1018,7 @@ const char* ClientConnect(int clientNum, bool firstTime) {
 
     // if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
     if (ent->inuse) {
-        G_LogPrintf("Forcing disconnect on active client: %i\n", (int)(ent - g_entities) );
+        G_LogPrintf("Forcing disconnect on active client: %i\n", (int)(ent - g_entities));
         // so lets just fix up anything that should happen on a disconnect
         ClientDisconnect(ent-g_entities);
     }
@@ -1028,8 +1028,8 @@ const char* ClientConnect(int clientNum, bool firstTime) {
             continue;
         }
 
-        if (!(g_entities[i].r.svFlags & SVF_BOT) && !Q_stricmp(client->pers.guid, level.clients[i].pers.guid) ) {
-            if (!G_ClientIsLagging(level.clients + i) ) {
+        if (!(g_entities[i].r.svFlags & SVF_BOT) && !Q_stricmp(client->pers.guid, level.clients[i].pers.guid)) {
+            if (!G_ClientIsLagging(level.clients + i)) {
                 trap_SendServerCommand(i, "cp \"Your GUID is not secure\"");
                 return "Duplicate GUID";
             }
@@ -1061,18 +1061,18 @@ const char* ClientConnect(int clientNum, bool firstTime) {
                 client->pers.netname);
 
     country = Info_ValueForKey(userinfo, "geoip");
-    Q_strncpyz(client->pers.country, country, sizeof(client->pers.country) );
+    Q_strncpyz(client->pers.country, country, sizeof(client->pers.country));
 
     G_SendClientPmoveParams(clientNum);
 
     // don't do the "xxx connected" messages if they were caried over from previous level
     if (firstTime) {
         if (g_geoip.integer && country && *country) {
-            trap_SendServerCommand(-1, va("print_tr %s %s %s", QQ(N_("$1$^7 connected from $2$\n") ),
-                                          Quote(client->pers.netname), Quote(country) ) );
+            trap_SendServerCommand(-1, va("print_tr %s %s %s", QQ(N_("$1$^7 connected from $2$\n")),
+                                          Quote(client->pers.netname), Quote(country)));
         } else {
-            trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 connected\n") ),
-                                          Quote(client->pers.netname) ) );
+            trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 connected\n")),
+                                          Quote(client->pers.netname)));
         }
     }
 
@@ -1106,14 +1106,14 @@ const char* ClientBotConnect(int clientNum, bool firstTime, team_t team) {
     client = &level.clients[clientNum];
 
     ent->client = client;
-    memset(client, 0, sizeof(*client) );
+    memset(client, 0, sizeof(*client));
 
-    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 
     client->pers.localClient = true;
     G_AddressParse("localhost", &client->pers.ip);
 
-    Q_strncpyz(client->pers.guid, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", sizeof(client->pers.guid) );
+    Q_strncpyz(client->pers.guid, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", sizeof(client->pers.guid));
     client->pers.admin = nullptr;
     client->pers.pubkey_authenticated = true;
     client->pers.connected = CON_CONNECTING;
@@ -1147,8 +1147,8 @@ const char* ClientBotConnect(int clientNum, bool firstTime, team_t team) {
 
     // don't do the "xxx connected" messages if they were caried over from previous level
     if (firstTime) {
-        trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 connected\n") ),
-                                      Quote(client->pers.netname) ) );
+        trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 connected\n")),
+                                      Quote(client->pers.netname)));
     }
 
     // count current clients and rank for scoreboard
@@ -1176,7 +1176,7 @@ void ClientAdminChallenge(int clientNum) {
     g_admin_admin_t* admin = client->pers.admin;
 
     if (!client->pers.pubkey_authenticated && admin && admin->pubkey[0] && (level.time - client->pers.pubkey_challengedAt) >= 6000) {
-        trap_SendServerCommand(clientNum, va("pubkey_decrypt %s", admin->msg2) );
+        trap_SendServerCommand(clientNum, va("pubkey_decrypt %s", admin->msg2));
         client->pers.pubkey_challengedAt = level.time ^ (5 * clientNum); // a small amount of jitter
 
         // copy the decrypted message because generating a new message will overwrite it
@@ -1199,7 +1199,7 @@ void ClientBegin(int clientNum) {
     int flags;
     char startMsg[MAX_STRING_CHARS];
 
-    ent    = g_entities + clientNum;
+    ent = g_entities + clientNum;
     client = level.clients + clientNum;
 
     // ignore if client already entered the game
@@ -1231,19 +1231,19 @@ void ClientBegin(int clientNum) {
     // so the viewpoint doesn't interpolate through the
     // world to the new position
     flags = client->ps.eFlags;
-    memset(&client->ps, 0, sizeof(client->ps) );
-    memset(&client->pmext, 0, sizeof(client->pmext) );
+    memset(&client->ps, 0, sizeof(client->ps));
+    memset(&client->pmext, 0, sizeof(client->pmext));
     client->ps.eFlags = flags;
 
     // locate ent at a spawn point
     ClientSpawn(ent, nullptr, nullptr, nullptr);
 
-    trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 entered the game\n") ), Quote(client->pers.netname) ) );
+    trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 entered the game\n")), Quote(client->pers.netname)));
 
-    trap_Cvar_VariableStringBuffer("g_mapStartupMessage", startMsg, sizeof(startMsg) );
+    trap_Cvar_VariableStringBuffer("g_mapStartupMessage", startMsg, sizeof(startMsg));
 
     if (*startMsg) {
-        trap_SendServerCommand(ent - g_entities, va("cpd %d %s", g_mapStartupMessageDelay.integer, Quote(startMsg) ) );
+        trap_SendServerCommand(ent - g_entities, va("cpd %d %s", g_mapStartupMessageDelay.integer, Quote(startMsg)));
     }
 
     G_namelog_restore(client);
@@ -1489,7 +1489,7 @@ void ClientSpawn(gentity_t* ent, gentity_t* spawn, const vec3_t origin, const ve
     }
 
     eventSequence = client->ps.eventSequence;
-    memset(client, 0, sizeof(*client) );
+    memset(client, 0, sizeof(*client));
 
     client->pers = saved;
     client->sess = savedSess;
@@ -1509,7 +1509,7 @@ void ClientSpawn(gentity_t* ent, gentity_t* spawn, const vec3_t origin, const ve
 
     client->airOutTime = level.time + 12000;
 
-    trap_GetUserinfo(index, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(index, userinfo, sizeof(userinfo));
     client->ps.eFlags = flags;
 
     // Com_Printf( "ent->client->pers->pclass = %i\n", ent->client->pers.classSelection );
@@ -1561,7 +1561,7 @@ void ClientSpawn(gentity_t* ent, gentity_t* spawn, const vec3_t origin, const ve
 
     // TODO: Check whether stats can be cleared at once instead of per field
     client->ps.stats[STAT_STAMINA] = STAMINA_MAX;
-    client->ps.stats[STAT_FUEL]    = JETPACK_FUEL_MAX;
+    client->ps.stats[STAT_FUEL] = JETPACK_FUEL_MAX;
     client->ps.stats[STAT_CLASS] = ent->client->pers.classSelection;
     client->ps.stats[STAT_BUILDABLE] = BA_NONE;
     client->ps.stats[STAT_PREDICTION] = 0;
@@ -1585,7 +1585,7 @@ void ClientSpawn(gentity_t* ent, gentity_t* spawn, const vec3_t origin, const ve
         client->pers.team == TEAM_ALIENS) {
         if (ent == spawn) {
             // evolution particle system
-            G_AddPredictableEvent(ent, EV_ALIEN_EVOLVE, DirToByte(up) );
+            G_AddPredictableEvent(ent, EV_ALIEN_EVOLVE, DirToByte(up));
         } else {
             spawn_angles[YAW] += 180.0f;
             AngleNormalize360(spawn_angles[YAW]);
@@ -1652,7 +1652,7 @@ void ClientSpawn(gentity_t* ent, gentity_t* spawn, const vec3_t origin, const ve
         client->ps.weapon = 1;
 
         for (i = WP_NUM_WEAPONS - 1; i > 0; i--) {
-            if (BG_InventoryContainsWeapon(i, client->ps.stats) ) {
+            if (BG_InventoryContainsWeapon(i, client->ps.stats)) {
                 client->ps.weapon = i;
                 break;
             }

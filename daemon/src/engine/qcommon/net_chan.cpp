@@ -69,7 +69,7 @@ cvar_t* showpackets;
 cvar_t* showdrop;
 cvar_t* qport;
 
-static const char* const netsrcString[2] ={
+static const char* const netsrcString[2] = {
     "client",
     "server"
 };
@@ -95,7 +95,7 @@ called to open a channel to a remote system
 ==============
 */
 void Netchan_Setup(netsrc_t sock, netchan_t* chan, netadr_t adr, int qport) {
-    Com_Memset(chan, 0, sizeof(*chan) );
+    Com_Memset(chan, 0, sizeof(*chan));
 
     chan->sock = sock;
     chan->remoteAddress = adr;
@@ -117,7 +117,7 @@ void Netchan_TransmitNextFragment(netchan_t* chan) {
     int fragmentLength;
 
     // write the packet header
-    MSG_InitOOB(&send, send_buf, sizeof(send_buf) ); // <-- only do the oob here
+    MSG_InitOOB(&send, send_buf, sizeof(send_buf)); // <-- only do the oob here
 
     MSG_WriteLong(&send, chan->outgoingSequence | FRAGMENT_BIT);
 
@@ -191,7 +191,7 @@ void Netchan_Transmit(netchan_t* chan, int length, const byte* data) {
     }
 
     // write the packet header
-    MSG_InitOOB(&send, send_buf, sizeof(send_buf) );
+    MSG_InitOOB(&send, send_buf, sizeof(send_buf));
 
     MSG_WriteLong(&send, chan->outgoingSequence);
     chan->outgoingSequence++;
@@ -324,7 +324,7 @@ bool Netchan_Process(netchan_t* chan, msg_t* msg) {
         if (fragmentStart != chan->fragmentLength) {
             if (showdrop->integer || showpackets->integer) {
                 Com_Printf("%s: Dropped a message fragment\n"
-                           , NET_AdrToString(chan->remoteAddress) );
+                           , NET_AdrToString(chan->remoteAddress));
             }
 
             // we can still keep the part that we have so far,
@@ -334,10 +334,10 @@ bool Netchan_Process(netchan_t* chan, msg_t* msg) {
 
         // copy the fragment to the fragment buffer
         if (fragmentLength < 0 || msg->readcount + fragmentLength > msg->cursize ||
-            chan->fragmentLength + fragmentLength > (int) sizeof(chan->fragmentBuffer) ) {
+            chan->fragmentLength + fragmentLength > (int) sizeof(chan->fragmentBuffer)) {
             if (showdrop->integer || showpackets->integer) {
                 Com_Printf("%s: illegal fragment length\n"
-                           , NET_AdrToString(chan->remoteAddress) );
+                           , NET_AdrToString(chan->remoteAddress));
             }
 
             return false;
@@ -431,7 +431,7 @@ bool        NET_GetLoopPacket(netsrc_t sock, netadr_t* net_from, msg_t* net_mess
 
     Com_Memcpy(net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
     net_message->cursize = loop->msgs[i].datalen;
-    Com_Memset(net_from, 0, sizeof(*net_from) );
+    Com_Memset(net_from, 0, sizeof(*net_from));
     net_from->type = NA_LOOPBACK;
     return true;
 }
@@ -470,12 +470,12 @@ static void NET_QueuePacket(int length, const void* data, netadr_t to,
         offset = 999;
     }
 
-    newp = (packetQueue_t*) S_Malloc(sizeof(packetQueue_t) );
+    newp = (packetQueue_t*) S_Malloc(sizeof(packetQueue_t));
     newp->data = (byte*) S_Malloc(length);
     Com_Memcpy(newp->data, data, length);
     newp->length = length;
     newp->to = to;
-    newp->release = Sys_Milliseconds() + (int)( (float) offset / com_timescale->value);
+    newp->release = Sys_Milliseconds() + (int)((float) offset / com_timescale->value);
     newp->next = nullptr;
 
     if (!packetQueue) {
@@ -585,7 +585,7 @@ void QDECL NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte* format, int len)
     int i;
     msg_t mbuf;
 
-    NET_SetOOBHeader( (char*) string);
+    NET_SetOOBHeader((char*) string);
 
     for (i = 0; i < len; i++) {
         string[i + 4] = format[i];
@@ -610,14 +610,14 @@ int NET_StringToAdr(const char* s, netadr_t* a, netadrtype_t family) {
     char base[MAX_STRING_CHARS], * search;
     char* port = nullptr;
 
-    if (!strcmp(s, "localhost") ) {
-        Com_Memset(a, 0, sizeof(*a) );
+    if (!strcmp(s, "localhost")) {
+        Com_Memset(a, 0, sizeof(*a));
         a->type = NA_LOOPBACK;
         // as NA_LOOPBACK doesn't require ports report port was given.
         return 1;
     }
 
-    Q_strncpyz(base, s, sizeof(base) );
+    Q_strncpyz(base, s, sizeof(base));
 
     if (*base == '[' || Q_CountChar(base, ':') > 1) {
         // This is an IPv6 address, handle it specially.
@@ -649,13 +649,13 @@ int NET_StringToAdr(const char* s, netadr_t* a, netadrtype_t family) {
         search = base;
     }
 
-    if (!Sys_StringToAdr(search, a, family) ) {
+    if (!Sys_StringToAdr(search, a, family)) {
         a->type = NA_BAD;
         return 0;
     }
 
     if (port) {
-        a->port = BigShort( (short) atoi(port) );
+        a->port = BigShort((short) atoi(port));
         return 1;
     } else {
         a->port = BigShort(PORT_SERVER);

@@ -117,7 +117,7 @@ void rBounds::clear() {
 }
 
 botRouteTargetInternal::botRouteTargetInternal(const botRouteTarget_t &target) :
-    type(target.type), pos(qVec(target.pos) ), polyExtents(qVec(target.polyExtents) ) {
+    type(target.type), pos(qVec(target.pos)), polyExtents(qVec(target.polyExtents)) {
     for (int i = 0; i < 3; i++) {
         polyExtents[i] = (polyExtents[i] < 0) ? -polyExtents[i] : polyExtents[i];
     }

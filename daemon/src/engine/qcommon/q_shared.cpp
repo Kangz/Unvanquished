@@ -51,12 +51,12 @@ GROWLISTS
 void Com_InitGrowList(growList_t* list, int maxElements) {
     list->maxElements = maxElements;
     list->currentElements = 0;
-    list->elements = (void**) Com_Allocate(list->maxElements * sizeof(void*) );
+    list->elements = (void**) Com_Allocate(list->maxElements * sizeof(void*));
 }
 
 void Com_DestroyGrowList(growList_t* list) {
     Com_Dealloc(list->elements);
-    memset(list, 0, sizeof(*list) );
+    memset(list, 0, sizeof(*list));
 }
 
 int Com_AddToGrowList(growList_t* list, void* data) {
@@ -84,13 +84,13 @@ int Com_AddToGrowList(growList_t* list, void* data) {
 
     // Com_DPrintf("Resizing growlist to %i maxElements\n", list->maxElements);
 
-    list->elements = (void**) Com_Allocate(list->maxElements * sizeof(void*) );
+    list->elements = (void**) Com_Allocate(list->maxElements * sizeof(void*));
 
     if (!list->elements) {
         Sys::Drop("Growlist alloc failed");
     }
 
-    Com_Memcpy(list->elements, old, list->currentElements * sizeof(void*) );
+    Com_Memcpy(list->elements, old, list->currentElements * sizeof(void*));
 
     Com_Dealloc(old);
 
@@ -180,10 +180,10 @@ char* Com_SkipTokens(char* s, int numTokens, const char* sep) {
     char* p = s;
 
     while (sepCount < numTokens) {
-        if (Com_CharIsOneOfCharset(*p++, sep) ) {
+        if (Com_CharIsOneOfCharset(*p++, sep)) {
             sepCount++;
 
-            while (Com_CharIsOneOfCharset(*p, sep) ) {
+            while (Com_CharIsOneOfCharset(*p, sep)) {
                 p++;
             }
         } else if (*p == '\0') {
@@ -304,7 +304,7 @@ void COM_DefaultExtension(char* path, int maxSize, const char* extension) {
         src--;
     }
 
-    Q_strncpyz(oldPath, path, sizeof(oldPath) );
+    Q_strncpyz(oldPath, path, sizeof(oldPath));
     Com_sprintf(path, maxSize, "%s%s", oldPath, extension);
 }
 
@@ -324,7 +324,7 @@ int Com_HashKey(char* string, int maxlen) {
         hash += string[i] * (119 + i);
     }
 
-    hash = (hash ^ (hash >> 10) ^ (hash >> 20) );
+    hash = (hash ^ (hash >> 10) ^ (hash >> 20));
     return hash;
 }
 
@@ -414,7 +414,7 @@ PARSING
 */
 
 // multiple character punctuation tokens
-static const char* punctuation[] ={
+static const char* punctuation[] = {
     "+=", "-=", "*=", "/=", "&=", "|=", "++", "--",
     "&&", "||", "<=", ">=", "==", "!=",
     nullptr
@@ -478,7 +478,7 @@ a newline.
 static const char* SkipWhitespace(const char* data, bool* hasNewLines) {
     int c;
 
-    while ( (c = *data & 0xFF) <= ' ') {
+    while ((c = *data & 0xFF) <= ' ') {
         if (!c) {
             return nullptr;
         }
@@ -503,7 +503,7 @@ int COM_Compress(char* data_p) {
     datai = datao = data_p;
 
     if (datai) {
-        while ( (c = *datai) != 0) {
+        while ((c = *datai) != 0) {
             if (c == 13 || c == 10) {
                 *datao = c;
                 datao++;
@@ -521,7 +521,7 @@ int COM_Compress(char* data_p) {
             } else if (c == '/' && datai[1] == '*') {
                 datai += 2; // Arnout: skip over '/*'
 
-                while (*datai && (*datai != '*' || datai[1] != '/') ) {
+                while (*datai && (*datai != '*' || datai[1] != '/')) {
                     datai++;
                 }
 
@@ -598,7 +598,7 @@ char* COM_ParseExt(const char** data_p, bool allowLineBreaks) {
         else if (c == '/' && data[1] == '*') {
             data += 2;
 
-            while (*data && (*data != '*' || data[1] != '/') ) {
+            while (*data && (*data != '*' || data[1] != '/')) {
                 data++;
 
                 // if ( *data == '\n' )
@@ -640,7 +640,7 @@ char* COM_ParseExt(const char** data_p, bool allowLineBreaks) {
                         break;
                     }
 
-                    if ( (c == '\\' && *data == '\"') ) {
+                    if ((c == '\\' && *data == '\"')) {
                         if (len < MAX_TOKEN_CHARS) {
                             com_token[len] = '\"';
                             len++;
@@ -978,7 +978,7 @@ void COM_MatchToken(const char** buf_p, const char* match) {
 
     token = COM_Parse(buf_p);
 
-    if (strcmp(token, match) ) {
+    if (strcmp(token, match)) {
         Sys::Drop("MatchToken: %s != %s", token, match);
     }
 }
@@ -1049,7 +1049,7 @@ void SkipRestOfLine(const char** data) {
 
     p = *data;
 
-    while ( (c = *p++) != 0) {
+    while ((c = *p++) != 0) {
         if (c == '\n') {
             com_lines++;
             break;
@@ -1078,7 +1078,7 @@ int Com_ParseInfos(const char* buf, int max, char infos[][MAX_INFO_STRING]) {
             break;
         }
 
-        if (strcmp(token, "{") ) {
+        if (strcmp(token, "{")) {
             Log::Notice("Missing { in info file\n");
             break;
         }
@@ -1098,11 +1098,11 @@ int Com_ParseInfos(const char* buf, int max, char infos[][MAX_INFO_STRING]) {
                 break;
             }
 
-            if (!strcmp(token, "}") ) {
+            if (!strcmp(token, "}")) {
                 break;
             }
 
-            Q_strncpyz(key, token, sizeof(key) );
+            Q_strncpyz(key, token, sizeof(key));
 
             token = COM_ParseExt(&buf, false);
 
@@ -1374,7 +1374,7 @@ char* Q_strlwr(char* s1) {
     char* s;
 
     for (s = s1; *s; ++s) {
-        if ( ('A' <= *s) && (*s <= 'Z') ) {
+        if (('A' <= *s) && (*s <= 'Z')) {
             *s -= 'A' - 'a';
         }
     }
@@ -1386,7 +1386,7 @@ char* Q_strupr(char* s1) {
     char* cp;
 
     for (cp = s1; *cp; ++cp) {
-        if ( ('a' <= *cp) && (*cp <= 'z') ) {
+        if (('a' <= *cp) && (*cp <= 'z')) {
             *cp += 'A' - 'a';
         }
     }
@@ -1449,7 +1449,7 @@ const char* Q_stristr(const char* s, const char* find) {
     char c, sc;
     size_t len;
 
-    if ( (c = *find++) != 0) {
+    if ((c = *find++) != 0) {
         if (c >= 'a' && c <= 'z') {
             c -= ('a' - 'A');
         }
@@ -1458,7 +1458,7 @@ const char* Q_stristr(const char* s, const char* find) {
 
         do {
             do {
-                if ( (sc = *s++) == 0) {
+                if ((sc = *s++) == 0) {
                     return nullptr;
                 }
 
@@ -1491,7 +1491,7 @@ const char* Com_StringContains(const char* str1, const char* str2, int casesensi
                     break;
                 }
             } else {
-                if (toupper(str1[j]) != toupper(str2[j]) ) {
+                if (toupper(str1[j]) != toupper(str2[j])) {
                     break;
                 }
             }
@@ -1531,7 +1531,7 @@ int Com_Filter(const char* filter, const char* name, int casesensitive) {
 
             buf[i] = '\0';
 
-            if (strlen(buf) ) {
+            if (strlen(buf)) {
                 ptr = Com_StringContains(name, buf, casesensitive);
 
                 if (!ptr) {
@@ -1554,13 +1554,13 @@ int Com_Filter(const char* filter, const char* name, int casesensitive) {
                     break;
                 }
 
-                if (*(filter + 1) == '-' && *(filter + 2) && (*(filter + 2) != ']' || *(filter + 3) == ']') ) {
+                if (*(filter + 1) == '-' && *(filter + 2) && (*(filter + 2) != ']' || *(filter + 3) == ']')) {
                     if (casesensitive) {
-                        if (*name >= *filter && *name <= *(filter + 2) ) {
+                        if (*name >= *filter && *name <= *(filter + 2)) {
                             found = true;
                         }
                     } else {
-                        if (toupper(*name) >= toupper(*filter) && toupper(*name) <= toupper(*(filter + 2) ) ) {
+                        if (toupper(*name) >= toupper(*filter) && toupper(*name) <= toupper(*(filter + 2))) {
                             found = true;
                         }
                     }
@@ -1572,7 +1572,7 @@ int Com_Filter(const char* filter, const char* name, int casesensitive) {
                             found = true;
                         }
                     } else {
-                        if (toupper(*filter) == toupper(*name) ) {
+                        if (toupper(*filter) == toupper(*name)) {
                             found = true;
                         }
                     }
@@ -1601,7 +1601,7 @@ int Com_Filter(const char* filter, const char* name, int casesensitive) {
                     return false;
                 }
             } else {
-                if (toupper(*filter) != toupper(*name) ) {
+                if (toupper(*filter) != toupper(*name)) {
                     return false;
                 }
             }
@@ -1685,7 +1685,7 @@ char* QDECL PRINTF_LIKE(1) va(const char* format, ...) {
     temp_buffer[MAX_VA_STRING] = 0;
     va_end(argptr);
 
-    if ( (len = strlen(temp_buffer) ) >= MAX_VA_STRING) {
+    if ((len = strlen(temp_buffer)) >= MAX_VA_STRING) {
         Sys::Drop("Attempted to overrun string in call to va()");
     }
 
@@ -1760,7 +1760,7 @@ const char* Info_ValueForKey(const char* s, const char* key) {
 
         *o = 0;
 
-        if (!Q_stricmp(key, pkey) ) {
+        if (!Q_stricmp(key, pkey)) {
             return value[valueindex];
         }
 
@@ -1837,7 +1837,7 @@ void Info_RemoveKey(char* s, const char* key, bool big) {
         Sys::Drop("Info_RemoveKey: oversize infostring [%s] [%s]", s, key);
     }
 
-    if (strchr(key, '\\') ) {
+    if (strchr(key, '\\')) {
         return;
     }
 
@@ -1873,7 +1873,7 @@ void Info_RemoveKey(char* s, const char* key, bool big) {
 
         *o = 0;
 
-        if (!Q_stricmp(key, pkey) ) {
+        if (!Q_stricmp(key, pkey)) {
             memmove(start, s, strlen(s) + 1);
             return;
         }
@@ -1893,11 +1893,11 @@ can mess up the server's parsing
 ==================
 */
 bool Info_Validate(const char* s) {
-    if (strchr(s, '\"') ) {
+    if (strchr(s, '\"')) {
         return false;
     }
 
-    if (strchr(s, ';') ) {
+    if (strchr(s, ';')) {
         return false;
     }
 
@@ -1920,24 +1920,24 @@ void Info_SetValueForKey(char* s, const char* key, const char* value, bool big) 
         Sys::Drop("Info_SetValueForKey: oversize infostring [%s] [%s] [%s]", s, key, value);
     }
 
-    if (strchr(key, '\\') || (value && strchr(value, '\\') ) ) {
+    if (strchr(key, '\\') || (value && strchr(value, '\\'))) {
         Log::Notice("Can't use keys or values with a \\\n");
         return;
     }
 
-    if (strchr(key, ';') || (value && strchr(value, ';') ) ) {
+    if (strchr(key, ';') || (value && strchr(value, ';'))) {
         Log::Notice("Can't use keys or values with a semicolon\n");
         return;
     }
 
-    if (strchr(key, '\"') || (value && strchr(value, '\"') ) ) {
+    if (strchr(key, '\"') || (value && strchr(value, '\"'))) {
         Log::Notice("Can't use keys or values with a \"\n");
         return;
     }
 
     Info_RemoveKey(s, key, big);
 
-    if (!value || !strlen(value) ) {
+    if (!value || !strlen(value)) {
         return;
     }
 
@@ -1960,14 +1960,14 @@ void Info_SetValueForKeyRocket(char* s, const char* key, const char* value, bool
         Sys::Drop("Info_SetValueForKey: oversize infostring [%s] [%s] [%s]", s, key, value);
     }
 
-    if (strchr(key, '\\') || (value && strchr(value, '\\') ) ) {
+    if (strchr(key, '\\') || (value && strchr(value, '\\'))) {
         Log::Notice("Can't use keys or values with a \\\n");
         return;
     }
 
     Info_RemoveKey(s, key, true);
 
-    if (!value || !strlen(value) ) {
+    if (!value || !strlen(value)) {
         return;
     }
 
@@ -1992,9 +1992,9 @@ bool Com_ClientListContains(const clientList_t* list, int clientNum) {
     }
 
     if (clientNum < 32) {
-        return ( (list->lo & (1 << clientNum) ) != 0);
+        return ((list->lo & (1 << clientNum)) != 0);
     } else {
-        return ( (list->hi & (1 << (clientNum - 32) ) ) != 0);
+        return ((list->hi & (1 << (clientNum - 32))) != 0);
     }
 }
 
@@ -2011,7 +2011,7 @@ void Com_ClientListAdd(clientList_t* list, int clientNum) {
     if (clientNum < 32) {
         list->lo |= (1 << clientNum);
     } else {
-        list->hi |= (1 << (clientNum - 32) );
+        list->hi |= (1 << (clientNum - 32));
     }
 }
 
@@ -2028,7 +2028,7 @@ void Com_ClientListRemove(clientList_t* list, int clientNum) {
     if (clientNum < 32) {
         list->lo &= ~(1 << clientNum);
     } else {
-        list->hi &= ~(1 << (clientNum - 32) );
+        list->hi &= ~(1 << (clientNum - 32));
     }
 }
 
@@ -2087,7 +2087,7 @@ void VectorMatrixMultiply(const vec3_t p, vec3_t m[3], vec3_t out) {
 
 void Q_ParseNewlines(char* dest, const char* src, int destsize) {
     for (; *src && destsize > 1; src++, destsize--) {
-        *dest++ = ( (*src == '\\' && *(++src) == 'n') ? '\n' : *src);
+        *dest++ = ((*src == '\\' && *(++src) == 'n') ? '\n' : *src);
     }
 
     *dest++ = '\0';
@@ -2096,7 +2096,7 @@ void Q_ParseNewlines(char* dest, const char* src, int destsize) {
 // ====================================================================
 
 /* Internals for Com_RealTime & Com_GMTime */
-static int internalTime(qtime_t* qtime, struct tm*(*timefunc)(const time_t*) ) {
+static int internalTime(qtime_t* qtime, struct tm*(*timefunc)(const time_t*)) {
     time_t t;
     struct tm* tms;
 

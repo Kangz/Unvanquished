@@ -34,7 +34,7 @@ Keybinding command
 =================
 */
 static void CG_SizeUp_f() {
-    trap_Cvar_Set("cg_viewsize", va("%i", std::min(cg_viewsize.integer + 10, 100) ) );
+    trap_Cvar_Set("cg_viewsize", va("%i", std::min(cg_viewsize.integer + 10, 100)));
 }
 
 /*
@@ -45,7 +45,7 @@ Keybinding command
 =================
 */
 static void CG_SizeDown_f() {
-    trap_Cvar_Set("cg_viewsize", va("%i", std::max(cg_viewsize.integer - 10, 30) ) );
+    trap_Cvar_Set("cg_viewsize", va("%i", std::max(cg_viewsize.integer - 10, 30)));
 }
 
 /*
@@ -145,7 +145,7 @@ static void CG_CompleteBuy_internal(bool negatives) {
             trap_CompleteCallback(item->name);
 
             if (negatives) {
-                trap_CompleteCallback(va("-%s", item->name) );
+                trap_CompleteCallback(va("-%s", item->name));
             }
         }
     }
@@ -165,7 +165,7 @@ static void CG_CompleteBuy_internal(bool negatives) {
             trap_CompleteCallback(item->name);
 
             if (negatives) {
-                trap_CompleteCallback(va("-%s", BG_Weapon(i)->name) );
+                trap_CompleteCallback(va("-%s", BG_Weapon(i)->name));
             }
         }
     }
@@ -199,7 +199,7 @@ static void CG_CompleteBeacon() {
 
     for (i = BCT_NONE + 1; i < NUM_BEACON_TYPES; i++) {
         const beaconAttributes_t* item = BG_Beacon(i);
-        if (!(item->flags & BCF_RESERVED) ) {
+        if (!(item->flags & BCF_RESERVED)) {
             trap_CompleteCallback(item->name);
         }
     }
@@ -229,7 +229,7 @@ static void CG_CompleteName() {
             continue;
         }
 
-        trap_CompleteCallback(Color::StripColors(name) );
+        trap_CompleteCallback(Color::StripColors(name));
     }
 }
 
@@ -245,7 +245,7 @@ static void CG_CompleteVsay() {
 
 static void CG_CompleteGive() {
     unsigned i = 0;
-    static const char give[][12] ={
+    static const char give[][12] = {
         "all", "health", "funds", "stamina", "poison", "fuel", "ammo", "momentum", "bp"
     };
 
@@ -256,7 +256,7 @@ static void CG_CompleteGive() {
 
 static void CG_CompleteTeamVote() {
     unsigned i = 0;
-    static const char vote[][16] ={
+    static const char vote[][16] = {
         "kick", "spectate", "denybuild", "allowbuild", "admitdefeat", "poll"
     };
 
@@ -266,7 +266,7 @@ static void CG_CompleteTeamVote() {
 }
 static void CG_CompleteVote() {
     unsigned i = 0;
-    static const char vote[][16] ={
+    static const char vote[][16] = {
         "kick", "spectate", "mute", "unmute", "sudden_death", "extend",
         "draw", "map_restart", "map", "layout", "nextmap", "poll"
     };
@@ -302,7 +302,7 @@ static void CG_CompleteItem() {
 
 static void CG_TestCGrade_f() {
     qhandle_t shader = trap_R_RegisterShader(CG_Argv(1),
-                                             (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE) );
+                                             (RegisterShaderFlags_t) (RSF_NOMIP | RSF_NOLIGHTSCALE));
 
     // override shader 0
     cgs.gameGradingTextures[0] = shader;
@@ -366,7 +366,7 @@ static const struct {
     const char* cmd;
     void ( * function )();
     void ( * completer )();
-} commands[] ={
+} commands[] = {
     { "+scores", CG_ShowScores_f, 0                },
     { "-scores", CG_HideScores_f, 0                },
     { "a", 0, 0                },
@@ -468,7 +468,7 @@ bool ConsoleCommand() {
         // This command was added to provide completion of server-side commands
         // forward it to the server
         // (see also CG_ServerCommands)
-        trap_EscapedArgs(buffer, sizeof(buffer) );
+        trap_EscapedArgs(buffer, sizeof(buffer));
         trap_SendClientCommand(buffer);
     } else {
         cmd->function();

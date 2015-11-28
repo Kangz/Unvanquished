@@ -94,8 +94,8 @@ class RocketElement : public Rocket::Core::Element {
 
             // Let this be picked up in the event loop if it is meant for us
             // HACK: Ignore mouse and resize events
-            if (event.GetTargetElement() == this && !Q_stristr(event.GetType().CString(), "mouse") && !Q_stristr(event.GetType().CString(), "resize") ) {
-                eventQueue.push(new RocketEvent_t(event, event.GetType() ) );
+            if (event.GetTargetElement() == this && !Q_stristr(event.GetType().CString(), "mouse") && !Q_stristr(event.GetType().CString(), "resize")) {
+                eventQueue.push(new RocketEvent_t(event, event.GetType()));
             }
         }
 
@@ -107,7 +107,7 @@ class RocketElement : public Rocket::Core::Element {
         void OnRender() {
             activeElement = this;
 
-            CG_Rocket_RenderElement(GetTagName().CString() );
+            CG_Rocket_RenderElement(GetTagName().CString());
 
             // Render text on top
             Rocket::Core::Element::OnRender();

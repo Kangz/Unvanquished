@@ -22,7 +22,7 @@ void MiningComponent::HandleDie(gentity_t* killer, meansOfDeath_t meansOfDeath) 
 
 bool MiningComponent::Active() {
     BuildableComponent* buildableComponent = entity.Get<BuildableComponent>();
-    HealthComponent* healthComponent    = entity.Get<HealthComponent>();
+    HealthComponent* healthComponent = entity.Get<HealthComponent>();
 
     // Buildables must be active and entities with health must be alive to mine.
     return ((!buildableComponent || buildableComponent->Active()) &&
@@ -40,7 +40,7 @@ float MiningComponent::InterferenceMod(float distance) {
     // q is the ratio of the part of a sphere with radius RGS_RANGE that intersects
     // with another sphere of equal size and given distance
     float dr = distance / RGS_RANGE;
-    float q  = ((dr * dr * dr) - 12.0f * dr + 16.0f) / 16.0f;
+    float q = ((dr * dr * dr) - 12.0f * dr + 16.0f) / 16.0f;
 
     // Two RGS together should mine at a rate proportional to the volume of the
     // union of their areas of effect. If more RGS intersect, this is just an

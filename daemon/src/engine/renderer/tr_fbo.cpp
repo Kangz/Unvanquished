@@ -102,7 +102,7 @@ FBO_t* R_CreateFBO(const char* name, int width, int height) {
     }
 
     fbo = tr.fbos[tr.numFBOs] = (FBO_t*) ri.Hunk_Alloc(sizeof(*fbo), h_low);
-    Q_strncpyz(fbo->name, name, sizeof(fbo->name) );
+    Q_strncpyz(fbo->name, name, sizeof(fbo->name));
     fbo->index = tr.numFBOs++;
     fbo->width = width;
     fbo->height = height;
@@ -267,7 +267,7 @@ R_AttachFBOTexture2D
 =================
 */
 void R_AttachFBOTexture2D(int target, int texId, int index) {
-    if (target != GL_TEXTURE_2D && (target < GL_TEXTURE_CUBE_MAP_POSITIVE_X || target > GL_TEXTURE_CUBE_MAP_NEGATIVE_Z) ) {
+    if (target != GL_TEXTURE_2D && (target < GL_TEXTURE_CUBE_MAP_POSITIVE_X || target > GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)) {
         ri.Printf(PRINT_WARNING, "R_AttachFBOTexture2D: invalid target %i\n", target);
         return;
     }
@@ -326,7 +326,7 @@ void R_BindFBO(FBO_t* fbo) {
 
     if (r_logFile->integer) {
         // don't just call LogComment, or we will get a call to va() every frame!
-        GLimp_LogComment(va("--- R_BindFBO( %s ) ---\n", fbo->name) );
+        GLimp_LogComment(va("--- R_BindFBO( %s ) ---\n", fbo->name));
     }
 
     if (glState.currentFBO != fbo) {

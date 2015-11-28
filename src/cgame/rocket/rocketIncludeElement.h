@@ -44,10 +44,10 @@ class RocketIncludeElement : public Rocket::Core::Element {
         }
         void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Element::OnAttributeChange(changed_attributes);
-            if (changed_attributes.find("src") != changed_attributes.end() ) {
+            if (changed_attributes.find("src") != changed_attributes.end()) {
                 Rocket::Core::String filename = GetAttribute<Rocket::Core::String>("src", "");
 
-                if (!filename.Empty() ) {
+                if (!filename.Empty()) {
                     std::string buffer;
                     buffer = FS::PakPath::ReadFile(filename.CString());
                     SetInnerRML(buffer.c_str());

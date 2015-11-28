@@ -54,7 +54,7 @@ void CG_ModelDoor(centity_t* cent) {
     }
 
     // create the render entity
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
     VectorCopy(cent->lerpOrigin, ent.origin);
     VectorCopy(cent->lerpOrigin, ent.oldorigin);
     AnglesToAxis(cent->lerpAngles, ent.axis);
@@ -132,11 +132,11 @@ void CG_AnimMapObj(centity_t* cent) {
     es = &cent->currentState;
 
     // if set to invisible, skip
-    if (!es->modelindex || (es->eFlags & EF_NODRAW) ) {
+    if (!es->modelindex || (es->eFlags & EF_NODRAW)) {
         return;
     }
 
-    memset(&ent, 0, sizeof(ent) );
+    memset(&ent, 0, sizeof(ent));
 
     VectorCopy(es->angles, cent->lerpAngles);
     AnglesToAxis(cent->lerpAngles, ent.axis);
@@ -191,7 +191,7 @@ void CG_AnimMapObj(centity_t* cent) {
             cent->animPlaying = !(cent->currentState.eFlags & EF_MOVER_STOP);
         } else {
             if (cent->animLastState !=
-                !(cent->currentState.eFlags & EF_MOVER_STOP) ) {
+                !(cent->currentState.eFlags & EF_MOVER_STOP)) {
                 cent->animPlaying = true;
                 cent->lerpFrame.animationTime = cg.time;
                 cent->lerpFrame.frameTime = cg.time;

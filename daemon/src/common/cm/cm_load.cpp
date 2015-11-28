@@ -95,7 +95,7 @@ void CMod_LoadShaders(lump_t* l) {
 
     in = (dshader_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("CMod_LoadShaders: funny lump size");
     }
 
@@ -105,10 +105,10 @@ void CMod_LoadShaders(lump_t* l) {
         Sys::Drop("Map with no shaders");
     }
 
-    cm.shaders = (dshader_t*) CM_Alloc(count * sizeof(*cm.shaders) );
+    cm.shaders = (dshader_t*) CM_Alloc(count * sizeof(*cm.shaders));
     cm.numShaders = count;
 
-    Com_Memcpy(cm.shaders, in, count * sizeof(*cm.shaders) );
+    Com_Memcpy(cm.shaders, in, count * sizeof(*cm.shaders));
 
     if (LittleLong(1) != 1) {
         out = cm.shaders;
@@ -133,7 +133,7 @@ void CMod_LoadSubmodels(lump_t* l) {
 
     in = (dmodel_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("CMod_LoadSubmodels: funny lump size");
     }
 
@@ -143,7 +143,7 @@ void CMod_LoadSubmodels(lump_t* l) {
         Sys::Drop("Map with no models");
     }
 
-    cm.cmodels = (cmodel_t*) CM_Alloc(count * sizeof(*cm.cmodels) );
+    cm.cmodels = (cmodel_t*) CM_Alloc(count * sizeof(*cm.cmodels));
     cm.numSubModels = count;
 
     for (i = 0; i < count; i++, in++, out++) {
@@ -192,7 +192,7 @@ void CMod_LoadNodes(lump_t* l) {
 
     in = (dnode_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
@@ -202,7 +202,7 @@ void CMod_LoadNodes(lump_t* l) {
         Sys::Drop("Map has no nodes");
     }
 
-    cm.nodes = (cNode_t*) CM_Alloc(count * sizeof(*cm.nodes) );
+    cm.nodes = (cNode_t*) CM_Alloc(count * sizeof(*cm.nodes));
     cm.numNodes = count;
 
     out = cm.nodes;
@@ -248,13 +248,13 @@ void CMod_LoadBrushes(lump_t* l) {
 
     in = (dbrush_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
     count = l->filelen / sizeof(*in);
 
-    cm.brushes = (cbrush_t*) CM_Alloc( (BOX_BRUSHES + count) * sizeof(*cm.brushes) );
+    cm.brushes = (cbrush_t*) CM_Alloc((BOX_BRUSHES + count) * sizeof(*cm.brushes));
     cm.numBrushes = count;
 
     out = cm.brushes;
@@ -288,7 +288,7 @@ void CMod_LoadLeafs(lump_t* l) {
 
     in = (dleaf_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
@@ -298,7 +298,7 @@ void CMod_LoadLeafs(lump_t* l) {
         Sys::Drop("Map with no leafs");
     }
 
-    cm.leafs = (cLeaf_t*) CM_Alloc( (BOX_LEAFS + count) * sizeof(*cm.leafs) );
+    cm.leafs = (cLeaf_t*) CM_Alloc((BOX_LEAFS + count) * sizeof(*cm.leafs));
     cm.numLeafs = count;
 
     out = cm.leafs;
@@ -320,8 +320,8 @@ void CMod_LoadLeafs(lump_t* l) {
         }
     }
 
-    cm.areas = (cArea_t*) CM_Alloc(cm.numAreas * sizeof(*cm.areas) );
-    cm.areaPortals = (int*) CM_Alloc(cm.numAreas * cm.numAreas * sizeof(*cm.areaPortals) );
+    cm.areas = (cArea_t*) CM_Alloc(cm.numAreas * sizeof(*cm.areas));
+    cm.areaPortals = (int*) CM_Alloc(cm.numAreas * cm.numAreas * sizeof(*cm.areaPortals));
 }
 
 /*
@@ -337,7 +337,7 @@ void CMod_LoadPlanes(lump_t* l) {
 
     in = (dplane_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
@@ -347,7 +347,7 @@ void CMod_LoadPlanes(lump_t* l) {
         Sys::Drop("Map with no planes");
     }
 
-    cm.planes = (cplane_t*) CM_Alloc( (BOX_PLANES + count) * sizeof(*cm.planes) );
+    cm.planes = (cplane_t*) CM_Alloc((BOX_PLANES + count) * sizeof(*cm.planes));
     cm.numPlanes = count;
 
     out = cm.planes;
@@ -376,14 +376,14 @@ void CMod_LoadLeafBrushes(lump_t* l) {
 
     in = (int*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
     count = l->filelen / sizeof(*in);
 
     // ydnar: more than <count> brushes are stored in leafbrushes...
-    cm.leafbrushes = (int*) CM_Alloc( (BOX_LEAF_BRUSHES + count) * sizeof(*cm.leafbrushes) );
+    cm.leafbrushes = (int*) CM_Alloc((BOX_LEAF_BRUSHES + count) * sizeof(*cm.leafbrushes));
     cm.numLeafBrushes = count;
 
     out = cm.leafbrushes;
@@ -406,13 +406,13 @@ void CMod_LoadLeafSurfaces(lump_t* l) {
 
     in = (int*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
     count = l->filelen / sizeof(*in);
 
-    cm.leafsurfaces = (int*) CM_Alloc(count * sizeof(*cm.leafsurfaces) );
+    cm.leafsurfaces = (int*) CM_Alloc(count * sizeof(*cm.leafsurfaces));
     cm.numLeafSurfaces = count;
 
     out = cm.leafsurfaces;
@@ -437,13 +437,13 @@ void CMod_LoadBrushSides(lump_t* l) {
 
     in = (dbrushside_t*)(cmod_base + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         Sys::Drop("MOD_LoadBmodel: funny lump size");
     }
 
     count = l->filelen / sizeof(*in);
 
-    cm.brushsides = (cbrushside_t*) CM_Alloc( (BOX_SIDES + count) * sizeof(*cm.brushsides) );
+    cm.brushsides = (cbrushside_t*) CM_Alloc((BOX_SIDES + count) * sizeof(*cm.brushsides));
     cm.numBrushSides = count;
 
     out = cm.brushsides;
@@ -469,11 +469,11 @@ CMod_BrushEdgesAreTheSame
 =================
 */
 static bool CMod_BrushEdgesAreTheSame(const vec3_t p0, const vec3_t p1, const vec3_t q0, const vec3_t q1) {
-    if (VectorCompareEpsilon(p0, q0, CM_EDGE_VERTEX_EPSILON) && VectorCompareEpsilon(p1, q1, CM_EDGE_VERTEX_EPSILON) ) {
+    if (VectorCompareEpsilon(p0, q0, CM_EDGE_VERTEX_EPSILON) && VectorCompareEpsilon(p1, q1, CM_EDGE_VERTEX_EPSILON)) {
         return true;
     }
 
-    if (VectorCompareEpsilon(p1, q0, CM_EDGE_VERTEX_EPSILON) && VectorCompareEpsilon(p0, q1, CM_EDGE_VERTEX_EPSILON) ) {
+    if (VectorCompareEpsilon(p1, q0, CM_EDGE_VERTEX_EPSILON) && VectorCompareEpsilon(p0, q1, CM_EDGE_VERTEX_EPSILON)) {
         return true;
     }
 
@@ -493,7 +493,7 @@ static bool CMod_AddEdgeToBrush(const vec3_t p0, const vec3_t p1, cbrushedge_t* 
     }
 
     for (i = 0; i < *numEdges; i++) {
-        if (CMod_BrushEdgesAreTheSame(p0, p1, edges[i].p0, edges[i].p1) ) {
+        if (CMod_BrushEdgesAreTheSame(p0, p1, edges[i].p0, edges[i].p1)) {
             return false;
         }
     }
@@ -542,7 +542,7 @@ static void CMod_CreateBrushSideWindings() {
                     continue;
                 }
 
-                if (chopSide->planeNum == (side->planeNum ^ 1) ) {
+                if (chopSide->planeNum == (side->planeNum ^ 1)) {
                     continue; // back side clipaway
                 }
 
@@ -632,7 +632,7 @@ void CMod_LoadEntityString(lump_t* l) {
             break;
         }
 
-        Q_strncpyz(keyname, token, sizeof(keyname) );
+        Q_strncpyz(keyname, token, sizeof(keyname));
 
         // parse value
         token = COM_ParseExt2(&p, false);
@@ -641,16 +641,16 @@ void CMod_LoadEntityString(lump_t* l) {
             continue;
         }
 
-        Q_strncpyz(value, token, sizeof(value) );
+        Q_strncpyz(value, token, sizeof(value));
 
         // check for per-poly collision support
-        if (!Q_stricmp(keyname, "perPolyCollision") && !Q_stricmp(value, "1") ) {
+        if (!Q_stricmp(keyname, "perPolyCollision") && !Q_stricmp(value, "1")) {
             Log::Notice("map features per poly collision detection");
             cm.perPolyCollision = true;
             continue;
         }
 
-        if (!Q_stricmp(keyname, "classname") && Q_stricmp(value, "worldspawn") ) {
+        if (!Q_stricmp(keyname, "classname") && Q_stricmp(value, "worldspawn")) {
             Log::Warn("expected worldspawn, found '%s'", value);
             break;
         }
@@ -680,8 +680,8 @@ void CMod_LoadVisibility(lump_t* l) {
 
     cm.vised = true;
     cm.visibility = (byte*) CM_Alloc(len - VIS_HEADER);
-    cm.numClusters = LittleLong( ( (int*) buf) [0]);
-    cm.clusterBytes = LittleLong( ( (int*) buf) [1]);
+    cm.numClusters = LittleLong(((int*) buf) [0]);
+    cm.clusterBytes = LittleLong(((int*) buf) [1]);
     Com_Memcpy(cm.visibility, buf + VIS_HEADER, len - VIS_HEADER);
 }
 
@@ -711,22 +711,22 @@ void CMod_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexesLump) {
 
     in = (dsurface_t*)(cmod_base + surfs->fileofs);
 
-    if (surfs->filelen % sizeof(*in) ) {
+    if (surfs->filelen % sizeof(*in)) {
         Sys::Drop("CMod_LoadSurfaces: funny lump size");
     }
 
     cm.numSurfaces = count = surfs->filelen / sizeof(*in);
-    cm.surfaces = (cSurface_t**) CM_Alloc(cm.numSurfaces * sizeof(cm.surfaces[0]) );
+    cm.surfaces = (cSurface_t**) CM_Alloc(cm.numSurfaces * sizeof(cm.surfaces[0]));
 
     dv = (drawVert_t*)(cmod_base + verts->fileofs);
 
-    if (verts->filelen % sizeof(*dv) ) {
+    if (verts->filelen % sizeof(*dv)) {
         Sys::Drop("CMod_LoadSurfaces: funny lump size");
     }
 
     index = (int*)(cmod_base + indexesLump->fileofs);
 
-    if (indexesLump->filelen % sizeof(*index) ) {
+    if (indexesLump->filelen % sizeof(*index)) {
         Sys::Drop("CMod_LoadSurfaces: funny lump size");
     }
 
@@ -736,7 +736,7 @@ void CMod_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexesLump) {
             int j = 0;
 
             // FIXME: check for non-colliding patches
-            cm.surfaces[i] = surface = (cSurface_t*) CM_Alloc(sizeof(*surface) );
+            cm.surfaces[i] = surface = (cSurface_t*) CM_Alloc(sizeof(*surface));
             surface->type = MST_PATCH;
 
             // load the full drawverts onto the stack
@@ -762,10 +762,10 @@ void CMod_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexesLump) {
 
             // create the internal facet structure
             surface->sc = CM_GeneratePatchCollide(width, height, vertexes);
-        } else if (LittleLong(in->surfaceType) == MST_TRIANGLE_SOUP && (cm.perPolyCollision || cm_forceTriangles.Get() ) ) {
+        } else if (LittleLong(in->surfaceType) == MST_TRIANGLE_SOUP && (cm.perPolyCollision || cm_forceTriangles.Get())) {
             // FIXME: check for non-colliding triangle soups
 
-            cm.surfaces[i] = surface = (cSurface_t*) CM_Alloc(sizeof(*surface) );
+            cm.surfaces[i] = surface = (cSurface_t*) CM_Alloc(sizeof(*surface));
             surface->type = MST_TRIANGLE_SOUP;
 
             // load the full drawverts onto the stack
@@ -833,21 +833,21 @@ void CM_LoadMap(Str::StringRef name) {
 
     // free old stuff
     CM_FreeAll();
-    memset(&cm, 0, sizeof(cm) );
+    memset(&cm, 0, sizeof(cm));
     CM_ClearLevelPatches();
 
     if (!name[0]) {
         cm.numLeafs = 1;
         cm.numClusters = 1;
         cm.numAreas = 1;
-        cm.cmodels = (cmodel_t*) CM_Alloc(sizeof(*cm.cmodels) );
+        cm.cmodels = (cmodel_t*) CM_Alloc(sizeof(*cm.cmodels));
         return;
     }
 
     header = *(dheader_t*) mapData.data();
 
     for (unsigned i = 0; i < sizeof(dheader_t) / 4; i++) {
-        ( (int*) &header) [i] = LittleLong( ( (int*) &header) [i]);
+        ((int*) &header) [i] = LittleLong(((int*) &header) [i]);
     }
 
     if (header.version != BSP_VERSION && header.version != BSP_VERSION_Q3) {
@@ -884,7 +884,7 @@ CM_ClearMap
 ==================
 */
 void CM_ClearMap() {
-    Com_Memset(&cm, 0, sizeof(cm) );
+    Com_Memset(&cm, 0, sizeof(cm));
     CM_ClearLevelPatches();
 }
 

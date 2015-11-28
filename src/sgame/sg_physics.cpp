@@ -50,9 +50,9 @@ static void G_Bounce(gentity_t* ent, trace_t* trace) {
     }
 
     // cut the velocity to keep from bouncing forever
-    if ( (trace->plane.normal[2] >= minNormal ||
-          (invert && trace->plane.normal[2] <= -minNormal) ) &&
-         trace->entityNum == ENTITYNUM_WORLD) {
+    if ((trace->plane.normal[2] >= minNormal ||
+         (invert && trace->plane.normal[2] <= -minNormal)) &&
+        trace->entityNum == ENTITYNUM_WORLD) {
         VectorScale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
     } else {
         VectorScale(ent->s.pos.trDelta, 0.3f, ent->s.pos.trDelta);

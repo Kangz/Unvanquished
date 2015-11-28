@@ -140,12 +140,12 @@ static int loadPagesToStreams() {
             break;
         }
 
-        if (g_ogm.os_audio.serialno == ogg_page_serialno(&og) ) {
+        if (g_ogm.os_audio.serialno == ogg_page_serialno(&og)) {
             osptr = &g_ogm.os_audio;
             ++AudioPages;
         }
 
-        if (g_ogm.os_video.serialno == ogg_page_serialno(&og) ) {
+        if (g_ogm.os_video.serialno == ogg_page_serialno(&og)) {
             osptr = &g_ogm.os_video;
             ++VideoPages;
         }
@@ -182,14 +182,14 @@ static bool loadAudio() {
     ogg_packet op;
     vorbis_block vb;
 
-    memset(&op, 0, sizeof(op) );
-    memset(&vb, 0, sizeof(vb) );
+    memset(&op, 0, sizeof(op));
+    memset(&vb, 0, sizeof(vb));
     vorbis_block_init(&g_ogm.vd, &vb);
 
-    while (anyDataTransferred && g_ogm.currentTime + MAX_AUDIO_PRELOAD > (int)(g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate) ) {
+    while (anyDataTransferred && g_ogm.currentTime + MAX_AUDIO_PRELOAD > (int)(g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate)) {
         anyDataTransferred = false;
 
-        if ( (samples = vorbis_synthesis_pcmout(&g_ogm.vd, &pcm) ) > 0) {
+        if ((samples = vorbis_synthesis_pcmout(&g_ogm.vd, &pcm)) > 0) {
             // vorbis -> raw
             ptr = rawBuffer;
             samplesNeeded = (SIZEOF_RAWBUFF) / (2 * 2); // (width*channel)
@@ -203,9 +203,9 @@ static bool loadAudio() {
 
             for (i = 0; i < samplesNeeded; ++i) {
                 ptr[0] = (left[i] >= -1.0f &&
-                          left[i] <= 1.0f) ? left[i] * 32767.f : 32767 * ( (left[i] > 0.0f) - (left[i] < 0.0f) );
+                          left[i] <= 1.0f) ? left[i] * 32767.f : 32767 * ((left[i] > 0.0f) - (left[i] < 0.0f));
                 ptr[1] = (right[i] >= -1.0f &&
-                          right[i] <= 1.0f) ? right[i] * 32767.f : 32767 * ( (right[i] > 0.0f) - (right[i] < 0.0f) );
+                          right[i] <= 1.0f) ? right[i] * 32767.f : 32767 * ((right[i] > 0.0f) - (right[i] < 0.0f));
                 ptr += 2; // numChans;
             }
 
@@ -221,7 +221,7 @@ static bool loadAudio() {
 
         if (!anyDataTransferred) {
             // op -> vorbis
-            if (ogg_stream_packetout(&g_ogm.os_audio, &op) ) {
+            if (ogg_stream_packetout(&g_ogm.os_audio, &op)) {
                 if (vorbis_synthesis(&vb, &op) == 0) {
                     vorbis_synthesis_blockin(&g_ogm.vd, &vb);
                 }
@@ -233,7 +233,7 @@ static bool loadAudio() {
 
     vorbis_block_clear(&vb);
 
-    if (g_ogm.currentTime + MIN_AUDIO_PRELOAD > (int)(g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate) ) {
+    if (g_ogm.currentTime + MIN_AUDIO_PRELOAD > (int)(g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate)) {
         return true;
     } else {
         return false;
@@ -256,7 +256,7 @@ static int findSizeShift(int x, int y) {
     int i;
 
     for (i = 0; (y >> i); ++i) {
-        if (x == (y >> i) ) {
+        if (x == (y >> i)) {
             return i;
         }
     }
@@ -268,20 +268,20 @@ static int loadVideoFrameTheora() {
     int r = 0;
     ogg_packet op;
 
-    memset(&op, 0, sizeof(op) );
+    memset(&op, 0, sizeof(op));
 
-    while (!r && (ogg_stream_packetout(&g_ogm.os_video, &op) ) ) {
+    while (!r && (ogg_stream_packetout(&g_ogm.os_video, &op))) {
         ogg_int64_t th_frame;
 
         theora_decode_packetin(&g_ogm.th_state, &op);
 
         th_frame = theora_granule_frame(&g_ogm.th_state, g_ogm.th_state.granulepos);
 
-        if ( (g_ogm.VFrameCount < th_frame && th_frame >= nextNeededVFrame() ) || !g_ogm.outputBuffer) {
+        if ((g_ogm.VFrameCount < th_frame && th_frame >= nextNeededVFrame()) || !g_ogm.outputBuffer) {
             int yWShift, uvWShift;
             int yHShift, uvHShift;
 
-            if (theora_decode_YUVout(&g_ogm.th_state, &g_ogm.th_yuvbuffer) ) {
+            if (theora_decode_YUVout(&g_ogm.th_state, &g_ogm.th_yuvbuffer)) {
                 continue;
             }
 
@@ -371,7 +371,7 @@ static int loadVideoFrame() {
     if (g_ogm.os_video.serialno) {
         ogg_packet op;
 
-        while (ogg_stream_packetout(&g_ogm.os_video, &op) ) {
+        while (ogg_stream_packetout(&g_ogm.os_video, &op)) {
         }
     }
 
@@ -391,7 +391,7 @@ static bool loadFrame() {
     bool audioWantsMoreData = false;
     int status;
 
-    while (anyDataTransferred && (needVOutputData || audioWantsMoreData) ) {
+    while (anyDataTransferred && (needVOutputData || audioWantsMoreData)) {
         anyDataTransferred = false;
 
         // xvid -> "gl" ? videoDone : needPacket
@@ -404,7 +404,7 @@ static bool loadFrame() {
             // audioStream -> vorbis ? audioStreamDone : needPage
             // anyDataTransferred = audioStreamDone && audioStreamDone;
 
-            if (needVOutputData && (status = loadVideoFrame() ) ) {
+            if (needVOutputData && (status = loadVideoFrame())) {
                 needVOutputData = false;
 
                 if (status > 0) {
@@ -417,7 +417,7 @@ static bool loadFrame() {
             // if needPage
             if (needVOutputData || audioWantsMoreData) {
                 // try to transfer Pages to the audio- and video-Stream
-                if (loadPagesToStreams() ) {
+                if (loadPagesToStreams()) {
                     // try to load a datablock from file
                     anyDataTransferred |= !loadBlockToSync();
                 } else {
@@ -469,7 +469,7 @@ bool isPowerOf2(int x) {
     int bitsSet = 0;
 
     for (unsigned i = 0; i < sizeof(int) * 8; ++i) {
-        if (x & (1 << i) ) {
+        if (x & (1 << i)) {
             ++bitsSet;
         }
     }
@@ -493,7 +493,7 @@ int Cin_OGM_Init(const char* filename) {
         Cin_OGM_Shutdown();
     }
 
-    memset(&g_ogm, 0, sizeof(cin_ogm_t) );
+    memset(&g_ogm, 0, sizeof(cin_ogm_t));
 
     FS_FOpenFileRead(filename, &g_ogm.ogmFile, true);
 
@@ -508,27 +508,27 @@ int Cin_OGM_Init(const char* filename) {
     // TODO: support for more than one audio stream? / detect files with one stream(or without correct ones)
     while (!g_ogm.os_audio.serialno || !g_ogm.os_video.serialno) {
         if (ogg_sync_pageout(&g_ogm.oy, &og) == 1) {
-            if (strstr( (char*)(og.body + 1), "vorbis") ) {
+            if (strstr((char*)(og.body + 1), "vorbis")) {
                 // FIXME? better way to find audio stream
                 if (g_ogm.os_audio.serialno) {
                     Com_Printf(S_WARNING "more than one audio stream in OGM file(%s). We will stay at the first one\n", filename);
                 } else {
-                    ogg_stream_init(&g_ogm.os_audio, ogg_page_serialno(&og) );
+                    ogg_stream_init(&g_ogm.os_audio, ogg_page_serialno(&og));
                     ogg_stream_pagein(&g_ogm.os_audio, &og);
                 }
             }
 
-            if (strstr( (char*)(og.body + 1), "theora") ) {
+            if (strstr((char*)(og.body + 1), "theora")) {
                 if (g_ogm.os_video.serialno) {
                     Com_Printf(S_WARNING "more than one video stream in OGM file(%s). We will stay at the first one\n", filename);
                 } else {
                     g_ogm.videoStreamIsTheora = true;
-                    ogg_stream_init(&g_ogm.os_video, ogg_page_serialno(&og) );
+                    ogg_stream_init(&g_ogm.os_video, ogg_page_serialno(&og));
                     ogg_stream_pagein(&g_ogm.os_video, &og);
                 }
             }
 
-        } else if (loadBlockToSync() ) {
+        } else if (loadBlockToSync()) {
             break;
         }
     }
@@ -565,8 +565,8 @@ int Cin_OGM_Init(const char* filename) {
             }
 
             ++i;
-        } else if (loadPagesToStreams() ) {
-            if (loadBlockToSync() ) {
+        } else if (loadPagesToStreams()) {
+            if (loadBlockToSync()) {
                 Com_Printf(S_WARNING "Couldn't find all Vorbis headers before end of OGM file (%s)\n", filename);
                 return -10;
             }
@@ -600,8 +600,8 @@ int Cin_OGM_Init(const char* filename) {
                 }
 
                 ++i;
-            } else if (loadPagesToStreams() ) {
-                if (loadBlockToSync() ) {
+            } else if (loadPagesToStreams()) {
+                if (loadBlockToSync()) {
                     Com_Printf(S_WARNING "Couldn't find all Theora headers before end of OGM file (%s)\n", filename);
                     return -10;
                 }
@@ -610,17 +610,17 @@ int Cin_OGM_Init(const char* filename) {
 
         theora_decode_init(&g_ogm.th_state, &g_ogm.th_info);
 
-        if (!isPowerOf2(g_ogm.th_info.width) ) {
+        if (!isPowerOf2(g_ogm.th_info.width)) {
             Com_Printf(S_WARNING "Video width of the OGM file isn't a power of 2 (%s)\n", filename);
             return -5;
         }
 
-        if (!isPowerOf2(g_ogm.th_info.height) ) {
+        if (!isPowerOf2(g_ogm.th_info.height)) {
             Com_Printf(S_WARNING "Video height of the OGM file isn't a power of 2 (%s)\n", filename);
             return -6;
         }
 
-        g_ogm.Vtime_unit = ( (ogg_int64_t) g_ogm.th_info.fps_denominator * 1000 * 10000 / g_ogm.th_info.fps_numerator);
+        g_ogm.Vtime_unit = ((ogg_int64_t) g_ogm.th_info.fps_denominator * 1000 * 10000 / g_ogm.th_info.fps_numerator);
     }
 
     Com_DPrintf("OGM-Init done (%s)\n", filename);
@@ -641,8 +641,8 @@ int nextNeededVFrame() {
 int Cin_OGM_Run(int time) {
     g_ogm.currentTime = time;
 
-    while (!g_ogm.VFrameCount || time + 20 >= (int)(g_ogm.VFrameCount * g_ogm.Vtime_unit / 10000) ) {
-        if (loadFrame() ) {
+    while (!g_ogm.VFrameCount || time + 20 >= (int)(g_ogm.VFrameCount * g_ogm.Vtime_unit / 10000)) {
+        if (loadFrame()) {
             return 1;
         }
     }

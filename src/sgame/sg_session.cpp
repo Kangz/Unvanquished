@@ -57,7 +57,7 @@ static void G_WriteClientSessionData(int clientNum) {
            Com_ClientListString(&client->sess.ignoreList)
            );
 
-    var = va("session%li", (long)(client - level.clients) );
+    var = va("session%li", (long)(client - level.clients));
 
     trap_Cvar_Set(var, s);
 }
@@ -78,8 +78,8 @@ void G_ReadSessionData(gclient_t* client) {
     char botTree[MAX_QPATH];
     char ignorelist[17];
 
-    var = va("session%li", (long)(client - level.clients) );
-    trap_Cvar_VariableStringBuffer(var, s, sizeof(s) );
+    var = va("session%li", (long)(client - level.clients));
+    trap_Cvar_VariableStringBuffer(var, s, sizeof(s));
 
     sscanf(s, "%i %i %i %i %i %i %63s %16s",
            &client->sess.spectatorTime,
@@ -95,7 +95,7 @@ void G_ReadSessionData(gclient_t* client) {
     client->sess.spectatorState = (spectatorState_t) spectatorState;
     client->sess.restartTeam = (team_t) restartTeam;
     client->sess.botSkill = botSkill;
-    Q_strncpyz(client->sess.botTree, botTree, sizeof(client->sess.botTree) );
+    Q_strncpyz(client->sess.botTree, botTree, sizeof(client->sess.botTree));
     Com_ClientListParse(&client->sess.ignoreList, ignorelist);
 }
 
@@ -134,7 +134,7 @@ void G_InitSessionData(gclient_t* client, const char* userinfo) {
     sess->botSkill = 0;
     sess->botTree[0] = '\0';
 
-    memset(&sess->ignoreList, 0, sizeof(sess->ignoreList) );
+    memset(&sess->ignoreList, 0, sizeof(sess->ignoreList));
     sess->seenWelcome = 0;
 
     G_WriteClientSessionData(client - level.clients);
@@ -150,7 +150,7 @@ void G_WriteSessionData() {
     int i;
 
     // FIXME: What's this for?
-    trap_Cvar_Set("session", va("%i", 0) );
+    trap_Cvar_Set("session", va("%i", 0));
 
     for (i = 0; i < level.maxclients; i++) {
         if (level.clients[i].pers.connected == CON_CONNECTED) {

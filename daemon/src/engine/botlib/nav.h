@@ -57,7 +57,7 @@ static inline void SwapArray(T block[], size_t len) {
 }
 
 static inline void SwapNavMeshSetHeader(NavMeshSetHeader &header) {
-    SwapArray( (unsigned int*) &header, sizeof(header) / sizeof(unsigned int) );
+    SwapArray((unsigned int*) &header, sizeof(header) / sizeof(unsigned int));
 }
 
 static inline void SwapNavMeshTileHeader(NavMeshTileHeader &header) {
@@ -153,7 +153,7 @@ struct FastLZCompressor : public dtTileCacheCompressor {
     virtual dtStatus compress(const unsigned char* buffer, const int bufferSize,
                               unsigned char* compressed, const int /*maxCompressedSize*/, int* compressedSize) {
 
-        *compressedSize = fastlz_compress( (const void* const) buffer, bufferSize, compressed);
+        *compressedSize = fastlz_compress((const void* const) buffer, bufferSize, compressed);
         return DT_SUCCESS;
     }
 

@@ -33,7 +33,7 @@ bool AddTriangleToVBOTriangleList(growList_t* vboTriangles, skelTriangle_t* tri,
     hasWeights = false;
 
     numNewReferences = 0;
-    Com_Memset(newReferences, -1, sizeof(newReferences) );
+    Com_Memset(newReferences, -1, sizeof(newReferences));
 
     for (unsigned i = 0; i < 3; i++) {
         v = tri->vertexes[i];
@@ -47,7 +47,7 @@ bool AddTriangleToVBOTriangleList(growList_t* vboTriangles, skelTriangle_t* tri,
                 // is the bone already referenced?
                 if (!boneReferences[boneIndex]) {
                     // the bone isn't yet and we have to test if we can give the mesh this bone at all
-                    if ( (*numBoneReferences + numNewReferences) >= glConfig2.maxVertexSkinningBones) {
+                    if ((*numBoneReferences + numNewReferences) >= glConfig2.maxVertexSkinningBones) {
                         return false;
                     } else {
                         unsigned k;
@@ -57,7 +57,7 @@ bool AddTriangleToVBOTriangleList(growList_t* vboTriangles, skelTriangle_t* tri,
                             }
                         }
 
-                        if (k == (MAX_WEIGHTS * 3) ) {
+                        if (k == (MAX_WEIGHTS * 3)) {
                             newReferences[numNewReferences] = boneIndex;
                             numNewReferences++;
                         }
@@ -111,7 +111,7 @@ void AddSurfaceToVBOSurfacesList(growList_t* vboSurfaces, growList_t* vboTriangl
     vboSurf->numIndexes = indexesNum;
     vboSurf->numVerts = vertexesNum;
 
-    memset(&data, 0, sizeof(data) );
+    memset(&data, 0, sizeof(data));
 
     data.xyz = (vec3_t*) ri.Hunk_AllocateTempMemory(sizeof(*data.xyz) * vertexesNum);
     data.qtangent = (i16vec4_t*) ri.Hunk_AllocateTempMemory(sizeof(i16vec4_t) * vertexesNum);
@@ -121,11 +121,11 @@ void AddSurfaceToVBOSurfacesList(growList_t* vboSurfaces, growList_t* vboTriangl
     data.noLightCoords = true;
     data.numVerts = vertexesNum;
 
-    indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(indexesNum * sizeof(glIndex_t) );
+    indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(indexesNum * sizeof(glIndex_t));
 
     vboSurf->numBoneRemap = 0;
-    Com_Memset(vboSurf->boneRemap, 0, sizeof(vboSurf->boneRemap) );
-    Com_Memset(vboSurf->boneRemapInverse, 0, sizeof(vboSurf->boneRemapInverse) );
+    Com_Memset(vboSurf->boneRemap, 0, sizeof(vboSurf->boneRemap));
+    Com_Memset(vboSurf->boneRemapInverse, 0, sizeof(vboSurf->boneRemapInverse));
 
     for (j = 0; j < MAX_BONES; j++) {
         if (boneReferences[j] > 0) {

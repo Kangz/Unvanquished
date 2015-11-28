@@ -37,7 +37,7 @@ Maryland 20850 USA.
 
 
 static void CG_Rocket_EventOpen() {
-    Rocket_LoadDocument(va("%s.rml", CG_Argv(1) ) );
+    Rocket_LoadDocument(va("%s.rml", CG_Argv(1)));
 }
 
 static void CG_Rocket_EventClose() {
@@ -63,22 +63,22 @@ static void CG_Rocket_EventHide() {
 
 static void CG_Rocket_InitServers() {
     const char* src = CG_Argv(1);
-    trap_LAN_ResetPings(CG_StringToNetSource(src) );
+    trap_LAN_ResetPings(CG_StringToNetSource(src));
     trap_LAN_ResetServerStatus();
 
-    if (!Q_stricmp(src, "internet") ) {
+    if (!Q_stricmp(src, "internet")) {
         trap_SendConsoleCommand("globalservers 0 86 full empty\n");
-    } else if (!Q_stricmp(src, "local") ) {
+    } else if (!Q_stricmp(src, "local")) {
         trap_SendConsoleCommand("localservers\n");
     }
 
-    trap_LAN_UpdateVisiblePings(CG_StringToNetSource(src) );
+    trap_LAN_UpdateVisiblePings(CG_StringToNetSource(src));
 }
 
 static void CG_Rocket_BuildDS() {
     char table[100];
 
-    Q_strncpyz(table, CG_Argv(2), sizeof(table) );
+    Q_strncpyz(table, CG_Argv(2), sizeof(table));
     CG_Rocket_BuildDataSource(CG_Argv(1), table);
 }
 
@@ -93,9 +93,9 @@ static void CG_Rocket_EventExec() {
 static void CG_Rocket_SortDS() {
     char name[100], table[100], sortBy[100];
 
-    Q_strncpyz(name, CG_Argv(1), sizeof(name) );
-    Q_strncpyz(table, CG_Argv(2), sizeof(table) );
-    Q_strncpyz(sortBy, CG_Argv(3), sizeof(sortBy) );
+    Q_strncpyz(name, CG_Argv(1), sizeof(name));
+    Q_strncpyz(table, CG_Argv(2), sizeof(table));
+    Q_strncpyz(sortBy, CG_Argv(3), sizeof(sortBy));
 
     if (name[0] && table[0] && sortBy[0]) {
         CG_Rocket_SortDataSource(name, table, sortBy);
@@ -107,7 +107,7 @@ static void CG_Rocket_SortDS() {
 
 static void CG_Rocket_ExecDS() {
     char table[100];
-    Q_strncpyz(table, CG_Argv(2), sizeof(table) );
+    Q_strncpyz(table, CG_Argv(2), sizeof(table));
     CG_Rocket_ExecDataSource(CG_Argv(1), table);
 }
 
@@ -115,16 +115,16 @@ static void CG_Rocket_SetDS() {
     char datasrc[100];
     char datatbl[100];
 
-    Q_strncpyz(datasrc, CG_Argv(1), sizeof(datasrc) );
-    Q_strncpyz(datatbl, CG_Argv(2), sizeof(datatbl) );
-    CG_Rocket_SetDataSourceIndex(datasrc, datatbl, atoi(CG_Argv(3) ) );
+    Q_strncpyz(datasrc, CG_Argv(1), sizeof(datasrc));
+    Q_strncpyz(datatbl, CG_Argv(2), sizeof(datatbl));
+    CG_Rocket_SetDataSourceIndex(datasrc, datatbl, atoi(CG_Argv(3)));
 }
 
 static void CG_Rocket_SetAttribute() {
     char attribute[100], value[MAX_STRING_CHARS];
 
-    Q_strncpyz(attribute, CG_Argv(1), sizeof(attribute) );
-    Q_strncpyz(value, CG_Argv(2), sizeof(value) );
+    Q_strncpyz(attribute, CG_Argv(1), sizeof(attribute));
+    Q_strncpyz(value, CG_Argv(2), sizeof(value));
 
     Rocket_SetAttribute("", "", attribute, value);
 
@@ -135,10 +135,10 @@ static void CG_Rocket_FilterDS() {
     char tbl[100];
     char params[MAX_STRING_CHARS];
 
-    Rocket_GetAttribute("", "", "value", params, sizeof(params) );
+    Rocket_GetAttribute("", "", "value", params, sizeof(params));
 
-    Q_strncpyz(src, CG_Argv(1), sizeof(src) );
-    Q_strncpyz(tbl, CG_Argv(2), sizeof(tbl) );
+    Q_strncpyz(src, CG_Argv(1), sizeof(src));
+    Q_strncpyz(tbl, CG_Argv(2), sizeof(tbl));
 
     CG_Rocket_FilterDataSource(src, tbl, params);
 }
@@ -174,13 +174,13 @@ static void CG_Rocket_SetChatCommand() {
 
 static void CG_Rocket_EventExecForm() {
     static char params[BIG_INFO_STRING];
-    char cmd[MAX_STRING_CHARS]  = { 0 };
+    char cmd[MAX_STRING_CHARS] = { 0 };
     char Template[MAX_STRING_CHARS];
     char* k = Template;
     char* s = Template;
 
-    Q_strncpyz(Template, CG_Argv(1), sizeof(Template) );
-    Rocket_GetEventParameters(params, sizeof(params) );
+    Q_strncpyz(Template, CG_Argv(1), sizeof(Template));
+    Rocket_GetEventParameters(params, sizeof(params));
 
     if (!*params) {
         Com_Printf("^3WARNING: Invalid form submit.  No named values exist.\n");
@@ -192,10 +192,10 @@ static void CG_Rocket_EventExecForm() {
         if (s) {
             char* ss = strchr(s + 1, '$');
             if (ss) {
-                *s =  0;
+                *s = 0;
                 *ss = 0;
                 Q_strcat(cmd, sizeof(cmd), k);
-                Q_strcat(cmd, sizeof(cmd), Info_ValueForKey(params, s + 1) );
+                Q_strcat(cmd, sizeof(cmd), Info_ValueForKey(params, s + 1));
             }
 
             k = ss + 1;
@@ -212,8 +212,8 @@ static void CG_Rocket_SetDataSelectValue() {
     char tbl[100];
     int index;
 
-    Q_strncpyz(src, CG_Argv(1), sizeof(src) );
-    Q_strncpyz(tbl, CG_Argv(2), sizeof(tbl) );
+    Q_strncpyz(src, CG_Argv(1), sizeof(src));
+    Q_strncpyz(tbl, CG_Argv(2), sizeof(tbl));
 
     index = CG_Rocket_GetDataSourceIndex(src, tbl);
 
@@ -224,7 +224,7 @@ static void CG_Rocket_SetDataSelectValue() {
 }
 
 static void CG_Rocket_GraphicsQualityChanged() {
-    switch (trap_Cvar_VariableIntegerValue("ui_glCustom") ) {
+    switch (trap_Cvar_VariableIntegerValue("ui_glCustom")) {
     case 0: // high quality
         trap_Cvar_Set("r_subdivisions", "4");
         trap_Cvar_Set("r_vertexlighting", "0");
@@ -324,7 +324,7 @@ static void CG_Rocket_EventPlay() {
 
     // Specifying multiple files to randomly select between
     if (trap_Argc() > 2) {
-        int numSounds = atoi(CG_Argv(1) );
+        int numSounds = atoi(CG_Argv(1));
         if (numSounds > 0) {
             int selection = rand() % numSounds + 1;
             track = CG_Argv(1 + selection);
@@ -338,8 +338,8 @@ static void CG_Rocket_EventPlay() {
 
 static void CG_Rocket_ResetPings() {
     const char* src = CG_Argv(1);
-    trap_LAN_ResetPings(CG_StringToNetSource(src) );
-    trap_LAN_UpdateVisiblePings(CG_StringToNetSource(src) );
+    trap_LAN_ResetPings(CG_StringToNetSource(src));
+    trap_LAN_UpdateVisiblePings(CG_StringToNetSource(src));
 }
 
 typedef struct {
@@ -347,7 +347,7 @@ typedef struct {
     void (* exec)();
 } eventCmd_t;
 
-static const eventCmd_t eventCmdList[] ={
+static const eventCmd_t eventCmdList[] = {
     { "blur", &CG_Rocket_EventBlur },
     { "buildDS", &CG_Rocket_BuildDS },
     { "close", &CG_Rocket_EventClose },
@@ -373,7 +373,7 @@ static const eventCmd_t eventCmdList[] ={
 static const size_t eventCmdListCount = ARRAY_LEN(eventCmdList);
 
 static int eventCmdCmp(const void* a, const void* b) {
-    return Q_stricmp( (const char*) a, ( (eventCmd_t*) b)->command);
+    return Q_stricmp((const char*) a, ((eventCmd_t*) b)->command);
 }
 
 void CG_Rocket_ProcessEvents() {
@@ -381,7 +381,7 @@ void CG_Rocket_ProcessEvents() {
     std::string cmdText;
 
     // Get the even command
-    while (Rocket_GetEvent(cmdText) ) {
+    while (Rocket_GetEvent(cmdText)) {
         Cmd::PushArgs(cmdText);
         cmd = (eventCmd_t*) bsearch(CG_Argv(0), eventCmdList, eventCmdListCount, sizeof(eventCmd_t), eventCmdCmp);
 

@@ -136,7 +136,7 @@ void SV_AddServerCommand(client_t* client, const char* cmd) {
     }
 
     index = client->reliableSequence & (MAX_RELIABLE_COMMANDS - 1);
-    Q_strncpyz(client->reliableCommands[index], cmd, sizeof(client->reliableCommands[index]) );
+    Q_strncpyz(client->reliableCommands[index], cmd, sizeof(client->reliableCommands[index]));
 }
 
 /*
@@ -155,12 +155,12 @@ void QDECL PRINTF_LIKE(2) SV_SendServerCommand(client_t *cl, const char* fmt, ..
     int j;
 
     va_start(argptr, fmt);
-    Q_vsnprintf( (char*) message, sizeof(message), fmt, argptr);
+    Q_vsnprintf((char*) message, sizeof(message), fmt, argptr);
     va_end(argptr);
 
     // do not forward server command messages that would be too big to clients
     // ( q3infoboom / q3msgboom stuff )
-    if (strlen( (char*) message) > 1022) {
+    if (strlen((char*) message) > 1022) {
         return;
     }
 
@@ -169,15 +169,15 @@ void QDECL PRINTF_LIKE(2) SV_SendServerCommand(client_t *cl, const char* fmt, ..
         return;
     }
 
-    if (Com_IsDedicatedServer() ) {
-        if (!strncmp( (char*) message, "print_tr_p ", 11) ) {
-            SV_PrintTranslatedText( (const char*) message, true, true);
-        } else if (!strncmp( (char*) message, "print_tr ", 9) ) {
-            SV_PrintTranslatedText( (const char*) message, true, false);
+    if (Com_IsDedicatedServer()) {
+        if (!strncmp((char*) message, "print_tr_p ", 11)) {
+            SV_PrintTranslatedText((const char*) message, true, true);
+        } else if (!strncmp((char*) message, "print_tr ", 9)) {
+            SV_PrintTranslatedText((const char*) message, true, false);
         }
         // hack to echo broadcast prints to console
-        else if (!strncmp( (char*) message, "print ", 6) ) {
-            Com_Printf("Broadcast: %s", Cmd_UnquoteString( (char*) message + 6) );
+        else if (!strncmp((char*) message, "print ", 6)) {
+            Com_Printf("Broadcast: %s", Cmd_UnquoteString((char*) message + 6));
         }
     }
 
@@ -188,7 +188,7 @@ void QDECL PRINTF_LIKE(2) SV_SendServerCommand(client_t *cl, const char* fmt, ..
         }
 
         // Ridah, don't need to send messages to AI
-        if (SV_IsBot(client) ) {
+        if (SV_IsBot(client)) {
             continue;
         }
 
@@ -228,7 +228,7 @@ static void SV_ResolveMasterServers() {
         // see if we haven't already resolved the name
         // resolving usually causes hitches on win95, so only
         // do it when needed
-        if (sv_master[i]->modified || (masterServerAddr[i].ipv4.type == NA_BAD && masterServerAddr[i].ipv6.type == NA_BAD) ) {
+        if (sv_master[i]->modified || (masterServerAddr[i].ipv4.type == NA_BAD && masterServerAddr[i].ipv6.type == NA_BAD)) {
             sv_master[i]->modified = false;
 
             if (netenabled & NET_ENABLEV4) {
@@ -241,7 +241,7 @@ static void SV_ResolveMasterServers() {
                 }
 
                 if (res) {
-                    Com_Printf("%s resolved to %s\n", sv_master[i]->string, NET_AdrToStringwPort(masterServerAddr[i].ipv4) );
+                    Com_Printf("%s resolved to %s\n", sv_master[i]->string, NET_AdrToStringwPort(masterServerAddr[i].ipv4));
                 } else {
                     Com_Printf("%s has no IPv4 address.\n", sv_master[i]->string);
                 }
@@ -257,7 +257,7 @@ static void SV_ResolveMasterServers() {
                 }
 
                 if (res) {
-                    Com_Printf("%s resolved to %s\n", sv_master[i]->string, NET_AdrToStringwPort(masterServerAddr[i].ipv6) );
+                    Com_Printf("%s resolved to %s\n", sv_master[i]->string, NET_AdrToStringwPort(masterServerAddr[i].ipv6));
                 } else {
                     Com_Printf("%s has no IPv6 address.\n", sv_master[i]->string);
                 }
@@ -311,7 +311,7 @@ void SV_MasterHeartbeat(const char* hbname) {
 
     netenabled = Cvar_VariableIntegerValue("net_enabled");
 
-    if (isLanOnly.Get() || !(netenabled & (NET_ENABLEV4 | NET_ENABLEV6) ) ) {
+    if (isLanOnly.Get() || !(netenabled & (NET_ENABLEV4 | NET_ENABLEV6))) {
         return; // only dedicated servers send heartbeats
     }
 
@@ -373,13 +373,13 @@ SV_MasterGameStat
 void SV_MasterGameStat(const char* data) {
     netadr_t adr;
 
-    if (!isLanOnly.Get() ) {
+    if (!isLanOnly.Get()) {
         return; // only dedicated servers send stats
     }
 
     Com_Printf("Resolving %s\n", MASTER_SERVER_NAME);
 
-    switch (NET_StringToAdr(MASTER_SERVER_NAME, &adr, NA_UNSPEC) ) {
+    switch (NET_StringToAdr(MASTER_SERVER_NAME, &adr, NA_UNSPEC)) {
     case 0:
         Com_Printf("Couldn't resolve master address: %s\n", MASTER_SERVER_NAME);
         return;
@@ -392,7 +392,7 @@ void SV_MasterGameStat(const char* data) {
     }
 
     Com_Printf("%s resolved to %s\n", MASTER_SERVER_NAME,
-               NET_AdrToStringwPort(adr) );
+               NET_AdrToStringwPort(adr));
 
     Com_Printf("Sending gamestat to %s\n", MASTER_SERVER_NAME);
     NET_OutOfBandPrint(NS_SERVER, adr, "gamestat %s", data);
@@ -453,7 +453,7 @@ void SVC_Status(netadr_t from, const Cmd::Args& args) {
     char infostring[MAX_INFO_STRING];
 
     // bani - bugtraq 12534
-    if (args.Argc() > 1 && !SV_VerifyChallenge(args.Argv(1).c_str() ) ) {
+    if (args.Argc() > 1 && !SV_VerifyChallenge(args.Argv(1).c_str())) {
         return;
     }
 
@@ -476,7 +476,7 @@ void SVC_Status(netadr_t from, const Cmd::Args& args) {
             Com_sprintf(player, sizeof(player), "%i %i \"%s\"\n", ps->persistant[PERS_SCORE], cl->ping, cl->name);
             playerLength = strlen(player);
 
-            if (statusLength + playerLength >= (int) sizeof(status) ) {
+            if (statusLength + playerLength >= (int) sizeof(status)) {
                 break; // can't hold any more
             }
 
@@ -516,7 +516,7 @@ void SVC_Info(netadr_t from, const Cmd::Args& args) {
     }
 
     // bani - bugtraq 12534
-    if (!SV_VerifyChallenge(challenge) ) {
+    if (!SV_VerifyChallenge(challenge)) {
         return;
     }
 
@@ -527,7 +527,7 @@ void SVC_Info(netadr_t from, const Cmd::Args& args) {
 
     for (i = sv_privateClients->integer; i < sv_maxclients->integer; i++) {
         if (svs.clients[i].state >= CS_CONNECTED) {
-            if (SV_IsBot(&svs.clients[i]) ) {
+            if (SV_IsBot(&svs.clients[i])) {
                 ++botCount;
             } else {
                 ++count;
@@ -545,7 +545,7 @@ void SVC_Info(netadr_t from, const Cmd::Args& args) {
     // most recent challenge received from it over the OTHER protocol
     for (i = 0; i < MAX_MASTER_SERVERS; i++) {
         // First, see if the challenge was sent by this master server
-        if (!NET_CompareBaseAdr(from, masterServerAddr[i].ipv4) && !NET_CompareBaseAdr(from, masterServerAddr[i].ipv6) ) {
+        if (!NET_CompareBaseAdr(from, masterServerAddr[i].ipv4) && !NET_CompareBaseAdr(from, masterServerAddr[i].ipv6)) {
             continue;
         }
 
@@ -616,7 +616,7 @@ bool SV_CheckDRDoS(netadr_t from) {
     // with a source address being a spoofed LAN address.  Even if that's not
     // the case, sending packets to other hosts in the LAN is not a big deal.
     // NA_LOOPBACK qualifies as a LAN address.
-    if (Sys_IsLANAddress(from) ) {
+    if (Sys_IsLANAddress(from)) {
         return false;
     }
 
@@ -652,7 +652,7 @@ bool SV_CheckDRDoS(netadr_t from) {
                 globalCount++;
             }
 
-            if (NET_CompareBaseAdr(from, receipt->adr) ) {
+            if (NET_CompareBaseAdr(from, receipt->adr)) {
                 specificCount++;
             }
         }
@@ -745,10 +745,10 @@ void SVC_RemoteCommand(netadr_t from, const Cmd::Args& args) {
 
     if (!strlen(sv_rconPassword->string) || args.Argv(1) != sv_rconPassword->string) {
         valid = false;
-        Com_Printf("Bad rcon from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(2).c_str() );
+        Com_Printf("Bad rcon from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(2).c_str());
     } else {
         valid = true;
-        Com_Printf("Rcon from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(2).c_str() );
+        Com_Printf("Rcon from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(2).c_str());
     }
 
     // start redirecting all print outputs to the packet
@@ -760,7 +760,7 @@ void SVC_RemoteCommand(netadr_t from, const Cmd::Args& args) {
     // (also a Q3 issue)
     auto env = RconEnvironment(from, SV_OUTPUTBUF_LENGTH);
 
-    if (!strlen(sv_rconPassword->string) ) {
+    if (!strlen(sv_rconPassword->string)) {
         env.Print("No rconpassword set on the server.");
     } else if (!valid) {
         env.Print("Bad rconpassword.");
@@ -786,7 +786,7 @@ void SV_ConnectionlessPacket(netadr_t from, msg_t* msg) {
     MSG_BeginReadingOOB(msg);
     MSG_ReadLong(msg); // skip the -1 marker
 
-    if (!Q_strncmp("connect", (char*) &msg->data[4], 7) ) {
+    if (!Q_strncmp("connect", (char*) &msg->data[4], 7)) {
         Huff_Decompress(msg, 12);
     }
 
@@ -796,16 +796,16 @@ void SV_ConnectionlessPacket(netadr_t from, msg_t* msg) {
         return;
     }
 
-    Com_DPrintf("SV packet %s : %s\n", NET_AdrToString(from), args.Argv(0).c_str() );
+    Com_DPrintf("SV packet %s : %s\n", NET_AdrToString(from), args.Argv(0).c_str());
 
     if (args.Argv(0) == "getstatus") {
-        if (SV_CheckDRDoS(from) ) {
+        if (SV_CheckDRDoS(from)) {
             return;
         }
 
         SVC_Status(from, args);
     } else if (args.Argv(0) == "getinfo") {
-        if (SV_CheckDRDoS(from) ) {
+        if (SV_CheckDRDoS(from)) {
             return;
         }
 
@@ -821,7 +821,7 @@ void SV_ConnectionlessPacket(netadr_t from, msg_t* msg) {
         // server disconnect messages when their new server sees our final
         // sequenced messages to the old client
     } else {
-        Com_DPrintf("bad connectionless packet from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(0).c_str() );
+        Com_DPrintf("bad connectionless packet from %s:\n%s\n", NET_AdrToString(from), args.ConcatArgs(0).c_str());
     }
 }
 
@@ -855,7 +855,7 @@ void SV_PacketEvent(netadr_t from, msg_t* msg) {
             continue;
         }
 
-        if (!NET_CompareBaseAdr(from, cl->netchan.remoteAddress) ) {
+        if (!NET_CompareBaseAdr(from, cl->netchan.remoteAddress)) {
             continue;
         }
 
@@ -874,7 +874,7 @@ void SV_PacketEvent(netadr_t from, msg_t* msg) {
         }
 
         // make sure it is a valid, in sequence packet
-        if (Netchan_Process(&cl->netchan, msg) ) {
+        if (Netchan_Process(&cl->netchan, msg)) {
             // zombie clients still need to do the Netchan_Process
             // to make sure they don't need to retransmit the final
             // reliable message, but they don't do any other processing
@@ -919,7 +919,7 @@ void SV_CalcPings() {
             continue;
         }
 
-        if (SV_IsBot(cl) ) {
+        if (SV_IsBot(cl)) {
             cl->ping = 0;
             continue;
         }
@@ -1094,7 +1094,7 @@ void SV_Frame(int msec) {
     }
 
     // allow pause if only the local client is connected
-    if (SV_CheckPaused() ) {
+    if (SV_CheckPaused()) {
         return;
     }
 
@@ -1149,12 +1149,12 @@ void SV_Frame(int msec) {
 
     // update infostrings if anything has been changed
     if (cvar_modifiedFlags & CVAR_SERVERINFO) {
-        SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO, false) );
+        SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO, false));
         cvar_modifiedFlags &= ~CVAR_SERVERINFO;
     }
 
     if (cvar_modifiedFlags & CVAR_SYSTEMINFO) {
-        SV_SetConfigstring(CS_SYSTEMINFO, Cvar_InfoString(CVAR_SYSTEMINFO, true) );
+        SV_SetConfigstring(CS_SYSTEMINFO, Cvar_InfoString(CVAR_SYSTEMINFO, true));
         cvar_modifiedFlags &= ~CVAR_SYSTEMINFO;
     }
 
@@ -1232,7 +1232,7 @@ void SV_Frame(int msec) {
 
     // collect timing statistics
     end = Sys_Milliseconds();
-    svs.stats.active += ( (double)(end - start) ) / 1000;
+    svs.stats.active += ((double)(end - start)) / 1000;
 
     if (++svs.stats.count == STATFRAMES) {
         svs.stats.latched_active = svs.stats.active;
@@ -1257,7 +1257,7 @@ void SV_Frame(int msec) {
 void SV_PrintTranslatedText(const char* text, bool broadcast, bool plural) {
     Cmd_SaveCmdContext();
     Cmd_TokenizeString(text);
-    Com_Printf("%s%s", broadcast ? "Broadcast: " : "", TranslateText_Internal(plural, 1) );
+    Com_Printf("%s%s", broadcast ? "Broadcast: " : "", TranslateText_Internal(plural, 1));
     Cmd_RestoreCmdContext();
 }
 

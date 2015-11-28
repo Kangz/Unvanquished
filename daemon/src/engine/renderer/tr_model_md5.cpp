@@ -78,7 +78,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
     // parse numJoints <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "numJoints") ) {
+    if (Q_stricmp(token, "numJoints")) {
         ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numJoints' found '%s' in model '%s'\n", token, modName);
         return false;
     }
@@ -89,7 +89,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
     // parse numMeshes <number>
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "numMeshes") ) {
+    if (Q_stricmp(token, "numMeshes")) {
         ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numMeshes' found '%s' in model '%s'\n", token, modName);
         return false;
     }
@@ -113,14 +113,14 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
     // parse joints {
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "joints") ) {
+    if (Q_stricmp(token, "joints")) {
         ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'joints' found '%s' in model '%s'\n", token, modName);
         return false;
     }
 
     token = COM_ParseExt2(&buf_p, false);
 
-    if (Q_stricmp(token, "{") ) {
+    if (Q_stricmp(token, "{")) {
         ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName);
         return false;
     }
@@ -128,7 +128,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
     bone = md5->bones;
     for (int i = 0; i < md5->numBones; i++, bone++) {
         token = COM_ParseExt2(&buf_p, true);
-        Q_strncpyz(bone->name, token, sizeof(bone->name) );
+        Q_strncpyz(bone->name, token, sizeof(bone->name));
 
         token = COM_ParseExt2(&buf_p, false);
         bone->parentIndex = atoi(token);
@@ -141,7 +141,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // skip (
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -154,7 +154,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -162,7 +162,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // skip (
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "(") ) {
+        if (Q_stricmp(token, "(")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -181,7 +181,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // skip )
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, ")") ) {
+        if (Q_stricmp(token, ")")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -190,7 +190,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
     // parse }
     token = COM_ParseExt2(&buf_p, true);
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName);
         return false;
     }
@@ -208,14 +208,14 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse mesh {
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "mesh") ) {
+        if (Q_stricmp(token, "mesh")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'mesh' found '%s' in model '%s'\n", token, modName);
             return false;
         }
 
         token = COM_ParseExt2(&buf_p, false);
 
-        if (Q_stricmp(token, "{") ) {
+        if (Q_stricmp(token, "{")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '{' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -229,13 +229,13 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse shader <name>
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "shader") ) {
+        if (Q_stricmp(token, "shader")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'shader' found '%s' in model '%s'\n", token, modName);
             return false;
         }
 
         token = COM_ParseExt2(&buf_p, false);
-        Q_strncpyz(surf->shader, token, sizeof(surf->shader) );
+        Q_strncpyz(surf->shader, token, sizeof(surf->shader));
 
         // FIXME .md5mesh meshes don't have surface names
         // lowercase the surface name so skin compares are faster
@@ -252,7 +252,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse numVerts <number>
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "numVerts") ) {
+        if (Q_stricmp(token, "numVerts")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numVerts' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -266,14 +266,14 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         }
 
         surf->verts = (md5Vertex_t*) ri.Hunk_Alloc(sizeof(*v) * surf->numVerts, h_low);
-        assert( ((intptr_t) surf->verts & 15) == 0);
+        assert(((intptr_t) surf->verts & 15) == 0);
 
         v = surf->verts;
         for (unsigned j = 0; j < surf->numVerts; j++, v++) {
             // skip vert <number>
             token = COM_ParseExt2(&buf_p, true);
 
-            if (Q_stricmp(token, "vert") ) {
+            if (Q_stricmp(token, "vert")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'vert' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -283,7 +283,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip (
             token = COM_ParseExt2(&buf_p, false);
 
-            if (Q_stricmp(token, "(") ) {
+            if (Q_stricmp(token, "(")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -296,7 +296,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip )
             token = COM_ParseExt2(&buf_p, false);
 
-            if (Q_stricmp(token, ")") ) {
+            if (Q_stricmp(token, ")")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -316,7 +316,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse numTris <number>
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "numTris") ) {
+        if (Q_stricmp(token, "numTris")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numTris' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -336,7 +336,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip tri <number>
             token = COM_ParseExt2(&buf_p, true);
 
-            if (Q_stricmp(token, "tri") ) {
+            if (Q_stricmp(token, "tri")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'tri' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -352,7 +352,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse numWeights <number>
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "numWeights") ) {
+        if (Q_stricmp(token, "numWeights")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'numWeights' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -367,7 +367,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip weight <number>
             token = COM_ParseExt2(&buf_p, true);
 
-            if (Q_stricmp(token, "weight") ) {
+            if (Q_stricmp(token, "weight")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected 'weight' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -383,7 +383,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip (
             token = COM_ParseExt2(&buf_p, false);
 
-            if (Q_stricmp(token, "(") ) {
+            if (Q_stricmp(token, "(")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '(' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -396,7 +396,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
             // skip )
             token = COM_ParseExt2(&buf_p, false);
 
-            if (Q_stricmp(token, ")") ) {
+            if (Q_stricmp(token, ")")) {
                 ri.Printf(PRINT_WARNING, "R_LoadMD5: expected ')' found '%s' in model '%s'\n", token, modName);
                 return false;
             }
@@ -405,7 +405,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
         // parse }
         token = COM_ParseExt2(&buf_p, true);
 
-        if (Q_stricmp(token, "}") ) {
+        if (Q_stricmp(token, "}")) {
             ri.Printf(PRINT_WARNING, "R_LoadMD5: expected '}' found '%s' in model '%s'\n", token, modName);
             return false;
         }
@@ -517,7 +517,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
 
         tri = surf->triangles;
         for (unsigned j = 0; j < surf->numTriangles; j++, tri++) {
-            skelTriangle_t* sortTri = (skelTriangle_t*) Com_Allocate(sizeof(*sortTri) );
+            skelTriangle_t* sortTri = (skelTriangle_t*) Com_Allocate(sizeof(*sortTri));
 
             for (unsigned k = 0; k < 3; k++) {
                 sortTri->indexes[k] = tri->indexes[k];
@@ -533,7 +533,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
 
         while (numRemaining) {
             numBoneReferences = 0;
-            Com_Memset(boneReferences, 0, sizeof(boneReferences) );
+            Com_Memset(boneReferences, 0, sizeof(boneReferences));
 
             Com_InitGrowList(&vboTriangles, 1000);
 
@@ -544,7 +544,7 @@ bool R_LoadMD5(model_t* mod, void* buffer, const char* modName) {
                     continue;
                 }
 
-                if (AddTriangleToVBOTriangleList(&vboTriangles, sortTri, &numBoneReferences, boneReferences) ) {
+                if (AddTriangleToVBOTriangleList(&vboTriangles, sortTri, &numBoneReferences, boneReferences)) {
                     sortTri->referenced = true;
                 }
             }

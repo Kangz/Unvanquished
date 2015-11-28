@@ -87,7 +87,7 @@ static int GLimp_RenderThreadWrapper(void*) {
 GLimp_SpawnRenderThread
 ===============
 */
-bool GLimp_SpawnRenderThread(void (* function)() ) {
+bool GLimp_SpawnRenderThread(void (* function)()) {
     static bool warned = false;
 
     if (!warned) {
@@ -103,7 +103,7 @@ bool GLimp_SpawnRenderThread(void (* function)() ) {
     smpMutex = SDL_CreateMutex();
 
     if (smpMutex == nullptr) {
-        Com_Printf("smpMutex creation failed: %s\n", SDL_GetError() );
+        Com_Printf("smpMutex creation failed: %s\n", SDL_GetError());
         GLimp_ShutdownRenderThread();
         return false;
     }
@@ -111,7 +111,7 @@ bool GLimp_SpawnRenderThread(void (* function)() ) {
     renderCommandsEvent = SDL_CreateCond();
 
     if (renderCommandsEvent == nullptr) {
-        Com_Printf("renderCommandsEvent creation failed: %s\n", SDL_GetError() );
+        Com_Printf("renderCommandsEvent creation failed: %s\n", SDL_GetError());
         GLimp_ShutdownRenderThread();
         return false;
     }
@@ -119,7 +119,7 @@ bool GLimp_SpawnRenderThread(void (* function)() ) {
     renderCompletedEvent = SDL_CreateCond();
 
     if (renderCompletedEvent == nullptr) {
-        Com_Printf("renderCompletedEvent creation failed: %s\n", SDL_GetError() );
+        Com_Printf("renderCompletedEvent creation failed: %s\n", SDL_GetError());
         GLimp_ShutdownRenderThread();
         return false;
     }
@@ -128,7 +128,7 @@ bool GLimp_SpawnRenderThread(void (* function)() ) {
     renderThread = SDL_CreateThread(GLimp_RenderThreadWrapper, "render thread", nullptr);
 
     if (renderThread == nullptr) {
-        ri.Printf(PRINT_ALL, "SDL_CreateThread() returned %s\n", SDL_GetError() );
+        ri.Printf(PRINT_ALL, "SDL_CreateThread() returned %s\n", SDL_GetError());
         GLimp_ShutdownRenderThread();
         return false;
     }
@@ -253,7 +253,7 @@ void GLimp_WakeRenderer(void* data) {
 void GLimp_RenderThreadWrapper(void*) {
 }
 
-bool GLimp_SpawnRenderThread(void (*)() ) {
+bool GLimp_SpawnRenderThread(void (*)()) {
     ri.Printf(PRINT_WARNING, "ERROR: SMP support was disabled at compile time\n");
     return false;
 }
@@ -322,8 +322,8 @@ void GLimp_Shutdown() {
 
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 
-    Com_Memset(&glConfig, 0, sizeof(glConfig) );
-    Com_Memset(&glState, 0, sizeof(glState) );
+    Com_Memset(&glConfig, 0, sizeof(glConfig));
+    Com_Memset(&glState, 0, sizeof(glState));
 }
 
 static void GLimp_Minimize() {
@@ -372,7 +372,7 @@ static void GLimp_DetectAvailableModes() {
     display = SDL_GetWindowDisplayIndex(window);
 
     if (SDL_GetWindowDisplayMode(window, &windowMode) < 0) {
-        ri.Printf(PRINT_WARNING, "Couldn't get window display mode: %s\n", SDL_GetError() );
+        ri.Printf(PRINT_WARNING, "Couldn't get window display mode: %s\n", SDL_GetError());
         return;
     }
 
@@ -404,7 +404,7 @@ static void GLimp_DetectAvailableModes() {
     for (i = 0; i < numModes; i++) {
         const char* newModeString = va("%ux%u ", modes[i].w, modes[i].h);
 
-        if (strlen(newModeString) < (int) sizeof(buf) - strlen(buf) ) {
+        if (strlen(newModeString) < (int) sizeof(buf) - strlen(buf)) {
             Q_strcat(buf, sizeof(buf), newModeString);
         } else {
             ri.Printf(PRINT_WARNING, "Skipping mode %ux%x, buffer too small\n", modes[i].w, modes[i].h);
@@ -449,26 +449,26 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
         y = SDL_WINDOWPOS_UNDEFINED_DISPLAY(r_displayIndex->integer);
     }
 
-    icon = SDL_CreateRGBSurfaceFrom( (void*) CLIENT_WINDOW_ICON.pixel_data,
-                                     CLIENT_WINDOW_ICON.width,
-                                     CLIENT_WINDOW_ICON.height,
-                                     CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
-                                     CLIENT_WINDOW_ICON.bytes_per_pixel * CLIENT_WINDOW_ICON.width,
-                                     #ifdef Q3_LITTLE_ENDIAN
-                                     0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000
-                                     #else
-                                     0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF
-                                     #endif
-                                     );
+    icon = SDL_CreateRGBSurfaceFrom((void*) CLIENT_WINDOW_ICON.pixel_data,
+                                    CLIENT_WINDOW_ICON.width,
+                                    CLIENT_WINDOW_ICON.height,
+                                    CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
+                                    CLIENT_WINDOW_ICON.bytes_per_pixel * CLIENT_WINDOW_ICON.width,
+                                    #ifdef Q3_LITTLE_ENDIAN
+                                    0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000
+                                    #else
+                                    0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF
+                                    #endif
+                                    );
 
     if (SDL_GetDesktopDisplayMode(r_displayIndex->integer, &desktopMode) == 0) {
         displayAspect = (float) desktopMode.w / (float) desktopMode.h;
 
         ri.Printf(PRINT_ALL, "Display aspect: %.3f\n", displayAspect);
     } else {
-        Com_Memset(&desktopMode, 0, sizeof(SDL_DisplayMode) );
+        Com_Memset(&desktopMode, 0, sizeof(SDL_DisplayMode));
 
-        ri.Printf(PRINT_ALL, "Cannot determine display aspect (%s), assuming 1.333\n", SDL_GetError() );
+        ri.Printf(PRINT_ALL, "Cannot determine display aspect (%s), assuming 1.333\n", SDL_GetError());
     }
 
     ri.Printf(PRINT_ALL, "...setting mode %d:", mode);
@@ -485,14 +485,14 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
         }
 
         glConfig.windowAspect = (float) glConfig.vidWidth / (float) glConfig.vidHeight;
-    } else if (!R_GetModeInfo(&glConfig.vidWidth, &glConfig.vidHeight, &glConfig.windowAspect, mode) ) {
+    } else if (!R_GetModeInfo(&glConfig.vidWidth, &glConfig.vidHeight, &glConfig.windowAspect, mode)) {
         ri.Printf(PRINT_ALL, " invalid mode\n");
         return RSERR_INVALID_MODE;
     }
 
     ri.Printf(PRINT_ALL, " %d %d\n", glConfig.vidWidth, glConfig.vidHeight);
-    Cvar_Set("r_customwidth", va("%d", glConfig.vidWidth) );
-    Cvar_Set("r_customheight", va("%d", glConfig.vidHeight) );
+    Cvar_Set("r_customwidth", va("%d", glConfig.vidWidth));
+    Cvar_Set("r_customheight", va("%d", glConfig.vidHeight));
 
     do {
         if (glContext != nullptr) {
@@ -522,7 +522,7 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
 
         colorBits = r_colorbits->integer;
 
-        if ( (!colorBits) || (colorBits >= 32) ) {
+        if ((!colorBits) || (colorBits >= 32)) {
             colorBits = 24;
         }
 
@@ -548,7 +548,7 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
             // 1 - minus colorbits
             // 2 - minus depthbits
             // 3 - minus stencil
-            if ( (i % 4) == 0 && i) {
+            if ((i % 4) == 0 && i) {
                 // one pass, reduce
                 switch (i / 4) {
                 case 2:
@@ -578,14 +578,14 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
             testDepthBits = depthBits;
             testStencilBits = stencilBits;
 
-            if ( (i % 4) == 3) {
+            if ((i % 4) == 3) {
                 // reduce colorbits
                 if (testColorBits == 24) {
                     testColorBits = 16;
                 }
             }
 
-            if ( (i % 4) == 2) {
+            if ((i % 4) == 2) {
                 // reduce depthbits
                 if (testDepthBits == 24) {
                     testDepthBits = 16;
@@ -594,7 +594,7 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
                 }
             }
 
-            if ( (i % 4) == 1) {
+            if ((i % 4) == 1) {
                 // reduce stencilbits
                 if (testStencilBits == 24) {
                     testStencilBits = 16;
@@ -645,7 +645,7 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
             window = SDL_CreateWindow(CLIENT_WINDOW_TITLE, x, y, glConfig.vidWidth, glConfig.vidHeight, flags);
 
             if (!window) {
-                ri.Printf(PRINT_DEVELOPER, "SDL_CreateWindow failed: %s\n", SDL_GetError() );
+                ri.Printf(PRINT_DEVELOPER, "SDL_CreateWindow failed: %s\n", SDL_GetError());
                 continue;
             }
 
@@ -654,7 +654,7 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
             glContext = SDL_GL_CreateContext(window);
 
             if (!glContext) {
-                ri.Printf(PRINT_DEVELOPER, "SDL_GL_CreateContext failed: %s\n", SDL_GetError() );
+                ri.Printf(PRINT_DEVELOPER, "SDL_GL_CreateContext failed: %s\n", SDL_GetError());
                 continue;
             }
             SDL_GL_SetSwapInterval(r_swapInterval->integer);
@@ -669,11 +669,11 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
             break;
         }
 
-        if (samples && (!glContext || !window) ) {
+        if (samples && (!glContext || !window)) {
             r_ext_multisample->integer = 0;
         }
 
-    } while ( (!glContext || !window) && samples);
+    } while ((!glContext || !window) && samples);
 
     SDL_FreeSurface(icon);
 
@@ -681,19 +681,19 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
 
     if (glewResult != GLEW_OK) {
         // glewInit failed, something is seriously wrong
-        ri.Error(ERR_FATAL, "GLW_StartOpenGL() - could not load OpenGL subsystem: %s", glewGetErrorString(glewResult) );
+        ri.Error(ERR_FATAL, "GLW_StartOpenGL() - could not load OpenGL subsystem: %s", glewGetErrorString(glewResult));
     } else {
-        ri.Printf(PRINT_ALL, "Using GLEW %s\n", glewGetString(GLEW_VERSION) );
+        ri.Printf(PRINT_ALL, "Using GLEW %s\n", glewGetString(GLEW_VERSION));
     }
 
     int GLmajor, GLminor;
-    sscanf( (const char*) glGetString(GL_VERSION), "%d.%d", &GLmajor, &GLminor);
-    if (GLmajor < 2 || (GLmajor == 2 && GLminor < 1) ) {
+    sscanf((const char*) glGetString(GL_VERSION), "%d.%d", &GLmajor, &GLminor);
+    if (GLmajor < 2 || (GLmajor == 2 && GLminor < 1)) {
         // missing shader support, switch to 1.x renderer
         return RSERR_OLD_GL;
     }
 
-    if (GLmajor < 3 || (GLmajor == 3 && GLminor < 2) ) {
+    if (GLmajor < 3 || (GLmajor == 3 && GLminor < 2)) {
         // shaders are supported, but not all GL3.x features
         ri.Printf(PRINT_ALL, "Using enhanced (GL3) Renderer in GL 2.x mode...\n");
     } else {
@@ -710,18 +710,18 @@ static int GLimp_SetMode(int mode, bool fullscreen, bool noborder) {
 
 static void AssertCvarRange(cvar_t* cv, float minVal, float maxVal, bool shouldBeIntegral) {
     if (shouldBeIntegral) {
-        if ( (int) cv->value != cv->integer) {
+        if ((int) cv->value != cv->integer) {
             ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' must be integral (%f)\n", cv->name, cv->value);
-            ri.Cvar_Set(cv->name, va("%d", cv->integer) );
+            ri.Cvar_Set(cv->name, va("%d", cv->integer));
         }
     }
 
     if (cv->value < minVal) {
         ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' out of range (%f < %f)\n", cv->name, cv->value, minVal);
-        ri.Cvar_Set(cv->name, va("%f", minVal) );
+        ri.Cvar_Set(cv->name, va("%f", minVal));
     } else if (cv->value > maxVal) {
         ri.Printf(PRINT_WARNING, "WARNING: cvar '%s' out of range (%f > %f)\n", cv->name, cv->value, maxVal);
-        ri.Cvar_Set(cv->name, va("%f", maxVal) );
+        ri.Cvar_Set(cv->name, va("%f", maxVal));
     }
 }
 
@@ -734,7 +734,7 @@ static bool GLimp_StartDriverAndSetMode(int mode, bool fullscreen, bool noborder
     rserr_t err;
     int numDisplays;
 
-    if (!SDL_WasInit(SDL_INIT_VIDEO) ) {
+    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
         const char* driverName;
         SDL_version v;
         SDL_GetVersion(&v);
@@ -743,7 +743,7 @@ static bool GLimp_StartDriverAndSetMode(int mode, bool fullscreen, bool noborder
         ri.Printf(PRINT_ALL, "Using SDL Version %u.%u.%u\n", v.major, v.minor, v.patch);
 
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) == -1) {
-            ri.Printf(PRINT_ALL, "SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) FAILED (%s)\n", SDL_GetError() );
+            ri.Printf(PRINT_ALL, "SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) FAILED (%s)\n", SDL_GetError());
             return false;
         }
 
@@ -760,12 +760,12 @@ static bool GLimp_StartDriverAndSetMode(int mode, bool fullscreen, bool noborder
     numDisplays = SDL_GetNumVideoDisplays();
 
     if (numDisplays <= 0) {
-        ri.Error(ERR_FATAL, "SDL_GetNumVideoDisplays FAILED (%s)\n", SDL_GetError() );
+        ri.Error(ERR_FATAL, "SDL_GetNumVideoDisplays FAILED (%s)\n", SDL_GetError());
     }
 
     AssertCvarRange(r_displayIndex, 0, numDisplays - 1, true);
 
-    if (fullscreen && ri.Cvar_VariableIntegerValue("in_nograb") ) {
+    if (fullscreen && ri.Cvar_VariableIntegerValue("in_nograb")) {
         ri.Printf(PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n");
         ri.Cvar_Set("r_fullscreen", "0");
         r_fullscreen->modified = false;
@@ -794,7 +794,7 @@ static bool GLimp_StartDriverAndSetMode(int mode, bool fullscreen, bool noborder
     return true;
 }
 
-static GLenum debugTypes[] ={
+static GLenum debugTypes[] = {
     0,
     GL_DEBUG_TYPE_ERROR_ARB,
     GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB,
@@ -910,8 +910,8 @@ static bool LoadExtWithCvar(bool hasExt, const char* name, bool cvarValue) {
 static void GLimp_InitExtensions() {
     ri.Printf(PRINT_ALL, "Initializing OpenGL extensions\n");
 
-    if (LOAD_EXTENSION_WITH_CVAR(ARB_debug_output, r_glDebugProfile) ) {
-        glDebugMessageCallbackARB( (GLDEBUGPROCARB)GLimp_DebugCallback, nullptr);
+    if (LOAD_EXTENSION_WITH_CVAR(ARB_debug_output, r_glDebugProfile)) {
+        glDebugMessageCallbackARB((GLDEBUGPROCARB)GLimp_DebugCallback, nullptr);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
     }
 
@@ -923,14 +923,14 @@ static void GLimp_InitExtensions() {
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS_ARB, &glConfig2.maxVertexAttribs);
 
     int reservedComponents = 36 * 10; // approximation how many uniforms we have besides the bone matrices
-    glConfig2.maxVertexSkinningBones = Math::Clamp( (glConfig2.maxVertexUniforms - reservedComponents) / 16, 0, MAX_BONES);
-    glConfig2.vboVertexSkinningAvailable = r_vboVertexSkinning->integer && ( (glConfig2.maxVertexSkinningBones >= 12) ? true : false);
+    glConfig2.maxVertexSkinningBones = Math::Clamp((glConfig2.maxVertexUniforms - reservedComponents) / 16, 0, MAX_BONES);
+    glConfig2.vboVertexSkinningAvailable = r_vboVertexSkinning->integer && ((glConfig2.maxVertexSkinningBones >= 12) ? true : false);
 
     // GLSL
     REQUIRE_EXTENSION(ARB_shading_language_100);
 
     Q_strncpyz(glConfig2.shadingLanguageVersionString, (char*) glGetString(GL_SHADING_LANGUAGE_VERSION_ARB),
-               sizeof(glConfig2.shadingLanguageVersionString) );
+               sizeof(glConfig2.shadingLanguageVersionString));
     int majorVersion, minorVersion;
     if (sscanf(glConfig2.shadingLanguageVersionString, "%i.%i", &majorVersion, &minorVersion) != 2) {
         ri.Printf(PRINT_ALL, "WARNING: unrecognized shading language version string format\n");
@@ -945,7 +945,7 @@ static void GLimp_InitExtensions() {
     REQUIRE_EXTENSION(ARB_texture_cube_map);
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, &glConfig2.maxCubeMapTextureSize);
 
-    glConfig2.textureHalfFloatAvailable =  LOAD_EXTENSION_WITH_CVAR(ARB_half_float_pixel, r_ext_half_float_pixel);
+    glConfig2.textureHalfFloatAvailable = LOAD_EXTENSION_WITH_CVAR(ARB_half_float_pixel, r_ext_half_float_pixel);
     glConfig2.textureFloatAvailable = LOAD_EXTENSION_WITH_CVAR(ARB_texture_float, r_ext_texture_float);
     glConfig2.textureRGAvailable = LOAD_EXTENSION_WITH_CVAR(ARB_texture_rg, r_ext_texture_rg);
 
@@ -954,7 +954,7 @@ static void GLimp_InitExtensions() {
 
     glConfig2.ARBTextureCompressionAvailable = LOAD_EXTENSION_WITH_CVAR(ARB_texture_compression, r_ext_compressed_textures);
     glConfig.textureCompression = TC_NONE;
-    if (LOAD_EXTENSION_WITH_CVAR(EXT_texture_compression_s3tc, r_ext_compressed_textures) ) {
+    if (LOAD_EXTENSION_WITH_CVAR(EXT_texture_compression_s3tc, r_ext_compressed_textures)) {
         glConfig.textureCompression = TC_S3TC;
     }
     // REQUIRE_EXTENSION(EXT_texture3D);
@@ -964,7 +964,7 @@ static void GLimp_InitExtensions() {
     glConfig2.generateMipmapAvailable = LOAD_EXTENSION_WITH_CVAR(SGIS_generate_mipmap, r_ext_generate_mipmap);
 
     glConfig2.textureAnisotropyAvailable = false;
-    if (LOAD_EXTENSION_WITH_CVAR(EXT_texture_filter_anisotropic, r_ext_texture_filter_anisotropic) ) {
+    if (LOAD_EXTENSION_WITH_CVAR(EXT_texture_filter_anisotropic, r_ext_texture_filter_anisotropic)) {
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &glConfig2.maxTextureAnisotropy);
         glConfig2.textureAnisotropyAvailable = true;
     }
@@ -976,7 +976,7 @@ static void GLimp_InitExtensions() {
 
     // FBO
     glConfig2.framebufferObjectAvailable = false;
-    if (LOAD_EXTENSION_WITH_CVAR(ARB_framebuffer_object, r_arb_framebuffer_object) ) {
+    if (LOAD_EXTENSION_WITH_CVAR(ARB_framebuffer_object, r_arb_framebuffer_object)) {
         glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &glConfig2.maxRenderbufferSize);
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &glConfig2.maxColorAttachments);
         glConfig2.framebufferObjectAvailable = true;
@@ -987,13 +987,13 @@ static void GLimp_InitExtensions() {
 
     glConfig2.occlusionQueryAvailable = false;
     glConfig2.occlusionQueryBits = 0;
-    if (LOAD_EXTENSION_WITH_CVAR(ARB_occlusion_query, r_ext_occlusion_query) ) {
+    if (LOAD_EXTENSION_WITH_CVAR(ARB_occlusion_query, r_ext_occlusion_query)) {
         glConfig2.occlusionQueryAvailable = true;
         glGetQueryivARB(GL_SAMPLES_PASSED, GL_QUERY_COUNTER_BITS, &glConfig2.occlusionQueryBits);
     }
 
     glConfig2.drawBuffersAvailable = false;
-    if (LOAD_EXTENSION_WITH_CVAR(ARB_draw_buffers, r_ext_draw_buffers) ) {
+    if (LOAD_EXTENSION_WITH_CVAR(ARB_draw_buffers, r_ext_draw_buffers)) {
         glGetIntegerv(GL_MAX_DRAW_BUFFERS_ARB, &glConfig2.maxDrawBuffers);
         glConfig2.drawBuffersAvailable = true;
     }
@@ -1055,7 +1055,7 @@ static void reportDriverType(bool force) {
     static const char* const drivers[] = {
         "integrated", "stand-alone", "OpenGL 3+", "Mesa"
     };
-    if (glConfig.driverType > GLDRV_UNKNOWN && (unsigned) glConfig.driverType < ARRAY_LEN(drivers) ) {
+    if (glConfig.driverType > GLDRV_UNKNOWN && (unsigned) glConfig.driverType < ARRAY_LEN(drivers)) {
         ri.Printf(PRINT_ALL, "%s graphics driver class '%s'\n",
                   force ? "User has forced" : "Detected",
                   drivers[glConfig.driverType]);
@@ -1066,7 +1066,7 @@ static void reportHardwareType(bool force) {
     static const char* const hardware[] = {
         "generic", "ATI Radeon", "AMD Radeon DX10-class", "nVidia DX10-class"
     };
-    if (glConfig.hardwareType > GLHW_UNKNOWN && (unsigned) glConfig.hardwareType < ARRAY_LEN(hardware) ) {
+    if (glConfig.hardwareType > GLHW_UNKNOWN && (unsigned) glConfig.hardwareType < ARRAY_LEN(hardware)) {
         ri.Printf(PRINT_ALL, "%s graphics hardware class '%s'\n",
                   force ? "User has forced" : "Detected",
                   hardware[glConfig.hardwareType]);
@@ -1090,15 +1090,15 @@ bool GLimp_Init() {
     r_displayIndex = ri.Cvar_Get("r_displayIndex", "0", 0);
     ri.Cmd_AddCommand("minimize", GLimp_Minimize);
 
-    if (ri.Cvar_VariableIntegerValue("com_abnormalExit") ) {
-        ri.Cvar_Set("r_mode", va("%d", R_MODE_FALLBACK) );
+    if (ri.Cvar_VariableIntegerValue("com_abnormalExit")) {
+        ri.Cvar_Set("r_mode", va("%d", R_MODE_FALLBACK));
         ri.Cvar_Set("r_fullscreen", "0");
         ri.Cvar_Set("r_centerWindow", "0");
         ri.Cvar_Set("com_abnormalExit", "0");
     }
 
     // Create the window and set up the context
-    if (GLimp_StartDriverAndSetMode(r_mode->integer, r_fullscreen->integer, false) ) {
+    if (GLimp_StartDriverAndSetMode(r_mode->integer, r_fullscreen->integer, false)) {
         goto success;
     }
 
@@ -1106,7 +1106,7 @@ bool GLimp_Init() {
     if (r_mode->integer != R_MODE_FALLBACK) {
         ri.Printf(PRINT_ALL, "Setting r_mode %d failed, falling back on r_mode %d\n", r_mode->integer, R_MODE_FALLBACK);
 
-        if (GLimp_StartDriverAndSetMode(R_MODE_FALLBACK, false, false) ) {
+        if (GLimp_StartDriverAndSetMode(R_MODE_FALLBACK, false, false)) {
             goto success;
         }
     }
@@ -1120,14 +1120,14 @@ success:
     glConfig.hardwareType = GLHW_GENERIC;
 
     // get our config strings
-    Q_strncpyz(glConfig.vendor_string, (char*) glGetString(GL_VENDOR), sizeof(glConfig.vendor_string) );
-    Q_strncpyz(glConfig.renderer_string, (char*) glGetString(GL_RENDERER), sizeof(glConfig.renderer_string) );
+    Q_strncpyz(glConfig.vendor_string, (char*) glGetString(GL_VENDOR), sizeof(glConfig.vendor_string));
+    Q_strncpyz(glConfig.renderer_string, (char*) glGetString(GL_RENDERER), sizeof(glConfig.renderer_string));
 
     if (*glConfig.renderer_string && glConfig.renderer_string[strlen(glConfig.renderer_string) - 1] == '\n') {
         glConfig.renderer_string[strlen(glConfig.renderer_string) - 1] = 0;
     }
 
-    Q_strncpyz(glConfig.version_string, (char*) glGetString(GL_VERSION), sizeof(glConfig.version_string) );
+    Q_strncpyz(glConfig.version_string, (char*) glGetString(GL_VERSION), sizeof(glConfig.version_string));
 
     if (glConfig.driverType == GLDRV_OPENGL3) {
         GLint numExts, i;
@@ -1136,21 +1136,21 @@ success:
 
         glConfig.extensions_string[0] = '\0';
         for (i = 0; i < numExts; ++i) {
-            Q_strcat(glConfig.extensions_string, sizeof(glConfig.extensions_string), (char*) glGetStringi(GL_EXTENSIONS, i) );
+            Q_strcat(glConfig.extensions_string, sizeof(glConfig.extensions_string), (char*) glGetStringi(GL_EXTENSIONS, i));
         }
     } else {
-        Q_strncpyz(glConfig.extensions_string, (char*) glGetString(GL_EXTENSIONS), sizeof(glConfig.extensions_string) );
+        Q_strncpyz(glConfig.extensions_string, (char*) glGetString(GL_EXTENSIONS), sizeof(glConfig.extensions_string));
     }
 
     if (Q_stristr(glConfig.renderer_string, "mesa") ||
         Q_stristr(glConfig.renderer_string, "gallium") ||
         Q_stristr(glConfig.vendor_string, "nouveau") ||
-        Q_stristr(glConfig.vendor_string, "mesa") ) {
+        Q_stristr(glConfig.vendor_string, "mesa")) {
         // suckage
         glConfig.driverType = GLDRV_MESA;
     }
 
-    if (Q_stristr(glConfig.renderer_string, "geforce") ) {
+    if (Q_stristr(glConfig.renderer_string, "geforce")) {
         if (Q_stristr(glConfig.renderer_string, "8400") ||
             Q_stristr(glConfig.renderer_string, "8500") ||
             Q_stristr(glConfig.renderer_string, "8600") ||
@@ -1187,24 +1187,24 @@ success:
             Q_stristr(glConfig.renderer_string, "gtx 560") ||
             Q_stristr(glConfig.renderer_string, "gtx 570") ||
             Q_stristr(glConfig.renderer_string, "gtx 580") ||
-            Q_stristr(glConfig.renderer_string, "gtx 590") ) {
+            Q_stristr(glConfig.renderer_string, "gtx 590")) {
             glConfig.hardwareType = GLHW_NV_DX10;
         }
-    } else if (Q_stristr(glConfig.renderer_string, "quadro fx") ) {
-        if (Q_stristr(glConfig.renderer_string, "3600") ) {
+    } else if (Q_stristr(glConfig.renderer_string, "quadro fx")) {
+        if (Q_stristr(glConfig.renderer_string, "3600")) {
             glConfig.hardwareType = GLHW_NV_DX10;
         }
     } else if (Q_stristr(glConfig.renderer_string, "gallium") &&
-               Q_stristr(glConfig.renderer_string, " amd ") ) {
+               Q_stristr(glConfig.renderer_string, " amd ")) {
         // anything prior to R600 is listed as ATI.
         glConfig.hardwareType = GLHW_ATI_DX10;
     } else if (Q_stristr(glConfig.renderer_string, "rv770") ||
                Q_stristr(glConfig.renderer_string, "eah4850") ||
                Q_stristr(glConfig.renderer_string, "eah4870") ||
                // previous three are too specific?
-               Q_stristr(glConfig.renderer_string, "radeon hd") ) {
+               Q_stristr(glConfig.renderer_string, "radeon hd")) {
         glConfig.hardwareType = GLHW_ATI_DX10;
-    } else if (Q_stristr(glConfig.renderer_string, "radeon") ) {
+    } else if (Q_stristr(glConfig.renderer_string, "radeon")) {
         glConfig.hardwareType = GLHW_ATI;
     }
 
@@ -1213,7 +1213,7 @@ success:
 
     { // allow overriding where the user really does know better
         cvar_t* forceGL;
-        glDriverType_t driverType   = GLDRV_UNKNOWN;
+        glDriverType_t driverType = GLDRV_UNKNOWN;
         glHardwareType_t hardwareType = GLHW_UNKNOWN;
 
         forceGL = ri.Cvar_Get("r_glForceDriver", "", CVAR_LATCH);
@@ -1299,7 +1299,7 @@ void GLimp_HandleCvars() {
         int sdlToggled = false;
         fullscreen = !!(SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN);
 
-        if (r_fullscreen->integer && ri.Cvar_VariableIntegerValue("in_nograb") ) {
+        if (r_fullscreen->integer && ri.Cvar_VariableIntegerValue("in_nograb")) {
             ri.Printf(PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n");
             ri.Cvar_Set("r_fullscreen", "0");
             r_fullscreen->modified = false;
@@ -1327,7 +1327,7 @@ void GLimp_LogComment(const char* comment) {
 
     if (r_logFile->integer && GLEW_GREMEDY_string_marker) {
         // copy string and ensure it has a trailing '\0'
-        Q_strncpyz(buf, comment, sizeof(buf) );
+        Q_strncpyz(buf, comment, sizeof(buf));
 
         glStringMarkerGREMEDY(strlen(buf), buf);
     }

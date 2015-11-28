@@ -171,12 +171,12 @@ static bool PC_Expression_Parse(int handle, float* f) {
     exprToken_t* value;
     bool expectingNumber = true;
 
-#define FULL(a)  (a.b >= (MAX_EXPR_ELEMENTS - 1) )
+#define FULL(a)  (a.b >= (MAX_EXPR_ELEMENTS - 1))
 #define EMPTY(a) (a.f > a.b)
 
 #define PUSH_VAL(a, v) \
     { \
-        if (FULL(a) ) { \
+        if (FULL(a)) { \
             return false; } \
         a.b++; \
         a.l[a.b].type = EXPR_VALUE; \
@@ -185,7 +185,7 @@ static bool PC_Expression_Parse(int handle, float* f) {
 
 #define PUSH_OP(a, o) \
     { \
-        if (FULL(a) ) { \
+        if (FULL(a)) { \
             return false; } \
         a.b++; \
         a.l[a.b].type = EXPR_OPERATOR; \
@@ -194,7 +194,7 @@ static bool PC_Expression_Parse(int handle, float* f) {
 
 #define POP_STACK(a) \
     { \
-        if (EMPTY(a) ) { \
+        if (EMPTY(a)) { \
             return false; } \
         value = &a.l[a.b]; \
         a.b--; \
@@ -205,7 +205,7 @@ static bool PC_Expression_Parse(int handle, float* f) {
 
 #define POP_FIFO(a) \
     { \
-        if (EMPTY(a) ) { \
+        if (EMPTY(a)) { \
             return false; } \
         value = &a.l[a.f]; \
         a.f++; \
@@ -214,14 +214,14 @@ static bool PC_Expression_Parse(int handle, float* f) {
     stack.f = fifo.f = 0;
     stack.b = fifo.b = -1;
 
-    while (trap_Parse_ReadToken(handle, &token) ) {
+    while (trap_Parse_ReadToken(handle, &token)) {
         if (!unmatchedParentheses && token.string[0] == ')') {
             break;
         }
 
         // Special case to catch negative numbers
         if (expectingNumber && token.string[0] == '-') {
-            if (!trap_Parse_ReadToken(handle, &token) ) {
+            if (!trap_Parse_ReadToken(handle, &token)) {
                 return false;
             }
 
@@ -270,10 +270,10 @@ static bool PC_Expression_Parse(int handle, float* f) {
 
                 expectingNumber = !expectingNumber;
 
-                if (EMPTY(stack) ) {
+                if (EMPTY(stack)) {
                     PUSH_OP(stack, token.string[0]);
                 } else {
-                    while (!EMPTY(stack) && OpPrec(token.string[0]) < OpPrec(PEEK_STACK_OP(stack) ) ) {
+                    while (!EMPTY(stack) && OpPrec(token.string[0]) < OpPrec(PEEK_STACK_OP(stack))) {
                         POP_STACK(stack);
                         PUSH_OP(fifo, value->u.op);
                     }
@@ -290,12 +290,12 @@ static bool PC_Expression_Parse(int handle, float* f) {
         }
     }
 
-    while (!EMPTY(stack) ) {
+    while (!EMPTY(stack)) {
         POP_STACK(stack);
         PUSH_OP(fifo, value->u.op);
     }
 
-    while (!EMPTY(fifo) ) {
+    while (!EMPTY(fifo)) {
         POP_FIFO(fifo);
 
         if (value->type == EXPR_VALUE) {
@@ -359,7 +359,7 @@ bool PC_Float_Parse(int handle, float* f) {
     pc_token_t token;
     int negative = false;
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
@@ -368,7 +368,7 @@ bool PC_Float_Parse(int handle, float* f) {
     }
 
     if (token.string[0] == '-') {
-        if (!trap_Parse_ReadToken(handle, &token) ) {
+        if (!trap_Parse_ReadToken(handle, &token)) {
             return false;
         }
 
@@ -399,7 +399,7 @@ bool Color_Parse(const char** p, Color::Color* c) {
     float f;
 
     for (i = 0; i < 4; i++) {
-        if (!Float_Parse(p, &f) ) {
+        if (!Float_Parse(p, &f)) {
             return false;
         }
 
@@ -419,7 +419,7 @@ bool PC_Color_Parse(int handle, Color::Color* c) {
     float f;
 
     for (i = 0; i < 4; i++) {
-        if (!PC_Float_Parse(handle, &f) ) {
+        if (!PC_Float_Parse(handle, &f)) {
             return false;
         }
 
@@ -455,14 +455,14 @@ bool PC_Int_Parse(int handle, int* i) {
     pc_token_t token;
     int negative = false;
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
     if (token.string[0] == '(') {
         float f;
 
-        if (PC_Expression_Parse(handle, &f) ) {
+        if (PC_Expression_Parse(handle, &f)) {
             *i = (int) f;
             return true;
         } else {
@@ -471,7 +471,7 @@ bool PC_Int_Parse(int handle, int* i) {
     }
 
     if (token.string[0] == '-') {
-        if (!trap_Parse_ReadToken(handle, &token) ) {
+        if (!trap_Parse_ReadToken(handle, &token)) {
             return false;
         }
 
@@ -498,10 +498,10 @@ Rect_Parse
 =================
 */
 bool Rect_Parse(const char** p, rectDef_t* r) {
-    if (Float_Parse(p, &r->x) ) {
-        if (Float_Parse(p, &r->y) ) {
-            if (Float_Parse(p, &r->w) ) {
-                if (Float_Parse(p, &r->h) ) {
+    if (Float_Parse(p, &r->x)) {
+        if (Float_Parse(p, &r->y)) {
+            if (Float_Parse(p, &r->w)) {
+                if (Float_Parse(p, &r->h)) {
                     return true;
                 }
             }
@@ -517,10 +517,10 @@ PC_Rect_Parse
 =================
 */
 bool PC_Rect_Parse(int handle, rectDef_t* r) {
-    if (PC_Float_Parse(handle, &r->x) ) {
-        if (PC_Float_Parse(handle, &r->y) ) {
-            if (PC_Float_Parse(handle, &r->w) ) {
-                if (PC_Float_Parse(handle, &r->h) ) {
+    if (PC_Float_Parse(handle, &r->x)) {
+        if (PC_Float_Parse(handle, &r->y)) {
+            if (PC_Float_Parse(handle, &r->w)) {
+                if (PC_Float_Parse(handle, &r->h)) {
                     return true;
                 }
             }
@@ -556,7 +556,7 @@ PC_String_Parse
 bool PC_String_Parse(int handle, const char** out) {
     pc_token_t token;
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
@@ -568,11 +568,11 @@ bool PC_String_Parse(int handle, const char** out) {
 bool PC_String_ParseTranslate(int handle, const char** out) {
     pc_token_t token;
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
-    *(out) = BG_strdup(_(token.string) );
+    *(out) = BG_strdup(_(token.string));
 
     return true;
 }
@@ -586,7 +586,7 @@ PC_Char_Parse
 bool PC_Char_Parse(int handle, char* out) {
     pc_token_t token;
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
@@ -604,11 +604,11 @@ bool PC_Script_Parse(int handle, const char** out) {
     char script[1024];
     pc_token_t token;
 
-    memset(script, 0, sizeof(script) );
+    memset(script, 0, sizeof(script));
     // scripts start with { and have ; separated command lists.. commands are command, arg..
     // basically we want everything between the { } as it will be interpreted at run time
 
-    if (!trap_Parse_ReadToken(handle, &token) ) {
+    if (!trap_Parse_ReadToken(handle, &token)) {
         return false;
     }
 
@@ -617,7 +617,7 @@ bool PC_Script_Parse(int handle, const char** out) {
     }
 
     while (1) {
-        if (!trap_Parse_ReadToken(handle, &token) ) {
+        if (!trap_Parse_ReadToken(handle, &token)) {
             return false;
         }
 
@@ -627,7 +627,7 @@ bool PC_Script_Parse(int handle, const char** out) {
         }
 
         if (token.string[1] != '\0') {
-            Q_strcat(script, 1024, va("\"%s\"", token.string) );
+            Q_strcat(script, 1024, va("\"%s\"", token.string));
         } else {
             Q_strcat(script, 1024, token.string);
         }

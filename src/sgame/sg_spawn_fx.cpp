@@ -53,7 +53,7 @@ void target_speaker_act(gentity_t* self, gentity_t*, gentity_t* activator) {
         }
     } else {
         // one-time sound
-        if ( (self->spawnflags & 8) && activator) {
+        if ((self->spawnflags & 8) && activator) {
             G_AddEvent(activator, EV_GENERAL_SOUND, self->soundIndex);
         } else if (self->spawnflags & 4) {
             G_AddEvent(self, EV_GLOBAL_SOUND, self->soundIndex);
@@ -66,8 +66,8 @@ void target_speaker_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 void SP_sfx_speaker(gentity_t* self) {
     char* tmpString;
 
-    if (!G_SpawnString("noise", "NOSOUND", &tmpString) ) {
-        G_Error("speaker %s without a noise key", etos(self) );
+    if (!G_SpawnString("noise", "NOSOUND", &tmpString)) {
+        G_Error("speaker %s without a noise key", etos(self));
     }
 
     // force all client-relative sounds to be "activator" speakers that
@@ -149,7 +149,7 @@ void fx_rumble_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 
 void SP_fx_rumble(gentity_t* self) {
     if (!self->config.amount) {
-        if (G_SpawnInt("count", "0", &self->config.amount) ) {
+        if (G_SpawnInt("count", "0", &self->config.amount)) {
             G_WarnAboutDeprecatedEntityField(self, "amount", "count", ENT_V_RENAMED);
         } else {
             self->customNumber = 10;

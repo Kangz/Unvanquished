@@ -32,7 +32,7 @@ Return the team referenced by a string
 ================
 */
 team_t G_TeamFromString(const char* str) {
-    switch (tolower(*str) ) {
+    switch (tolower(*str)) {
     case '0':
     case 's':
         return TEAM_NONE;
@@ -64,7 +64,7 @@ void G_TeamCommand(team_t team, const char* cmd) {
         if (level.clients[i].pers.connected == CON_CONNECTED) {
             if (level.clients[i].pers.team == team ||
                 (level.clients[i].pers.team == TEAM_NONE &&
-                 G_admin_permission(&g_entities[i], ADMF_SPEC_ALLCHAT) ) ) {
+                 G_admin_permission(&g_entities[i], ADMF_SPEC_ALLCHAT))) {
                 trap_SendServerCommand(i, cmd);
             }
         }
@@ -115,7 +115,7 @@ team_t G_Team(gentity_t* ent) {
 
 bool G_OnSameTeam(gentity_t* ent1, gentity_t* ent2) {
     team_t team1 = G_Team(ent1);
-    return (team1 != TEAM_NONE && team1 == G_Team(ent2) );
+    return (team1 != TEAM_NONE && team1 == G_Team(ent2));
 }
 
 /*
@@ -127,7 +127,7 @@ static clientList_t G_ClientListForTeam(team_t team) {
     int i;
     clientList_t clientList;
 
-    Com_Memset(&clientList, 0, sizeof(clientList_t) );
+    Com_Memset(&clientList, 0, sizeof(clientList_t));
 
     for (i = 0; i < level.maxclients; i++) {
         gentity_t* ent = g_entities + i;
@@ -136,7 +136,7 @@ static clientList_t G_ClientListForTeam(team_t team) {
             continue;
         }
 
-        if (ent->inuse && (ent->client->pers.team == team) ) {
+        if (ent->inuse && (ent->client->pers.team == team)) {
             Com_ClientListAdd(&clientList, ent->client->ps.clientNum);
         }
     }
@@ -155,8 +155,8 @@ void G_UpdateTeamConfigStrings() {
 
     if (level.intermissiontime) {
         // No restrictions once the game has ended
-        Com_Memset(&alienTeam, 0, sizeof(clientList_t) );
-        Com_Memset(&humanTeam, 0, sizeof(clientList_t) );
+        Com_Memset(&alienTeam, 0, sizeof(clientList_t));
+        Com_Memset(&humanTeam, 0, sizeof(clientList_t));
     }
 
     trap_SetConfigstringRestrictions(CS_VOTE_TIME + TEAM_ALIENS, &humanTeam);
@@ -205,8 +205,8 @@ void G_LeaveTeam(gentity_t* self) {
 
         if (ent->client && ent->client->pers.connected == CON_CONNECTED) {
             // cure poison
-            if ( (ent->client->ps.stats[STAT_STATE] & SS_POISONED) &&
-                 ent->client->lastPoisonClient == self) {
+            if ((ent->client->ps.stats[STAT_STATE] & SS_POISONED) &&
+                ent->client->lastPoisonClient == self) {
                 ent->client->ps.stats[STAT_STATE] &= ~SS_POISONED;
             }
         } else if (ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number) {
@@ -302,7 +302,7 @@ gentity_t* Team_GetLocation(gentity_t* ent) {
             continue;
         }
 
-        if (!trap_InPVS(ent->r.currentOrigin, eloc->r.currentOrigin) ) {
+        if (!trap_InPVS(ent->r.currentOrigin, eloc->r.currentOrigin)) {
             continue;
         }
 
@@ -377,13 +377,13 @@ void TeamplayInfoMessage(gentity_t* ent) {
         } else if (cl->pers.team == TEAM_HUMANS) {
             curWeaponClass = cl->ps.weapon;
 
-            if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, cl->ps.stats) ) {
+            if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, cl->ps.stats)) {
                 upgrade = UP_BATTLESUIT;
-            } else if (BG_InventoryContainsUpgrade(UP_JETPACK, cl->ps.stats) ) {
+            } else if (BG_InventoryContainsUpgrade(UP_JETPACK, cl->ps.stats)) {
                 upgrade = UP_JETPACK;
-            } else if (BG_InventoryContainsUpgrade(UP_RADAR, cl->ps.stats) ) {
+            } else if (BG_InventoryContainsUpgrade(UP_RADAR, cl->ps.stats)) {
                 upgrade = UP_RADAR;
-            } else if (BG_InventoryContainsUpgrade(UP_LIGHTARMOUR, cl->ps.stats) ) {
+            } else if (BG_InventoryContainsUpgrade(UP_LIGHTARMOUR, cl->ps.stats)) {
                 upgrade = UP_LIGHTARMOUR;
             } else {
                 upgrade = UP_NONE;
@@ -412,7 +412,7 @@ void TeamplayInfoMessage(gentity_t* ent) {
         j = strlen(entry);
 
         // this should not happen if entry and string sizes are correct
-        if (stringlength + j >= (int) sizeof(string) ) {
+        if (stringlength + j >= (int) sizeof(string)) {
             break;
         }
 
@@ -421,7 +421,7 @@ void TeamplayInfoMessage(gentity_t* ent) {
     }
 
     if (string[0]) {
-        trap_SendServerCommand(ent - g_entities, va("tinfo%s", string) );
+        trap_SendServerCommand(ent - g_entities, va("tinfo%s", string));
         ent->client->pers.teamInfo = level.time;
     }
 }
@@ -441,7 +441,7 @@ void CheckTeamStatus() {
             }
 
             if (ent->inuse && (ent->client->pers.team == TEAM_HUMANS ||
-                               ent->client->pers.team == TEAM_ALIENS) ) {
+                               ent->client->pers.team == TEAM_ALIENS)) {
                 loc = Team_GetLocation(ent);
 
                 if (loc) {
@@ -472,7 +472,7 @@ void CheckTeamStatus() {
     // Warn on imbalanced teams
     if (g_teamImbalanceWarnings.integer && !level.intermissiontime &&
         (level.time - level.lastTeamImbalancedTime >
-         (g_teamImbalanceWarnings.integer * 1000) ) &&
+         (g_teamImbalanceWarnings.integer * 1000)) &&
         level.numTeamImbalanceWarnings < 3 && !level.restarted) {
         level.lastTeamImbalancedTime = level.time;
 

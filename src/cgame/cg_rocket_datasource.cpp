@@ -62,7 +62,7 @@ static void AddToServerList(const char* name, const char* label, int clients, in
 static void CG_Rocket_SetServerListServer(const char* table, int index) {
     int netSrc = CG_StringToNetSource(table);
 
-    if (!Q_stricmp(table, "severInfo") || !Q_stricmp(table, "serverPlayers") ) {
+    if (!Q_stricmp(table, "severInfo") || !Q_stricmp(table, "serverPlayers")) {
         return;
     }
 
@@ -99,7 +99,7 @@ void CG_Rocket_BuildServerInfo() {
     server = &rocketInfo.data.servers[netSrc][serverIndex];
 
 
-    if (trap_LAN_ServerStatus(server->addr, serverInfoText, sizeof(serverInfoText) ) ) {
+    if (trap_LAN_ServerStatus(server->addr, serverInfoText, sizeof(serverInfoText))) {
         int i = 0, score, ping;
         const char* start, * end;
         static char key[BIG_INFO_VALUE], value[BIG_INFO_VALUE];
@@ -239,24 +239,24 @@ void CG_Rocket_BuildServerList(const char* args) {
             char info[MAX_STRING_CHARS];
             int ping, bots, clients, maxClients;
 
-            Com_Memset(&data, 0, sizeof(data) );
+            Com_Memset(&data, 0, sizeof(data));
 
-            if (!trap_LAN_ServerIsVisible(netSrc, i) ) {
+            if (!trap_LAN_ServerIsVisible(netSrc, i)) {
                 continue;
             }
 
             ping = trap_LAN_GetServerPing(netSrc, i);
 
-            if (ping >= 0 || !Q_stricmp(args, "favorites") ) {
+            if (ping >= 0 || !Q_stricmp(args, "favorites")) {
                 char addr[50]; // long enough for IPv6 literal plus port no.
                 char mapname[256];
-                trap_LAN_GetServerInfo(netSrc, i, info, sizeof(info) );
+                trap_LAN_GetServerInfo(netSrc, i, info, sizeof(info));
 
-                bots = atoi(Info_ValueForKey(info, "bots") );
-                clients = atoi(Info_ValueForKey(info, "clients") );
-                maxClients = atoi(Info_ValueForKey(info, "sv_maxclients") );
-                Q_strncpyz(addr, Info_ValueForKey(info, "addr"), sizeof(addr) );
-                Q_strncpyz(mapname, Info_ValueForKey(info, "mapname"), sizeof(mapname) );
+                bots = atoi(Info_ValueForKey(info, "bots"));
+                clients = atoi(Info_ValueForKey(info, "clients"));
+                maxClients = atoi(Info_ValueForKey(info, "sv_maxclients"));
+                Q_strncpyz(addr, Info_ValueForKey(info, "addr"), sizeof(addr));
+                Q_strncpyz(mapname, Info_ValueForKey(info, "mapname"), sizeof(mapname));
                 AddToServerList(Info_ValueForKey(info, "hostname"), Info_ValueForKey(info, "label"), clients, bots, ping, maxClients, mapname, addr, netSrc);
             }
         }
@@ -282,7 +282,7 @@ void CG_Rocket_BuildServerList(const char* args) {
             }
         }
 
-    } else if (!Q_stricmp(args, "serverInfo") ) {
+    } else if (!Q_stricmp(args, "serverInfo")) {
         CG_Rocket_BuildServerInfo();
     }
 }
@@ -312,8 +312,8 @@ static int ServerListCmpByName(const void* one, const void* two) {
     server_t* a = (server_t*) one;
     server_t* b = (server_t*) two;
 
-    Q_strncpyz(cleanName1, a->name, sizeof(cleanName1) );
-    Q_strncpyz(cleanName2, b->name, sizeof(cleanName2) );
+    Q_strncpyz(cleanName1, a->name, sizeof(cleanName1));
+    Q_strncpyz(cleanName2, b->name, sizeof(cleanName2));
 
     Color::StripColors(cleanName1);
     Color::StripColors(cleanName2);
@@ -352,13 +352,13 @@ static void CG_Rocket_SortServerList(const char* name, const char* sortBy) {
     int netSrc = CG_StringToNetSource(name);
     int i;
 
-    if (!Q_stricmp(sortBy, "ping") ) {
+    if (!Q_stricmp(sortBy, "ping")) {
         qsort(rocketInfo.data.servers[netSrc], rocketInfo.data.serverCount[netSrc], sizeof(server_t), &ServerListCmpByPing);
-    } else if (!Q_stricmp(sortBy, "name") ) {
+    } else if (!Q_stricmp(sortBy, "name")) {
         qsort(rocketInfo.data.servers[netSrc], rocketInfo.data.serverCount[netSrc], sizeof(server_t), &ServerListCmpByName);
-    } else if (!Q_stricmp(sortBy, "players") ) {
+    } else if (!Q_stricmp(sortBy, "players")) {
         qsort(rocketInfo.data.servers[netSrc], rocketInfo.data.serverCount[netSrc], sizeof(server_t), &ServerListCmpByPlayers);
-    } else if (!Q_stricmp(sortBy, "map") ) {
+    } else if (!Q_stricmp(sortBy, "map")) {
         qsort(rocketInfo.data.servers[netSrc], rocketInfo.data.serverCount[netSrc], sizeof(server_t), &ServerListCmpByMap);
     }
 
@@ -410,9 +410,9 @@ static void CG_Rocket_FilterServerList(const char* table, const char* filter) {
     for (i = 0; i < rocketInfo.data.serverCount[netSrc]; ++i) {
         char name[MAX_INFO_VALUE];
 
-        Q_strncpyz(name, rocketInfo.data.servers[netSrc][i].name, sizeof(name) );
+        Q_strncpyz(name, rocketInfo.data.servers[netSrc][i].name, sizeof(name));
 
-        if (Q_stristr(Color::StripColors(name), filter) ) {
+        if (Q_stristr(Color::StripColors(name), filter)) {
             char data[MAX_INFO_STRING] = { 0 };
 
             Info_SetValueForKey(data, "name", rocketInfo.data.servers[netSrc][i].name, false);
@@ -430,7 +430,7 @@ static void CG_Rocket_FilterServerList(const char* table, const char* filter) {
 
 void CG_Rocket_ExecServerList(const char* table) {
     int netSrc = CG_StringToNetSource(table);
-    trap_SendConsoleCommand(va("connect %s", rocketInfo.data.servers[netSrc][rocketInfo.data.serverIndex[netSrc]].addr) );
+    trap_SendConsoleCommand(va("connect %s", rocketInfo.data.servers[netSrc][rocketInfo.data.serverIndex[netSrc]].addr));
 }
 
 static bool Parse(const char** p, char** out) {
@@ -462,8 +462,8 @@ static void AddToResolutionList(int w, int h) {
 
 void CG_Rocket_SetResolutionListResolution(const char*, int index) {
     if (index < rocketInfo.data.resolutionCount && index >= 0) {
-        trap_Cvar_Set("r_customwidth", va("%d", rocketInfo.data.resolutions[index].width) );
-        trap_Cvar_Set("r_customheight", va("%d", rocketInfo.data.resolutions[index].height) );
+        trap_Cvar_Set("r_customwidth", va("%d", rocketInfo.data.resolutions[index].width));
+        trap_Cvar_Set("r_customheight", va("%d", rocketInfo.data.resolutions[index].height));
         trap_Cvar_Set("r_mode", "-1");
         rocketInfo.data.resolutionIndex = index;
     }
@@ -478,12 +478,12 @@ void CG_Rocket_BuildResolutionList(const char*) {
 
     currentW = trap_Cvar_VariableIntegerValue("r_customwidth");
     currentH = trap_Cvar_VariableIntegerValue("r_customheight");
-    trap_Cvar_VariableStringBuffer("r_availableModes", buf, sizeof(buf) );
+    trap_Cvar_VariableStringBuffer("r_availableModes", buf, sizeof(buf));
     p = buf;
     rocketInfo.data.resolutionCount = 0;
     rocketInfo.data.resolutionIndex = -1;
 
-    while (Parse(&p, &out) ) {
+    while (Parse(&p, &out)) {
 
         sscanf(out, "%dx%d", &w, &h);
         AddToResolutionList(w, h);
@@ -537,7 +537,7 @@ void CG_Rocket_SortResolutionList(const char*, const char* sortBy) {
     static char buf[MAX_STRING_CHARS];
     int i;
 
-    if (!Q_stricmp(sortBy, "width") ) {
+    if (!Q_stricmp(sortBy, "width")) {
         qsort(rocketInfo.data.resolutions, rocketInfo.data.resolutionCount, sizeof(resolution_t), &ResolutionListCmpByWidth);
     }
 
@@ -590,11 +590,11 @@ void CG_Rocket_BuildLanguageList(const char*) {
     bool quoted = false;
     char* p;
 
-    trap_Cvar_VariableStringBuffer("trans_languages", buf, sizeof(buf) );
-    trap_Cvar_VariableStringBuffer("language", language, sizeof(language) );
+    trap_Cvar_VariableStringBuffer("trans_languages", buf, sizeof(buf));
+    trap_Cvar_VariableStringBuffer("language", language, sizeof(language));
 
     p = buf;
-    memset(&temp, 0, sizeof(temp) );
+    memset(&temp, 0, sizeof(temp));
 
     while (p && *p) {
         if (*p == '"' && quoted) {
@@ -614,16 +614,16 @@ void CG_Rocket_BuildLanguageList(const char*) {
         p++;
     }
 
-    trap_Cvar_VariableStringBuffer("trans_encodings", buf, sizeof(buf) );
+    trap_Cvar_VariableStringBuffer("trans_encodings", buf, sizeof(buf));
     p = buf;
-    memset(&temp, 0, sizeof(temp) );
+    memset(&temp, 0, sizeof(temp));
 
     while (p && *p) {
         if (*p == '"' && quoted) {
             temp[index] = '\0';
 
             // Set the current language index
-            if (!Q_stricmp(temp, language) ) {
+            if (!Q_stricmp(temp, language)) {
                 rocketInfo.data.languageIndex = lang;
             }
 
@@ -690,19 +690,19 @@ void CG_Rocket_BuildAlOutputs(const char*) {
     char* p, * head;
     int outputs = 0;
 
-    trap_Cvar_VariableStringBuffer("audio.al.device", currentDevice, sizeof(currentDevice) );
-    trap_Cvar_VariableStringBuffer("audio.al.availableDevices", buf, sizeof(buf) );
+    trap_Cvar_VariableStringBuffer("audio.al.device", currentDevice, sizeof(currentDevice));
+    trap_Cvar_VariableStringBuffer("audio.al.availableDevices", buf, sizeof(buf));
     head = buf;
 
-    while ( (p = strchr(head, '\n') ) ) {
+    while ((p = strchr(head, '\n'))) {
         *p = '\0';
 
         // Set current device
-        if (!Q_stricmp(currentDevice, head) ) {
+        if (!Q_stricmp(currentDevice, head)) {
             rocketInfo.data.alOutputIndex = rocketInfo.data.alOutputsCount;
         }
 
-        AddToAlOutputs(BG_strdup(head) );
+        AddToAlOutputs(BG_strdup(head));
         head = p + 1;
     }
 
@@ -738,7 +738,7 @@ void CG_Rocket_BuildModList(const char*) {
     int dirlen;
 
     rocketInfo.data.modCount = 0;
-    numdirs = trap_FS_GetFileList("$modlist", "", dirlist, sizeof(dirlist) );
+    numdirs = trap_FS_GetFileList("$modlist", "", dirlist, sizeof(dirlist));
     dirptr = dirlist;
 
     for (i = 0; i < numdirs; i++) {
@@ -780,7 +780,7 @@ void CG_Rocket_SetDemoListDemo(const char*, int index) {
 }
 
 void CG_Rocket_ExecDemoList(const char*) {
-    trap_SendConsoleCommand(va("demo %s", rocketInfo.data.demoList[rocketInfo.data.demoIndex]) );
+    trap_SendConsoleCommand(va("demo %s", rocketInfo.data.demoList[rocketInfo.data.demoIndex]));
 }
 
 void CG_Rocket_BuildDemoList(const char*) {
@@ -789,11 +789,11 @@ void CG_Rocket_BuildDemoList(const char*) {
     char* demoname;
     int i, len;
 
-    Com_sprintf(demoExt, sizeof(demoExt), "dm_%d", (int) trap_Cvar_VariableIntegerValue("protocol") );
+    Com_sprintf(demoExt, sizeof(demoExt), "dm_%d", (int) trap_Cvar_VariableIntegerValue("protocol"));
 
     rocketInfo.data.demoCount = trap_FS_GetFileList("demos", demoExt, demolist, 4096);
 
-    Com_sprintf(demoExt, sizeof(demoExt), ".dm_%d", (int) trap_Cvar_VariableIntegerValue("protocol") );
+    Com_sprintf(demoExt, sizeof(demoExt), ".dm_%d", (int) trap_Cvar_VariableIntegerValue("protocol"));
 
     if (rocketInfo.data.demoCount) {
         if (rocketInfo.data.demoCount > MAX_DEMOS) {
@@ -805,7 +805,7 @@ void CG_Rocket_BuildDemoList(const char*) {
         for (i = 0; i < rocketInfo.data.demoCount; i++) {
             len = strlen(demoname);
 
-            if (!Q_stricmp(demoname +  len - strlen(demoExt), demoExt) ) {
+            if (!Q_stricmp(demoname +  len - strlen(demoExt), demoExt)) {
                 demoname[len - strlen(demoExt)] = '\0';
             }
 
@@ -920,7 +920,7 @@ void CG_Rocket_SortPlayerList(const char*, const char* sortBy) {
 
 
 
-    if (!Q_stricmp("score", sortBy) ) {
+    if (!Q_stricmp("score", sortBy)) {
         qsort(rocketInfo.data.playerList[TEAM_NONE], rocketInfo.data.playerCount[TEAM_NONE], sizeof(int), &PlayerListCmpByScore);
         qsort(rocketInfo.data.playerList[TEAM_ALIENS], rocketInfo.data.playerCount[TEAM_ALIENS], sizeof(int), &PlayerListCmpByScore);
         qsort(rocketInfo.data.playerList[TEAM_HUMANS], rocketInfo.data.playerIndex[TEAM_HUMANS], sizeof(int), &PlayerListCmpByScore);
@@ -1035,7 +1035,7 @@ void CG_Rocket_SetPlayerListPlayer(const char*, int) {
 }
 
 void CG_Rocket_BuildTeamList(const char*) {
-    static const char* data[] ={
+    static const char* data[] = {
         "\\name\\Aliens\\description\\The Alien Team\n\n"
         "The Aliens' strengths are in movement and the ability to "
         "quickly construct new bases quickly. They possess a range "
@@ -1103,7 +1103,7 @@ void CG_Rocket_CleanUpTeamList(const char*) {
 void AddHumanSpawnItem(weapon_t weapon) {
     static char data[MAX_STRING_CHARS];
 
-    if (!BG_WeaponUnlocked(weapon) ) {
+    if (!BG_WeaponUnlocked(weapon)) {
         return;
     }
 
@@ -1318,31 +1318,31 @@ void CG_Rocket_ExecArmouryBuyList(const char* table) {
         tblIndex = ROCKETDS_BOTH;
     }
 
-    if ( (item = rocketInfo.data.armouryBuyList[tblIndex][rocketInfo.data.selectedArmouryBuyItem[tblIndex]]) > WP_NUM_WEAPONS) {
+    if ((item = rocketInfo.data.armouryBuyList[tblIndex][rocketInfo.data.selectedArmouryBuyItem[tblIndex]]) > WP_NUM_WEAPONS) {
         item -= WP_NUM_WEAPONS;
 
-        if (BG_Upgrade(item) ) {
+        if (BG_Upgrade(item)) {
             buy = BG_Upgrade(item)->name;
 
-            if (BG_Upgrade(item)->slots & BG_SlotsForInventory(cg.predictedPlayerState.stats) ) {
+            if (BG_Upgrade(item)->slots & BG_SlotsForInventory(cg.predictedPlayerState.stats)) {
                 int i;
 
                 for (i = 0; i < UP_NUM_UPGRADES; ++i) {
                     if (i != item &&  BG_Upgrade(i)->slots == BG_Upgrade(item)->slots) {
-                        trap_SendClientCommand(va("sell %s", BG_Upgrade(i)->name) );
+                        trap_SendClientCommand(va("sell %s", BG_Upgrade(i)->name));
                     }
                 }
             }
         }
     } else {
-        if (BG_Weapon(item) ) {
+        if (BG_Weapon(item)) {
             buy = BG_Weapon(item)->name;
-            trap_SendClientCommand(va("sell %s", BG_Weapon(BG_GetPlayerWeapon(&cg.predictedPlayerState) )->name) );
+            trap_SendClientCommand(va("sell %s", BG_Weapon(BG_GetPlayerWeapon(&cg.predictedPlayerState))->name));
         }
     }
 
     if (buy) {
-        trap_SendClientCommand(va("buy %s", buy) );
+        trap_SendClientCommand(va("buy %s", buy));
         CG_Rocket_BuildArmouryBuyList("default");
         CG_Rocket_BuildArmourySellList("default");
     }
@@ -1360,7 +1360,7 @@ void CG_Rocket_BuildArmourySellList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
         int i;
 
         Rocket_DSClearTable("armourySellList", "default");
@@ -1409,18 +1409,18 @@ void CG_Rocket_ExecArmourySellList(const char*) {
     if (item > WP_NUM_WEAPONS) {
         item -= WP_NUM_WEAPONS;
 
-        if (BG_Upgrade(item) ) {
+        if (BG_Upgrade(item)) {
             sell = BG_Upgrade(item)->name;
             BG_RemoveUpgradeFromInventory(item, cg.predictedPlayerState.stats);
         }
     } else {
-        if (BG_Weapon(item) ) {
+        if (BG_Weapon(item)) {
             sell = BG_Weapon(item)->name;
         }
     }
 
     if (sell) {
-        trap_SendClientCommand(va("sell %s", sell) );
+        trap_SendClientCommand(va("sell %s", sell));
         CG_Rocket_BuildArmourySellList("default");
         CG_Rocket_BuildArmouryBuyList("default");
     }
@@ -1439,7 +1439,7 @@ void CG_Rocket_BuildAlienEvolveList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
         int i;
 
         Rocket_DSClearTable("alienEvolveList", "default");
@@ -1470,7 +1470,7 @@ void CG_Rocket_ExecAlienEvolveList(const char*) {
     class_t evo = (class_t) rocketInfo.data.alienEvolveList[rocketInfo.data.selectedAlienEvolve];
 
     if (BG_Class(evo) && BG_ClassCanEvolveFromTo(cg.predictedPlayerState.stats[STAT_CLASS], evo, cg.predictedPlayerState.persistant[PERS_CREDIT]) >= 0) {
-        trap_SendClientCommand(va("class %s", BG_Class(evo)->name) );
+        trap_SendClientCommand(va("class %s", BG_Class(evo)->name));
         Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_ALIENEVOLVE].id, "hide");
     }
 }
@@ -1487,7 +1487,7 @@ void CG_Rocket_BuildHumanBuildList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
         int i;
 
         Rocket_DSClearTable("humanBuildList", "default");
@@ -1517,8 +1517,8 @@ void CG_Rocket_SetHumanBuildList(const char*, int index) {
 void CG_Rocket_ExecHumanBuildList(const char*) {
     buildable_t build = (buildable_t) rocketInfo.data.humanBuildList[rocketInfo.data.selectedHumanBuild];
 
-    if (BG_Buildable(build) ) {
-        trap_SendClientCommand(va("build %s", BG_Buildable(build)->name) );
+    if (BG_Buildable(build)) {
+        trap_SendClientCommand(va("build %s", BG_Buildable(build)->name));
         Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_HUMANBUILD].id, "hide");
     }
 }
@@ -1535,7 +1535,7 @@ void CG_Rocket_BuildAlienBuildList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
         int i;
 
         Rocket_DSClearTable("alienBuildList", "default");
@@ -1565,8 +1565,8 @@ void CG_Rocket_SetAlienBuildList(const char*, int index) {
 void CG_Rocket_ExecAlienBuildList(const char*) {
     buildable_t build = (buildable_t) rocketInfo.data.alienBuildList[rocketInfo.data.selectedAlienBuild];
 
-    if (BG_Buildable(build) ) {
-        trap_SendClientCommand(va("build %s", BG_Buildable(build)->name) );
+    if (BG_Buildable(build)) {
+        trap_SendClientCommand(va("build %s", BG_Buildable(build)->name));
         Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_ALIENBUILD].id, "hide");
     }
 }
@@ -1574,7 +1574,7 @@ void CG_Rocket_ExecAlienBuildList(const char*) {
 void AddAlienSpawnClass(class_t _class) {
     static char data[MAX_STRING_CHARS];
 
-    if (!BG_ClassUnlocked(_class) ) {
+    if (!BG_ClassUnlocked(_class)) {
         return;
     }
 
@@ -1590,7 +1590,7 @@ void CG_Rocket_BuildAlienSpawnList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
 
         Rocket_DSClearTable("alienSpawnClass", "default");
     }
@@ -1598,7 +1598,7 @@ void CG_Rocket_BuildAlienSpawnList(const char* table) {
     {
         AddAlienSpawnClass(PCL_ALIEN_LEVEL0);
 
-        if (BG_ClassUnlocked(PCL_ALIEN_BUILDER0_UPG) ) {
+        if (BG_ClassUnlocked(PCL_ALIEN_BUILDER0_UPG)) {
             AddAlienSpawnClass(PCL_ALIEN_BUILDER0_UPG);
         } else {
             AddAlienSpawnClass(PCL_ALIEN_BUILDER0);
@@ -1628,7 +1628,7 @@ void CG_Rocket_ExecAlienSpawnList(const char*) {
     }
 
     if (_class) {
-        trap_SendClientCommand(va("class %s", _class) );
+        trap_SendClientCommand(va("class %s", _class));
         Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_ALIENSPAWN].id, "hide");
     }
 }
@@ -1648,7 +1648,7 @@ void CG_Rocket_BuildBeaconList(const char* table) {
         return;
     }
 
-    if (!Q_stricmp(table, "default") ) {
+    if (!Q_stricmp(table, "default")) {
         int i;
         const beaconAttributes_t* ba;
 
@@ -1688,7 +1688,7 @@ void CG_Rocket_ExecBeaconList(const char*) {
         return;
     }
 
-    trap_SendClientCommand(va("beacon %s", ba->name) );
+    trap_SendClientCommand(va("beacon %s", ba->name));
     Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_BEACONS].id, "hide");
 }
 
@@ -1716,7 +1716,7 @@ typedef struct {
     int (* get)(const char* table);
 } dataSourceCmd_t;
 
-static const dataSourceCmd_t dataSourceCmdList[] ={
+static const dataSourceCmd_t dataSourceCmdList[] = {
     { "alienBuildList", &CG_Rocket_BuildAlienBuildList, &nullSortFunc, &CG_Rocket_CleanUpAlienBuildList, &CG_Rocket_SetAlienBuildList, &nullFilterFunc, &CG_Rocket_ExecAlienBuildList, &nullGetFunc },
     { "alienEvolveList", &CG_Rocket_BuildAlienEvolveList, &nullSortFunc, &CG_Rocket_CleanUpAlienEvolveList, &CG_Rocket_SetAlienEvolveList, &nullFilterFunc, &CG_Rocket_ExecAlienEvolveList, &nullGetFunc },
     { "alienSpawnClass", &CG_Rocket_BuildAlienSpawnList, &nullSortFunc, &CG_Rocket_CleanUpAlienSpawnList, &CG_Rocket_SetAlienSpawnList, &nullFilterFunc, &CG_Rocket_ExecAlienSpawnList, &nullGetFunc },
@@ -1739,7 +1739,7 @@ static const dataSourceCmd_t dataSourceCmdList[] ={
 static const size_t dataSourceCmdListCount = ARRAY_LEN(dataSourceCmdList);
 
 static int dataSourceCmdCmp(const void* a, const void* b) {
-    return Q_stricmp( (const char*) a, ( (dataSourceCmd_t*) b)->name);
+    return Q_stricmp((const char*) a, ((dataSourceCmd_t*) b)->name);
 }
 
 void CG_Rocket_BuildDataSource(const char* dataSrc, const char* table) {

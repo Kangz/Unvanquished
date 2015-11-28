@@ -37,7 +37,7 @@ PNG LOADING
 static void png_read_data(png_structp png, png_bytep data, png_size_t length) {
     byte* io_ptr = (byte*) png_get_io_ptr(png);
     Com_Memcpy(data, io_ptr, length);
-    png_init_io(png, (png_FILE_p)(io_ptr + length) );
+    png_init_io(png, (png_FILE_p)(io_ptr + length));
 }
 
 static void png_user_warning_fn(png_structp, png_const_charp warning_message) {
@@ -92,7 +92,7 @@ void LoadPNG(const char* name, byte** pic, int* width, int* height,
      * the common method of doing things with libpng).  REQUIRED unless you
      * set up your own error handlers in the png_create_read_struct() earlier.
      */
-    if (setjmp(png_jmpbuf(png) ) ) {
+    if (setjmp(png_jmpbuf(png))) {
         // if we get here, we had a problem reading the file
         ri.Printf(PRINT_WARNING, "LoadPNG: first exception handler called for (%s)\n", name);
         ri.FS_FreeFile(data);
@@ -120,7 +120,7 @@ void LoadPNG(const char* name, byte** pic, int* width, int* height,
     }
 
     // expand gray-scaled images to RGB triplets
-    if (!(color_type & PNG_COLOR_MASK_COLOR) ) {
+    if (!(color_type & PNG_COLOR_MASK_COLOR)) {
         png_set_gray_to_rgb(png);
     }
 
@@ -128,12 +128,12 @@ void LoadPNG(const char* name, byte** pic, int* width, int* height,
 
     // expand paletted or RGB images with transparency to full alpha channels
     // so the data will be available as RGBA quartets
-    if (png_get_valid(png, info, PNG_INFO_tRNS) ) {
+    if (png_get_valid(png, info, PNG_INFO_tRNS)) {
         png_set_tRNS_to_alpha(png);
     }
 
     // if there is no alpha information, fill with alphaByte
-    if (!(color_type & PNG_COLOR_MASK_ALPHA) ) {
+    if (!(color_type & PNG_COLOR_MASK_ALPHA)) {
         png_set_filler(png, alphaByte, PNG_FILLER_AFTER);
     }
 
@@ -155,7 +155,7 @@ void LoadPNG(const char* name, byte** pic, int* width, int* height,
     row_pointers = (png_bytep*) ri.Hunk_AllocateTempMemory(sizeof(png_bytep) * h);
 
     // set a new exception handler
-    if (setjmp(png_jmpbuf(png) ) ) {
+    if (setjmp(png_jmpbuf(png))) {
         ri.Printf(PRINT_WARNING, "LoadPNG: second exception handler called for (%s)\n", name);
         ri.Hunk_FreeTempMemory(row_pointers);
         ri.FS_FreeFile(data);
@@ -164,7 +164,7 @@ void LoadPNG(const char* name, byte** pic, int* width, int* height,
     }
 
     for (row = 0; row < h; row++) {
-        row_pointers[row] = (png_bytep)(out + (row * 4 * w) );
+        row_pointers[row] = (png_bytep)(out + (row * 4 * w));
     }
 
     // read image data
@@ -192,7 +192,7 @@ static int png_compressed_size;
 static void png_write_data(png_structp png, png_bytep data, png_size_t length) {
     byte* io_ptr = (byte*) png_get_io_ptr(png);
     Com_Memcpy(io_ptr, data, length);
-    png_init_io(png, (png_FILE_p)(io_ptr + length) );
+    png_init_io(png, (png_FILE_p)(io_ptr + length));
     png_compressed_size += length;
 }
 
@@ -226,7 +226,7 @@ void SavePNG(const char* name, const byte* pic, int width, int height, int numBy
     buffer = (byte*) ri.Hunk_AllocateTempMemory(width * height * numBytes);
 
     // set error handling
-    if (setjmp(png_jmpbuf(png) ) ) {
+    if (setjmp(png_jmpbuf(png))) {
         ri.Hunk_FreeTempMemory(buffer);
         png_destroy_write_struct(&png, &info);
         return;
@@ -259,9 +259,9 @@ void SavePNG(const char* name, const byte* pic, int width, int height, int numBy
     // write the file header information
     png_write_info(png, info);
 
-    row_pointers = (png_bytep*) ri.Hunk_AllocateTempMemory(height * sizeof(png_bytep) );
+    row_pointers = (png_bytep*) ri.Hunk_AllocateTempMemory(height * sizeof(png_bytep));
 
-    if (setjmp(png_jmpbuf(png) ) ) {
+    if (setjmp(png_jmpbuf(png))) {
         ri.Hunk_FreeTempMemory(row_pointers);
         ri.Hunk_FreeTempMemory(buffer);
         png_destroy_write_struct(&png, &info);

@@ -46,7 +46,7 @@ target_print
 void target_print_act(gentity_t* self, gentity_t*, gentity_t* activator) {
     if (self->spawnflags & 4) {
         if (activator && activator->client) {
-            trap_SendServerCommand(activator - g_entities, va("cp %s", Quote(self->message) ) );
+            trap_SendServerCommand(activator - g_entities, va("cp %s", Quote(self->message)));
         }
 
         return;
@@ -54,17 +54,17 @@ void target_print_act(gentity_t* self, gentity_t*, gentity_t* activator) {
 
     if (self->spawnflags & 3) {
         if (self->spawnflags & 1) {
-            G_TeamCommand(TEAM_HUMANS, va("cp %s", Quote(self->message) ) );
+            G_TeamCommand(TEAM_HUMANS, va("cp %s", Quote(self->message)));
         }
 
         if (self->spawnflags & 2) {
-            G_TeamCommand(TEAM_ALIENS, va("cp %s", Quote(self->message) ) );
+            G_TeamCommand(TEAM_ALIENS, va("cp %s", Quote(self->message)));
         }
 
         return;
     }
 
-    trap_SendServerCommand(-1, va("cp %s", Quote(self->message) ) );
+    trap_SendServerCommand(-1, va("cp %s", Quote(self->message)));
 }
 
 void SP_target_print(gentity_t* self) {

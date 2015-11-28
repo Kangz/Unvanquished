@@ -47,7 +47,7 @@ void HumanBuildableComponent::HandleDie(gentity_t* killer, meansOfDeath_t meansO
     gentity_t* rc = G_ActiveReactor();
     if (entity.oldEnt != rc && entity.oldEnt->powered && G_IsWarnableMOD(meansOfDeath)) {
         bool inBase = G_InsideBase(entity.oldEnt, true);
-        gentity_t* watcher  = nullptr, * location = nullptr;
+        gentity_t* watcher = nullptr, * location = nullptr;
 
         // Note that being inside the main base doesn't mean there always is an active reactor.
         if (inBase) {
@@ -81,7 +81,7 @@ void HumanBuildableComponent::HandleDie(gentity_t* killer, meansOfDeath_t meansO
 void HumanBuildableComponent::Blast(int timeDelta) {
     float splashDamage = (float)entity.oldEnt->splashDamage;
     float splashRadius = (float)entity.oldEnt->splashRadius;
-    meansOfDeath_t splashMOD    = (meansOfDeath_t)entity.oldEnt->splashMethodOfDeath;
+    meansOfDeath_t splashMOD = (meansOfDeath_t)entity.oldEnt->splashMethodOfDeath;
 
     humanBuildableLogger.Notice("Human buildable is exploding.");
 

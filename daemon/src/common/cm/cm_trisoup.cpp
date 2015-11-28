@@ -198,7 +198,7 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
     // create the borders for each triangle
     for (i = 0; i < triSoup->numTriangles; i++) {
         facet = &facets[numFacets];
-        Com_Memset(facet, 0, sizeof(*facet) );
+        Com_Memset(facet, 0, sizeof(*facet));
 
         p1 = triSoup->points[i][0];
         p2 = triSoup->points[i][1];
@@ -220,10 +220,10 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
             if (i4 == i3 && i5 == i2) {
                 p4 = triSoup->points[i][5]; // vertex at i6
 
-                if (CM_GenerateFacetFor4Points(facet, p1, p2, p4, p3) ) { // test->facets[count], v1, v2, v4, v3))
+                if (CM_GenerateFacetFor4Points(facet, p1, p2, p4, p3)) { // test->facets[count], v1, v2, v4, v3))
                     CM_SetBorderInward(facet, triSoup, i, 0);
 
-                    if (CM_ValidateFacet(facet) ) {
+                    if (CM_ValidateFacet(facet)) {
                         CM_AddFacetBevels(facet);
                         numFacets++;
 
@@ -236,10 +236,10 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
 
         #endif
 
-        if (CM_GenerateFacetFor3Points(facet, p1, p2, p3) ) {
+        if (CM_GenerateFacetFor3Points(facet, p1, p2, p3)) {
             CM_SetBorderInward(facet, triSoup, i, 0);
 
-            if (CM_ValidateFacet(facet) ) {
+            if (CM_ValidateFacet(facet)) {
                 CM_AddFacetBevels(facet);
                 numFacets++;
             }
@@ -248,12 +248,12 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
 
     // copy the results out
     sc->numPlanes = numPlanes;
-    sc->planes = (cPlane_t*) CM_Alloc(numPlanes * sizeof(*sc->planes) );
-    Com_Memcpy(sc->planes, planes, numPlanes * sizeof(*sc->planes) );
+    sc->planes = (cPlane_t*) CM_Alloc(numPlanes * sizeof(*sc->planes));
+    Com_Memcpy(sc->planes, planes, numPlanes * sizeof(*sc->planes));
 
     sc->numFacets = numFacets;
-    sc->facets = (cFacet_t*) CM_Alloc(numFacets * sizeof(*sc->facets) );
-    Com_Memcpy(sc->facets, facets, numFacets * sizeof(*sc->facets) );
+    sc->facets = (cFacet_t*) CM_Alloc(numFacets * sizeof(*sc->facets));
+    Com_Memcpy(sc->facets, facets, numFacets * sizeof(*sc->facets));
 }
 
 /*
@@ -294,7 +294,7 @@ cSurfaceCollide_t* CM_GenerateTriangleSoupCollide(int numVertexes, vec3_t* verte
 
     // for(i = 0; i < triSoup.num
 
-    sc = (cSurfaceCollide_t*) CM_Alloc(sizeof(*sc) );
+    sc = (cSurfaceCollide_t*) CM_Alloc(sizeof(*sc));
     ClearBounds(sc->bounds[0], sc->bounds[1]);
 
     for (i = 0; i < triSoup.numTriangles; i++) {

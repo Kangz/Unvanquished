@@ -48,7 +48,7 @@ static float CG_LerpValues(float a, float b, float f) {
     if (b == PARTICLES_SAME_AS_INITIAL) {
         return a;
     } else {
-        return ( (a) + (f) * ( (b) - (a) ) );
+        return ((a) + (f) * ((b) - (a)));
     }
 }
 
@@ -61,7 +61,7 @@ Randomise some value by some variance
 */
 static float CG_RandomiseValue(float value, float variance) {
     if (value != 0.0f) {
-        return value * (1.0f + (random() * variance) );
+        return value * (1.0f + (random() * variance));
     } else {
         return random() * variance;
     }
@@ -101,7 +101,7 @@ static void CG_DestroyParticle(particle_t* p, vec3_t impactNormal) {
 
         ps = CG_SpawnNewParticleSystem(p->class_->onDeathSystemHandle);
 
-        if (CG_IsParticleSystemValid(&ps) ) {
+        if (CG_IsParticleSystemValid(&ps)) {
             if (impactNormal) {
                 CG_SetParticleSystemNormal(ps, impactNormal);
             }
@@ -138,31 +138,31 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
 
         // FIXME: the + 1 may be unnecessary
         if (!p->valid && cg.clientFrame > p->frameWhenInvalidated + 1) {
-            memset(p, 0, sizeof(particle_t) );
+            memset(p, 0, sizeof(particle_t));
 
             // found a free slot
             p->class_ = bp;
             p->parent = pe;
 
             p->birthTime = cg.time;
-            p->lifeTime = (int) CG_RandomiseValue( (float) bp->lifeTime, bp->lifeTimeRandFrac);
+            p->lifeTime = (int) CG_RandomiseValue((float) bp->lifeTime, bp->lifeTimeRandFrac);
 
-            p->radius.delay = (int) CG_RandomiseValue( (float) bp->radius.delay, bp->radius.delayRandFrac);
+            p->radius.delay = (int) CG_RandomiseValue((float) bp->radius.delay, bp->radius.delayRandFrac);
             p->radius.initial = CG_RandomiseValue(bp->radius.initial, bp->radius.initialRandFrac);
             p->radius.final = CG_RandomiseValue(bp->radius.final, bp->radius.finalRandFrac);
 
             p->radius.initial += bp->scaleWithCharge * pe->parent->charge;
 
-            p->alpha.delay = (int) CG_RandomiseValue( (float) bp->alpha.delay, bp->alpha.delayRandFrac);
+            p->alpha.delay = (int) CG_RandomiseValue((float) bp->alpha.delay, bp->alpha.delayRandFrac);
             p->alpha.initial = CG_RandomiseValue(bp->alpha.initial, bp->alpha.initialRandFrac);
             p->alpha.final = CG_RandomiseValue(bp->alpha.final, bp->alpha.finalRandFrac);
 
-            p->rotation.delay = (int) CG_RandomiseValue( (float) bp->rotation.delay, bp->rotation.delayRandFrac);
+            p->rotation.delay = (int) CG_RandomiseValue((float) bp->rotation.delay, bp->rotation.delayRandFrac);
             p->rotation.initial = CG_RandomiseValue(bp->rotation.initial, bp->rotation.initialRandFrac);
             p->rotation.final = CG_RandomiseValue(bp->rotation.final, bp->rotation.finalRandFrac);
 
             p->dLightRadius.delay =
-                (int) CG_RandomiseValue( (float) bp->dLightRadius.delay, bp->dLightRadius.delayRandFrac);
+                (int) CG_RandomiseValue((float) bp->dLightRadius.delay, bp->dLightRadius.delayRandFrac);
             p->dLightRadius.initial =
                 CG_RandomiseValue(bp->dLightRadius.initial, bp->dLightRadius.initialRandFrac);
             p->dLightRadius.final =
@@ -172,9 +172,9 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
 
             p->bounceMarkRadius = CG_RandomiseValue(bp->bounceMarkRadius, bp->bounceMarkRadiusRandFrac);
             p->bounceMarkCount =
-                rint(CG_RandomiseValue( (float) bp->bounceMarkCount, bp->bounceMarkCountRandFrac) );
+                rint(CG_RandomiseValue((float) bp->bounceMarkCount, bp->bounceMarkCountRandFrac));
             p->bounceSoundCount =
-                rint(CG_RandomiseValue( (float) bp->bounceSoundCount, bp->bounceSoundCountRandFrac) );
+                rint(CG_RandomiseValue((float) bp->bounceSoundCount, bp->bounceSoundCountRandFrac));
 
             if (bp->numModels) {
                 p->model = bp->models[rand() % bp->numModels];
@@ -185,13 +185,13 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
                 }
             }
 
-            if (!CG_AttachmentPoint(&ps->attachment, attachmentPoint) ) {
+            if (!CG_AttachmentPoint(&ps->attachment, attachmentPoint)) {
                 return nullptr;
             }
 
             VectorCopy(attachmentPoint, p->origin);
 
-            if (CG_AttachmentAxis(&ps->attachment, transform) ) {
+            if (CG_AttachmentAxis(&ps->attachment, transform)) {
                 vec3_t transDisplacement;
 
                 VectorMatrixMultiply(bp->displacement, transform, transDisplacement);
@@ -215,7 +215,7 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
                 break;
 
             case PMT_STATIC_TRANSFORM:
-                if (!CG_AttachmentAxis(&ps->attachment, transform) ) {
+                if (!CG_AttachmentAxis(&ps->attachment, transform)) {
                     return nullptr;
                 }
 
@@ -235,7 +235,7 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
                 if (bp->velMoveValues.dirType == PMD_POINT) {
                     VectorSubtract(attachmentPoint, p->origin, p->velocity);
                 } else if (bp->velMoveValues.dirType == PMD_LINEAR) {
-                    if (!CG_AttachmentDir(&ps->attachment, p->velocity) ) {
+                    if (!CG_AttachmentDir(&ps->attachment, p->velocity)) {
                         return nullptr;
                     }
                 }
@@ -277,7 +277,7 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
                         CG_RandomiseValue(bp->velMoveValues.mag, bp->velMoveValues.magRandFrac),
                         p->velocity);
 
-            if (CG_AttachmentVelocity(&ps->attachment, attachmentVelocity) ) {
+            if (CG_AttachmentVelocity(&ps->attachment, attachmentVelocity)) {
                 VectorMA(p->velocity,
                          CG_RandomiseValue(bp->velMoveValues.parentVelFrac,
                                            bp->velMoveValues.parentVelFracRandFrac), attachmentVelocity, p->velocity);
@@ -291,7 +291,7 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
             if (bp->childSystemName[0] != '\0') {
                 particleSystem_t* chps = CG_SpawnNewParticleSystem(bp->childSystemHandle);
 
-                if (CG_IsParticleSystemValid(&chps) ) {
+                if (CG_IsParticleSystemValid(&chps)) {
                     CG_SetAttachmentParticle(&chps->attachment, p);
                     CG_AttachToParticle(&chps->attachment);
                     p->childParticleSystem = chps;
@@ -308,7 +308,7 @@ static particle_t* CG_SpawnNewParticle(baseParticle_t* bp, particleEjector_t* pa
             if (bp->childTrailSystemName[0] != '\0') {
                 trailSystem_t* ts = CG_SpawnNewTrailSystem(bp->childTrailSystemHandle);
 
-                if (CG_IsTrailSystemValid(&ts) ) {
+                if (CG_IsTrailSystemValid(&ts)) {
                     CG_SetAttachmentParticle(&ts->frontAttachment, p);
                     CG_AttachToParticle(&ts->frontAttachment);
                 }
@@ -344,7 +344,7 @@ static void CG_SpawnNewParticles() {
 
         if (pe->valid) {
             // a non attached particle system can't make particles
-            if (!CG_Attached(&ps->attachment) ) {
+            if (!CG_Attached(&ps->attachment)) {
                 continue;
             }
 
@@ -353,7 +353,7 @@ static void CG_SpawnNewParticles() {
             // if this system is scheduled for removal don't make any new particles
             if (!ps->lazyRemove) {
                 while (pe->nextEjectionTime <= cg.time &&
-                       (pe->count > 0 || pe->totalParticles == PARTICLES_INFINITE) ) {
+                       (pe->count > 0 || pe->totalParticles == PARTICLES_INFINITE)) {
                     for (j = 0; j < bpe->numParticles; j++) {
                         CG_SpawnNewParticle(bpe->particles[j], pe);
                     }
@@ -363,7 +363,7 @@ static void CG_SpawnNewParticles() {
                     }
 
                     // calculate next ejection time
-                    lerpFrac = 1.0 - ( (float) pe->count / (float) pe->totalParticles);
+                    lerpFrac = 1.0 - ((float) pe->count / (float) pe->totalParticles);
                     pe->nextEjectionTime = cg.time + (int) CG_RandomiseValue(
                         CG_LerpValues(pe->ejectPeriod.initial,
                                       pe->ejectPeriod.final,
@@ -409,7 +409,7 @@ static particleEjector_t* CG_SpawnNewParticleEjector(baseParticleEjector_t* bpe,
         pe = &particleEjectors[i];
 
         if (!pe->valid) {
-            memset(pe, 0, sizeof(particleEjector_t) );
+            memset(pe, 0, sizeof(particleEjector_t));
 
             // found a free slot
             pe->class_ = bpe;
@@ -420,9 +420,9 @@ static particleEjector_t* CG_SpawnNewParticleEjector(baseParticleEjector_t* bpe,
             pe->ejectPeriod.randFrac = bpe->eject.randFrac;
 
             pe->nextEjectionTime = cg.time +
-                                   (int) CG_RandomiseValue( (float) bpe->eject.delay, bpe->eject.delayRandFrac);
+                                   (int) CG_RandomiseValue((float) bpe->eject.delay, bpe->eject.delayRandFrac);
             pe->count = pe->totalParticles =
-                            (int) rint(CG_RandomiseValue( (float) bpe->totalParticles, bpe->totalParticlesRandFrac) );
+                            (int) rint(CG_RandomiseValue((float) bpe->totalParticles, bpe->totalParticlesRandFrac));
 
             pe->valid = true;
 
@@ -458,7 +458,7 @@ particleSystem_t* CG_SpawnNewParticleSystem(qhandle_t psHandle) {
         ps = &particleSystems[i];
 
         if (!ps->valid) {
-            memset(ps, 0, sizeof(particleSystem_t) );
+            memset(ps, 0, sizeof(particleSystem_t));
 
             // found a free slot
             ps->class_ = bps;
@@ -500,7 +500,7 @@ qhandle_t CG_RegisterParticleSystem(const char* name) {
     for (i = 0; i < MAX_BASEPARTICLE_SYSTEMS; i++) {
         bps = &baseParticleSystems[i];
 
-        if (!Q_strnicmp(bps->name, name, MAX_QPATH) ) {
+        if (!Q_strnicmp(bps->name, name, MAX_QPATH)) {
             // already registered
             if (bps->registered) {
                 return i + 1;
@@ -577,7 +577,7 @@ static void CG_ParseValueAndVariance(char* token, float* value, float* variance,
     float localValue = 0.0f;
     float localVariance = 0.0f;
 
-    Q_strncpyz(valueBuffer, token, sizeof(valueBuffer) );
+    Q_strncpyz(valueBuffer, token, sizeof(valueBuffer));
 
     variancePtr = strchr(valueBuffer, '~');
 
@@ -640,19 +640,19 @@ static bool CG_ParseType(pMoveType_t* pmt, const char** text_p) {
         return false;
     }
 
-    if (!Q_stricmp(token, "static") ) {
+    if (!Q_stricmp(token, "static")) {
         *pmt = PMT_STATIC;
-    } else if (!Q_stricmp(token, "static_transform") ) {
+    } else if (!Q_stricmp(token, "static_transform")) {
         *pmt = PMT_STATIC_TRANSFORM;
-    } else if (!Q_stricmp(token, "tag") ) {
+    } else if (!Q_stricmp(token, "tag")) {
         *pmt = PMT_TAG;
-    } else if (!Q_stricmp(token, "cent") ) {
+    } else if (!Q_stricmp(token, "cent")) {
         *pmt = PMT_CENT_ANGLES;
-    } else if (!Q_stricmp(token, "normal") ) {
+    } else if (!Q_stricmp(token, "normal")) {
         *pmt = PMT_NORMAL;
-    } else if (!Q_stricmp(token, "last_normal") ) {
+    } else if (!Q_stricmp(token, "last_normal")) {
         *pmt = PMT_LAST_NORMAL;
-    } else if (!Q_stricmp(token, "opportunistic_normal") ) {
+    } else if (!Q_stricmp(token, "opportunistic_normal")) {
         *pmt = PMT_OPPORTUNISTIC_NORMAL;
     }
 
@@ -666,9 +666,9 @@ static bool CG_ParseDir(pMoveValues_t* pmv, const char** text_p) {
         return false;
     }
 
-    if (!Q_stricmp(token, "linear") ) {
+    if (!Q_stricmp(token, "linear")) {
         pmv->dirType = PMD_LINEAR;
-    } else if (!Q_stricmp(token, "point") ) {
+    } else if (!Q_stricmp(token, "point")) {
         pmv->dirType = PMD_POINT;
     }
 
@@ -682,7 +682,7 @@ static bool CG_ParseFinal(pLerpValues_t* plv, const char** text_p, bool allowNeg
         return false;
     }
 
-    if (!Q_stricmp(token, "-") ) {
+    if (!Q_stricmp(token, "-")) {
         plv->final = PARTICLES_SAME_AS_INITIAL;
         plv->finalRandFrac = 0.0f;
     } else {
@@ -712,14 +712,14 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             return false;
         }
 
-        if (!Q_stricmp(token, "bounce") ) {
+        if (!Q_stricmp(token, "bounce")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
                 break;
             }
 
-            if (!Q_stricmp(token, "cull") ) {
+            if (!Q_stricmp(token, "cull")) {
                 bp->bounceCull = true;
 
                 bp->bounceFrac = -1.0f;
@@ -727,7 +727,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             } else {
                 CG_ParseValueAndVariance(token, &bp->bounceFrac, &bp->bounceFracRandFrac, false);
             }
-        } else if (!Q_stricmp(token, "bounceMark") ) {
+        } else if (!Q_stricmp(token, "bounceMark")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -751,7 +751,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             Q_strncpyz(bp->bounceMarkName, token, MAX_QPATH);
-        } else if (!Q_stricmp(token, "bounceSound") ) {
+        } else if (!Q_stricmp(token, "bounceSound")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -767,7 +767,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             Q_strncpyz(bp->bounceSoundName, token, MAX_QPATH);
-        } else if (!Q_stricmp(token, "shader") ) {
+        } else if (!Q_stricmp(token, "shader")) {
             if (bp->numModels > 0) {
                 CG_Printf(S_ERROR "'shader' not allowed in "
                           "conjunction with 'model'\n");
@@ -780,14 +780,14 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                 break;
             }
 
-            if (!Q_stricmp(token, "sync") ) {
+            if (!Q_stricmp(token, "sync")) {
                 bp->framerate = 0.0f;
             } else {
                 bp->framerate = atof_neg(token, false);
             }
 
             CG_CopyLine(&bp->numFrames, bp->shaderNames[0], ARRAY_LEN(bp->shaderNames), MAX_QPATH, text_p);
-        } else if (!Q_stricmp(token, "model") ) {
+        } else if (!Q_stricmp(token, "model")) {
             if (bp->numFrames > 0) {
                 CG_Printf(S_ERROR "'model' not allowed in "
                           "conjunction with 'shader'\n");
@@ -795,7 +795,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_CopyLine(&bp->numModels, bp->modelNames[0], ARRAY_LEN(bp->modelNames), MAX_QPATH, text_p);
-        } else if (!Q_stricmp(token, "modelAnimation") ) {
+        } else if (!Q_stricmp(token, "modelAnimation")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -834,7 +834,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                 break;
             }
 
-            if (!Q_stricmp(token, "sync") ) {
+            if (!Q_stricmp(token, "sync")) {
                 bp->modelAnimation.frameLerp = -1;
                 bp->modelAnimation.initialLerp = -1;
             } else {
@@ -849,15 +849,15 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
         }
         ///
-        else if (!Q_stricmp(token, "velocityType") ) {
-            if (!CG_ParseType(&bp->velMoveType, text_p) ) {
+        else if (!Q_stricmp(token, "velocityType")) {
+            if (!CG_ParseType(&bp->velMoveType, text_p)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "velocityDir") ) {
-            if (!CG_ParseDir(&bp->velMoveValues, text_p) ) {
+        } else if (!Q_stricmp(token, "velocityDir")) {
+            if (!CG_ParseDir(&bp->velMoveValues, text_p)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "velocityMagnitude") ) {
+        } else if (!Q_stricmp(token, "velocityMagnitude")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -865,7 +865,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_ParseValueAndVariance(token, &bp->velMoveValues.mag, &bp->velMoveValues.magRandFrac, true);
-        } else if (!Q_stricmp(token, "parentVelocityFraction") ) {
+        } else if (!Q_stricmp(token, "parentVelocityFraction")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -873,7 +873,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_ParseValueAndVariance(token, &bp->velMoveValues.parentVelFrac, &bp->velMoveValues.parentVelFracRandFrac, false);
-        } else if (!Q_stricmp(token, "velocity") ) {
+        } else if (!Q_stricmp(token, "velocity")) {
             for (i = 0; i <= 2; i++) {
                 token = COM_Parse(text_p);
 
@@ -891,7 +891,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_ParseValueAndVariance(token, nullptr, &bp->velMoveValues.dirRandAngle, false);
-        } else if (!Q_stricmp(token, "velocityPoint") ) {
+        } else if (!Q_stricmp(token, "velocityPoint")) {
             for (i = 0; i <= 2; i++) {
                 token = COM_Parse(text_p);
 
@@ -911,15 +911,15 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             CG_ParseValueAndVariance(token, nullptr, &bp->velMoveValues.pointRandAngle, false);
         }
         ///
-        else if (!Q_stricmp(token, "accelerationType") ) {
-            if (!CG_ParseType(&bp->accMoveType, text_p) ) {
+        else if (!Q_stricmp(token, "accelerationType")) {
+            if (!CG_ParseType(&bp->accMoveType, text_p)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "accelerationDir") ) {
-            if (!CG_ParseDir(&bp->accMoveValues, text_p) ) {
+        } else if (!Q_stricmp(token, "accelerationDir")) {
+            if (!CG_ParseDir(&bp->accMoveValues, text_p)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "accelerationMagnitude") ) {
+        } else if (!Q_stricmp(token, "accelerationMagnitude")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -927,7 +927,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_ParseValueAndVariance(token, &bp->accMoveValues.mag, &bp->accMoveValues.magRandFrac, true);
-        } else if (!Q_stricmp(token, "acceleration") ) {
+        } else if (!Q_stricmp(token, "acceleration")) {
             for (i = 0; i <= 2; i++) {
                 token = COM_Parse(text_p);
 
@@ -945,7 +945,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             CG_ParseValueAndVariance(token, nullptr, &bp->accMoveValues.dirRandAngle, false);
-        } else if (!Q_stricmp(token, "accelerationPoint") ) {
+        } else if (!Q_stricmp(token, "accelerationPoint")) {
             for (i = 0; i <= 2; i++) {
                 token = COM_Parse(text_p);
 
@@ -965,7 +965,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             CG_ParseValueAndVariance(token, nullptr, &bp->accMoveValues.pointRandAngle, false);
         }
         ///
-        else if (!Q_stricmp(token, "displacement") ) {
+        else if (!Q_stricmp(token, "displacement")) {
             for (i = 0; i <= 2; i++) {
                 token = COM_Parse(text_p);
 
@@ -995,7 +995,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
                 bp->randDisplacement[i] += randFrac;
             }
-        } else if (!Q_stricmp(token, "normalDisplacement") ) {
+        } else if (!Q_stricmp(token, "normalDisplacement")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1003,11 +1003,11 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             bp->normalDisplacement = atof_neg(token, true);
-        } else if (!Q_stricmp(token, "overdrawProtection") ) {
+        } else if (!Q_stricmp(token, "overdrawProtection")) {
             bp->overdrawProtection = true;
-        } else if (!Q_stricmp(token, "realLight") ) {
+        } else if (!Q_stricmp(token, "realLight")) {
             bp->realLight = true;
-        } else if (!Q_stricmp(token, "dynamicLight") ) {
+        } else if (!Q_stricmp(token, "dynamicLight")) {
             bp->dynamicLight = true;
 
             token = COM_Parse(text_p);
@@ -1027,7 +1027,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
             CG_ParseValueAndVariance(token, &bp->dLightRadius.initial, &bp->dLightRadius.initialRandFrac, false);
 
-            if (!CG_ParseFinal(&bp->dLightRadius, text_p, false) ) {
+            if (!CG_ParseFinal(&bp->dLightRadius, text_p, false)) {
                 break;
             }
 
@@ -1037,14 +1037,14 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                 break;
             }
 
-            if (!Q_stricmp(token, "{") ) {
-                if (!CG_ParseColor(bp->dLightColor, text_p) ) {
+            if (!Q_stricmp(token, "{")) {
+                if (!CG_ParseColor(bp->dLightColor, text_p)) {
                     break;
                 }
             }
-        } else if (!Q_stricmp(token, "cullOnStartSolid") ) {
+        } else if (!Q_stricmp(token, "cullOnStartSolid")) {
             bp->cullOnStartSolid = true;
-        } else if (!Q_stricmp(token, "radius") ) {
+        } else if (!Q_stricmp(token, "radius")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1062,10 +1062,10 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
             CG_ParseValueAndVariance(token, &bp->radius.initial, &bp->radius.initialRandFrac, false);
 
-            if (!CG_ParseFinal(&bp->radius, text_p, false) ) {
+            if (!CG_ParseFinal(&bp->radius, text_p, false)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "physicsRadius") ) {
+        } else if (!Q_stricmp(token, "physicsRadius")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1073,7 +1073,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             bp->physicsRadius = atoi(token);
-        } else if (!Q_stricmp(token, "alpha") ) {
+        } else if (!Q_stricmp(token, "alpha")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1091,10 +1091,10 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
             CG_ParseValueAndVariance(token, &bp->alpha.initial, &bp->alpha.initialRandFrac, false);
 
-            if (!CG_ParseFinal(&bp->alpha, text_p, false) ) {
+            if (!CG_ParseFinal(&bp->alpha, text_p, false)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "color") ) {
+        } else if (!Q_stricmp(token, "color")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1110,8 +1110,8 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                 break;
             }
 
-            if (!Q_stricmp(token, "{") ) {
-                if (!CG_ParseColor(bp->initialColor, text_p) ) {
+            if (!Q_stricmp(token, "{")) {
+                if (!CG_ParseColor(bp->initialColor, text_p)) {
                     break;
                 }
 
@@ -1121,12 +1121,12 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                     break;
                 }
 
-                if (!Q_stricmp(token, "-") ) {
+                if (!Q_stricmp(token, "-")) {
                     bp->finalColor[0] = bp->initialColor[0];
                     bp->finalColor[1] = bp->initialColor[1];
                     bp->finalColor[2] = bp->initialColor[2];
-                } else if (!Q_stricmp(token, "{") ) {
-                    if (!CG_ParseColor(bp->finalColor, text_p) ) {
+                } else if (!Q_stricmp(token, "{")) {
+                    if (!CG_ParseColor(bp->finalColor, text_p)) {
                         break;
                     }
                 } else {
@@ -1137,7 +1137,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
                 CG_Printf(S_ERROR "missing '{'\n");
                 break;
             }
-        } else if (!Q_stricmp(token, "rotation") ) {
+        } else if (!Q_stricmp(token, "rotation")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1155,10 +1155,10 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
             CG_ParseValueAndVariance(token, &bp->rotation.initial, &bp->rotation.initialRandFrac, true);
 
-            if (!CG_ParseFinal(&bp->rotation, text_p, true) ) {
+            if (!CG_ParseFinal(&bp->rotation, text_p, true)) {
                 break;
             }
-        } else if (!Q_stricmp(token, "lifeTime") ) {
+        } else if (!Q_stricmp(token, "lifeTime")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1167,7 +1167,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
 
             CG_ParseValueAndVariance(token, &number, &bp->lifeTimeRandFrac, false);
             bp->lifeTime = (int) number;
-        } else if (!Q_stricmp(token, "childSystem") ) {
+        } else if (!Q_stricmp(token, "childSystem")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1175,7 +1175,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             Q_strncpyz(bp->childSystemName, token, MAX_QPATH);
-        } else if (!Q_stricmp(token, "onDeathSystem") ) {
+        } else if (!Q_stricmp(token, "onDeathSystem")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1183,7 +1183,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             Q_strncpyz(bp->onDeathSystemName, token, MAX_QPATH);
-        } else if (!Q_stricmp(token, "childTrailSystem") ) {
+        } else if (!Q_stricmp(token, "childTrailSystem")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1191,7 +1191,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             Q_strncpyz(bp->childTrailSystemName, token, MAX_QPATH);
-        } else if (!Q_stricmp(token, "scaleWithCharge") ) {
+        } else if (!Q_stricmp(token, "scaleWithCharge")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1199,7 +1199,7 @@ static bool CG_ParseParticle(baseParticle_t* bp, const char** text_p) {
             }
 
             bp->scaleWithCharge = atof(token);
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             return true; // reached the end of this particle
         } else {
             CG_Printf(S_ERROR "unknown token '%s' in particle\n", token);
@@ -1216,10 +1216,10 @@ CG_InitialiseBaseParticle
 ===============
 */
 static void CG_InitialiseBaseParticle(baseParticle_t* bp) {
-    memset(bp, 0, sizeof(baseParticle_t) );
+    memset(bp, 0, sizeof(baseParticle_t));
 
-    memset(bp->initialColor, 0xFF, sizeof(bp->initialColor) );
-    memset(bp->finalColor, 0xFF, sizeof(bp->finalColor) );
+    memset(bp->initialColor, 0xFF, sizeof(bp->initialColor));
+    memset(bp->finalColor, 0xFF, sizeof(bp->finalColor));
 }
 
 /*
@@ -1241,10 +1241,10 @@ static bool CG_ParseParticleEjector(baseParticleEjector_t* bpe, const char** tex
             return false;
         }
 
-        if (!Q_stricmp(token, "{") ) {
+        if (!Q_stricmp(token, "{")) {
             CG_InitialiseBaseParticle(&baseParticles[numBaseParticles]);
 
-            if (!CG_ParseParticle(&baseParticles[numBaseParticles], text_p) ) {
+            if (!CG_ParseParticle(&baseParticles[numBaseParticles], text_p)) {
                 CG_Printf(S_ERROR "failed to parse particle\n");
                 return false;
             }
@@ -1263,7 +1263,7 @@ static bool CG_ParseParticleEjector(baseParticleEjector_t* bpe, const char** tex
             bpe->particles[bpe->numParticles] = &baseParticles[numBaseParticles];
             bpe->numParticles++;
             numBaseParticles++;
-        } else if (!Q_stricmp(token, "delay") ) {
+        } else if (!Q_stricmp(token, "delay")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1272,7 +1272,7 @@ static bool CG_ParseParticleEjector(baseParticleEjector_t* bpe, const char** tex
 
             CG_ParseValueAndVariance(token, &number, &bpe->eject.delayRandFrac, false);
             bpe->eject.delay = (int) number;
-        } else if (!Q_stricmp(token, "period") ) {
+        } else if (!Q_stricmp(token, "period")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
@@ -1287,7 +1287,7 @@ static bool CG_ParseParticleEjector(baseParticleEjector_t* bpe, const char** tex
                 break;
             }
 
-            if (!Q_stricmp(token, "-") ) {
+            if (!Q_stricmp(token, "-")) {
                 bpe->eject.final = PARTICLES_SAME_AS_INITIAL;
             } else {
                 bpe->eject.final = atoi_neg(token, false);
@@ -1300,23 +1300,23 @@ static bool CG_ParseParticleEjector(baseParticleEjector_t* bpe, const char** tex
             }
 
             CG_ParseValueAndVariance(token, nullptr, &bpe->eject.randFrac, false);
-        } else if (!Q_stricmp(token, "count") ) {
+        } else if (!Q_stricmp(token, "count")) {
             token = COM_Parse(text_p);
 
             if (!*token) {
                 break;
             }
 
-            if (!Q_stricmp(token, "infinite") ) {
+            if (!Q_stricmp(token, "infinite")) {
                 bpe->totalParticles = PARTICLES_INFINITE;
                 bpe->totalParticlesRandFrac = 0.0f;
             } else {
                 CG_ParseValueAndVariance(token, &number, &bpe->totalParticlesRandFrac, false);
                 bpe->totalParticles = (int) number;
             }
-        } else if (!Q_stricmp(token, "particle") ) { // acceptable text
+        } else if (!Q_stricmp(token, "particle")) { // acceptable text
             continue;
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             return true; // reached the end of this particle ejector
         } else {
             CG_Printf(S_ERROR "unknown token '%s' in particle ejector\n", token);
@@ -1346,8 +1346,8 @@ static bool CG_ParseParticleSystem(baseParticleSystem_t* bps, const char** text_
             return false;
         }
 
-        if (!Q_stricmp(token, "{") ) {
-            if (!CG_ParseParticleEjector(&baseParticleEjectors[numBaseParticleEjectors], text_p) ) {
+        if (!Q_stricmp(token, "{")) {
+            if (!CG_ParseParticleEjector(&baseParticleEjectors[numBaseParticleEjectors], text_p)) {
                 CG_Printf(S_ERROR "failed to parse particle ejector\n");
                 return false;
             }
@@ -1356,7 +1356,7 @@ static bool CG_ParseParticleSystem(baseParticleSystem_t* bps, const char** text_
 
             // check for infinite count + zero period
             if (bpe->totalParticles == PARTICLES_INFINITE &&
-                (bpe->eject.initial == 0.0f || bpe->eject.final == 0.0f) ) {
+                (bpe->eject.initial == 0.0f || bpe->eject.final == 0.0f)) {
                 CG_Printf(S_ERROR "ejector with 'count infinite' potentially has zero period\n");
                 return false;
             }
@@ -1376,11 +1376,11 @@ static bool CG_ParseParticleSystem(baseParticleSystem_t* bps, const char** text_
             bps->ejectors[bps->numEjectors] = &baseParticleEjectors[numBaseParticleEjectors];
             bps->numEjectors++;
             numBaseParticleEjectors++;
-        } else if (!Q_stricmp(token, "thirdPersonOnly") ) {
+        } else if (!Q_stricmp(token, "thirdPersonOnly")) {
             bps->thirdPersonOnly = true;
-        } else if (!Q_stricmp(token, "ejector") ) { // acceptable text
+        } else if (!Q_stricmp(token, "ejector")) { // acceptable text
             continue;
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             if (cg_debugParticles.integer >= 1) {
                 CG_Printf("Parsed particle system %s\n", name);
             }
@@ -1419,7 +1419,7 @@ static bool CG_ParseParticleFile(const char* fileName) {
         return false;
     }
 
-    if (len == 0 || len + 1 >= (int) sizeof(text) ) {
+    if (len == 0 || len + 1 >= (int) sizeof(text)) {
         trap_FS_FCloseFile(f);
         CG_Printf(len ? S_ERROR "particle file %s is too long\n" : S_ERROR "particle file %s is empty\n", fileName);
         return false;
@@ -1440,11 +1440,11 @@ static bool CG_ParseParticleFile(const char* fileName) {
             break;
         }
 
-        if (!Q_stricmp(token, "{") ) {
+        if (!Q_stricmp(token, "{")) {
             if (psNameSet) {
                 Q_strncpyz(baseParticleSystems[numBaseParticleSystems].name, psName, MAX_QPATH);
 
-                if (!CG_ParseParticleSystem(&baseParticleSystems[numBaseParticleSystems], &text_p, psName) ) {
+                if (!CG_ParseParticleSystem(&baseParticleSystems[numBaseParticleSystems], &text_p, psName)) {
                     CG_Printf(S_ERROR "%s: failed to parse particle system %s\n", fileName, psName);
                     return false;
                 }
@@ -1464,11 +1464,11 @@ static bool CG_ParseParticleFile(const char* fileName) {
                 return false;
             }
         } else if (!psNameSet) {
-            Q_strncpyz(psName, token, sizeof(psName) );
+            Q_strncpyz(psName, token, sizeof(psName));
 
             // check for name space clashes
             for (i = 0; i < numBaseParticleSystems; i++) {
-                if (!Q_stricmp(baseParticleSystems[i].name, psName) ) {
+                if (!Q_stricmp(baseParticleSystems[i].name, psName)) {
                     CG_Printf(S_ERROR "a particle system is already named %s\n", psName);
                     break;
                 }
@@ -1509,17 +1509,17 @@ void CG_LoadParticleSystems() {
 
     for (i = 0; i < MAX_BASEPARTICLE_SYSTEMS; i++) {
         baseParticleSystem_t* bps = &baseParticleSystems[i];
-        memset(bps, 0, sizeof(baseParticleSystem_t) );
+        memset(bps, 0, sizeof(baseParticleSystem_t));
     }
 
     for (i = 0; i < MAX_BASEPARTICLE_EJECTORS; i++) {
         baseParticleEjector_t* bpe = &baseParticleEjectors[i];
-        memset(bpe, 0, sizeof(baseParticleEjector_t) );
+        memset(bpe, 0, sizeof(baseParticleEjector_t));
     }
 
     for (i = 0; i < MAX_BASEPARTICLES; i++) {
         baseParticle_t* bp = &baseParticles[i];
-        memset(bp, 0, sizeof(baseParticle_t) );
+        memset(bp, 0, sizeof(baseParticle_t));
     }
 
     // and bring in the new
@@ -1544,7 +1544,7 @@ void CG_LoadParticleSystems() {
             for (j = 0; j < numBaseParticleSystems; j++) {
                 baseParticleSystem_t* bps = &baseParticleSystems[j];
 
-                if (!Q_stricmp(bps->name, bp->childSystemName) ) {
+                if (!Q_stricmp(bps->name, bp->childSystemName)) {
                     // FIXME: add checks for cycles and infinite children
 
                     bp->childSystemHandle = j + 1;
@@ -1565,7 +1565,7 @@ void CG_LoadParticleSystems() {
             for (j = 0; j < numBaseParticleSystems; j++) {
                 baseParticleSystem_t* bps = &baseParticleSystems[j];
 
-                if (!Q_stricmp(bps->name, bp->onDeathSystemName) ) {
+                if (!Q_stricmp(bps->name, bp->onDeathSystemName)) {
                     // FIXME: add checks for cycles and infinite children
 
                     bp->onDeathSystemHandle = j + 1;
@@ -1705,7 +1705,7 @@ Test a particle system for validity
 ===============
 */
 bool CG_IsParticleSystemValid(particleSystem_t** ps) {
-    if (*ps == nullptr || (*ps && !(*ps)->valid) ) {
+    if (*ps == nullptr || (*ps && !(*ps)->valid)) {
         if (*ps && !(*ps)->valid) {
             *ps = nullptr;
         }
@@ -1752,8 +1752,8 @@ static void CG_GarbageCollectParticleSystems() {
 
         // check systems where the parent cent has left the PVS
         // ( local player entity is always valid )
-        if ( (centNum = CG_AttachmentCentNum(&ps->attachment) ) >= 0 &&
-             centNum != cg.snap->ps.clientNum) {
+        if ((centNum = CG_AttachmentCentNum(&ps->attachment)) >= 0 &&
+            centNum != cg.snap->ps.clientNum) {
             if (!cg_entities[centNum].valid) {
                 ps->lazyRemove = true;
             }
@@ -1775,7 +1775,7 @@ Calculate the fraction of time passed
 static float CG_CalculateTimeFrac(int birth, int life, int delay) {
     float frac;
 
-    frac = ( (float) cg.time - (float)(birth + delay) ) / (float)(life - delay);
+    frac = ((float) cg.time - (float)(birth + delay)) / (float)(life - delay);
 
     if (frac < 0.0f) {
         frac = 0.0f;
@@ -1818,7 +1818,7 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
         break;
 
     case PMT_STATIC_TRANSFORM:
-        if (!CG_AttachmentAxis(&ps->attachment, transform) ) {
+        if (!CG_AttachmentAxis(&ps->attachment, transform)) {
             return;
         }
 
@@ -1838,13 +1838,13 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
         if (bp->accMoveValues.dirType == PMD_POINT) {
             vec3_t point;
 
-            if (!CG_AttachmentPoint(&ps->attachment, point) ) {
+            if (!CG_AttachmentPoint(&ps->attachment, point)) {
                 return;
             }
 
             VectorSubtract(point, p->origin, acceleration);
         } else if (bp->accMoveValues.dirType == PMD_LINEAR) {
-            if (!CG_AttachmentDir(&ps->attachment, acceleration) ) {
+            if (!CG_AttachmentDir(&ps->attachment, acceleration)) {
                 return;
             }
         }
@@ -1909,7 +1909,7 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
     } else {
         radius = CG_LerpValues(p->radius.initial, p->radius.final,
                                CG_CalculateTimeFrac(p->birthTime, p->lifeTime,
-                                                    p->radius.delay) );
+                                                    p->radius.delay));
     }
 
     VectorSet(mins, -radius, -radius, -radius);
@@ -1926,7 +1926,7 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
     if (!cg_bounceParticles.integer) {
         int contents = trap_CM_PointContents(newOrigin, 0);
 
-        if ( (contents & CONTENTS_SOLID) || (contents & CONTENTS_NODROP) ) {
+        if ((contents & CONTENTS_SOLID) || (contents & CONTENTS_NODROP)) {
             CG_DestroyParticle(p, nullptr);
         } else {
             VectorCopy(newOrigin, p->origin);
@@ -1941,15 +1941,15 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
     // not hit anything or not a collider
     if (trace.fraction == 1.0f || bounce == 0.0f) {
         VectorCopy(newOrigin, p->origin);
-        if (CG_IsParticleSystemValid(&p->childParticleSystem) ) {
+        if (CG_IsParticleSystemValid(&p->childParticleSystem)) {
             CG_SetParticleSystemLastNormal(p->childParticleSystem, nullptr);
         }
         return;
     }
 
     // remove particles that get into a CONTENTS_NODROP brush
-    if ( (trap_CM_PointContents(trace.endpos, 0) & CONTENTS_NODROP) ||
-         (bp->cullOnStartSolid && trace.startsolid) ) {
+    if ((trap_CM_PointContents(trace.endpos, 0) & CONTENTS_NODROP) ||
+        (bp->cullOnStartSolid && trace.startsolid)) {
         CG_DestroyParticle(p, nullptr);
         return;
     } else if (bp->bounceCull) {
@@ -1965,7 +1965,7 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
 
     if (trace.plane.normal[2] > 0.5f &&
         (p->velocity[2] < 40.0f ||
-         p->velocity[2] < -cg.frametime * p->velocity[2]) ) {
+         p->velocity[2] < -cg.frametime * p->velocity[2])) {
         p->atRest = true;
     }
 
@@ -1983,7 +1983,7 @@ static void CG_EvaluateParticlePhysics(particle_t* p) {
     VectorCopy(trace.endpos, p->origin);
 
     if (!trace.allsolid) {
-        if (CG_IsParticleSystemValid(&p->childParticleSystem) ) {
+        if (CG_IsParticleSystemValid(&p->childParticleSystem)) {
             CG_SetParticleSystemLastNormal(p->childParticleSystem, trace.plane.normal);
         }
     }
@@ -2001,7 +2001,7 @@ static void CG_Radix(int bits, int size, particle_t** source, particle_t** dest)
     int index[256];
     int i;
 
-    memset(count, 0, sizeof(count) );
+    memset(count, 0, sizeof(count));
 
     for (i = 0; i < size; i++) {
         count[GETKEY(source[i]->sortKey, bits)]++;
@@ -2106,7 +2106,7 @@ static void CG_RenderParticle(particle_t* p) {
     vec3_t alight, dlight, lightdir;
     vec3_t up = { 0.0f, 0.0f, 1.0f };
 
-    memset(&re, 0, sizeof(refEntity_t) );
+    memset(&re, 0, sizeof(refEntity_t));
 
     timeFrac = CG_CalculateTimeFrac(p->birthTime, p->lifeTime, 0);
 
@@ -2114,7 +2114,7 @@ static void CG_RenderParticle(particle_t* p) {
                           p->radius.final,
                           CG_CalculateTimeFrac(p->birthTime,
                                                p->lifeTime,
-                                               p->radius.delay) );
+                                               p->radius.delay));
 
     re.shaderTime = p->birthTime / 1000.0f;
 
@@ -2138,15 +2138,15 @@ static void CG_RenderParticle(particle_t* p) {
                      CG_CalculateTimeFrac(p->birthTime,
                                           p->lifeTime,
                                           p->colorDelay),
-                     colorRange, re.shaderRGBA.ToArray() );
+                     colorRange, re.shaderRGBA.ToArray());
         }
 
-        re.shaderRGBA.SetAlpha( (float) 0xFF *
-                                CG_LerpValues(p->alpha.initial,
-                                              p->alpha.final,
-                                              CG_CalculateTimeFrac(p->birthTime,
-                                                                   p->lifeTime,
-                                                                   p->alpha.delay) ) );
+        re.shaderRGBA.SetAlpha((float) 0xFF *
+                               CG_LerpValues(p->alpha.initial,
+                                             p->alpha.final,
+                                             CG_CalculateTimeFrac(p->birthTime,
+                                                                  p->lifeTime,
+                                                                  p->alpha.delay)));
 
         re.radius = scale;
 
@@ -2154,7 +2154,7 @@ static void CG_RenderParticle(particle_t* p) {
                                     p->rotation.final,
                                     CG_CalculateTimeFrac(p->birthTime,
                                                          p->lifeTime,
-                                                         p->rotation.delay) );
+                                                         p->rotation.delay));
 
         // if the view would be "inside" the sprite, kill the sprite
         // so it doesn't add too much overdraw
@@ -2164,7 +2164,7 @@ static void CG_RenderParticle(particle_t* p) {
 
         if (bp->framerate == 0.0f) {
             // sync animation time to lifeTime of particle
-            index = (int)(timeFrac * (bp->numFrames + 1) );
+            index = (int)(timeFrac * (bp->numFrames + 1));
 
             if (index >= bp->numFrames) {
                 index = bp->numFrames - 1;
@@ -2223,10 +2223,10 @@ static void CG_RenderParticle(particle_t* p) {
         re.renderfx |= RF_THIRD_PERSON;
     }
 
-    if (bp->dynamicLight && !(re.renderfx & RF_THIRD_PERSON) ) {
+    if (bp->dynamicLight && !(re.renderfx & RF_THIRD_PERSON)) {
         trap_R_AddLightToScene(p->origin,
                                CG_LerpValues(p->dLightRadius.initial, p->dLightRadius.final,
-                                             CG_CalculateTimeFrac(p->birthTime, p->lifeTime, p->dLightRadius.delay) ),
+                                             CG_CalculateTimeFrac(p->birthTime, p->lifeTime, p->dLightRadius.delay)),
                                3,
                                (float) bp->dLightColor[0] / (float) 0xFF,
                                (float) bp->dLightColor[1] / (float) 0xFF,
@@ -2309,7 +2309,7 @@ void CG_ParticleSystemEntity(centity_t* cent) {
     es = &cent->currentState;
 
     if (es->eFlags & EF_NODRAW) {
-        if (CG_IsParticleSystemValid(&cent->entityPS) && CG_IsParticleSystemInfinite(cent->entityPS) ) {
+        if (CG_IsParticleSystemValid(&cent->entityPS) && CG_IsParticleSystemInfinite(cent->entityPS)) {
             CG_DestroyParticleSystem(&cent->entityPS);
         }
 
@@ -2319,7 +2319,7 @@ void CG_ParticleSystemEntity(centity_t* cent) {
     if (!CG_IsParticleSystemValid(&cent->entityPS) && !cent->entityPSMissing) {
         cent->entityPS = CG_SpawnNewParticleSystem(cgs.gameParticleSystems[es->modelindex]);
 
-        if (CG_IsParticleSystemValid(&cent->entityPS) ) {
+        if (CG_IsParticleSystemValid(&cent->entityPS)) {
             CG_SetAttachmentCent(&cent->entityPS->attachment, cent);
             CG_AttachToCent(&cent->entityPS->attachment);
         } else {
@@ -2339,7 +2339,7 @@ Destroy the test a particle system
 ===============
 */
 void CG_DestroyTestPS_f() {
-    if (CG_IsParticleSystemValid(&testPS) ) {
+    if (CG_IsParticleSystemValid(&testPS)) {
         CG_DestroyParticleSystem(&testPS);
     }
 }
@@ -2370,7 +2370,7 @@ void CG_TestPS_f() {
 
         VectorMA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], origin);
 
-        if (CG_IsParticleSystemValid(&testPS) ) {
+        if (CG_IsParticleSystemValid(&testPS)) {
             CG_SetAttachmentPoint(&testPS->attachment, origin);
             CG_SetParticleSystemNormal(testPS, up);
             CG_AttachToPoint(&testPS->attachment);

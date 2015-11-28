@@ -48,7 +48,7 @@ static void G_BotListTeamNames(gentity_t* ent, const char* heading, team_t team,
         ADMBP_begin();
 
         for (i = 0; i < botNames[team].count; ++i) {
-            ADMBP(va("  %s^7 %s\n", botNames[team].name[i].inUse ? marker : " ", botNames[team].name[i].name) );
+            ADMBP(va("  %s^7 %s\n", botNames[team].name[i].inUse ? marker : " ", botNames[team].name[i].name));
         }
 
         ADMBP_end();
@@ -56,8 +56,8 @@ static void G_BotListTeamNames(gentity_t* ent, const char* heading, team_t team,
 }
 
 void G_BotListNames(gentity_t* ent) {
-    G_BotListTeamNames(ent, QQ(N_("^3Alien bot names:\n") ), TEAM_ALIENS, "^1*");
-    G_BotListTeamNames(ent, QQ(N_("^3Human bot names:\n") ), TEAM_HUMANS, "^5*");
+    G_BotListTeamNames(ent, QQ(N_("^3Alien bot names:\n")), TEAM_ALIENS, "^1*");
+    G_BotListTeamNames(ent, QQ(N_("^3Human bot names:\n")), TEAM_HUMANS, "^5*");
 }
 
 bool G_BotClearNames() {
@@ -97,12 +97,12 @@ int G_BotAddNames(team_t team, int arg, int last) {
     while (arg < last && i < MAX_CLIENTS) {
         int j, t;
 
-        trap_Argv(arg++, name, sizeof(name) );
+        trap_Argv(arg++, name, sizeof(name));
 
         // name already in the list? (quick check, including colours & invalid)
         for (t = 1; t < NUM_TEAMS; ++t) {
             for (j = 0; j < botNames[t].count; ++j) {
-                if (!Q_stricmp(botNames[t].name[j].name, name) ) {
+                if (!Q_stricmp(botNames[t].name[j].name, name)) {
                     goto next;
                 }
             }
@@ -142,7 +142,7 @@ static char* G_BotSelectName(team_t team) {
 
 static void G_BotNameUsed(team_t team, const char* name, bool inUse) {
     for (int i = 0; i < botNames[team].count; ++i) {
-        if (!Q_stricmp(name, botNames[team].name[i].name) ) {
+        if (!Q_stricmp(name, botNames[team].name[i].name)) {
             botNames[team].name[i].inUse = inUse;
             return;
         }
@@ -157,10 +157,10 @@ bool G_BotSetDefaults(int clientNum, team_t team, int skill, const char* behavio
     botMind->botTeam = team;
     BotSetNavmesh(self, (class_t) self->client->ps.stats[STAT_CLASS]);
 
-    memset(botMind->runningNodes, 0, sizeof(botMind->runningNodes) );
+    memset(botMind->runningNodes, 0, sizeof(botMind->runningNodes));
     botMind->numRunningNodes = 0;
     botMind->currentNode = nullptr;
-    memset(&botMind->nav, 0, sizeof(botMind->nav) );
+    memset(&botMind->nav, 0, sizeof(botMind->nav));
     BotResetEnemyQueue(&botMind->enemyQueue);
 
     botMind->behaviorTree = ReadBehaviorTree(behavior, &treeList);
@@ -212,7 +212,7 @@ bool G_BotAdd(char* name, team_t team, int skill, const char* behavior) {
     bot->r.svFlags |= SVF_BOT;
     bot->inuse = true;
 
-    if (!Q_stricmp(name, "*") ) {
+    if (!Q_stricmp(name, "*")) {
         name = G_BotSelectName(team);
         autoname = name != nullptr;
     }
@@ -237,7 +237,7 @@ bool G_BotAdd(char* name, team_t team, int skill, const char* behavior) {
     trap_SetUserinfo(clientNum, userinfo);
 
     // have it connect to the game as a normal client
-    if ( (s = ClientBotConnect(clientNum, true, team) ) ) {
+    if ((s = ClientBotConnect(clientNum, true, team))) {
         // won't let us join
         trap_Print(s);
         okay = false;
@@ -263,19 +263,19 @@ void G_BotDel(int clientNum) {
     const char* autoname;
 
     if (!(bot->r.svFlags & SVF_BOT) || !bot->botMind) {
-        trap_Print(va("'^7%s^7' is not a bot\n", bot->client->pers.netname) );
+        trap_Print(va("'^7%s^7' is not a bot\n", bot->client->pers.netname));
         return;
     }
 
-    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo) );
+    trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 
     autoname = Info_ValueForKey(userinfo, "autoname");
     if (autoname && *autoname) {
         G_BotNameUsed(BotGetEntityTeam(bot), autoname, false);
     }
 
-    trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 disconnected\n") ),
-                                  Quote(bot->client->pers.netname) ) );
+    trap_SendServerCommand(-1, va("print_tr %s %s", QQ(N_("$1$^7 disconnected\n")),
+                                  Quote(bot->client->pers.netname)));
     trap_DropClient(clientNum, "disconnected");
 }
 
@@ -327,7 +327,7 @@ void G_BotThink(gentity_t* self) {
 
     // acknowledge recieved server commands
     // MUST be done
-    while (trap_BotGetServerCommand(self->client->ps.clientNum, buf, sizeof(buf) ) ) {
+    while (trap_BotGetServerCommand(self->client->ps.clientNum, buf, sizeof(buf))) {
     }
 
     BotSearchForEnemy(self);
@@ -336,7 +336,7 @@ void G_BotThink(gentity_t* self) {
 
     // use medkit when hp is low
     if (self->entity->Get<HealthComponent>()->Health() < BOT_USEMEDKIT_HP &&
-        BG_InventoryContainsUpgrade(UP_MEDKIT, self->client->ps.stats) ) {
+        BG_InventoryContainsUpgrade(UP_MEDKIT, self->client->ps.stats)) {
         BG_ActivateUpgrade(UP_MEDKIT, self->client->ps.stats);
     }
 
@@ -375,7 +375,7 @@ void G_BotSpectatorThink(gentity_t* self) {
 
     // acknowledge recieved console messages
     // MUST be done
-    while (trap_BotGetServerCommand(self->client->ps.clientNum, buf, sizeof(buf) ) ) {
+    while (trap_BotGetServerCommand(self->client->ps.clientNum, buf, sizeof(buf))) {
     }
 
     if (self->client->ps.pm_flags & PMF_QUEUED) {
@@ -389,7 +389,7 @@ void G_BotSpectatorThink(gentity_t* self) {
                 sq = nullptr;
             }
 
-            if (sq && PlayersBehindBotInSpawnQueue(self) ) {
+            if (sq && PlayersBehindBotInSpawnQueue(self)) {
                 G_RemoveFromSpawnQueue(sq, self->s.number);
                 G_PushSpawnQueue(sq, self->s.number);
             }
@@ -402,11 +402,11 @@ void G_BotSpectatorThink(gentity_t* self) {
     self->botMind->bestEnemy.ent = nullptr;
     BotResetEnemyQueue(&self->botMind->enemyQueue);
     self->botMind->currentNode = nullptr;
-    memset(&self->botMind->nav, 0, sizeof(self->botMind->nav) );
+    memset(&self->botMind->nav, 0, sizeof(self->botMind->nav));
     self->botMind->futureAimTime = 0;
     self->botMind->futureAimTimeInterval = 0;
     self->botMind->numRunningNodes = 0;
-    memset(self->botMind->runningNodes, 0, sizeof(self->botMind->runningNodes) );
+    memset(self->botMind->runningNodes, 0, sizeof(self->botMind->runningNodes));
 
     if (self->client->sess.restartTeam == TEAM_NONE) {
         int teamnum = self->client->pers.team;

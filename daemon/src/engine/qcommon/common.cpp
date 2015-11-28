@@ -137,7 +137,7 @@ int QDECL VPRINTF_LIKE(1) Com_VPrintf(const char* fmt, va_list argptr) {
 
     // Build the message
     char msg[MAXPRINTMSG];
-    memset(msg, 0, sizeof(msg) );
+    memset(msg, 0, sizeof(msg));
     Q_vsnprintf(msg, sizeof(msg), fmt, argptr);
     msg[MAXPRINTMSG - 1] = '\0';
 
@@ -342,8 +342,8 @@ void Com_StartupVariable(const char* match) {
 
         s = line[1].c_str();
 
-        if (!match || !strcmp(s, match) ) {
-            Cvar_Set(s, line[2].c_str() );
+        if (!match || !strcmp(s, match)) {
+            Cvar_Set(s, line[2].c_str());
             cv = Cvar_Get(s, "", CVAR_USER_CREATED);
             if (cv->flags & CVAR_ROM) {
                 com_consoleLines[i] = 0;
@@ -493,7 +493,7 @@ typedef struct hunkblock_s {
     int line;
 } hunkblock_t;
 // for alignment purposes
-#define SIZEOF_HUNKBLOCK_T ( (sizeof(hunkblock_t) + 31) & ~31)
+#define SIZEOF_HUNKBLOCK_T ((sizeof(hunkblock_t) + 31) & ~31)
 
 static hunkblock_t* hunkblocks;
 
@@ -509,28 +509,28 @@ Com_Meminfo_f
 =================
 */
 void Com_Meminfo_f() {
-    Com_Printf("%9i bytes (%6.2f MB) total hunk\n", s_hunkTotal, s_hunkTotal / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) total hunk\n", s_hunkTotal, s_hunkTotal / Square(1024.f));
     Com_Printf("\n");
-    Com_Printf("%9i bytes (%6.2f MB) low mark\n", hunk_low.mark, hunk_low.mark / Square(1024.f) );
-    Com_Printf("%9i bytes (%6.2f MB) low permanent\n", hunk_low.permanent, hunk_low.permanent / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) low mark\n", hunk_low.mark, hunk_low.mark / Square(1024.f));
+    Com_Printf("%9i bytes (%6.2f MB) low permanent\n", hunk_low.permanent, hunk_low.permanent / Square(1024.f));
 
     if (hunk_low.temp != hunk_low.permanent) {
-        Com_Printf("%9i bytes (%6.2f MB) low temp\n", hunk_low.temp, hunk_low.temp / Square(1024.f) );
+        Com_Printf("%9i bytes (%6.2f MB) low temp\n", hunk_low.temp, hunk_low.temp / Square(1024.f));
     }
 
-    Com_Printf("%9i bytes (%6.2f MB) low tempHighwater\n", hunk_low.tempHighwater, hunk_low.tempHighwater / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) low tempHighwater\n", hunk_low.tempHighwater, hunk_low.tempHighwater / Square(1024.f));
     Com_Printf("\n");
-    Com_Printf("%9i bytes (%6.2f MB) high mark\n", hunk_high.mark, hunk_high.mark / Square(1024.f) );
-    Com_Printf("%9i bytes (%6.2f MB) high permanent\n", hunk_high.permanent, hunk_high.permanent / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) high mark\n", hunk_high.mark, hunk_high.mark / Square(1024.f));
+    Com_Printf("%9i bytes (%6.2f MB) high permanent\n", hunk_high.permanent, hunk_high.permanent / Square(1024.f));
 
     if (hunk_high.temp != hunk_high.permanent) {
-        Com_Printf("%9i bytes (%6.2f MB) high temp\n", hunk_high.temp, hunk_high.temp / Square(1024.f) );
+        Com_Printf("%9i bytes (%6.2f MB) high temp\n", hunk_high.temp, hunk_high.temp / Square(1024.f));
     }
 
-    Com_Printf("%9i bytes (%6.2f MB) high tempHighwater\n", hunk_high.tempHighwater, hunk_high.tempHighwater / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) high tempHighwater\n", hunk_high.tempHighwater, hunk_high.tempHighwater / Square(1024.f));
     Com_Printf("\n");
     Com_Printf("%9i bytes (%6.2f MB) total hunk in use\n", hunk_low.permanent + hunk_high.permanent,
-               (hunk_low.permanent + hunk_high.permanent) / Square(1024.f) );
+               (hunk_low.permanent + hunk_high.permanent) / Square(1024.f));
     int unused = 0;
 
     if (hunk_low.tempHighwater > hunk_low.permanent) {
@@ -541,7 +541,7 @@ void Com_Meminfo_f() {
         unused += hunk_high.tempHighwater - hunk_high.permanent;
     }
 
-    Com_Printf("%9i bytes (%6.2f MB) unused highwater\n", unused, unused / Square(1024.f) );
+    Com_Printf("%9i bytes (%6.2f MB) unused highwater\n", unused, unused / Square(1024.f));
 }
 
 /*
@@ -556,7 +556,7 @@ void* Com_Allocate_Aligned(size_t alignment, size_t size) {
     return _aligned_malloc(size, alignment);
     #else
     void* ptr;
-    if (!posix_memalign(&ptr, alignment, size) ) {
+    if (!posix_memalign(&ptr, alignment, size)) {
         return ptr;
     } else {
         return nullptr;
@@ -589,7 +589,7 @@ void Hunk_Log() {
     char buf[4096];
     int size, numBlocks;
 
-    if (!logfile || !FS::IsInitialized() ) {
+    if (!logfile || !FS::IsInitialized()) {
         return;
     }
 
@@ -623,7 +623,7 @@ void Hunk_SmallLog() {
     char buf[4096];
     int size, locsize, numBlocks;
 
-    if (!logfile || !FS::IsInitialized() ) {
+    if (!logfile || !FS::IsInitialized()) {
         return;
     }
 
@@ -648,7 +648,7 @@ void Hunk_SmallLog() {
                 continue;
             }
 
-            if (Q_stricmp(block->file, block2->file) ) {
+            if (Q_stricmp(block->file, block2->file)) {
                 continue;
             }
 
@@ -694,7 +694,7 @@ void Com_InitHunkMemory() {
     s_hunkData = (byte*) Com_Allocate_Aligned(64, s_hunkTotal);
 
     if (!s_hunkData) {
-        Com_Error(ERR_FATAL, "Hunk data failed to allocate %iMB", s_hunkTotal / (1024 * 1024) );
+        Com_Error(ERR_FATAL, "Hunk data failed to allocate %iMB", s_hunkTotal / (1024 * 1024));
     }
 
     Hunk_Clear();
@@ -760,7 +760,7 @@ void Hunk_Clear() {
     hunk_permanent = &hunk_low;
     hunk_temp = &hunk_high;
 
-    Cvar_Set("com_hunkused", va("%i", hunk_low.permanent + hunk_high.permanent) );
+    Cvar_Set("com_hunkused", va("%i", hunk_low.permanent + hunk_high.permanent));
     com_hunkusedvalue = hunk_low.permanent + hunk_high.permanent;
 
     Com_DPrintf("Hunk_Clear: reset the hunk ok\n");
@@ -847,13 +847,13 @@ void* Hunk_Alloc(int size, ha_pref) {
         block->line = line;
         block->next = hunkblocks;
         hunkblocks = block;
-        buf = ( (byte*) buf) + SIZEOF_HUNKBLOCK_T;
+        buf = ((byte*) buf) + SIZEOF_HUNKBLOCK_T;
     }
     #endif
 
     // Ridah, update the com_hunkused cvar in increments, so we don't update it too often, since this cvar call isn't very efficent
-    if ( (hunk_low.permanent + hunk_high.permanent) > com_hunkused->integer + 2500) {
-        Cvar_Set("com_hunkused", va("%i", hunk_low.permanent + hunk_high.permanent) );
+    if ((hunk_low.permanent + hunk_high.permanent) > com_hunkused->integer + 2500) {
+        Cvar_Set("com_hunkused", va("%i", hunk_low.permanent + hunk_high.permanent));
     }
 
     com_hunkusedvalue = hunk_low.permanent + hunk_high.permanent;
@@ -884,7 +884,7 @@ void* Hunk_AllocateTempMemory(int size) {
 
     Hunk_SwapBanks();
 
-    size = PAD(size, sizeof(intptr_t) ) + sizeof(hunkHeader_t);
+    size = PAD(size, sizeof(intptr_t)) + sizeof(hunkHeader_t);
 
     if (hunk_temp->temp + hunk_permanent->permanent + size > s_hunkTotal) {
         #ifdef HUNK_DEBUG
@@ -933,7 +933,7 @@ void Hunk_FreeTempMemory(void* buf) {
         return;
     }
 
-    hdr = ( (hunkHeader_t*) buf) - 1;
+    hdr = ((hunkHeader_t*) buf) - 1;
 
     if (hdr->magic != (int) HUNK_MAGIC) {
         Com_Error(ERR_FATAL, "Hunk_FreeTempMemory: bad magic");
@@ -944,13 +944,13 @@ void Hunk_FreeTempMemory(void* buf) {
     // this only works if the files are freed in stack order,
     // otherwise the memory will stay around until Hunk_ClearTempMemory
     if (hunk_temp == &hunk_low) {
-        if (hdr == (void*)(s_hunkData + hunk_temp->temp - hdr->size) ) {
+        if (hdr == (void*)(s_hunkData + hunk_temp->temp - hdr->size)) {
             hunk_temp->temp -= hdr->size;
         } else {
             Com_Printf("Hunk_FreeTempMemory: not the final block\n");
         }
     } else {
-        if (hdr == (void*)(s_hunkData + s_hunkTotal - hunk_temp->temp) ) {
+        if (hdr == (void*)(s_hunkData + s_hunkTotal - hunk_temp->temp)) {
             hunk_temp->temp -= hdr->size;
         } else {
             Com_Printf("Hunk_FreeTempMemory: not the final block\n");
@@ -1050,10 +1050,10 @@ sysEvent_t Com_GetEvent() {
     }
 
     // check for network packets
-    MSG_Init(&netmsg, sys_packetReceived, sizeof(sys_packetReceived) );
+    MSG_Init(&netmsg, sys_packetReceived, sizeof(sys_packetReceived));
     adr.type = NA_UNSPEC;
 
-    if (Sys_GetPacket(&adr, &netmsg) ) {
+    if (Sys_GetPacket(&adr, &netmsg)) {
         netadr_t* buf;
         int len;
 
@@ -1072,7 +1072,7 @@ sysEvent_t Com_GetEvent() {
     }
 
     // create an empty event to return
-    memset(&ev, 0, sizeof(ev) );
+    memset(&ev, 0, sizeof(ev));
     ev.evTime = Sys_Milliseconds();
 
     return ev;
@@ -1125,7 +1125,7 @@ int Com_EventLoop() {
     int mouseX = 0, mouseY = 0, mouseTime = 0;
     bool mouseHaveEvent = false;
 
-    MSG_Init(&buf, bufData, sizeof(bufData) );
+    MSG_Init(&buf, bufData, sizeof(bufData));
 
     while (1) {
         ev = Com_GetEvent();
@@ -1137,11 +1137,11 @@ int Com_EventLoop() {
             }
 
             // manually send packet events for the loopback channel
-            while (NET_GetLoopPacket(NS_CLIENT, &evFrom, &buf) ) {
+            while (NET_GetLoopPacket(NS_CLIENT, &evFrom, &buf)) {
                 CL_PacketEvent(evFrom, &buf);
             }
 
-            while (NET_GetLoopPacket(NS_SERVER, &evFrom, &buf) ) {
+            while (NET_GetLoopPacket(NS_SERVER, &evFrom, &buf)) {
                 // if the server just shut down, flush the events
                 if (com_sv_running->integer) {
                     Com_RunAndTimeServerPacket(&evFrom, &buf);
@@ -1240,7 +1240,7 @@ int Com_EventLoop() {
                 continue;
             }
 
-            memcpy(buf.data, (byte*)( (netadr_t*) ev.evPtr + 1), buf.cursize);
+            memcpy(buf.data, (byte*)((netadr_t*) ev.evPtr + 1), buf.cursize);
 
             if (com_sv_running->integer) {
                 Com_RunAndTimeServerPacket(&evFrom, &buf);
@@ -1304,14 +1304,14 @@ static void Com_Freeze_f() {
         return;
     }
 
-    s = atof(Cmd_Argv(1) );
+    s = atof(Cmd_Argv(1));
 
     start = Com_Milliseconds();
 
     while (1) {
         now = Com_Milliseconds();
 
-        if ( (now - start) * 0.001 > s) {
+        if ((now - start) * 0.001 > s) {
             break;
         }
     }
@@ -1439,7 +1439,7 @@ void Com_Init(char* commandLine) {
     // As machines get faster, Com_Milliseconds() can't be used
     // anymore, as it results in a smaller and smaller range of
     // qport values.
-    Sys::GenRandomBytes(&qport, sizeof(int) );
+    Sys::GenRandomBytes(&qport, sizeof(int));
     Netchan_Init(qport & 0xffff);
 
     SV_Init();
@@ -1461,7 +1461,7 @@ void Com_Init(char* commandLine) {
 
 // ==================================================================
 
-void Com_WriteConfigToFile(const char* filename, void (* writeConfig)(fileHandle_t) ) {
+void Com_WriteConfigToFile(const char* filename, void (* writeConfig)(fileHandle_t)) {
     fileHandle_t f;
     char tmp[MAX_QPATH];
 
@@ -1523,7 +1523,7 @@ void Com_WriteConfig_f() {
         return;
     }
 
-    Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename) );
+    Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
     COM_DefaultExtension(filename, sizeof(filename), ".cfg");
     Com_Printf("Writing %s.\n", filename);
     Com_WriteConfigToFile(filename, Cvar_WriteVariables);
@@ -1545,7 +1545,7 @@ void Com_WriteBindings_f() {
         return;
     }
 
-    Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename) );
+    Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
     COM_DefaultExtension(filename, sizeof(filename), ".cfg");
     Com_Printf("Writing %s.\n", filename);
     Com_WriteConfigToFile(filename, Key_WriteBindings);
@@ -1565,7 +1565,7 @@ int Com_ModifyMsec(int msec) {
     //
     // modify time for debugging values
     //
-    if (fixedtime.Get() ) {
+    if (fixedtime.Get()) {
         msec = fixedtime.Get();
     } else if (com_timescale->value) {
         msec *= com_timescale->value;
@@ -1576,7 +1576,7 @@ int Com_ModifyMsec(int msec) {
         msec = 1;
     }
 
-    if (Com_IsDedicatedServer() ) {
+    if (Com_IsDedicatedServer()) {
         // dedicated servers don't want to clamp for a much longer
         // period, because it would mess up all the client's views
         // of time.
@@ -1585,7 +1585,7 @@ int Com_ModifyMsec(int msec) {
         }
 
         clampTime = 5000;
-    } else if (!Com_ServerRunning() ) {
+    } else if (!Com_ServerRunning()) {
         // clients of remote servers do not want to clamp time, because
         // it would skew their view of the server's time temporarily
         clampTime = 5000;
@@ -1658,7 +1658,7 @@ void Com_Frame() {
 
     // we may want to spin here if things are going too fast
     if (!com_timedemo->integer) {
-        if (Com_IsDedicatedServer() ) {
+        if (Com_IsDedicatedServer()) {
             minMsec = SV_FrameMsec();
         } else {
             if (com_minimized->integer && maxfpsMinimized.Get() > 0) {
@@ -1752,7 +1752,7 @@ void Com_Frame() {
                 watchdogTime = 0;
                 watchWarn = false;
 
-                if (watchdogCmd.Get().empty() ) {
+                if (watchdogCmd.Get().empty()) {
                     Cmd::BufferCommandText("quit");
                 } else {
                     Cmd::BufferCommandText(watchdogCmd.Get());
@@ -1782,7 +1782,7 @@ void Com_Frame() {
     //
     // trace optimization tracking
     //
-    if (showTraceStats.Get() ) {
+    if (showTraceStats.Get()) {
         extern int c_traces, c_brush_traces, c_patch_traces, c_trisoup_traces;
         extern int c_pointcontents;
 

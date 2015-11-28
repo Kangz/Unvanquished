@@ -46,8 +46,8 @@ static void byteReverse(unsigned char* buf, unsigned longs) {
 
     do {
         t = (uint32_t)
-            ( (unsigned) buf[3] << 8 | buf[2]) << 16 |
-            ( (unsigned) buf[1] << 8 | buf[0]);
+            ((unsigned) buf[3] << 8 | buf[2]) << 16 |
+            ((unsigned) buf[1] << 8 | buf[0]);
         *(uint32_t*) buf = t;
         buf += 4;
     } while (--longs);
@@ -181,7 +181,7 @@ static void MD5Update(struct MD5Context* ctx, unsigned char const* buf,
 
     t = ctx->bits[0];
 
-    if ( (ctx->bits[0] = t + ( (uint32_t) len << 3) ) < t) {
+    if ((ctx->bits[0] = t + ((uint32_t) len << 3)) < t) {
         ctx->bits[1]++; /* Carry from low to high */
     }
 
@@ -259,17 +259,17 @@ static void MD5Final(struct MD5Context* ctx, unsigned char* digest) {
     byteReverse(ctx->in, 14);
 
     /* Append length in bits and transform */
-    ( (uint32_t*) ctx->in) [14] = ctx->bits[0];
-    ( (uint32_t*) ctx->in) [15] = ctx->bits[1];
+    ((uint32_t*) ctx->in) [14] = ctx->bits[0];
+    ((uint32_t*) ctx->in) [15] = ctx->bits[1];
 
     MD5Transform(ctx->buf, (uint32_t*) ctx->in);
-    byteReverse( (unsigned char*) ctx->buf, 4);
+    byteReverse((unsigned char*) ctx->buf, 4);
 
     if (digest != nullptr) {
         memcpy(digest, ctx->buf, 16);
     }
 
-    memset(ctx, 0, sizeof(*ctx) ); /* In case it's sensitive */
+    memset(ctx, 0, sizeof(*ctx)); /* In case it's sensitive */
 }
 
 #endif /* USE_OPENSSL */
@@ -284,7 +284,7 @@ void Com_MD5Buffer(const char* pubkey, int size, char* buffer, int bufsize) {
     MD5Final(&md5, digest);
 
     for (i = 0; i < 16; i++) {
-        Q_strcat(buffer, bufsize, va("%02X", digest[i]) );
+        Q_strcat(buffer, bufsize, va("%02X", digest[i]));
     }
 }
 

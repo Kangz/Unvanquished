@@ -112,9 +112,9 @@ namespace Clustering {
             void UpdateMetadata() {
                 dirty = false;
 
-                center            *= 0.0f;
-                meanObject        = nullptr;
-                averageDistance   = 0;
+                center *= 0.0f;
+                meanObject = nullptr;
+                averageDistance = 0;
                 standardDeviation = 0;
 
                 int size = records.size();
@@ -137,7 +137,7 @@ namespace Clustering {
                     averageDistance += distance;
                     if (distance < smallestDistance) {
                         smallestDistance = distance;
-                        meanObject       = record.first;
+                        meanObject = record.first;
                     }
                 }
                 averageDistance /= size;
@@ -287,7 +287,7 @@ namespace Clustering {
             void FindMST() {
                 // Clear an existing MST.
                 mstEdges.clear();
-                mstAverageDistance   = 0;
+                mstAverageDistance = 0;
                 mstStandardDeviation = 0;
 
                 // Track connected components for circle prevention.
@@ -295,7 +295,7 @@ namespace Clustering {
 
                 // The edges are implicitely sorted by distance, iterate in ascending order.
                 for (const edge_record_type& edgeRecord : edges) {
-                    float distance        = edgeRecord.first;
+                    float distance = edgeRecord.first;
                     const edge_type& edge = edgeRecord.second;
 
                     // Stop if spanning tree is complete.
@@ -304,7 +304,7 @@ namespace Clustering {
                     }
 
                     // Get component representatives, if available.
-                    Data firstVertexRepr  = components.Find(edge.first);
+                    Data firstVertexRepr = components.Find(edge.first);
                     Data secondVertexRepr = components.Find(edge.second);
 
                     // Otheriwse add vertices to new components.
@@ -550,15 +550,15 @@ namespace BaseClustering {
         std::unordered_set<gentity_t*> &oldBeacons = beacons[layer];
         std::unordered_set<gentity_t*> newBeacons;
 
-        team_t team  = GetInformedTeam(layer);
+        team_t team = GetInformedTeam(layer);
         bool enemy = MarksEnemyBase(layer);
 
         // Add a beacon for every cluster.
         for (EntityClustering::cluster_type& cluster : bases[layer]) {
             const EntityClustering::point_type &center = cluster.GetCenter();
-            gentity_t* mean                            = cluster.GetMeanObject();
-            float averageDistance                      = cluster.GetAverageDistance();
-            float standardDeviation                    = cluster.GetStandardDeviation();
+            gentity_t* mean = cluster.GetMeanObject();
+            float averageDistance = cluster.GetAverageDistance();
+            float standardDeviation = cluster.GetStandardDeviation();
 
             float baseRadius = std::max(averageDistance + standardDeviation, MININUM_BASE_RADIUS);
 

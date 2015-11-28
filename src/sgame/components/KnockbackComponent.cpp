@@ -45,7 +45,7 @@ void KnockbackComponent::HandleDamage(float amount, gentity_t* source, Util::opt
         mass = KNOCKBACK_NORMAL_MASS;
     }
 
-    float massMod  = Math::Clamp(KNOCKBACK_NORMAL_MASS / mass, KNOCKBACK_MIN_MASSMOD, KNOCKBACK_MAX_MASSMOD);
+    float massMod = Math::Clamp(KNOCKBACK_NORMAL_MASS / mass, KNOCKBACK_MIN_MASSMOD, KNOCKBACK_MAX_MASSMOD);
     float strength = amount * DAMAGE_TO_KNOCKBACK * massMod;
 
     // Change client velocity.

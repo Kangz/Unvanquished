@@ -124,7 +124,7 @@ gentity_t* G_NewEntity() {
 
     // let the server system know that there are more entities
     trap_LocateGameData(level.gentities, level.num_entities, sizeof(gentity_t),
-                        &level.clients[0].ps, sizeof(level.clients[0]) );
+                        &level.clients[0].ps, sizeof(level.clients[0]));
 
     G_InitGentity(newEntity);
     return newEntity;
@@ -165,7 +165,7 @@ void G_FreeEntity(gentity_t* entity) {
         delete entity->entity;
     }
 
-    memset(entity, 0, sizeof(*entity) );
+    memset(entity, 0, sizeof(*entity));
     entity->entity = &emptyEntity;
     entity->classname = "freent";
     entity->freetime = level.time;
@@ -253,7 +253,7 @@ void G_PrintEntityNameList(gentity_t* entity) {
         return;
     }
 
-    Q_strncpyz(string, entity->names[0], sizeof(string) );
+    Q_strncpyz(string, entity->names[0], sizeof(string));
 
     for (i = 1; i < MAX_ENTITY_ALIASES && entity->names[i]; i++) {
         Q_strcat(string, sizeof(string), ", ");
@@ -289,7 +289,7 @@ gentity_t* G_IterateEntities(gentity_t* entity, const char* classname, bool skip
     if (!entity) {
         entity = g_entities;
         // start after the reserved player slots, if we are not searching for a player
-        if (classname && !strcmp(classname, S_PLAYER_CLASSNAME) ) {
+        if (classname && !strcmp(classname, S_PLAYER_CLASSNAME)) {
             entity += MAX_CLIENTS;
         }
     } else {
@@ -306,13 +306,13 @@ gentity_t* G_IterateEntities(gentity_t* entity, const char* classname, bool skip
         }
 
 
-        if (classname && Q_stricmp(entity->classname, classname) ) {
+        if (classname && Q_stricmp(entity->classname, classname)) {
             continue;
         }
 
         if (fieldofs && match) {
-            fieldString = *(char**)( (byte*) entity + fieldofs);
-            if (Q_stricmp(fieldString, match) ) {
+            fieldString = *(char**)((byte*) entity + fieldofs);
+            if (Q_stricmp(fieldString, match)) {
                 continue;
             }
         }
@@ -420,7 +420,7 @@ gentity_t* G_PickRandomEntity(const char* classname, size_t fieldofs, const char
     gentity_t* choices[MAX_GENTITIES - 2 - MAX_CLIENTS];
 
     // collects the targets
-    while ( (foundEntity = G_IterateEntities(foundEntity, classname, true, fieldofs, match) ) != nullptr) {
+    while ((foundEntity = G_IterateEntities(foundEntity, classname, true, fieldofs, match)) != nullptr) {
         choices[totalChoiceCount++] = foundEntity;
     }
 
@@ -471,7 +471,7 @@ typedef struct {
     gentityCallEvent_t eventType;
 } entityCallEventDescription_t;
 
-static const entityCallEventDescription_t gentityEventDescriptions[] ={
+static const entityCallEventDescription_t gentityEventDescriptions[] = {
     { "onAct", ON_ACT       },
     { "onDie", ON_DIE       },
     { "onDisable", ON_DISABLE   },
@@ -507,7 +507,7 @@ typedef struct {
     gentityCallActionType_t action;
 } entityActionDescription_t;
 
-static const entityActionDescription_t actionDescriptions[] ={
+static const entityActionDescription_t actionDescriptions[] = {
     { "act", ECA_ACT       },
     { "disable", ECA_DISABLE   },
     { "enable", ECA_ENABLE    },
@@ -579,7 +579,7 @@ gentity_t* G_IterateTargets(gentity_t* entity, int* targetIndex, gentity_t* self
                 continue;
             }
 
-            if (G_MatchesName(entity, self->targets[*targetIndex]) ) {
+            if (G_MatchesName(entity, self->targets[*targetIndex])) {
                 return entity;
             }
 
@@ -604,7 +604,7 @@ gentity_t* G_IterateCallEndpoints(gentity_t* entity, int* calltargetIndex, genti
                 continue;
             }
 
-            if (G_MatchesName(entity, self->calltargets[*calltargetIndex].name) ) {
+            if (G_MatchesName(entity, self->calltargets[*calltargetIndex].name)) {
                 return entity;
             }
 
@@ -625,7 +625,7 @@ gentity_t* G_PickRandomTargetFor(gentity_t* self) {
     gentity_t* choices[MAX_GENTITIES];
 
     // collects the targets
-    while ( (foundTarget = G_IterateTargets(foundTarget, &targetIndex, self) ) != nullptr) {
+    while ((foundTarget = G_IterateTargets(foundTarget, &targetIndex, self)) != nullptr) {
         choices[totalChoiceCount++] = foundTarget;
     }
 
@@ -655,7 +655,7 @@ void G_FireEntityRandomly(gentity_t* entity, gentity_t* activator) {
     gentityTargetChoice_t* selectedChoice;
 
     // collects the targets
-    while ( (possibleTarget = G_IterateCallEndpoints(possibleTarget, &targetIndex, entity) ) != nullptr) {
+    while ((possibleTarget = G_IterateCallEndpoints(possibleTarget, &targetIndex, entity)) != nullptr) {
         choices[totalChoiceCount].recipient = possibleTarget;
         choices[totalChoiceCount].callDefinition = &entity->calltargets[targetIndex];
         totalChoiceCount++;
@@ -691,7 +691,7 @@ void G_EventFireEntity(gentity_t* self, gentity_t* activator, gentityCallEvent_t
     gentityCall_t call;
     call.activator = activator;
 
-    while ( (currentTarget = G_IterateCallEndpoints(currentTarget, &targetIndex, self) ) != nullptr) {
+    while ((currentTarget = G_IterateCallEndpoints(currentTarget, &targetIndex, self)) != nullptr) {
         if (eventType && self->calltargets[targetIndex].eventType != eventType) {
             continue;
         }
@@ -910,9 +910,9 @@ void G_SetMovedir(vec3_t angles, vec3_t movedir) {
     static vec3_t VEC_DOWN = { 0, -2, 0 };
     static vec3_t MOVEDIR_DOWN = { 0, 0, -1 };
 
-    if (VectorCompare(angles, VEC_UP) ) {
+    if (VectorCompare(angles, VEC_UP)) {
         VectorCopy(MOVEDIR_UP, movedir);
-    } else if (VectorCompare(angles, VEC_DOWN) ) {
+    } else if (VectorCompare(angles, VEC_DOWN)) {
         VectorCopy(MOVEDIR_DOWN, movedir);
     } else {
         AngleVectors(angles, movedir, nullptr, nullptr);

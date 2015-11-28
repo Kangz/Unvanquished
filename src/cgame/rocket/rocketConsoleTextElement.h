@@ -64,8 +64,8 @@ class RocketConsoleTextElement : public Rocket::Core::Element {
                 lines.pop_back();
             }
 
-            while (HasChildNodes() && atoi(GetFirstChild()->GetId().CString() ) + latency < time) {
-                RemoveChild(GetFirstChild() );
+            while (HasChildNodes() && atoi(GetFirstChild()->GetId().CString()) + latency < time) {
+                RemoveChild(GetFirstChild());
                 numLines--;
             }
 
@@ -81,19 +81,19 @@ class RocketConsoleTextElement : public Rocket::Core::Element {
 
                 // Each line gets its own span element
                 for (line = line - 1; line >= 0; --line, numLines++) {
-                    Rocket::Core::Element* child = Rocket::Core::Factory::InstanceElement(this, "#text", "span", Rocket::Core::XMLAttributes() );
+                    Rocket::Core::Element* child = Rocket::Core::Factory::InstanceElement(this, "#text", "span", Rocket::Core::XMLAttributes());
                     Rocket::Core::Factory::InstanceElementText(child, Rocket_QuakeToRML(lines[line].text.CString(), RP_EMOTICONS));
-                    child->SetId(va("%d", lines[line].time) );
+                    child->SetId(va("%d", lines[line].time));
                     AppendChild(child);
                     child->RemoveReference();
                 }
             }
 
             // Calculate max lines when we have a child element with a fontface
-            if (dirty_height && HasChildNodes() ) {
+            if (dirty_height && HasChildNodes()) {
                 const Rocket::Core::FontFaceHandle* font = GetFirstChild()->GetFontFaceHandle();
                 if (font) {
-                    maxLines = floor(GetProperty("height")->value.Get<float>() / (font->GetBaseline() + font->GetLineHeight() ) );
+                    maxLines = floor(GetProperty("height")->value.Get<float>() / (font->GetBaseline() + font->GetLineHeight()));
 
                     if (maxLines <= 0) {
                         maxLines = 4; // conservatively low number
@@ -104,7 +104,7 @@ class RocketConsoleTextElement : public Rocket::Core::Element {
             }
 
             while (maxLines < numLines) {
-                RemoveChild(GetFirstChild() );
+                RemoveChild(GetFirstChild());
                 numLines--;
             }
 
@@ -112,7 +112,7 @@ class RocketConsoleTextElement : public Rocket::Core::Element {
         }
 
         void OnPropertyChange(const Rocket::Core::PropertyNameList &changed_properties) {
-            if (changed_properties.find("height") != changed_properties.end() ) {
+            if (changed_properties.find("height") != changed_properties.end()) {
                 int fontPt = GetProperty<int>("font-size");
                 maxLines = GetProperty<int>("height") / (fontPt > 0 ? fontPt : 1);
             }

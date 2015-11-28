@@ -60,7 +60,7 @@ bool GetPointPointedTo(NavData_t* nav, rVec &p) {
                 CONTENTS_SOLID | CONTENTS_PLAYERCLIP, 0, TT_AABB);
 
     pos = qVec(trace.endpos);
-    if (dtStatusFailed(nav->query->findNearestPoly(pos, extents, &nav->filter, &nearRef, p) ) ) {
+    if (dtStatusFailed(nav->query->findNearestPoly(pos, extents, &nav->filter, &nearRef, p))) {
         return false;
     }
 
@@ -81,7 +81,7 @@ static struct {
 void BotDrawNavEdit(DebugDrawQuake* dd) {
     rVec p;
 
-    if (cmd.enabled && GetPointPointedTo(cmd.nav, p) ) {
+    if (cmd.enabled && GetPointPointedTo(cmd.nav, p)) {
         unsigned int col = duRGBA(255, 255, 255, 220);
         dd->begin(DU_DRAW_LINES, 2.0f);
         duAppendCircle(dd, p[0], p[1], p[2], connectionSize, col);
@@ -156,7 +156,7 @@ void Cmd_NavEdit() {
     const char* arg = nullptr;
     const char usage[] = "Usage: navedit enable/disable/save <navmesh>\n";
 
-    if (!Cvar_VariableIntegerValue("sv_cheats") ) {
+    if (!Cvar_VariableIntegerValue("sv_cheats")) {
         Com_Printf("navedit only available in local devmap\n");
         return;
     }
@@ -168,7 +168,7 @@ void Cmd_NavEdit() {
 
     arg = Cmd_Argv(1);
 
-    if (!Q_stricmp(arg, "enable") ) {
+    if (!Q_stricmp(arg, "enable")) {
         int i;
         if (argc < 3) {
             Com_Printf("%s", usage);
@@ -177,7 +177,7 @@ void Cmd_NavEdit() {
 
         arg = Cmd_Argv(2);
         for (i = 0; i < numNavData; i++) {
-            if (!Q_stricmp(BotNavData[i].name, arg) ) {
+            if (!Q_stricmp(BotNavData[i].name, arg)) {
                 cmd.nav = &BotNavData[i];
                 break;
             }
@@ -192,10 +192,10 @@ void Cmd_NavEdit() {
             cmd.enabled = true;
             Cvar_Set("r_debugSurface", "1");
         }
-    } else if (!Q_stricmp(arg, "disable") ) {
+    } else if (!Q_stricmp(arg, "disable")) {
         cmd.enabled = false;
         Cvar_Set("r_debugSurface", "0");
-    } else if (!Q_stricmp(arg, "save") ) {
+    } else if (!Q_stricmp(arg, "save")) {
         if (!cmd.enabled) {
             return;
         }
@@ -219,7 +219,7 @@ void Cmd_AddConnection() {
 
     arg = Cmd_Argv(1);
 
-    if (!Q_stricmp(arg, "start") ) {
+    if (!Q_stricmp(arg, "start")) {
         if (!cmd.enabled) {
             return;
         }
@@ -231,28 +231,28 @@ void Cmd_AddConnection() {
 
         arg = Cmd_Argv(2);
 
-        if (!Q_stricmp(arg, "oneway") ) {
+        if (!Q_stricmp(arg, "oneway")) {
             cmd.pc.dir = 0;
-        } else if (!Q_stricmp(arg, "twoway") ) {
+        } else if (!Q_stricmp(arg, "twoway")) {
             cmd.pc.dir = 1;
         } else {
             Com_Printf("Invalid argument for direction, specify oneway or twoway\n");
             return;
         }
 
-        if (GetPointPointedTo(cmd.nav, cmd.pc.start) ) {
+        if (GetPointPointedTo(cmd.nav, cmd.pc.start)) {
             cmd.pc.area = DT_TILECACHE_WALKABLE_AREA;
             cmd.pc.flag = POLYFLAGS_WALK;
             cmd.pc.userid = 0;
 
             if (argc == 4) {
-                cmd.pc.radius = std::max(atoi(Cmd_Argv(3) ), 10);
+                cmd.pc.radius = std::max(atoi(Cmd_Argv(3)), 10);
             } else {
                 cmd.pc.radius = connectionSize;
             }
             cmd.offBegin = true;
         }
-    } else if (!Q_stricmp(arg, "end") ) {
+    } else if (!Q_stricmp(arg, "end")) {
         if (!cmd.enabled) {
             return;
         }
@@ -261,7 +261,7 @@ void Cmd_AddConnection() {
             return;
         }
 
-        if (GetPointPointedTo(cmd.nav, cmd.pc.end) ) {
+        if (GetPointPointedTo(cmd.nav, cmd.pc.end)) {
             cmd.nav->process.con.addConnection(cmd.pc);
 
             rBounds box;
@@ -293,7 +293,7 @@ static void adjustConnectionSize(int dir) {
     int newConnectionSize;
 
     if (argc > 1) {
-        adjust = Math::Clamp(atoi(Cmd_Argv(1) ), 1, 20);
+        adjust = Math::Clamp(atoi(Cmd_Argv(1)), 1, 20);
     }
 
     newConnectionSize = Math::Clamp(connectionSize + dir * adjust, 20, 100);
@@ -329,21 +329,21 @@ void Cmd_NavTest() {
 
     arg = Cmd_Argv(1);
 
-    if (!Q_stricmp(arg, "shownodes") ) {
+    if (!Q_stricmp(arg, "shownodes")) {
         cmd.shownodes = true;
-    } else if (!Q_stricmp(arg, "hidenodes") ) {
+    } else if (!Q_stricmp(arg, "hidenodes")) {
         cmd.shownodes = false;
-    } else if (!Q_stricmp(arg, "showportals") ) {
+    } else if (!Q_stricmp(arg, "showportals")) {
         cmd.showportals = true;
-    } else if (!Q_stricmp(arg, "hideportals") ) {
+    } else if (!Q_stricmp(arg, "hideportals")) {
         cmd.showportals = false;
-    } else if (!Q_stricmp(arg, "startpath") ) {
-        if (GetPointPointedTo(cmd.nav, cmd.start) ) {
+    } else if (!Q_stricmp(arg, "startpath")) {
+        if (GetPointPointedTo(cmd.nav, cmd.start)) {
             cmd.validPathStart = true;
         } else {
             cmd.validPathStart = false;
         }
-    } else if (!Q_stricmp(arg, "endpath") ) {
+    } else if (!Q_stricmp(arg, "endpath")) {
         rVec end;
         if (GetPointPointedTo(cmd.nav, end) && cmd.validPathStart) {
             dtPolyRef startRef;
@@ -366,7 +366,7 @@ void Cmd_NavTest() {
 
 void NavEditInit() {
     #ifndef BUILD_SERVER
-    memset(&cmd, 0, sizeof(cmd) );
+    memset(&cmd, 0, sizeof(cmd));
     Cvar_Set("r_debugSurface", "0");
     Cmd_AddCommand("navedit", Cmd_NavEdit);
     Cmd_AddCommand("addcon", Cmd_AddConnection);

@@ -36,7 +36,7 @@ Maryland 20850 USA.
 
 #include "client.h"
 
-static const char* const svc_strings[256] ={
+static const char* const svc_strings[256] = {
     "svc_bad",
 
     "svc_nop",
@@ -85,7 +85,7 @@ void CL_DeltaEntity(msg_t* msg, clSnapshot_t* frame, int newnum, entityState_t* 
         MSG_ReadDeltaEntity(msg, old, state, newnum);
     }
 
-    if (state->number == (MAX_GENTITIES - 1) ) {
+    if (state->number == (MAX_GENTITIES - 1)) {
         return; // entity was delta removed
     }
 
@@ -131,7 +131,7 @@ void CL_ParsePacketEntities(msg_t* msg, const clSnapshot_t* oldframe, clSnapshot
         // read the entity index number
         newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
 
-        if (newnum >= (MAX_GENTITIES - 1) ) {
+        if (newnum >= (MAX_GENTITIES - 1)) {
             break;
         }
 
@@ -238,7 +238,7 @@ void CL_ParseSnapshot(msg_t* msg) {
 
     // read in the new snapshot to a temporary buffer
     // we will only copy to cl.snap if it is valid
-    Com_Memset(&newSnap, 0, sizeof(newSnap) );
+    Com_Memset(&newSnap, 0, sizeof(newSnap));
 
     // we will have read any new server commands in this
     // message before we got to svc_snapshot
@@ -331,7 +331,7 @@ void CL_ParseSnapshot(msg_t* msg) {
     // read areamask
     len = MSG_ReadByte(msg);
 
-    if (len > (int) sizeof(newSnap.areamask) ) {
+    if (len > (int) sizeof(newSnap.areamask)) {
         Com_Error(ERR_DROP, "CL_ParseSnapshot: Invalid size %d for areamask.", len);
     }
 
@@ -416,7 +416,7 @@ void CL_SystemInfoChanged() {
     // when the serverId changes, any further messages we send to the server will use this new serverId
     // show_bug.cgi?id=475
     // in some cases, outdated cp commands might get sent with this news serverId
-    cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid") );
+    cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid"));
 
     // load paks sent by the server, but not if we are running a local server
     if (!com_sv_running->integer) {
@@ -496,7 +496,7 @@ void CL_ParseGamestate(msg_t* msg) {
                 Com_Error(ERR_DROP, "Baseline number out of range: %i", newnum);
             }
 
-            memset(&nullstate, 0, sizeof(nullstate) );
+            memset(&nullstate, 0, sizeof(nullstate));
             es = &cl.entityBaselines[newnum];
             MSG_ReadDeltaEntity(msg, &nullstate, es, newnum);
         } else {
@@ -543,7 +543,7 @@ void CL_ParseDownload(msg_t* msg) {
             MSG_ReadLong(msg);
         } else if (block != 0) {
             size = MSG_ReadShort(msg);
-            if (size < 0 || size > (int) sizeof(data) ) {
+            if (size < 0 || size > (int) sizeof(data)) {
                 Com_Error(ERR_DROP, "CL_ParseDownload: Invalid size %d for download chunk.", size);
             }
             MSG_ReadData(msg, data, size);
@@ -561,8 +561,8 @@ void CL_ParseDownload(msg_t* msg) {
     if (block == -1) {
         if (!clc.bWWWDl) {
             // server is sending us a www download
-            Q_strncpyz(cls.originalDownloadName, cls.downloadName, sizeof(cls.originalDownloadName) );
-            Q_strncpyz(cls.downloadName, MSG_ReadString(msg), sizeof(cls.downloadName) );
+            Q_strncpyz(cls.originalDownloadName, cls.downloadName, sizeof(cls.originalDownloadName));
+            Q_strncpyz(cls.downloadName, MSG_ReadString(msg), sizeof(cls.downloadName));
             clc.downloadSize = MSG_ReadLong(msg);
             clc.downloadFlags = MSG_ReadLong(msg);
 
@@ -575,14 +575,14 @@ void CL_ParseDownload(msg_t* msg) {
             cls.state = CA_DOWNLOADING;
 
             // make sure the server is not trying to redirect us again on a bad checksum
-            if (strstr(clc.badChecksumList, va("@%s", cls.originalDownloadName) ) ) {
+            if (strstr(clc.badChecksumList, va("@%s", cls.originalDownloadName))) {
                 Com_Printf("refusing redirect to %s by server (bad checksum)\n", cls.downloadName);
                 CL_AddReliableCommand("wwwdl fail");
                 clc.bWWWDlAborting = true;
                 return;
             }
 
-            if (!DL_BeginDownload(cls.downloadTempName, cls.downloadName) ) {
+            if (!DL_BeginDownload(cls.downloadTempName, cls.downloadName)) {
                 // setting bWWWDl to false after sending the wwwdl fail doesn't work
                 // not sure why, but I suspect we have to eat all remaining block -1 that the server has sent us
                 // still leave a flag so that CL_WWWDownload is inactive
@@ -594,7 +594,7 @@ void CL_ParseDownload(msg_t* msg) {
 
             // Check for a disconnected download
             // we'll let the server disconnect us when it gets the bbl8r message
-            if (clc.downloadFlags & (1 << DL_FLAG_DISCON) ) {
+            if (clc.downloadFlags & (1 << DL_FLAG_DISCON)) {
                 CL_AddReliableCommand("wwwdl bbl8r");
                 cls.bWWWDlDisconnected = true;
             }
@@ -618,13 +618,13 @@ void CL_ParseDownload(msg_t* msg) {
         Cvar_SetValue("cl_downloadSize", clc.downloadSize);
 
         if (clc.downloadSize < 0) {
-            Com_Error(ERR_DROP, "%s", MSG_ReadString(msg) );
+            Com_Error(ERR_DROP, "%s", MSG_ReadString(msg));
         }
     }
 
     size = MSG_ReadShort(msg);
 
-    if (size < 0 || size > (int) sizeof(data) ) {
+    if (size < 0 || size > (int) sizeof(data)) {
         Com_Error(ERR_DROP, "CL_ParseDownload: Invalid size %d for download chunk.", size);
     }
 
@@ -653,7 +653,7 @@ void CL_ParseDownload(msg_t* msg) {
         FS_Write(data, size, clc.download);
     }
 
-    CL_AddReliableCommand(va("nextdl %d", clc.downloadBlock) );
+    CL_AddReliableCommand(va("nextdl %d", clc.downloadBlock));
     clc.downloadBlock++;
 
     clc.downloadCount += size;
@@ -712,7 +712,7 @@ void CL_ParseCommandString(msg_t* msg) {
     clc.serverCommandSequence = seq;
 
     index = seq & (MAX_RELIABLE_COMMANDS - 1);
-    Q_strncpyz(clc.serverCommands[index], s, sizeof(clc.serverCommands[index]) );
+    Q_strncpyz(clc.serverCommands[index], s, sizeof(clc.serverCommands[index]));
 }
 
 /*
@@ -754,7 +754,7 @@ void CL_ParseServerMessage(msg_t* msg) {
 
         // See if this is an extension command after the EOF, which means we
         // got data that a legacy client should ignore.
-        if ( (cmd == svc_EOF) && (MSG_LookaheadByte(msg) == svc_extension) ) {
+        if ((cmd == svc_EOF) && (MSG_LookaheadByte(msg) == svc_extension)) {
             SHOWNET(msg, "EXTENSION");
             MSG_ReadByte(msg); // throw the svc_extension byte away.
             cmd = MSG_ReadByte(msg); // something legacy clients can't do!

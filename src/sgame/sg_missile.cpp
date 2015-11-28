@@ -97,7 +97,7 @@ static float MissileTimePowerMod(gentity_t* self, missileTimePowerMod_t type,
 
     case MTPR_EXPONENTIAL_DECREASE:
         // arg is half life time, ln(2) ~= 0.6931472
-        return startMod * exp( (-0.6931472f * affectedTime) / (float)endTime);
+        return startMod * exp((-0.6931472f * affectedTime) / (float)endTime);
 
     default:
         return startMod;
@@ -145,7 +145,7 @@ static float MissileTimeSplashDmgMod(gentity_t* self) {
 static int ImpactGrenade(gentity_t* ent, trace_t* trace, gentity_t*) {
     BounceMissile(ent, trace);
 
-    if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND) ) {
+    if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND)) {
         G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
     }
 
@@ -161,7 +161,7 @@ static int ImpactFlamer(gentity_t* ent, trace_t* trace, gentity_t* hitEnt) {
     }
 
     // ignite in radius
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, trace->endpos, FLAMER_IGNITE_RADIUS) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, trace->endpos, FLAMER_IGNITE_RADIUS))) {
         // we already handled other, since it might not always be in FLAMER_IGNITE_RADIUS due to BBOX sizes
         if (neighbor == hitEnt) {
             continue;
@@ -217,8 +217,8 @@ static int ImpactSlowblob(gentity_t*, trace_t* trace, gentity_t* hitEnt) {
     // put out fires in range
     // TODO: Iterate over all ignitable entities only
     neighbor = nullptr;
-    while ( (neighbor = G_IterateEntitiesWithinRadius(neighbor, trace->endpos,
-                                                      ABUILDER_BLOB_FIRE_STOP_RANGE) ) ) {
+    while ((neighbor = G_IterateEntitiesWithinRadius(neighbor, trace->endpos,
+                                                     ABUILDER_BLOB_FIRE_STOP_RANGE))) {
         if (neighbor != hitEnt) {
             neighbor->entity->Extinguish(ABUILDER_BLOB_FIRE_IMMUNITY);
         }
@@ -266,7 +266,7 @@ static int DefaultImpactFunc(gentity_t*, trace_t*, gentity_t*) {
 static void MissileImpact(gentity_t* ent, trace_t* trace) {
     int dirAsByte, impactFlags;
     const missileAttributes_t* ma = BG_Missile(ent->s.modelindex);
-    gentity_t* hitEnt   = &g_entities[trace->entityNum];
+    gentity_t* hitEnt = &g_entities[trace->entityNum];
     gentity_t* attacker = &g_entities[ent->r.ownerNum];
 
     // Returns whether damage and hit effects should be done and played.
@@ -274,10 +274,10 @@ static void MissileImpact(gentity_t* ent, trace_t* trace) {
 
     // Check for bounce.
     if (ent->s.eFlags & (EF_BOUNCE | EF_BOUNCE_HALF) &&
-        !HasComponents<HealthComponent>(*hitEnt->entity) ) {
+        !HasComponents<HealthComponent>(*hitEnt->entity)) {
         BounceMissile(ent, trace);
 
-        if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND) ) {
+        if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND)) {
             G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
         }
 
@@ -322,8 +322,8 @@ static void MissileImpact(gentity_t* ent, trace_t* trace) {
     impactFlags = impactFunc(ent, trace, hitEnt);
 
     // Deal impact damage.
-    if (!(impactFlags & MIF_NO_DAMAGE) ) {
-        if (ent->damage && G_Alive(hitEnt) ) {
+    if (!(impactFlags & MIF_NO_DAMAGE)) {
+        if (ent->damage && G_Alive(hitEnt)) {
             vec3_t dir;
 
             BG_EvaluateTrajectoryDelta(&ent->s.pos, level.time, dir);
@@ -355,7 +355,7 @@ static void MissileImpact(gentity_t* ent, trace_t* trace) {
     }
 
     // Play hit effects and remove the missile.
-    if (!(impactFlags & MIF_NO_EFFECT) ) {
+    if (!(impactFlags & MIF_NO_EFFECT)) {
         // Use either the trajectory direction or the surface normal for the hit event.
         if (ma->impactFlightDirection) {
             vec3_t trajDir;
@@ -367,7 +367,7 @@ static void MissileImpact(gentity_t* ent, trace_t* trace) {
         }
 
         // Add hit event.
-        if (HasComponents<HealthComponent>(*hitEnt->entity) ) {
+        if (HasComponents<HealthComponent>(*hitEnt->entity)) {
             G_AddEvent(ent, EV_MISSILE_HIT_ENTITY, dirAsByte);
 
             ent->s.otherEntityNum = hitEnt->s.number;
@@ -393,7 +393,7 @@ static void MissileImpact(gentity_t* ent, trace_t* trace) {
         trap_LinkEntity(ent);
     }
     // If no impact happened, check if we should continue or free ourselves.
-    else if (!(impactFlags & MIF_NO_FREE) ) {
+    else if (!(impactFlags & MIF_NO_FREE)) {
         G_FreeEntity(ent);
     }
 }
@@ -418,7 +418,7 @@ void G_ExplodeMissile(gentity_t* ent) {
     // turn the missile into an event carrier
     ent->s.eType = ET_INVISIBLE;
     ent->freeAfterEvent = true;
-    G_AddEvent(ent, EV_MISSILE_HIT_ENVIRONMENT, DirToByte(dir) );
+    G_AddEvent(ent, EV_MISSILE_HIT_ENVIRONMENT, DirToByte(dir));
 
     // splash damage
     if (ent->splashDamage) {
@@ -453,7 +453,7 @@ void G_RunMissile(gentity_t* ent) {
     }
 
     if (tr.fraction < 1.0f) {
-        if (!ent->pointAgainstWorld || (tr.contents & CONTENTS_BODY) ) {
+        if (!ent->pointAgainstWorld || (tr.contents & CONTENTS_BODY)) {
             // We hit an entity or we don't care
             impact = true;
         } else {
@@ -532,35 +532,35 @@ gentity_t* G_SpawnMissile(missile_t missile, gentity_t* parent, vec3_t start, ve
     m = G_NewEntity();
 
     // generic
-    m->s.eType             = ET_MISSILE;
-    m->s.modelindex        = missile;
-    m->r.ownerNum          = parent->s.number;
-    m->parent              = parent;
-    m->target              = target;
-    m->think               = think;
-    m->nextthink           = nextthink;
+    m->s.eType = ET_MISSILE;
+    m->s.modelindex = missile;
+    m->r.ownerNum = parent->s.number;
+    m->parent = parent;
+    m->target = target;
+    m->think = think;
+    m->nextthink = nextthink;
 
     // from attribute config file
-    m->s.weapon            = ma->number;
-    m->classname           = ma->name;
-    m->pointAgainstWorld   = ma->pointAgainstWorld;
-    m->damage              = ma->damage;
-    m->methodOfDeath       = ma->meansOfDeath;
-    m->splashDamage        = ma->splashDamage;
-    m->splashRadius        = ma->splashRadius;
+    m->s.weapon = ma->number;
+    m->classname = ma->name;
+    m->pointAgainstWorld = ma->pointAgainstWorld;
+    m->damage = ma->damage;
+    m->methodOfDeath = ma->meansOfDeath;
+    m->splashDamage = ma->splashDamage;
+    m->splashRadius = ma->splashRadius;
     m->splashMethodOfDeath = ma->splashMeansOfDeath;
-    m->clipmask            = ma->clipmask;
-    m->r.mins[0]         =
-        m->r.mins[1]         =
-            m->r.mins[2]         = -ma->size;
-    m->r.maxs[0]         =
-        m->r.maxs[1]         =
-            m->r.maxs[2]         = ma->size;
-    m->s.eFlags            = ma->flags;
+    m->clipmask = ma->clipmask;
+    m->r.mins[0] =
+        m->r.mins[1] =
+            m->r.mins[2] = -ma->size;
+    m->r.maxs[0] =
+        m->r.maxs[1] =
+            m->r.maxs[2] = ma->size;
+    m->s.eFlags = ma->flags;
 
     // not yet implemented / deprecated
-    m->flightSplashDamage  = 0;
-    m->flightSplashRadius  = 0;
+    m->flightSplashDamage = 0;
+    m->flightSplashRadius = 0;
 
     // trajectory
     {

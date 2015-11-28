@@ -156,7 +156,7 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
 
     data[0] = nullptr;
 
-    if (strncmp( (const char*) buff, "DDS ", 4) != 0) {
+    if (strncmp((const char*) buff, "DDS ", 4) != 0) {
         ri.Printf(PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name);
         return;
     }
@@ -177,12 +177,12 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
     }
     #endif
 
-    if (ddsd->dwSize != sizeof(DDSHEADER_t) || ddsd->ddpfPixelFormat.dwSize != sizeof(DDS_PIXELFORMAT_t) ) {
+    if (ddsd->dwSize != sizeof(DDSHEADER_t) || ddsd->ddpfPixelFormat.dwSize != sizeof(DDS_PIXELFORMAT_t)) {
         ri.Printf(PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name);
         return;
     }
 
-    *numMips = ( (ddsd->dwFlags & DDSD_MIPMAPCOUNT) && (ddsd->dwMipMapCount > 1) ) ? ddsd->dwMipMapCount : 1;
+    *numMips = ((ddsd->dwFlags & DDSD_MIPMAPCOUNT) && (ddsd->dwMipMapCount > 1)) ? ddsd->dwMipMapCount : 1;
 
     if (*numMips > MAX_TEXTURE_MIPS) {
         ri.Printf(PRINT_WARNING, "R_LoadDDSImage: dds image has too many mip levels \"%s\"\n", name);
@@ -204,12 +204,12 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
         *height = ddsd->dwHeight;
         *numLayers = 6;
 
-        if (*width & (*width - 1) ) {
+        if (*width & (*width - 1)) {
             // cubes must be a power of two
             ri.Printf(PRINT_WARNING, "R_LoadDDSImage: cube images must be power of two \"%s\"\n", name);
             return;
         }
-    } else if ( (ddsd->ddsCaps.dwCaps2 & DDSCAPS2_VOLUME) && (ddsd->dwFlags & DDSD_DEPTH) ) {
+    } else if ((ddsd->ddsCaps.dwCaps2 & DDSCAPS2_VOLUME) && (ddsd->dwFlags & DDSD_DEPTH)) {
         // 3D texture
 
         *width = ddsd->dwWidth;
@@ -221,7 +221,7 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
             return;
         }
 
-        if (*width & (*width - 1) || *height & (*height - 1) || *numLayers & (*numLayers - 1) ) {
+        if (*width & (*width - 1) || *height & (*height - 1) || *numLayers & (*numLayers - 1)) {
             ri.Printf(PRINT_WARNING, "R_LoadDDSImage: volume images must be power of two \"%s\"\n", name);
             return;
         }
@@ -234,7 +234,7 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
 
         // these are allowed to be non power of two, will be dealt with later on
         // except for compressed images!
-        if (compressed && (*width & (*width - 1) || *height & (*height - 1) ) ) {
+        if (compressed && (*width & (*width - 1) || *height & (*height - 1))) {
             ri.Printf(PRINT_WARNING, "R_LoadDDSImage: compressed texture images must be power of two \"%s\"\n", name);
             return;
         }

@@ -140,7 +140,7 @@ int DL_BeginDownload(const char* localName, const char* remoteName) {
     Q_strncpyz(referer + URI_SCHEME_LENGTH, Cvar_VariableString("cl_currentServerIP"), MAX_STRING_CHARS);
 
     dl_request = curl_easy_init();
-    curl_easy_setopt(dl_request, CURLOPT_USERAGENT, va("%s %s", PRODUCT_NAME "/" PRODUCT_VERSION, curl_version() ) );
+    curl_easy_setopt(dl_request, CURLOPT_USERAGENT, va("%s %s", PRODUCT_NAME "/" PRODUCT_VERSION, curl_version()));
     curl_easy_setopt(dl_request, CURLOPT_REFERER, referer);
     curl_easy_setopt(dl_request, CURLOPT_URL, remoteName);
     curl_easy_setopt(dl_request, CURLOPT_WRITEFUNCTION, DL_cb_FWriteFile);
@@ -168,11 +168,11 @@ dlStatus_t DL_DownloadLoop() {
         return DL_DONE;
     }
 
-    if ( (status = curl_multi_perform(dl_multi, &dls) ) == CURLM_CALL_MULTI_PERFORM && dls) {
+    if ((status = curl_multi_perform(dl_multi, &dls)) == CURLM_CALL_MULTI_PERFORM && dls) {
         return DL_CONTINUE;
     }
 
-    while ( (msg = curl_multi_info_read(dl_multi, &dls) ) && msg->easy_handle != dl_request) {
+    while ((msg = curl_multi_info_read(dl_multi, &dls)) && msg->easy_handle != dl_request) {
     }
 
     if (!msg || msg->msg != CURLMSG_DONE) {

@@ -28,15 +28,15 @@ int gl_filter_max = GL_LINEAR;
 
 image_t* r_imageHashTable[IMAGE_FILE_HASH_SIZE];
 
-#define Tex_ByteToFloat(v) ( ( (int)(v) - 128) / 127.0f)
-#define Tex_FloatToByte(v) (128 + (int) ( (v) * 127.0f + 0.5) )
+#define Tex_ByteToFloat(v) (((int)(v) - 128) / 127.0f)
+#define Tex_FloatToByte(v) (128 + (int) ((v) * 127.0f + 0.5))
 
 typedef struct {
     const char* name;
     int minimize, maximize;
 } textureMode_t;
 
-static const textureMode_t modes[] ={
+static const textureMode_t modes[] = {
     { "GL_NEAREST", GL_NEAREST, GL_NEAREST },
     { "GL_LINEAR", GL_LINEAR, GL_LINEAR  },
     { "GL_NEAREST_MIPMAP_NEAREST", GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST },
@@ -85,7 +85,7 @@ void GL_TextureMode(const char* string) {
     image_t* image;
 
     for (i = 0; i < 6; i++) {
-        if (!Q_stricmp(modes[i].name, string) ) {
+        if (!Q_stricmp(modes[i].name, string)) {
             break;
         }
     }
@@ -101,7 +101,7 @@ void GL_TextureMode(const char* string) {
     // bound texture anisotropy
     if (glConfig2.textureAnisotropyAvailable) {
         if (r_ext_texture_filter_anisotropic->value > glConfig2.maxTextureAnisotropy) {
-            ri.Cvar_Set("r_ext_texture_filter_anisotropic", va("%f", glConfig2.maxTextureAnisotropy) );
+            ri.Cvar_Set("r_ext_texture_filter_anisotropic", va("%f", glConfig2.maxTextureAnisotropy));
         } else if (r_ext_texture_filter_anisotropic->value < 1.0) {
             ri.Cvar_Set("r_ext_texture_filter_anisotropic", "1.0");
         }
@@ -137,7 +137,7 @@ void R_ImageList_f() {
     int texels;
     int dataSize;
     int imageDataSize;
-    const char* yesno[] ={
+    const char* yesno[] = {
         "no ", "yes"
     };
     const char* filter = ri.Cmd_Argc() > 1 ? ri.Cmd_Argv(1) : nullptr;
@@ -152,7 +152,7 @@ void R_ImageList_f() {
         char buffer[MAX_TOKEN_CHARS];
         std::string out;
 
-        if (filter && !Com_Filter(filter, image->name, true) ) {
+        if (filter && !Com_Filter(filter, image->name, true)) {
             continue;
         }
 
@@ -402,7 +402,7 @@ void R_ImageList_f() {
     ri.Printf(PRINT_ALL, " ---------\n");
     ri.Printf(PRINT_ALL, " %i total texels (not including mipmaps)\n", texels);
     ri.Printf(PRINT_ALL, " %d.%02d MB total image memory\n", dataSize / (1024 * 1024),
-              (dataSize % (1024 * 1024) ) * 100 / (1024 * 1024) );
+              (dataSize % (1024 * 1024)) * 100 / (1024 * 1024));
     ri.Printf(PRINT_ALL, " %i total images\n\n", tr.images.currentElements);
 }
 
@@ -448,8 +448,8 @@ static void ResampleTexture(unsigned* in, int inwidth, int inheight, unsigned* o
 
     if (normalMap) {
         for (y = 0; y < outheight; y++) {
-            inrow = in + inwidth * (int)( (y + 0.25) * inheight / outheight);
-            inrow2 = in + inwidth * (int)( (y + 0.75) * inheight / outheight);
+            inrow = in + inwidth * (int)((y + 0.25) * inheight / outheight);
+            inrow2 = in + inwidth * (int)((y + 0.75) * inheight / outheight);
 
             for (x = 0; x < outwidth; x++) {
                 pix1 = (byte*) inrow + p1[x];
@@ -477,22 +477,22 @@ static void ResampleTexture(unsigned* in, int inwidth, int inheight, unsigned* o
                 VectorAdd(n, n3, n);
                 VectorAdd(n, n4, n);
 
-                if (!VectorNormalize(n) ) {
+                if (!VectorNormalize(n)) {
                     VectorSet(n, 0, 0, 1);
                 }
 
-                ( (byte*)(out) ) [0] = Tex_FloatToByte(n[0]);
-                ( (byte*)(out) ) [1] = Tex_FloatToByte(n[1]);
-                ( (byte*)(out) ) [2] = Tex_FloatToByte(n[2]);
-                ( (byte*)(out) ) [3] = 255;
+                ((byte*)(out)) [0] = Tex_FloatToByte(n[0]);
+                ((byte*)(out)) [1] = Tex_FloatToByte(n[1]);
+                ((byte*)(out)) [2] = Tex_FloatToByte(n[2]);
+                ((byte*)(out)) [3] = 255;
 
                 ++out;
             }
         }
     } else {
         for (y = 0; y < outheight; y++) {
-            inrow = in + inwidth * (int)( (y + 0.25) * inheight / outheight);
-            inrow2 = in + inwidth * (int)( (y + 0.75) * inheight / outheight);
+            inrow = in + inwidth * (int)((y + 0.25) * inheight / outheight);
+            inrow2 = in + inwidth * (int)((y + 0.75) * inheight / outheight);
 
             for (x = 0; x < outwidth; x++) {
                 pix1 = (byte*) inrow + p1[x];
@@ -500,10 +500,10 @@ static void ResampleTexture(unsigned* in, int inwidth, int inheight, unsigned* o
                 pix3 = (byte*) inrow2 + p1[x];
                 pix4 = (byte*) inrow2 + p2[x];
 
-                ( (byte*)(out) ) [0] = (pix1[0] + pix2[0] + pix3[0] + pix4[0]) >> 2;
-                ( (byte*)(out) ) [1] = (pix1[1] + pix2[1] + pix3[1] + pix4[1]) >> 2;
-                ( (byte*)(out) ) [2] = (pix1[2] + pix2[2] + pix3[2] + pix4[2]) >> 2;
-                ( (byte*)(out) ) [3] = (pix1[3] + pix2[3] + pix3[3] + pix4[3]) >> 2;
+                ((byte*)(out)) [0] = (pix1[0] + pix2[0] + pix3[0] + pix4[0]) >> 2;
+                ((byte*)(out)) [1] = (pix1[1] + pix2[1] + pix3[1] + pix4[1]) >> 2;
+                ((byte*)(out)) [2] = (pix1[2] + pix2[2] + pix3[2] + pix4[2]) >> 2;
+                ((byte*)(out)) [3] = (pix1[3] + pix2[3] + pix3[3] + pix4[3]) >> 2;
 
                 ++out;
             }
@@ -543,7 +543,7 @@ static void R_MipMap2(unsigned* in, int inWidth, int inHeight) {
         row[0] = row[1];
         row[1] = row[2];
         row[2] = row[3];
-        row[3] = (byte*) &in[( (i + 2) & inHeightMask) * inWidth];
+        row[3] = (byte*) &in[((i + 2) & inHeightMask) * inWidth];
 
         for (j = 0; j < inWidth * 4; j += 8) { // count source, bytes comprising texel pairs
             for (k = j; k < j + 4; k++) {
@@ -576,7 +576,7 @@ static void R_MipMap(byte* in, int width, int height) {
     int row;
 
     if (!r_simpleMipMaps->integer) {
-        R_MipMap2( (unsigned*) in, width, height);
+        R_MipMap2((unsigned*) in, width, height);
         return;
     }
 
@@ -2972,7 +2972,7 @@ static void R_CreateColorGradeImage() {
     byte* data, * ptr;
     int i, r, g, b;
 
-    data = (byte*) ri.Hunk_AllocateTempMemory(REF_COLORGRADE_SLOTS * REF_COLORGRADEMAP_STORE_SIZE * sizeof(u8vec4_t) );
+    data = (byte*) ri.Hunk_AllocateTempMemory(REF_COLORGRADE_SLOTS * REF_COLORGRADEMAP_STORE_SIZE * sizeof(u8vec4_t));
 
     // 255 is 15 * 17, so the colors range from 0 to 255
     for (ptr = data, i = 0; i < REF_COLORGRADE_SLOTS; i++) {
@@ -3017,12 +3017,12 @@ void R_CreateBuiltinImages() {
     R_CreateDefaultImage();
 
     // we use a solid white image instead of disabling texturing
-    Com_Memset(data, 255, sizeof(data) );
+    Com_Memset(data, 255, sizeof(data));
     tr.whiteImage = R_CreateImage("_white", (const byte**) &dataPtr,
                                   8, 8, 1, IF_NOPICMIP, FT_LINEAR, WT_REPEAT);
 
     // we use a solid black image instead of disabling texturing
-    Com_Memset(data, 0, sizeof(data) );
+    Com_Memset(data, 0, sizeof(data));
     tr.blackImage = R_CreateImage("_black", (const byte**) &dataPtr,
                                   8, 8, 1, IF_NOPICMIP, FT_LINEAR, WT_REPEAT);
 
@@ -3073,13 +3073,13 @@ void R_CreateBuiltinImages() {
 
     for (y = 0; y < DEFAULT_SIZE; y++) {
         for (x = 0; x < DEFAULT_SIZE; x++, out += 4) {
-            s = ( ( (float) x + 0.5f) * (2.0f / DEFAULT_SIZE) - 1.0f);
+            s = (((float) x + 0.5f) * (2.0f / DEFAULT_SIZE) - 1.0f);
 
             s = Q_fabs(s) - (1.0f / DEFAULT_SIZE);
 
             value = 1.0f - (s * 2.0f) + (s * s);
 
-            intensity = ClampByte(Q_ftol(value * 255.0f) );
+            intensity = ClampByte(Q_ftol(value * 255.0f));
 
             out[0] = intensity;
             out[1] = intensity;
@@ -3122,7 +3122,7 @@ void R_InitImages() {
 
     ri.Printf(PRINT_DEVELOPER, "------- R_InitImages -------\n");
 
-    Com_Memset(r_imageHashTable, 0, sizeof(r_imageHashTable) );
+    Com_Memset(r_imageHashTable, 0, sizeof(r_imageHashTable));
     Com_InitGrowList(&tr.images, 4096);
     Com_InitGrowList(&tr.lightmaps, 128);
     Com_InitGrowList(&tr.deluxemaps, 128);
@@ -3160,7 +3160,7 @@ void R_ShutdownImages() {
         glDeleteTextures(1, &image->texnum);
     }
 
-    Com_Memset(glState.currenttextures, 0, sizeof(glState.currenttextures) );
+    Com_Memset(glState.currenttextures, 0, sizeof(glState.currenttextures));
 
     Com_DestroyGrowList(&tr.images);
     Com_DestroyGrowList(&tr.lightmaps);
@@ -3202,5 +3202,5 @@ int numTextures = 0;
 qhandle_t RE_GenerateTexture(const byte* pic, int width, int height) {
     const char* name = va("rocket%d", numTextures++);
     R_SyncRenderThread();
-    return RE_RegisterShaderFromImage(name, R_CreateImage(name, &pic, width, height, 1, IF_NOCOMPRESSION | IF_NOPICMIP, FT_LINEAR, WT_CLAMP) );
+    return RE_RegisterShaderFromImage(name, R_CreateImage(name, &pic, width, height, 1, IF_NOCOMPRESSION | IF_NOPICMIP, FT_LINEAR, WT_CLAMP));
 }

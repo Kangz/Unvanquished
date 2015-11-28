@@ -76,7 +76,7 @@ void think_aimAtTarget(gentity_t* self) {
 
     height = pickedTarget->s.origin[2] - origin[2];
     gravity = g_gravity.value;
-    time = sqrt(height / (0.5 * gravity) );
+    time = sqrt(height / (0.5 * gravity));
 
     if (!time) {
         G_FreeEntity(self);
@@ -173,15 +173,15 @@ shared field spawn functions
 void SP_ConditionFields(gentity_t* self) {
     char* buffer;
 
-    if (G_SpawnString("buildables", "", &buffer) ) {
+    if (G_SpawnString("buildables", "", &buffer)) {
         BG_ParseCSVBuildableList(buffer, self->conditions.buildables, BA_NUM_BUILDABLES);
     }
 
-    if (G_SpawnString("classes", "", &buffer) ) {
+    if (G_SpawnString("classes", "", &buffer)) {
         BG_ParseCSVClassList(buffer, self->conditions.classes, PCL_NUM_CLASSES);
     }
 
-    if (G_SpawnString("equipment", "", &buffer) ) {
+    if (G_SpawnString("equipment", "", &buffer)) {
         BG_ParseCSVEquipmentList(buffer, self->conditions.weapons, WP_NUM_WEAPONS,
                                  self->conditions.upgrades, UP_NUM_UPGRADES);
     }
@@ -201,7 +201,7 @@ void SP_WaitFields(gentity_t* self, float defaultWait, float defaultWaitVariance
         self->config.wait.variance = self->config.wait.time - FRAMETIME;
 
         if (g_debugEntities.integer > -1) {
-            G_Printf(S_WARNING "Entity %s has wait.variance >= wait.time\n", etos(self) );
+            G_Printf(S_WARNING "Entity %s has wait.variance >= wait.time\n", etos(self));
         }
     }
 }

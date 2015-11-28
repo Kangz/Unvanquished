@@ -77,7 +77,7 @@ float BotGetBaseRushScore(gentity_t* ent) {
         return 0.2f;
 
     case WP_CHAINGUN:
-        if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, ent->client->ps.stats) ) {
+        if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, ent->client->ps.stats)) {
             return 0.5f;
         } else {
             return 0.2f;
@@ -136,7 +136,7 @@ float BotGetHealScore(gentity_t* self) {
 
     percentHealth = self->entity->Get<HealthComponent>()->HealthFraction();
 
-    distToHealer = std::max(std::min(MAX_HEAL_DIST, distToHealer), MAX_HEAL_DIST * (3.0f / 4.0f) );
+    distToHealer = std::max(std::min(MAX_HEAL_DIST, distToHealer), MAX_HEAL_DIST * (3.0f / 4.0f));
 
     if (percentHealth == 1.0f) {
         return 1.0f;
@@ -288,8 +288,8 @@ float BotGetEnemyPriority(gentity_t* self, gentity_t* ent) {
 
 
 bool BotCanEvolveToClass(gentity_t* self, class_t newClass) {
-    return (BG_ClassCanEvolveFromTo( (class_t)self->client->ps.stats[STAT_CLASS], newClass,
-                                     self->client->ps.persistant[PERS_CREDIT]) >= 0);
+    return (BG_ClassCanEvolveFromTo((class_t)self->client->ps.stats[STAT_CLASS], newClass,
+                                    self->client->ps.persistant[PERS_CREDIT]) >= 0);
 }
 
 bool WeaponIsEmpty(weapon_t weapon, playerState_t* ps) {
@@ -322,8 +322,8 @@ int BotValueOfWeapons(gentity_t* self) {
     int i;
 
     for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++) {
-        if (BG_InventoryContainsWeapon(i, self->client->ps.stats) ) {
-            worth += BG_Weapon( (weapon_t)i)->price;
+        if (BG_InventoryContainsWeapon(i, self->client->ps.stats)) {
+            worth += BG_Weapon((weapon_t)i)->price;
         }
     }
     return worth;
@@ -333,8 +333,8 @@ int BotValueOfUpgrades(gentity_t* self) {
     int i;
 
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
-        if (BG_InventoryContainsUpgrade(i, self->client->ps.stats) ) {
-            worth += BG_Upgrade( (upgrade_t) i)->price;
+        if (BG_InventoryContainsUpgrade(i, self->client->ps.stats)) {
+            worth += BG_Upgrade((upgrade_t) i)->price;
         }
     }
     return worth;
@@ -348,25 +348,25 @@ void BotGetDesiredBuy(gentity_t* self, weapon_t* weapon, upgrade_t* upgrades, in
 
     // decide what upgrade(s) to buy
     if (BG_WeaponUnlocked(WP_PAIN_SAW) && BG_UpgradeUnlocked(UP_BATTLESUIT) &&
-        usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_BATTLESUIT)->price) ) {
+        usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_BATTLESUIT)->price)) {
         upgrades[0] = UP_BATTLESUIT;
         *numUpgrades = 1;
     } else if (BG_WeaponUnlocked(WP_SHOTGUN) && BG_UpgradeUnlocked(UP_MEDIUMARMOUR) && BG_UpgradeUnlocked(UP_RADAR) &&
-               usableCapital >= (BG_Weapon(WP_SHOTGUN)->price + BG_Upgrade(UP_MEDIUMARMOUR)->price + BG_Upgrade(UP_RADAR)->price) ) {
+               usableCapital >= (BG_Weapon(WP_SHOTGUN)->price + BG_Upgrade(UP_MEDIUMARMOUR)->price + BG_Upgrade(UP_RADAR)->price)) {
         upgrades[0] = UP_MEDIUMARMOUR;
         upgrades[1] = UP_RADAR;
         *numUpgrades = 2;
     } else if (BG_WeaponUnlocked(WP_SHOTGUN) && BG_UpgradeUnlocked(UP_LIGHTARMOUR) && BG_UpgradeUnlocked(UP_RADAR) &&
-               usableCapital >= (BG_Weapon(WP_SHOTGUN)->price + BG_Upgrade(UP_LIGHTARMOUR)->price + BG_Upgrade(UP_RADAR)->price) ) {
+               usableCapital >= (BG_Weapon(WP_SHOTGUN)->price + BG_Upgrade(UP_LIGHTARMOUR)->price + BG_Upgrade(UP_RADAR)->price)) {
         upgrades[0] = UP_LIGHTARMOUR;
         upgrades[1] = UP_RADAR;
         *numUpgrades = 2;
     } else if (BG_WeaponUnlocked(WP_PAIN_SAW) && BG_UpgradeUnlocked(UP_MEDIUMARMOUR) &&
-               usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_MEDIUMARMOUR)->price) ) {
+               usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_MEDIUMARMOUR)->price)) {
         upgrades[0] = UP_MEDIUMARMOUR;
         *numUpgrades = 1;
     } else if (BG_WeaponUnlocked(WP_PAIN_SAW) && BG_UpgradeUnlocked(UP_LIGHTARMOUR) &&
-               usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_LIGHTARMOUR)->price) ) {
+               usableCapital >= (BG_Weapon(WP_PAIN_SAW)->price + BG_Upgrade(UP_LIGHTARMOUR)->price)) {
         upgrades[0] = UP_LIGHTARMOUR;
         *numUpgrades = 1;
     } else {
@@ -404,12 +404,12 @@ void BotGetDesiredBuy(gentity_t* self, weapon_t* weapon, upgrade_t* upgrades, in
 
     // now test to see if we already have all of these items
     // check if we already have everything
-    if (BG_InventoryContainsWeapon( (int)*weapon, self->client->ps.stats) ) {
+    if (BG_InventoryContainsWeapon((int)*weapon, self->client->ps.stats)) {
         int numContain = 0;
         int i;
 
         for (i = 0; i < *numUpgrades; i++) {
-            if (BG_InventoryContainsUpgrade( (int)upgrades[i], self->client->ps.stats) ) {
+            if (BG_InventoryContainsUpgrade((int)upgrades[i], self->client->ps.stats)) {
                 numContain++;
             }
         }
@@ -441,8 +441,8 @@ gentity_t* BotFindBuilding(gentity_t* self, int buildingType, int range) {
             continue;
         }
         if (target->s.eType == ET_BUILDABLE && target->s.modelindex == buildingType &&
-            (target->buildableTeam == TEAM_ALIENS || (target->powered && target->spawned) ) &&
-            G_Alive(target) ) {
+            (target->buildableTeam == TEAM_ALIENS || (target->powered && target->spawned)) &&
+            G_Alive(target)) {
             newDistance = DistanceSquared(self->s.origin, target->s.origin);
             if (range && newDistance > rangeSquared) {
                 continue;
@@ -479,12 +479,12 @@ void BotFindClosestBuildings(gentity_t* self) {
         }
 
         // ignore dead targets
-        if (G_Dead(testEnt) ) {
+        if (G_Dead(testEnt)) {
             continue;
         }
 
         // skip human buildings that are currently building or arn't powered
-        if (testEnt->buildableTeam == TEAM_HUMANS && (!testEnt->powered || !testEnt->spawned) ) {
+        if (testEnt->buildableTeam == TEAM_HUMANS && (!testEnt->powered || !testEnt->spawned)) {
             continue;
         }
 
@@ -523,11 +523,11 @@ void BotFindDamagedFriendlyStructure(gentity_t* self) {
             continue;
         }
 
-        if (target->entity->Get<HealthComponent>()->FullHealth() ) {
+        if (target->entity->Get<HealthComponent>()->FullHealth()) {
             continue;
         }
 
-        if (G_Dead(target) ) {
+        if (G_Dead(target)) {
             continue;
         }
 
@@ -558,16 +558,16 @@ gentity_t* BotFindBestEnemy(gentity_t* self) {
     gentity_t* target;
     team_t team = BotGetEntityTeam(self);
     bool hasRadar = (team == TEAM_ALIENS) ||
-                    (team == TEAM_HUMANS && BG_InventoryContainsUpgrade(UP_RADAR, self->client->ps.stats) );
+                    (team == TEAM_HUMANS && BG_InventoryContainsUpgrade(UP_RADAR, self->client->ps.stats));
 
     for (target = g_entities; target < &g_entities[level.num_entities - 1]; target++) {
         float newScore;
 
-        if (!BotEnemyIsValid(self, target) ) {
+        if (!BotEnemyIsValid(self, target)) {
             continue;
         }
 
-        if (DistanceSquared(self->s.origin, target->s.origin) > Square(ALIENSENSE_RANGE) ) {
+        if (DistanceSquared(self->s.origin, target->s.origin) > Square(ALIENSENSE_RANGE)) {
             continue;
         }
 
@@ -582,7 +582,7 @@ gentity_t* BotFindBestEnemy(gentity_t* self) {
 
         newScore = BotGetEnemyPriority(self, target);
 
-        if (newScore > bestVisibleEnemyScore && BotEntityIsVisible(self, target, MASK_SHOT) ) {
+        if (newScore > bestVisibleEnemyScore && BotEntityIsVisible(self, target, MASK_SHOT)) {
             // store the new score and the index of the entity
             bestVisibleEnemyScore = newScore;
             bestVisibleEnemy = target;
@@ -611,7 +611,7 @@ gentity_t* BotFindClosestEnemy(gentity_t* self) {
         }
 
         // Only consider living targets.
-        if (!G_Alive(target) ) {
+        if (!G_Alive(target)) {
             continue;
         }
 
@@ -633,7 +633,7 @@ gentity_t* BotFindClosestEnemy(gentity_t* self) {
         }
 
         // ignore teamates
-        if (BotGetEntityTeam(target) == BotGetEntityTeam(self) ) {
+        if (BotGetEntityTeam(target) == BotGetEntityTeam(self)) {
             continue;
         }
 
@@ -728,7 +728,7 @@ bool BotTargetIsPlayer(botTarget_t target) {
 }
 
 int BotGetTargetEntityNumber(botTarget_t target) {
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         return target.ent->s.number;
     } else {
         return ENTITYNUM_NONE;
@@ -736,7 +736,7 @@ int BotGetTargetEntityNumber(botTarget_t target) {
 }
 
 void BotGetTargetPos(botTarget_t target, vec3_t rVec) {
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         VectorCopy(target.ent->s.origin, rVec);
     } else {
         VectorCopy(target.coord, rVec);
@@ -747,17 +747,17 @@ void BotTargetToRouteTarget(gentity_t* self, botTarget_t target, botRouteTarget_
     vec3_t mins, maxs;
     int i;
 
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         if (target.ent->client) {
-            BG_ClassBoundingBox( (class_t) target.ent->client->ps.stats[STAT_CLASS], mins, maxs, nullptr, nullptr, nullptr);
+            BG_ClassBoundingBox((class_t) target.ent->client->ps.stats[STAT_CLASS], mins, maxs, nullptr, nullptr, nullptr);
         } else if (target.ent->s.eType == ET_BUILDABLE) {
-            BG_BuildableBoundingBox( (buildable_t) target.ent->s.modelindex, mins, maxs);
+            BG_BuildableBoundingBox((buildable_t) target.ent->s.modelindex, mins, maxs);
         } else {
             VectorCopy(target.ent->r.mins, mins);
             VectorCopy(target.ent->r.maxs, maxs);
         }
 
-        if (BotTargetIsPlayer(target) ) {
+        if (BotTargetIsPlayer(target)) {
             routeTarget->type = BOT_TARGET_DYNAMIC;
         } else {
             routeTarget->type = BOT_TARGET_STATIC;
@@ -780,7 +780,7 @@ void BotTargetToRouteTarget(gentity_t* self, botTarget_t target, botRouteTarget_
     routeTarget->pos[2] -= routeTarget->polyExtents[2] / 2;
 
     // account for buildings on walls or cielings
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         if (target.ent->s.eType == ET_BUILDABLE || target.ent->s.eType == ET_PLAYER) {
             // building on wall or cieling ( 0.7 == MIN_WALK_NORMAL )
             if (target.ent->s.origin2[2] < 0.7 || target.ent->s.eType == ET_PLAYER) {
@@ -823,7 +823,7 @@ team_t BotGetEntityTeam(gentity_t* ent) {
 }
 
 team_t BotGetTargetTeam(botTarget_t target) {
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         return BotGetEntityTeam(target.ent);
     } else {
         return TEAM_NONE;
@@ -831,7 +831,7 @@ team_t BotGetTargetTeam(botTarget_t target) {
 }
 
 int BotGetTargetType(botTarget_t target) {
-    if (BotTargetIsEntity(target) ) {
+    if (BotTargetIsEntity(target)) {
         return target.ent->s.eType;
     } else {
         return -1;
@@ -843,7 +843,7 @@ bool BotChangeGoal(gentity_t* self, botTarget_t target) {
         return false;
     }
 
-    if (!FindRouteToTarget(self, target, false) ) {
+    if (!FindRouteToTarget(self, target, false)) {
         return false;
     }
 
@@ -1026,7 +1026,7 @@ bool BotTargetInAttackRange(gentity_t* self, botTarget_t target) {
 
     if (self->client->pers.team != BotGetEntityTeam(&g_entities[trace.entityNum])
         && BotGetEntityTeam(&g_entities[trace.entityNum]) != TEAM_NONE
-        && Distance(muzzle, trace.endpos) <= std::max(range, secondaryRange) ) {
+        && Distance(muzzle, trace.endpos) <= std::max(range, secondaryRange)) {
         return true;
     } else {
         return false;
@@ -1042,7 +1042,7 @@ bool BotTargetIsVisible(gentity_t* self, botTarget_t target, int mask) {
     G_CalcMuzzlePoint(self, forward, right, up, muzzle);
     BotGetTargetPos(target, targetPos);
 
-    if (!trap_InPVS(muzzle, targetPos) ) {
+    if (!trap_InPVS(muzzle, targetPos)) {
         return false;
     }
 
@@ -1054,8 +1054,8 @@ bool BotTargetIsVisible(gentity_t* self, botTarget_t target, int mask) {
     }
 
     // target is in range
-    if ( (trace.entityNum == BotGetTargetEntityNumber(target) || trace.fraction == 1.0f) &&
-         !trace.startsolid) {
+    if ((trace.entityNum == BotGetTargetEntityNumber(target) || trace.fraction == 1.0f) &&
+        !trace.startsolid) {
         return true;
     }
     return false;
@@ -1083,7 +1083,7 @@ void BotGetIdealAimLocation(gentity_t* self, botTarget_t target, vec3_t aimLocat
 }
 
 int BotGetAimPredictionTime(gentity_t* self) {
-    return (10 - self->botMind->botSkill.level) * 100 * std::max( ( (float) rand() ) / RAND_MAX, 0.5f);
+    return (10 - self->botMind->botSkill.level) * 100 * std::max(((float) rand()) / RAND_MAX, 0.5f);
 }
 
 void BotPredictPosition(gentity_t* self, gentity_t* predict, vec3_t pos, int time) {
@@ -1115,7 +1115,7 @@ void BotAimAtEnemy(gentity_t* self) {
     VectorNormalize(desired);
     AngleVectors(self->client->ps.viewangles, current, nullptr, nullptr);
 
-    frac = (1.0f - ( (float) (self->botMind->futureAimTime - level.time) ) / self->botMind->futureAimTimeInterval);
+    frac = (1.0f - ((float) (self->botMind->futureAimTime - level.time)) / self->botMind->futureAimTimeInterval);
     VectorLerp(current, desired, frac, newAim);
 
     VectorSet(self->client->ps.delta_angles, 0, 0, 0);
@@ -1161,7 +1161,7 @@ void BotSlowAim(gentity_t* self, vec3_t target, float slowAmount) {
     float slow;
     float cosAngle;
 
-    if (!(self && self->client) ) {
+    if (!(self && self->client)) {
         return;
     }
     // clamp to 0-1
@@ -1237,9 +1237,9 @@ bool PlayersBehindBotInSpawnQueue(gentity_t* self) {
 
     i = sq->front;
 
-    if (G_GetSpawnQueueLength(sq) ) {
+    if (G_GetSpawnQueueLength(sq)) {
         do {
-            if (!(g_entities[sq->clients[i]].r.svFlags & SVF_BOT) ) {
+            if (!(g_entities[sq->clients[i]].r.svFlags & SVF_BOT)) {
                 if (i < sq->front) {
                     lastPlayerPos = i + MAX_CLIENTS - sq->front;
                 } else {
@@ -1256,7 +1256,7 @@ bool PlayersBehindBotInSpawnQueue(gentity_t* self) {
             }
 
             i = QUEUE_PLUS1(i);
-        } while (i != QUEUE_PLUS1(sq->back) );
+        } while (i != QUEUE_PLUS1(sq->back));
     }
 
     if (botPos < lastPlayerPos) {
@@ -1276,7 +1276,7 @@ bool BotTeamateHasWeapon(gentity_t* self, int weapon) {
         if (bot == self) {
             continue;
         }
-        if (BG_InventoryContainsWeapon(weapon, bot->client->ps.stats) ) {
+        if (BG_InventoryContainsWeapon(weapon, bot->client->ps.stats)) {
             return true;
         }
     }
@@ -1361,7 +1361,7 @@ float CalcAimPitch(gentity_t* self, botTarget_t target, vec_t launchSpeed) {
     initialHeight = startPos[2];
     targetPos[2] -= initialHeight;
     startPos[2] -= initialHeight;
-    distance2D = sqrt(Square(startPos[0] - targetPos[0]) + Square(startPos[1] - targetPos[1]) );
+    distance2D = sqrt(Square(startPos[0] - targetPos[0]) + Square(startPos[1] - targetPos[1]));
     targetPos[0] = distance2D;
 
     // for readability's sake
@@ -1371,18 +1371,18 @@ float CalcAimPitch(gentity_t* self, botTarget_t target, vec_t launchSpeed) {
     g = self->client->ps.gravity;
 
     // make sure we won't get NaN
-    check = Square(Square(v) ) - g * (g * Square(x) + 2 * y * Square(v) );
+    check = Square(Square(v)) - g * (g * Square(x) + 2 * y * Square(v));
 
     // as long as we will get NaN, increase velocity to compensate
     // This is better than returning some failure value because it gives us the best launch angle possible, even if it wont hit in the end.
     while (check < 0) {
         v += 5;
-        check = Square(Square(v) ) - g * (g * Square(x) + 2 * y * Square(v) );
+        check = Square(Square(v)) - g * (g * Square(x) + 2 * y * Square(v));
     }
 
     // calculate required angle of launch
-    angle1 = atanf( (Square(v) + sqrt(check) ) / (g * x) );
-    angle2 = atanf( (Square(v) - sqrt(check) ) / (g * x) );
+    angle1 = atanf((Square(v) + sqrt(check)) / (g * x));
+    angle2 = atanf((Square(v) - sqrt(check)) / (g * x));
 
     // take the smaller angle
     angle = (angle1 < angle2) ? angle1 : angle2;
@@ -1463,7 +1463,7 @@ void BotFireWeaponAI(gentity_t* self) {
 
     case WP_ALEVEL3:
         if (distance > LEVEL3_CLAW_RANGE && self->client->ps.stats[STAT_MISC] < LEVEL3_POUNCE_TIME) {
-            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcPounceAimPitch(self, self->botMind->goal) ); // compute and apply correct aim pitch to hit target
+            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcPounceAimPitch(self, self->botMind->goal)); // compute and apply correct aim pitch to hit target
             BotFireWeapon(WPM_SECONDARY, botCmdBuffer); // goon pounce
         } else {
             BotFireWeapon(WPM_PRIMARY, botCmdBuffer); // goon chomp
@@ -1472,10 +1472,10 @@ void BotFireWeaponAI(gentity_t* self) {
 
     case WP_ALEVEL3_UPG:
         if (self->client->ps.ammo > 0 && distance > LEVEL3_CLAW_UPG_RANGE) {
-            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcBarbAimPitch(self, self->botMind->goal) ); // compute and apply correct aim pitch to hit target
+            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcBarbAimPitch(self, self->botMind->goal)); // compute and apply correct aim pitch to hit target
             BotFireWeapon(WPM_TERTIARY, botCmdBuffer); // goon barb
         } else if (distance > LEVEL3_CLAW_UPG_RANGE && self->client->ps.stats[STAT_MISC] < LEVEL3_POUNCE_TIME_UPG) {
-            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcPounceAimPitch(self, self->botMind->goal) ); // compute and apply correct aim pitch to hit target
+            botCmdBuffer->angles[PITCH] = ANGLE2SHORT(-CalcPounceAimPitch(self, self->botMind->goal)); // compute and apply correct aim pitch to hit target
             BotFireWeapon(WPM_SECONDARY, botCmdBuffer); // goon pounce
         } else {
             BotFireWeapon(WPM_PRIMARY, botCmdBuffer); // goon chomp
@@ -1491,7 +1491,7 @@ void BotFireWeaponAI(gentity_t* self) {
         break;
 
     case WP_LUCIFER_CANNON:
-        if (self->client->ps.stats[STAT_MISC] < LCANNON_CHARGE_TIME_MAX * Com_Clamp(0.5, 1, random() ) ) {
+        if (self->client->ps.stats[STAT_MISC] < LCANNON_CHARGE_TIME_MAX * Com_Clamp(0.5, 1, random())) {
             BotFireWeapon(WPM_PRIMARY, botCmdBuffer);
         }
         break;
@@ -1513,7 +1513,7 @@ bool BotEvolveToClass(gentity_t* ent, class_t newClass) {
     int num;
     gentity_t* other;
 
-    if (G_Dead(ent) ) {
+    if (G_Dead(ent)) {
         return false;
     }
 
@@ -1521,7 +1521,7 @@ bool BotEvolveToClass(gentity_t* ent, class_t newClass) {
 
     // if we are not currently spectating, we are attempting evolution
     if (ent->client->pers.classSelection != PCL_NONE) {
-        if ( (ent->client->ps.stats[STAT_STATE] & SS_WALLCLIMBING) ) {
+        if ((ent->client->ps.stats[STAT_STATE] & SS_WALLCLIMBING)) {
             ent->client->pers.cmd.upmove = 0;
         }
 
@@ -1533,21 +1533,21 @@ bool BotEvolveToClass(gentity_t* ent, class_t newClass) {
         for (i = 0; i < num; i++) {
             other = &g_entities[entityList[i]];
 
-            if ( (other->client && other->client->pers.team == TEAM_HUMANS) ||
-                 (other->s.eType == ET_BUILDABLE && other->buildableTeam == TEAM_HUMANS) ) {
+            if ((other->client && other->client->pers.team == TEAM_HUMANS) ||
+                (other->s.eType == ET_BUILDABLE && other->buildableTeam == TEAM_HUMANS)) {
                 return false;
             }
         }
 
-        if (!G_ActiveOvermind() ) {
+        if (!G_ActiveOvermind()) {
             return false;
         }
 
         numLevels = BG_ClassCanEvolveFromTo(currentClass, newClass, (short)ent->client->ps.persistant[PERS_CREDIT]);
 
-        if (G_RoomForClassChange(ent, newClass, infestOrigin) ) {
+        if (G_RoomForClassChange(ent, newClass, infestOrigin)) {
             // ...check we can evolve to that class
-            if (numLevels >= 0 && BG_ClassUnlocked(newClass) && !BG_ClassDisabled(newClass) ) {
+            if (numLevels >= 0 && BG_ClassUnlocked(newClass) && !BG_ClassDisabled(newClass)) {
                 ent->client->pers.evolveHealthFraction = ent->entity->Get<HealthComponent>()->HealthFraction();
 
                 if (ent->client->pers.evolveHealthFraction < 0.0f) {
@@ -1582,7 +1582,7 @@ bool BotEvolveToClass(gentity_t* ent, class_t newClass) {
 void BotBuyWeapon(gentity_t* self, weapon_t weapon) {
     if (weapon != WP_NONE) {
         // already got this?
-        if (BG_InventoryContainsWeapon(weapon, self->client->ps.stats) ) {
+        if (BG_InventoryContainsWeapon(weapon, self->client->ps.stats)) {
             return;
         }
 
@@ -1597,7 +1597,7 @@ void BotBuyWeapon(gentity_t* self, weapon_t weapon) {
         }
 
         // are we /allowed/ to buy this?
-        if (!BG_WeaponUnlocked(weapon) || BG_WeaponDisabled(weapon) ) {
+        if (!BG_WeaponUnlocked(weapon) || BG_WeaponDisabled(weapon)) {
             return;
         }
 
@@ -1607,12 +1607,12 @@ void BotBuyWeapon(gentity_t* self, weapon_t weapon) {
         }
 
         // have space to carry this?
-        if (BG_Weapon(weapon)->slots & BG_SlotsForInventory(self->client->ps.stats) ) {
+        if (BG_Weapon(weapon)->slots & BG_SlotsForInventory(self->client->ps.stats)) {
             return;
         }
 
         // In some instances, weapons can't be changed
-        if (!BG_PlayerCanChangeWeapon(&self->client->ps) ) {
+        if (!BG_PlayerCanChangeWeapon(&self->client->ps)) {
             return;
         }
 
@@ -1636,7 +1636,7 @@ void BotBuyUpgrade(gentity_t* self, upgrade_t upgrade) {
 
     if (upgrade != UP_NONE) {
         // already got this?
-        if (BG_InventoryContainsUpgrade(upgrade, self->client->ps.stats) ) {
+        if (BG_InventoryContainsUpgrade(upgrade, self->client->ps.stats)) {
             return;
         }
 
@@ -1646,7 +1646,7 @@ void BotBuyUpgrade(gentity_t* self, upgrade_t upgrade) {
         }
 
         // have space to carry this?
-        if (BG_Upgrade(upgrade)->slots & BG_SlotsForInventory(self->client->ps.stats) ) {
+        if (BG_Upgrade(upgrade)->slots & BG_SlotsForInventory(self->client->ps.stats)) {
             return;
         }
 
@@ -1661,12 +1661,12 @@ void BotBuyUpgrade(gentity_t* self, upgrade_t upgrade) {
         }
 
         // are we /allowed/ to buy this?
-        if (!BG_UpgradeUnlocked(upgrade) || BG_UpgradeDisabled(upgrade) ) {
+        if (!BG_UpgradeUnlocked(upgrade) || BG_UpgradeDisabled(upgrade)) {
             return;
         }
 
         if (upgrade == UP_LIGHTARMOUR) {
-            if (!G_RoomForClassChange(self, PCL_HUMAN_LIGHT, newOrigin) ) {
+            if (!G_RoomForClassChange(self, PCL_HUMAN_LIGHT, newOrigin)) {
                 return;
             }
             VectorCopy(newOrigin, self->client->ps.origin);
@@ -1675,7 +1675,7 @@ void BotBuyUpgrade(gentity_t* self, upgrade_t upgrade) {
             BotSetNavmesh(self, PCL_HUMAN_LIGHT);
             self->client->ps.eFlags ^= EF_TELEPORT_BIT;
         } else if (upgrade == UP_MEDIUMARMOUR) {
-            if (!G_RoomForClassChange(self, PCL_HUMAN_MEDIUM, newOrigin) ) {
+            if (!G_RoomForClassChange(self, PCL_HUMAN_MEDIUM, newOrigin)) {
                 return;
             }
             VectorCopy(newOrigin, self->client->ps.origin);
@@ -1684,7 +1684,7 @@ void BotBuyUpgrade(gentity_t* self, upgrade_t upgrade) {
             BotSetNavmesh(self, PCL_HUMAN_MEDIUM);
             self->client->ps.eFlags ^= EF_TELEPORT_BIT;
         } else if (upgrade == UP_BATTLESUIT) {
-            if (!G_RoomForClassChange(self, PCL_HUMAN_BSUIT, newOrigin) ) {
+            if (!G_RoomForClassChange(self, PCL_HUMAN_BSUIT, newOrigin)) {
                 return;
             }
             VectorCopy(newOrigin, self->client->ps.origin);
@@ -1711,11 +1711,11 @@ void BotSellWeapons(gentity_t* self) {
     int i;
 
     // no armoury nearby
-    if (!G_BuildableInRange(self->client->ps.origin, ENTITY_BUY_RANGE, BA_H_ARMOURY) ) {
+    if (!G_BuildableInRange(self->client->ps.origin, ENTITY_BUY_RANGE, BA_H_ARMOURY)) {
         return;
     }
 
-    if (!BG_PlayerCanChangeWeapon(&self->client->ps) ) {
+    if (!BG_PlayerCanChangeWeapon(&self->client->ps)) {
         return;
     }
 
@@ -1727,11 +1727,11 @@ void BotSellWeapons(gentity_t* self) {
         }
 
         if (BG_InventoryContainsWeapon(i, self->client->ps.stats) &&
-            BG_Weapon( (weapon_t)i)->purchasable) {
+            BG_Weapon((weapon_t)i)->purchasable) {
             self->client->ps.stats[STAT_WEAPON] = WP_NONE;
 
             // add to funds
-            G_AddCreditToClient(self->client, (short)BG_Weapon( (weapon_t) i)->price, false);
+            G_AddCreditToClient(self->client, (short)BG_Weapon((weapon_t) i)->price, false);
         }
 
         // if we have this weapon selected, force a new selection
@@ -1744,7 +1744,7 @@ void BotSellAll(gentity_t* self) {
     int i;
 
     // no armoury nearby
-    if (!G_BuildableInRange(self->client->ps.origin, ENTITY_BUY_RANGE, BA_H_ARMOURY) ) {
+    if (!G_BuildableInRange(self->client->ps.origin, ENTITY_BUY_RANGE, BA_H_ARMOURY)) {
         return;
     }
     BotSellWeapons(self);
@@ -1753,13 +1753,13 @@ void BotSellAll(gentity_t* self) {
     for (i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++) {
         // remove upgrade if carried
         if (BG_InventoryContainsUpgrade(i, self->client->ps.stats) &&
-            BG_Upgrade( (upgrade_t)i)->purchasable) {
+            BG_Upgrade((upgrade_t)i)->purchasable) {
 
             // shouldn't really need to test for this, but just to be safe
             if (i == UP_LIGHTARMOUR || i == UP_MEDIUMARMOUR || i == UP_BATTLESUIT) {
                 vec3_t newOrigin;
 
-                if (!G_RoomForClassChange(self, PCL_HUMAN_NAKED, newOrigin) ) {
+                if (!G_RoomForClassChange(self, PCL_HUMAN_NAKED, newOrigin)) {
                     continue;
                 }
                 VectorCopy(newOrigin, self->client->ps.origin);
@@ -1773,7 +1773,7 @@ void BotSellAll(gentity_t* self) {
             BG_RemoveUpgradeFromInventory(i, self->client->ps.stats);
 
             // add to funds
-            G_AddCreditToClient(self->client, (short)BG_Upgrade( (upgrade_t)i)->price, false);
+            G_AddCreditToClient(self->client, (short)BG_Upgrade((upgrade_t)i)->price, false);
         }
     }
     // update ClientInfo
@@ -1795,12 +1795,12 @@ void BotSetSkillLevel(gentity_t* self, int skill) {
 void BotResetEnemyQueue(enemyQueue_t* queue) {
     queue->front = 0;
     queue->back = 0;
-    memset(queue->enemys, 0, sizeof(queue->enemys) );
+    memset(queue->enemys, 0, sizeof(queue->enemys));
 }
 
 void BotPushEnemy(enemyQueue_t* queue, gentity_t* enemy) {
     if (enemy) {
-        if ( (queue->back + 1) % MAX_ENEMY_QUEUE != queue->front) {
+        if ((queue->back + 1) % MAX_ENEMY_QUEUE != queue->front) {
             queue->enemys[queue->back].ent = enemy;
             queue->enemys[queue->back].timeFound = level.time;
             queue->back = (queue->back + 1) % MAX_ENEMY_QUEUE;
@@ -1829,13 +1829,13 @@ bool BotEnemyIsValid(gentity_t* self, gentity_t* enemy) {
     }
 
     // Only living targets are valid.
-    if (!G_Alive(enemy) ) {
+    if (!G_Alive(enemy)) {
         return false;
     }
 
     // ignore buildings if we cant attack them
     if (enemy->s.eType == ET_BUILDABLE && (!g_bot_attackStruct.integer ||
-                                           self->client->ps.stats[STAT_CLASS] == PCL_ALIEN_LEVEL0) ) {
+                                           self->client->ps.stats[STAT_CLASS] == PCL_ALIEN_LEVEL0)) {
         return false;
     }
 
@@ -1869,7 +1869,7 @@ void BotSearchForEnemy(gentity_t* self) {
 
     do {
         enemy = BotPopEnemy(queue);
-    } while (enemy && !BotEnemyIsValid(self, enemy) );
+    } while (enemy && !BotEnemyIsValid(self, enemy));
 
     self->botMind->bestEnemy.ent = enemy;
 

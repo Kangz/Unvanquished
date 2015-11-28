@@ -46,7 +46,7 @@ class RocketColorInput : public Rocket::Core::Element, public Rocket::Core::Even
             Rocket::Core::XMLAttributes attribs;
             attribs.Set("type", "text");
             input = Rocket::Core::Factory::InstanceElement(this, "input", "input", attribs);
-            color_value = Rocket::Core::Factory::InstanceElement(this, "*", "div", Rocket::Core::XMLAttributes() );
+            color_value = Rocket::Core::Factory::InstanceElement(this, "*", "div", Rocket::Core::XMLAttributes());
         }
 
         virtual void OnChildAdd(Element* child) {
@@ -66,7 +66,7 @@ class RocketColorInput : public Rocket::Core::Element, public Rocket::Core::Even
 
             // Pass all attributes down to the input element
             for (Rocket::Core::AttributeNameList::const_iterator it = changed_attributes.begin(); it != changed_attributes.end(); ++it) {
-                input->SetAttribute(*it, GetAttribute<Rocket::Core::String>(*it, "") );
+                input->SetAttribute(*it, GetAttribute<Rocket::Core::String>(*it, ""));
             }
         }
 
@@ -92,7 +92,7 @@ class RocketColorInput : public Rocket::Core::Element, public Rocket::Core::Even
                         input->Focus();
                         break;
                     }
-                } while ( (elem = elem->GetParentNode() ) );
+                } while ((elem = elem->GetParentNode()));
             }
         }
 
@@ -100,13 +100,13 @@ class RocketColorInput : public Rocket::Core::Element, public Rocket::Core::Even
         void UpdateValue() {
             Rocket::Core::String string = "^7";
 
-            while (color_value->HasChildNodes() ) {
-                color_value->RemoveChild(color_value->GetFirstChild() );
+            while (color_value->HasChildNodes()) {
+                color_value->RemoveChild(color_value->GetFirstChild());
             }
 
             string += dynamic_cast< Rocket::Controls::ElementFormControlInput* >(input)->GetValue();
 
-            Rocket::Core::Factory::InstanceElementText(color_value, Rocket_QuakeToRML(string.CString(), RP_QUAKE) );
+            Rocket::Core::Factory::InstanceElementText(color_value, Rocket_QuakeToRML(string.CString(), RP_QUAKE));
         }
 
         Rocket::Core::Element* input;

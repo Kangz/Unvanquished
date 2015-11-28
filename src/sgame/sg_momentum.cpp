@@ -111,8 +111,8 @@ void NotifyLegacyStageSensors(team_t team, float amount) {
     for (stage = 1; stage < 3; stage++) {
         momentum = stage * (float)MOMENTUM_PER_LEGACY_STAGE;
 
-        if ( (level.team[team].momentum - amount < momentum) ==
-             (level.team[team].momentum          > momentum) ) {
+        if ((level.team[team].momentum - amount < momentum) ==
+            (level.team[team].momentum          > momentum)) {
             if (amount > 0.0f) {
                 G_notify_sensor_stage(team, stage - 1, stage);
             } else if (amount < 0.0f) {
@@ -127,7 +127,7 @@ static INLINE float MomentumTimeMod() {
         return 1.0f;
     } else {
         // ln(2) ~= 0.6931472
-        return exp(0.6931472f * ( (level.matchTime / 60000.0f) / g_momentumRewardDoubleTime.value) );
+        return exp(0.6931472f * ((level.matchTime / 60000.0f) / g_momentumRewardDoubleTime.value));
     }
 }
 
@@ -152,39 +152,39 @@ static float MomentumMod(momentum_t type) {
     // type mod
     switch (type) {
     case CONF_KILLING:
-        baseMod        = g_momentumBaseMod.value;
-        typeMod        = g_momentumKillMod.value;
-        timeMod        = MomentumTimeMod();
+        baseMod = g_momentumBaseMod.value;
+        typeMod = g_momentumKillMod.value;
+        timeMod = MomentumTimeMod();
         playerCountMod = MomentumPlayerCountMod();
         break;
 
     case CONF_BUILDING:
-        baseMod        = g_momentumBaseMod.value;
-        typeMod        = g_momentumBuildMod.value;
-        timeMod        = MomentumTimeMod();
+        baseMod = g_momentumBaseMod.value;
+        typeMod = g_momentumBuildMod.value;
+        timeMod = MomentumTimeMod();
         playerCountMod = 1.0f;
         break;
 
     case CONF_DECONSTRUCTING:
         // always used on top of build mod, so neutral baseMod/timeMod/playerCountMod
-        baseMod        = 1.0f;
-        typeMod        = g_momentumDeconMod.value;
-        timeMod        = 1.0f;
+        baseMod = 1.0f;
+        typeMod = g_momentumDeconMod.value;
+        timeMod = 1.0f;
         playerCountMod = 1.0f;
         break;
 
     case CONF_DESTROYING:
-        baseMod        = g_momentumBaseMod.value;
-        typeMod        = g_momentumDestroyMod.value;
-        timeMod        = MomentumTimeMod();
+        baseMod = g_momentumBaseMod.value;
+        typeMod = g_momentumDestroyMod.value;
+        timeMod = MomentumTimeMod();
         playerCountMod = 1.0f;
         break;
 
     case CONF_GENERIC:
     default:
-        baseMod        = 1.0f;
-        typeMod        = 1.0f;
-        timeMod        = 1.0f;
+        baseMod = 1.0f;
+        typeMod = 1.0f;
+        timeMod = 1.0f;
         playerCountMod = 1.0f;
     }
 
@@ -242,7 +242,7 @@ static float AddMomentum(momentum_t type, team_t team, float amount,
         } else {
             event = G_NewTempEntity(vec3_origin, EV_MOMENTUM);
             event->r.svFlags = (SVF_BROADCAST | SVF_CLIENTMASK);
-            G_TeamToClientmask(team, &(event->r.loMask), &(event->r.hiMask) );
+            G_TeamToClientmask(team, &(event->r.loMask), &(event->r.hiMask));
         }
         if (event) {
             // TODO: Use more bits for momentum value
@@ -265,7 +265,7 @@ static float AddMomentum(momentum_t type, team_t team, float amount,
 
         Com_Printf("Momentum: %.2f to %s (%s by %s for %s)\n",
                    amount, BG_TeamNamePlural(team), amount < 0.0f ? "lost" : "earned",
-                   clientName, MomentumTypeToReason(type) );
+                   clientName, MomentumTypeToReason(type));
     }
 
     return amount;
@@ -296,8 +296,8 @@ void G_DecreaseMomentum() {
     // only calculate decreaseFactor if the server configuration changed
     if (lastMomentumHalfLife != g_momentumHalfLife.value) {
         // ln(2) ~= 0.6931472
-        decreaseFactor = exp( (-0.6931472f / ( (60000.0f / DECREASE_MOMENTUM_PERIOD) *
-                                               g_momentumHalfLife.value) ) );
+        decreaseFactor = exp((-0.6931472f / ((60000.0f / DECREASE_MOMENTUM_PERIOD) *
+                                             g_momentumHalfLife.value)));
 
         lastMomentumHalfLife = g_momentumHalfLife.value;
     }
@@ -309,7 +309,7 @@ void G_DecreaseMomentum() {
         level.team[team].momentum += amount;
 
         // notify legacy stage sensors
-        NotifyLegacyStageSensors( (team_t) team, amount);
+        NotifyLegacyStageSensors((team_t) team, amount);
     }
 
     MomentumChanged();
@@ -365,8 +365,8 @@ float G_AddMomentumForBuilding(gentity_t* buildable) {
         return 0.0f;
     }
 
-    value   = BG_Buildable(buildable->s.modelindex)->buildPoints;
-    team    = BG_Buildable(buildable->s.modelindex)->team;
+    value = BG_Buildable(buildable->s.modelindex)->buildPoints;
+    team = BG_Buildable(buildable->s.modelindex)->team;
 
     if (buildable->builtBy->slot != -1) {
         builder = &g_entities[buildable->builtBy->slot];
@@ -393,7 +393,7 @@ float G_RemoveMomentumForDecon(gentity_t* buildable, gentity_t* deconner) {
     if (!buildable || buildable->s.eType != ET_BUILDABLE) {
         return 0.0f;
     }
-    team           = BG_Buildable(buildable->s.modelindex)->team;
+    team = BG_Buildable(buildable->s.modelindex)->team;
 
     if (buildable->momentumEarned) {
         value = buildable->momentumEarned;
@@ -450,7 +450,7 @@ float G_AddMomentumForKillingStep(gentity_t* victim, gentity_t* attacker, float 
     }
 
     value = BG_GetValueOfPlayer(&victim->client->ps) * MOMENTUM_PER_CREDIT * share;
-    team  = (team_t) attacker->client->pers.team;
+    team = (team_t) attacker->client->pers.team;
 
     return AddMomentum(CONF_KILLING, team, value, attacker, true);
 }

@@ -37,7 +37,7 @@ void GL_Bind(image_t* image) {
     } else {
         if (r_logFile->integer) {
             // don't just call LogComment, or we will get a call to va() every frame!
-            GLimp_LogComment(va("--- GL_Bind( %s ) ---\n", image->name) );
+            GLimp_LogComment(va("--- GL_Bind( %s ) ---\n", image->name));
         }
     }
 
@@ -122,7 +122,7 @@ void GL_SelectTexture(int unit) {
         glActiveTexture(GL_TEXTURE0 + unit);
 
         if (r_logFile->integer) {
-            GLimp_LogComment(va("glActiveTexture( GL_TEXTURE%i )\n", unit) );
+            GLimp_LogComment(va("glActiveTexture( GL_TEXTURE%i )\n", unit));
         }
     } else {
         ri.Error(ERR_DROP, "GL_SelectTexture: unit = %i", unit);
@@ -234,7 +234,7 @@ void GL_FrontFace(GLenum mode) {
 }
 
 void GL_LoadModelViewMatrix(const matrix_t m) {
-    if (MatrixCompare(glState.modelViewMatrix[glState.stackIndex], m) ) {
+    if (MatrixCompare(glState.modelViewMatrix[glState.stackIndex], m)) {
         return;
     }
 
@@ -244,7 +244,7 @@ void GL_LoadModelViewMatrix(const matrix_t m) {
 }
 
 void GL_LoadProjectionMatrix(const matrix_t m) {
-    if (MatrixCompare(glState.projectionMatrix[glState.stackIndex], m) ) {
+    if (MatrixCompare(glState.projectionMatrix[glState.stackIndex], m)) {
         return;
     }
 
@@ -369,10 +369,10 @@ void GL_State(uint32_t stateBits) {
     }
 
     // check blend bits
-    if (diff & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) ) {
+    if (diff & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) {
         GLenum srcFactor, dstFactor;
 
-        if (stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) ) {
+        if (stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) {
             switch (stateBits & GLS_SRCBLEND_BITS) {
             case GLS_SRCBLEND_ZERO:
                 srcFactor = GL_ZERO;
@@ -462,10 +462,10 @@ void GL_State(uint32_t stateBits) {
 
     // check colormask
     if (diff & GLS_COLORMASK_BITS) {
-        GL_ColorMask( (stateBits & GLS_REDMASK_FALSE) ? GL_FALSE : GL_TRUE,
-                      (stateBits & GLS_GREENMASK_FALSE) ? GL_FALSE : GL_TRUE,
-                      (stateBits & GLS_BLUEMASK_FALSE) ? GL_FALSE : GL_TRUE,
-                      (stateBits & GLS_ALPHAMASK_FALSE) ? GL_FALSE : GL_TRUE);
+        GL_ColorMask((stateBits & GLS_REDMASK_FALSE) ? GL_FALSE : GL_TRUE,
+                     (stateBits & GLS_GREENMASK_FALSE) ? GL_FALSE : GL_TRUE,
+                     (stateBits & GLS_BLUEMASK_FALSE) ? GL_FALSE : GL_TRUE,
+                     (stateBits & GLS_ALPHAMASK_FALSE) ? GL_FALSE : GL_TRUE);
     }
 
     // check depthmask
@@ -531,8 +531,8 @@ void GL_VertexAttribsState(uint32_t stateBits) {
     for (i = 0; i < ATTR_INDEX_MAX; i++) {
         uint32_t bit = BIT(i);
 
-        if ( (diff & bit) ) {
-            if ( (stateBits & bit) ) {
+        if ((diff & bit)) {
+            if ((stateBits & bit)) {
                 if (r_logFile->integer) {
                     static char buf[MAX_STRING_CHARS];
                     Q_snprintf(buf, sizeof(buf), "glEnableVertexAttribArray( %s )\n", attributeNames[i]);
@@ -566,7 +566,7 @@ void GL_VertexAttribPointers(uint32_t attribBits) {
 
     if (r_logFile->integer) {
         // don't just call LogComment, or we will get a call to va() every frame!
-        GLimp_LogComment(va("--- GL_VertexAttribPointers( %s ) ---\n", glState.currentVBO->name) );
+        GLimp_LogComment(va("--- GL_VertexAttribPointers( %s ) ---\n", glState.currentVBO->name));
     }
 
     if (glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning) {
@@ -582,10 +582,10 @@ void GL_VertexAttribPointers(uint32_t attribBits) {
             base = tess.vertexBase * sizeof(shaderVertex_t);
         }
 
-        if ( (attribBits & bit) != 0 &&
-             (!(glState.vertexAttribPointersSet & bit) ||
-              glState.vertexAttribsInterpolation >= 0 ||
-              glState.currentVBO == tess.vbo) ) {
+        if ((attribBits & bit) != 0 &&
+            (!(glState.vertexAttribPointersSet & bit) ||
+             glState.vertexAttribsInterpolation >= 0 ||
+             glState.currentVBO == tess.vbo)) {
             const vboAttributeLayout_t* layout = &glState.currentVBO->attribs[i];
 
             if (r_logFile->integer) {
@@ -595,13 +595,13 @@ void GL_VertexAttribPointers(uint32_t attribBits) {
                 GLimp_LogComment(buf);
             }
 
-            if ( (ATTR_INTERP_BITS & bit) && glState.vertexAttribsInterpolation > 0) {
+            if ((ATTR_INTERP_BITS & bit) && glState.vertexAttribsInterpolation > 0) {
                 frame = glState.vertexAttribsNewFrame;
             } else {
                 frame = glState.vertexAttribsOldFrame;
             }
 
-            glVertexAttribPointer(i, layout->numComponents, layout->componentType, layout->normalize, layout->stride, BUFFER_OFFSET(layout->ofs + (frame * layout->frameOffset + base) ) );
+            glVertexAttribPointer(i, layout->numComponents, layout->componentType, layout->normalize, layout->stride, BUFFER_OFFSET(layout->ofs + (frame * layout->frameOffset + base)));
             glState.vertexAttribPointersSet |= bit;
         }
     }
@@ -632,7 +632,7 @@ static void SetViewportAndScissor() {
     float mat[16], scale;
     vec4_t q, c;
 
-    Com_Memcpy(mat, backEnd.viewParms.projectionMatrix, sizeof(mat) );
+    Com_Memcpy(mat, backEnd.viewParms.projectionMatrix, sizeof(mat));
     if (backEnd.viewParms.isPortal) {
         c[0] = -DotProduct(backEnd.viewParms.portalPlane.normal, backEnd.viewParms.orientation.axis[1]);
         c[1] = DotProduct(backEnd.viewParms.portalPlane.normal, backEnd.viewParms.orientation.axis[2]);
@@ -645,8 +645,8 @@ static void SetViewportAndScissor() {
         q[3] = (1.0f + mat[10]) / mat[14];
 
         scale = 2.0f / (DotProduct(c, q) + c[3] * q[3]);
-        mat[2]  = c[0] * scale;
-        mat[6]  = c[1] * scale;
+        mat[2] = c[0] * scale;
+        mat[6] = c[1] * scale;
         mat[10] = c[2] * scale + 1.0f;
         mat[14] = c[3] * scale;
     }
@@ -732,15 +732,15 @@ static void RB_RenderDrawSurfaces(bool opaque, renderDrawSurfaces_e drawSurfFilt
         fogNum = drawSurf->fogNum();
 
         if (entity == &tr.worldEntity) {
-            if (!(drawSurfFilter & DRAWSURFACES_WORLD) ) {
+            if (!(drawSurfFilter & DRAWSURFACES_WORLD)) {
                 continue;
             }
-        } else if (!(entity->e.renderfx & RF_DEPTHHACK) ) {
-            if (!(drawSurfFilter & DRAWSURFACES_FAR_ENTITIES) ) {
+        } else if (!(entity->e.renderfx & RF_DEPTHHACK)) {
+            if (!(drawSurfFilter & DRAWSURFACES_FAR_ENTITIES)) {
                 continue;
             }
         } else {
-            if (!(drawSurfFilter & DRAWSURFACES_NEAR_ENTITIES) ) {
+            if (!(drawSurfFilter & DRAWSURFACES_NEAR_ENTITIES)) {
                 continue;
             }
         }
@@ -766,9 +766,9 @@ static void RB_RenderDrawSurfaces(bool opaque, renderDrawSurfaces_e drawSurfFilt
         // change the tess parameters if needed
         // an "entityMergable" shader is a shader that can have surfaces from separate
         // entities merged into a single batch, like smoke and blood puff sprites
-        if (shader != oldShader || lightmapNum != oldLightmapNum || fogNum != oldFogNum || (entity != oldEntity && !shader->entityMergable) ) {
+        if (shader != oldShader || lightmapNum != oldLightmapNum || fogNum != oldFogNum || (entity != oldEntity && !shader->entityMergable)) {
             if (oldShader != nullptr) {
-                if (oldShader->autoSpriteMode && !(tess.attribsSet & ATTR_ORIENTATION) ) {
+                if (oldShader->autoSpriteMode && !(tess.attribsSet & ATTR_ORIENTATION)) {
                     Tess_AutospriteDeform(oldShader->autoSpriteMode,
                                           0, tess.numVertexes,
                                           0, tess.numIndexes);
@@ -824,7 +824,7 @@ static void RB_RenderDrawSurfaces(bool opaque, renderDrawSurfaces_e drawSurfFilt
 
     // draw the contents of the last shader batch
     if (oldShader != nullptr) {
-        if (oldShader->autoSpriteMode && !(tess.attribsSet & ATTR_ORIENTATION) ) {
+        if (oldShader->autoSpriteMode && !(tess.attribsSet & ATTR_ORIENTATION)) {
             Tess_AutospriteDeform(oldShader->autoSpriteMode,
                                   0, tess.numVertexes,
                                   0, tess.numIndexes);
@@ -868,12 +868,12 @@ static int MergeInteractionBounds(const matrix_t lightViewProjectionMatrix, inte
         surface = ia->surface;
 
         if (shadowCasters) {
-            if (!(ia->type & IA_SHADOW) ) {
+            if (!(ia->type & IA_SHADOW)) {
                 goto skipInteraction;
             }
         } else {
             // we only merge shadow receivers
-            if (!(ia->type & IA_LIGHT) ) {
+            if (!(ia->type & IA_LIGHT)) {
                 goto skipInteraction;
             }
         }
@@ -910,7 +910,7 @@ static int MergeInteractionBounds(const matrix_t lightViewProjectionMatrix, inte
             }
         }
 
-        if (shadowCasters && (ia->type & IA_SHADOW) ) {
+        if (shadowCasters && (ia->type & IA_SHADOW)) {
             numCasters++;
         }
 
@@ -996,7 +996,7 @@ static void RB_SetupLightAttenuationForEntity(trRefLight_t* light, const trRefEn
 
     case RL_PROJ: {
         MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.0); // bias
-        MatrixMultiplyScale(light->attenuationMatrix, 0.5f, 0.5f, 1.0f / std::min(light->falloffLength, 1.0f) ); // scale
+        MatrixMultiplyScale(light->attenuationMatrix, 0.5f, 0.5f, 1.0f / std::min(light->falloffLength, 1.0f)); // scale
         MatrixMultiply2(light->attenuationMatrix, light->projectionMatrix);
         MatrixMultiply2(light->attenuationMatrix, modelToLight);
 
@@ -1049,7 +1049,7 @@ static void RB_RenderInteractions() {
     iaFirst = nullptr;
 
     // render interactions
-    while ( (iaFirst = IterateLights(iaFirst) ) ) {
+    while ((iaFirst = IterateLights(iaFirst))) {
         backEnd.currentLight = light = iaFirst->light;
 
         // set light scissor to reduce fillrate
@@ -1066,7 +1066,7 @@ static void RB_RenderInteractions() {
                 continue;
             }
 
-            if (!(ia->type & IA_LIGHT) ) {
+            if (!(ia->type & IA_LIGHT)) {
                 // skip this interaction because the interaction is meant for shadowing only
                 continue;
             }
@@ -1177,7 +1177,7 @@ static void RB_SetupLightForShadowing(trRefLight_t* light, int index,
         if (r_logFile->integer) {
             // don't just call LogComment, or we will get
             // a call to va() every frame!
-            GLimp_LogComment(va("----- Rendering shadowCube side: %i -----\n", cubeSide) );
+            GLimp_LogComment(va("----- Rendering shadowCube side: %i -----\n", cubeSide));
         }
 
         R_BindFBO(tr.shadowMapFBO[light->shadowLOD]);
@@ -1398,17 +1398,17 @@ static void RB_SetupLightForShadowing(trRefLight_t* light, int index,
 
                 VectorInverse(viewDirection);
 
-                GLimp_LogComment(va("split frustum %i: near = %5.3f, far = %5.3f\n", splitFrustumIndex, zNear, zFar) );
-                GLimp_LogComment(va("pyramid nearCorners\n") );
+                GLimp_LogComment(va("split frustum %i: near = %5.3f, far = %5.3f\n", splitFrustumIndex, zNear, zFar));
+                GLimp_LogComment(va("pyramid nearCorners\n"));
 
                 for (j = 0; j < 4; j++) {
-                    GLimp_LogComment(va("(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2]) );
+                    GLimp_LogComment(va("(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2]));
                 }
 
-                GLimp_LogComment(va("pyramid farCorners\n") );
+                GLimp_LogComment(va("pyramid farCorners\n"));
 
                 for (j = 4; j < 8; j++) {
-                    GLimp_LogComment(va("(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2]) );
+                    GLimp_LogComment(va("(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2]));
                 }
             }
 
@@ -1459,19 +1459,19 @@ static void RB_SetupLightForShadowing(trRefLight_t* light, int index,
             }
 
             if (r_logFile->integer) {
-                GLimp_LogComment(va("shadow casters = %i\n", numCasters) );
+                GLimp_LogComment(va("shadow casters = %i\n", numCasters));
 
                 GLimp_LogComment(va("split frustum light space clip bounds (%5.3f, %5.3f, %5.3f) (%5.3f, %5.3f, %5.3f)\n",
                                     splitFrustumClipBounds[0][0], splitFrustumClipBounds[0][1], splitFrustumClipBounds[0][2],
-                                    splitFrustumClipBounds[1][0], splitFrustumClipBounds[1][1], splitFrustumClipBounds[1][2]) );
+                                    splitFrustumClipBounds[1][0], splitFrustumClipBounds[1][1], splitFrustumClipBounds[1][2]));
 
                 GLimp_LogComment(va("shadow caster light space clip bounds (%5.3f, %5.3f, %5.3f) (%5.3f, %5.3f, %5.3f)\n",
                                     casterBounds[0][0], casterBounds[0][1], casterBounds[0][2],
-                                    casterBounds[1][0], casterBounds[1][1], casterBounds[1][2]) );
+                                    casterBounds[1][0], casterBounds[1][1], casterBounds[1][2]));
 
                 GLimp_LogComment(va("light receiver light space clip bounds (%5.3f, %5.3f, %5.3f) (%5.3f, %5.3f, %5.3f)\n",
                                     receiverBounds[0][0], receiverBounds[0][1], receiverBounds[0][2],
-                                    receiverBounds[1][0], receiverBounds[1][1], receiverBounds[1][2]) );
+                                    receiverBounds[1][0], receiverBounds[1][1], receiverBounds[1][2]));
             }
 
             // scene-dependent bounding volume
@@ -1539,7 +1539,7 @@ static void RB_SetupLightForShadowing(trRefLight_t* light, int index,
     if (r_logFile->integer) {
         // don't just call LogComment, or we will get
         // a call to va() every frame!
-        GLimp_LogComment(va("----- First Shadow Interaction: %i -----\n", (int)(light->firstInteraction - backEnd.viewParms.interactions) ) );
+        GLimp_LogComment(va("----- First Shadow Interaction: %i -----\n", (int)(light->firstInteraction - backEnd.viewParms.interactions)));
     }
 }
 
@@ -1549,7 +1549,7 @@ static void RB_SetupLightForLighting(trRefLight_t* light) {
     if (r_logFile->integer) {
         // don't just call LogComment, or we will get
         // a call to va() every frame!
-        GLimp_LogComment(va("----- First Light Interaction: %i -----\n", (int)(light->firstInteraction - backEnd.viewParms.interactions) ) );
+        GLimp_LogComment(va("----- First Light Interaction: %i -----\n", (int)(light->firstInteraction - backEnd.viewParms.interactions)));
     }
 
     R_BindNullFBO();
@@ -1845,7 +1845,7 @@ static void RB_RenderInteractionsShadowMapped() {
     // render each light
     iaFirst = nullptr;
 
-    while ( (iaFirst = IterateLights(iaFirst) ) ) {
+    while ((iaFirst = IterateLights(iaFirst))) {
         backEnd.currentLight = light = iaFirst->light;
 
         // begin shadowing
@@ -1875,7 +1875,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 if (r_logFile->integer) {
                     // don't just call LogComment, or we will get
                     // a call to va() every frame!
-                    GLimp_LogComment(va("----- Skipping shadowCube side: %i -----\n", i) );
+                    GLimp_LogComment(va("----- Skipping shadowCube side: %i -----\n", i));
                 }
                 continue;
             }
@@ -1890,7 +1890,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 shader = tr.sortedShaders[ia->shaderNum];
                 alphaTest = shader->alphaTest;
 
-                if (entity->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK) ) {
+                if (entity->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK)) {
                     continue;
                 }
 
@@ -1906,15 +1906,15 @@ static void RB_RenderInteractionsShadowMapped() {
                     continue;
                 }
 
-                if ( (ia->type & IA_SHADOWCLIP) ) {
+                if ((ia->type & IA_SHADOWCLIP)) {
                     shadowClipFound = true;
                 }
 
-                if (!(ia->type & IA_SHADOW) ) {
+                if (!(ia->type & IA_SHADOW)) {
                     continue;
                 }
 
-                if (light->l.rlType == RL_OMNI && !(ia->cubeSideBits & (1 << i) ) ) {
+                if (light->l.rlType == RL_OMNI && !(ia->cubeSideBits & (1 << i))) {
                     continue;
                 }
 
@@ -1922,11 +1922,11 @@ static void RB_RenderInteractionsShadowMapped() {
                 case RL_OMNI:
                 case RL_PROJ:
                 case RL_DIRECTIONAL: {
-                    if (entity == oldEntity && (alphaTest ? shader == oldShader : alphaTest == oldAlphaTest) ) {
+                    if (entity == oldEntity && (alphaTest ? shader == oldShader : alphaTest == oldAlphaTest)) {
                         if (r_logFile->integer) {
                             // don't just call LogComment, or we will get
                             // a call to va() every frame!
-                            GLimp_LogComment(va("----- Batching Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                            GLimp_LogComment(va("----- Batching Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                         }
 
                         // fast path, same as previous
@@ -1939,7 +1939,7 @@ static void RB_RenderInteractionsShadowMapped() {
                         if (r_logFile->integer) {
                             // don't just call LogComment, or we will get
                             // a call to va() every frame!
-                            GLimp_LogComment(va("----- Beginning Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                            GLimp_LogComment(va("----- Beginning Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                         }
 
                         // we don't need tangent space calculations here
@@ -1967,7 +1967,7 @@ static void RB_RenderInteractionsShadowMapped() {
                         }
                     } else {
                         // set up the transformation matrix
-                        Com_Memset(&backEnd.orientation, 0, sizeof(backEnd.orientation) );
+                        Com_Memset(&backEnd.orientation, 0, sizeof(backEnd.orientation));
 
                         backEnd.orientation.axis[0][0] = 1;
                         backEnd.orientation.axis[1][1] = 1;
@@ -2015,7 +2015,7 @@ static void RB_RenderInteractionsShadowMapped() {
             if (r_logFile->integer) {
                 // don't just call LogComment, or we will get
                 // a call to va() every frame!
-                GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions) ) );
+                GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions)));
             }
 
             Tess_End();
@@ -2030,7 +2030,7 @@ static void RB_RenderInteractionsShadowMapped() {
                     if (r_logFile->integer) {
                         // don't just call LogComment, or we will get
                         // a call to va() every frame!
-                        GLimp_LogComment(va("----- Skipping shadowCube side: %i -----\n", i) );
+                        GLimp_LogComment(va("----- Skipping shadowCube side: %i -----\n", i));
                     }
                     continue;
                 }
@@ -2044,7 +2044,7 @@ static void RB_RenderInteractionsShadowMapped() {
                     shader = tr.sortedShaders[ia->shaderNum];
                     alphaTest = shader->alphaTest;
 
-                    if (entity->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK) ) {
+                    if (entity->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK)) {
                         continue;
                     }
 
@@ -2060,11 +2060,11 @@ static void RB_RenderInteractionsShadowMapped() {
                         continue;
                     }
 
-                    if (!(ia->type & IA_SHADOWCLIP) ) {
+                    if (!(ia->type & IA_SHADOWCLIP)) {
                         continue;
                     }
 
-                    if (light->l.rlType == RL_OMNI && !(ia->cubeSideBits & (1 << i) ) ) {
+                    if (light->l.rlType == RL_OMNI && !(ia->cubeSideBits & (1 << i))) {
                         continue;
                     }
 
@@ -2072,11 +2072,11 @@ static void RB_RenderInteractionsShadowMapped() {
                     case RL_OMNI:
                     case RL_PROJ:
                     case RL_DIRECTIONAL: {
-                        if (entity == oldEntity && (alphaTest ? shader == oldShader : alphaTest == oldAlphaTest) ) {
+                        if (entity == oldEntity && (alphaTest ? shader == oldShader : alphaTest == oldAlphaTest)) {
                             if (r_logFile->integer) {
                                 // don't just call LogComment, or we will get
                                 // a call to va() every frame!
-                                GLimp_LogComment(va("----- Batching Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                                GLimp_LogComment(va("----- Batching Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                             }
 
                             // fast path, same as previous
@@ -2089,7 +2089,7 @@ static void RB_RenderInteractionsShadowMapped() {
                             if (r_logFile->integer) {
                                 // don't just call LogComment, or we will get
                                 // a call to va() every frame!
-                                GLimp_LogComment(va("----- Beginning Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                                GLimp_LogComment(va("----- Beginning Shadow Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                             }
 
                             // we don't need tangent space calculations here
@@ -2117,7 +2117,7 @@ static void RB_RenderInteractionsShadowMapped() {
                             }
                         } else {
                             // set up the transformation matrix
-                            Com_Memset(&backEnd.orientation, 0, sizeof(backEnd.orientation) );
+                            Com_Memset(&backEnd.orientation, 0, sizeof(backEnd.orientation));
 
                             backEnd.orientation.axis[0][0] = 1;
                             backEnd.orientation.axis[1][1] = 1;
@@ -2165,7 +2165,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 if (r_logFile->integer) {
                     // don't just call LogComment, or we will get
                     // a call to va() every frame!
-                    GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions) ) );
+                    GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions)));
                 }
 
                 Tess_End();
@@ -2200,7 +2200,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 continue;
             }
 
-            if (!(ia->type & IA_LIGHT) ) {
+            if (!(ia->type & IA_LIGHT)) {
                 continue;
             }
 
@@ -2208,7 +2208,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 if (r_logFile->integer) {
                     // don't just call LogComment, or we will get
                     // a call to va() every frame!
-                    GLimp_LogComment(va("----- Batching Light Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                    GLimp_LogComment(va("----- Batching Light Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                 }
 
                 // fast path, same as previous
@@ -2221,7 +2221,7 @@ static void RB_RenderInteractionsShadowMapped() {
                 if (r_logFile->integer) {
                     // don't just call LogComment, or we will get
                     // a call to va() every frame!
-                    GLimp_LogComment(va("----- Beginning Light Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions) ) );
+                    GLimp_LogComment(va("----- Beginning Light Interaction: %i -----\n", (int)(ia - backEnd.viewParms.interactions)));
                 }
 
                 // begin a new batch
@@ -2272,7 +2272,7 @@ static void RB_RenderInteractionsShadowMapped() {
         if (r_logFile->integer) {
             // don't just call LogComment, or we will get
             // a call to va() every frame!
-            GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions) ) );
+            GLimp_LogComment(va("----- Last Interaction: %i -----\n", (int)(iaLast - backEnd.viewParms.interactions)));
         }
 
         Tess_End();
@@ -2338,7 +2338,7 @@ void RB_RenderGlobalFog() {
         fog = &tr.world->fogs[tr.world->globalFog];
 
         if (r_logFile->integer) {
-            GLimp_LogComment(va("--- RB_RenderGlobalFog( fogNum = %i, originalBrushNumber = %i ) ---\n", tr.world->globalFog, fog->originalBrushNumber) );
+            GLimp_LogComment(va("--- RB_RenderGlobalFog( fogNum = %i, originalBrushNumber = %i ) ---\n", tr.world->globalFog, fog->originalBrushNumber));
         }
 
         GL_State(GLS_DEPTHTEST_DISABLE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
@@ -2402,7 +2402,7 @@ void RB_RenderBloom() {
 
     GLimp_LogComment("--- RB_RenderBloom ---\n");
 
-    if ( (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOBLOOM) ) || !r_bloom->integer || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
+    if ((backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOBLOOM)) || !r_bloom->integer || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
         return;
     }
 
@@ -2494,7 +2494,7 @@ void RB_RenderBloom() {
 
         gl_screenShader->BindProgram(0);
         GL_State(GLS_DEPTHTEST_DISABLE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
-        glVertexAttrib4fv(ATTR_INDEX_COLOR, Color::White.ToArray() );
+        glVertexAttrib4fv(ATTR_INDEX_COLOR, Color::White.ToArray());
 
         gl_screenShader->SetUniform_ModelViewProjectionMatrix(glState.modelViewProjectionMatrix[glState.stackIndex]);
 
@@ -2517,7 +2517,7 @@ void RB_RenderMotionBlur() {
 
     GLimp_LogComment("--- RB_RenderMotionBlur ---\n");
 
-    if ( (backEnd.refdef.rdflags & RDF_NOWORLDMODEL) || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
+    if ((backEnd.refdef.rdflags & RDF_NOWORLDMODEL) || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
         return;
     }
 
@@ -2565,7 +2565,7 @@ void RB_RenderSSAO() {
         return;
     }
 
-    if ( (backEnd.refdef.rdflags & RDF_NOWORLDMODEL) || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
+    if ((backEnd.refdef.rdflags & RDF_NOWORLDMODEL) || backEnd.viewParms.isPortal || !glConfig2.framebufferObjectAvailable) {
         return;
     }
 
@@ -2588,8 +2588,8 @@ void RB_RenderSSAO() {
 
     gl_ssaoShader->BindProgram(0);
 
-    zParams[0] = 2.0f * tanf(DEG2RAD(backEnd.refdef.fov_x * 0.5f) ) / glConfig.vidWidth;
-    zParams[1] = 2.0f * tanf(DEG2RAD(backEnd.refdef.fov_y * 0.5f) ) / glConfig.vidHeight;
+    zParams[0] = 2.0f * tanf(DEG2RAD(backEnd.refdef.fov_x * 0.5f)) / glConfig.vidWidth;
+    zParams[1] = 2.0f * tanf(DEG2RAD(backEnd.refdef.fov_y * 0.5f)) / glConfig.vidHeight;
     zParams[2] = backEnd.viewParms.zFar;
 
     gl_ssaoShader->SetUniform_zFar(zParams);
@@ -2612,8 +2612,8 @@ void RB_FXAA() {
 
     GLimp_LogComment("--- RB_FXAA ---\n");
 
-    if ( (backEnd.refdef.rdflags & RDF_NOWORLDMODEL) ||
-         backEnd.viewParms.isPortal) {
+    if ((backEnd.refdef.rdflags & RDF_NOWORLDMODEL) ||
+        backEnd.viewParms.isPortal) {
         return;
     }
 
@@ -2649,8 +2649,8 @@ void RB_CameraPostFX() {
 
     GLimp_LogComment("--- RB_CameraPostFX ---\n");
 
-    if ( (backEnd.refdef.rdflags & RDF_NOWORLDMODEL) ||
-         backEnd.viewParms.isPortal) {
+    if ((backEnd.refdef.rdflags & RDF_NOWORLDMODEL) ||
+        backEnd.viewParms.isPortal) {
         return;
     }
 
@@ -2723,7 +2723,7 @@ static void RB_RenderDebugUtils() {
 
         ia = nullptr;
         Color::Color lightColor;
-        while ( (ia = IterateLights(ia) ) ) {
+        while ((ia = IterateLights(ia))) {
             backEnd.currentLight = light = ia->light;
 
             if (r_showShadowLod->integer) {
@@ -2785,7 +2785,7 @@ static void RB_RenderDebugUtils() {
                 switch (light->l.rlType) {
                 case RL_OMNI:
                 case RL_DIRECTIONAL: {
-                    if (!VectorCompare(light->l.center, vec3_origin) ) {
+                    if (!VectorCompare(light->l.center, vec3_origin)) {
                         Tess_AddCube(light->l.center, minSize, maxSize, Color::Yellow);
                     }
                     break;
@@ -2797,11 +2797,11 @@ static void RB_RenderDebugUtils() {
                     Tess_AddCube(light->l.projRight, minSize, maxSize, Color::Green);
                     Tess_AddCube(light->l.projUp, minSize, maxSize, Color::Blue);
 
-                    if (!VectorCompare(light->l.projStart, vec3_origin) ) {
+                    if (!VectorCompare(light->l.projStart, vec3_origin)) {
                         Tess_AddCube(light->l.projStart, minSize, maxSize, Color::Yellow);
                     }
 
-                    if (!VectorCompare(light->l.projEnd, vec3_origin) ) {
+                    if (!VectorCompare(light->l.projEnd, vec3_origin)) {
                         Tess_AddCube(light->l.projEnd, minSize, maxSize, Color::Magenta);
                     }
                     break;
@@ -2873,7 +2873,7 @@ static void RB_RenderDebugUtils() {
                 cubeSides = 0;
 
                 for (i = 0; i < 6; i++) {
-                    if (ia->cubeSideBits & (1 << i) ) {
+                    if (ia->cubeSideBits & (1 << i)) {
                         cubeSides++;
                     }
                 }
@@ -2954,7 +2954,7 @@ static void RB_RenderDebugUtils() {
         ent = backEnd.refdef.entities;
 
         for (i = 0; i < backEnd.refdef.numEntities; i++, ent++) {
-            if ( (ent->e.renderfx & RF_THIRD_PERSON) && !backEnd.viewParms.isPortal) {
+            if ((ent->e.renderfx & RF_THIRD_PERSON) && !backEnd.viewParms.isPortal) {
                 continue;
             }
 
@@ -3022,7 +3022,7 @@ static void RB_RenderDebugUtils() {
         ent = backEnd.refdef.entities;
 
         for (i = 0; i < backEnd.refdef.numEntities; i++, ent++) {
-            if ( (ent->e.renderfx & RF_THIRD_PERSON) && !backEnd.viewParms.isPortal) {
+            if ((ent->e.renderfx & RF_THIRD_PERSON) && !backEnd.viewParms.isPortal) {
                 continue;
             }
 
@@ -3053,7 +3053,7 @@ static void RB_RenderDebugUtils() {
 
                         for (j = 0, bone = &skeleton.bones[0]; j < skeleton.numBones; j++, bone++) {
                             #if defined(REFBONE_NAMES)
-                            Q_strncpyz(bone->name, model->md5->bones[j].name, sizeof(bone->name) );
+                            Q_strncpyz(bone->name, model->md5->bones[j].name, sizeof(bone->name));
                             #endif
 
                             bone->parentIndex = model->md5->bones[j].parentIndex;
@@ -3091,7 +3091,7 @@ static void RB_RenderDebugUtils() {
 
                     VectorSubtract(offset, origin, diff);
 
-                    if ( (length = VectorNormalize(diff) ) ) {
+                    if ((length = VectorNormalize(diff))) {
                         PerpendicularVector(tmp, diff);
                         // VectorCopy(up, tmp);
 
@@ -3241,7 +3241,7 @@ static void RB_RenderDebugUtils() {
             Tess_InstantQuad(quadVerts);
 
             if (!ia->next) {
-                if (iaCount < (backEnd.viewParms.numInteractions - 1) ) {
+                if (iaCount < (backEnd.viewParms.numInteractions - 1)) {
                     // jump to next interaction and continue
                     ia++;
                     iaCount++;
@@ -3265,7 +3265,7 @@ static void RB_RenderDebugUtils() {
         static const vec3_t mins = { -8, -8, -8 };
         static const vec3_t maxs = { 8, 8, 8 };
 
-        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOCUBEMAP) ) {
+        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOCUBEMAP)) {
             return;
         }
 
@@ -3366,7 +3366,7 @@ static void RB_RenderDebugUtils() {
         vec_t length;
         vec4_t tetraVerts[4];
 
-        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOCUBEMAP) ) {
+        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL | RDF_NOCUBEMAP)) {
             return;
         }
 
@@ -3415,7 +3415,7 @@ static void RB_RenderDebugUtils() {
                     origin[1] += y * tr.world->lightGridSize[1];
                     origin[2] += z * tr.world->lightGridSize[2];
 
-                    if (VectorDistanceSquared(origin, backEnd.viewParms.orientation.origin) > Square(1024) ) {
+                    if (VectorDistanceSquared(origin, backEnd.viewParms.orientation.origin) > Square(1024)) {
                         continue;
                     }
 
@@ -3458,7 +3458,7 @@ static void RB_RenderDebugUtils() {
     }
 
     if (r_showBspNodes->integer) {
-        if ( (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL) ) || !tr.world) {
+        if ((backEnd.refdef.rdflags & (RDF_NOWORLDMODEL)) || !tr.world) {
             return;
         }
 
@@ -3719,7 +3719,7 @@ static void RB_RenderDebugUtils() {
         static const vec3_t mins = { -1, -1, -1 };
         static const vec3_t maxs = { 1, 1, 1 };
 
-        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL) ) {
+        if (backEnd.refdef.rdflags & (RDF_NOWORLDMODEL)) {
             return;
         }
 
@@ -3751,7 +3751,7 @@ static void RB_RenderDebugUtils() {
         Tess_Begin(Tess_StageIteratorDebug, nullptr, nullptr, nullptr, true, false, -1, 0);
 
         for (i = 0, dp = backEnd.refdef.decalProjectors; i < backEnd.refdef.numDecalProjectors; i++, dp++) {
-            if (VectorDistanceSquared(dp->center, backEnd.viewParms.orientation.origin) > Square(1024) ) {
+            if (VectorDistanceSquared(dp->center, backEnd.viewParms.orientation.origin) > Square(1024)) {
                 continue;
             }
 
@@ -3882,7 +3882,7 @@ void DebugDrawEnd() {
     GL_VertexAttribsState(ATTR_POSITION | ATTR_TEXCOORD | ATTR_COLOR);
 
     if (glState.currentVBO && glState.currentIBO) {
-        glDrawElements(drawMode, tess.numIndexes, GL_INDEX_TYPE, BUFFER_OFFSET(0) );
+        glDrawElements(drawMode, tess.numIndexes, GL_INDEX_TYPE, BUFFER_OFFSET(0));
 
         backEnd.pc.c_drawElements++;
 
@@ -3912,7 +3912,7 @@ static void RB_RenderView() {
         // don't just call LogComment, or we will get a call to va() every frame!
         GLimp_LogComment(va
                              ("--- RB_RenderView( %i surfaces, %i interactions ) ---\n", backEnd.viewParms.numDrawSurfs,
-                             backEnd.viewParms.numInteractions) );
+                             backEnd.viewParms.numInteractions));
     }
 
     GL_CheckErrors();
@@ -3950,7 +3950,7 @@ static void RB_RenderView() {
     glClear(clearBits);
     backEnd.depthRenderImageValid = false;
 
-    if ( (backEnd.refdef.rdflags & RDF_HYPERSPACE) ) {
+    if ((backEnd.refdef.rdflags & RDF_HYPERSPACE)) {
         RB_Hyperspace();
         return;
     } else {
@@ -4092,7 +4092,7 @@ void RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* d
     for (j = 0; (1 << j) < rows; j++) {
     }
 
-    if ( (1 << i) != cols || (1 << j) != rows) {
+    if ((1 << i) != cols || (1 << j) != rows) {
         ri.Error(ERR_DROP, "Draw_StretchRaw: size not a power of 2: %i by %i", cols, rows);
     }
 
@@ -4158,22 +4158,22 @@ void RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* d
     tess.verts[tess.numVertexes].xyz[0] = x + w;
     tess.verts[tess.numVertexes].xyz[1] = y;
     tess.verts[tess.numVertexes].xyz[2] = 0.0f;
-    tess.verts[tess.numVertexes].texCoords[0] = floatToHalf( (cols - 0.5f) / cols);
+    tess.verts[tess.numVertexes].texCoords[0] = floatToHalf((cols - 0.5f) / cols);
     tess.verts[tess.numVertexes].texCoords[1] = floatToHalf(0.5f / rows);
     tess.numVertexes++;
 
     tess.verts[tess.numVertexes].xyz[0] = x + w;
     tess.verts[tess.numVertexes].xyz[1] = y + h;
     tess.verts[tess.numVertexes].xyz[2] = 0.0f;
-    tess.verts[tess.numVertexes].texCoords[0] = floatToHalf( (cols - 0.5f) / cols);
-    tess.verts[tess.numVertexes].texCoords[1] = floatToHalf( (rows - 0.5f) / rows);
+    tess.verts[tess.numVertexes].texCoords[0] = floatToHalf((cols - 0.5f) / cols);
+    tess.verts[tess.numVertexes].texCoords[1] = floatToHalf((rows - 0.5f) / rows);
     tess.numVertexes++;
 
     tess.verts[tess.numVertexes].xyz[0] = x;
     tess.verts[tess.numVertexes].xyz[1] = y + h;
     tess.verts[tess.numVertexes].xyz[2] = 0.0f;
     tess.verts[tess.numVertexes].texCoords[0] = floatToHalf(0.5f / cols);
-    tess.verts[tess.numVertexes].texCoords[1] = floatToHalf( (rows - 0.5f) / rows);
+    tess.verts[tess.numVertexes].texCoords[1] = floatToHalf((rows - 0.5f) / rows);
     tess.numVertexes++;
 
     tess.indexes[tess.numIndexes++] = 0;
@@ -4212,7 +4212,7 @@ void RE_UploadCinematic(int cols, int rows, const byte* data, int client, bool d
 
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, Color::Black.ToArray() );
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, Color::Black.ToArray());
     } else {
         if (dirty) {
             // otherwise, just subimage upload it so that drivers can tell we are going to be changing
@@ -4284,7 +4284,7 @@ const void* RB_SetColorGrading(const void* data) {
         for (i = 0; i < 16; i++) {
             glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, i + cmd->slot * REF_COLORGRADEMAP_SIZE,
                             REF_COLORGRADEMAP_SIZE, REF_COLORGRADEMAP_SIZE, 1,
-                            GL_RGBA, GL_UNSIGNED_BYTE, ( (u8vec4_t*) nullptr) + REF_COLORGRADEMAP_SIZE);
+                            GL_RGBA, GL_UNSIGNED_BYTE, ((u8vec4_t*) nullptr) + REF_COLORGRADEMAP_SIZE);
         }
 
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -4554,8 +4554,8 @@ const void* RB_RotatedPic(const void* data) {
 
     mx = cmd->x + (cmd->w / 2);
     my = cmd->y + (cmd->h / 2);
-    cosA = cos(DEG2RAD(cmd->angle) );
-    sinA = sin(DEG2RAD(cmd->angle) );
+    cosA = cos(DEG2RAD(cmd->angle));
+    sinA = sin(DEG2RAD(cmd->angle));
     cw = cosA * (cmd->w / 2);
     ch = cosA * (cmd->h / 2);
     sw = sinA * (cmd->w / 2);

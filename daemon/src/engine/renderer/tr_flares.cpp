@@ -87,7 +87,7 @@ R_ClearFlares
 void R_ClearFlares() {
     int i;
 
-    Com_Memset(r_flareStructs, 0, sizeof(r_flareStructs) );
+    Com_Memset(r_flareStructs, 0, sizeof(r_flareStructs));
     r_activeFlares = nullptr;
     r_inactiveFlares = nullptr;
 
@@ -174,12 +174,12 @@ void RB_AddFlare(void* surface, int fogNum, vec3_t point, vec3_t color, vec3_t n
     d2 = -eye[2];
 
     if (d2 > distBias) {
-        if (d2 > (distBias * 2.0) ) {
+        if (d2 > (distBias * 2.0)) {
             d2 = (distBias * 2.0);
         }
 
         d2 -= distBias;
-        d2 = 1.0 - (d2 * (1.0 / distBias) );
+        d2 = 1.0 - (d2 * (1.0 / distBias));
         d2 *= distLerp;
     } else {
         d2 = distLerp;

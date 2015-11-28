@@ -125,7 +125,7 @@ typedef struct _TargaHeader {
 ========================================================================
 */
 
-#define MD3_IDENT         ( ('3' << 24) + ('P' << 16) + ('D' << 8) + 'I')
+#define MD3_IDENT         (('3' << 24) + ('P' << 16) + ('D' << 8) + 'I')
 #define MD3_VERSION       15
 
 // limits
@@ -231,7 +231,7 @@ typedef struct {
 ========================================================================
 */
 
-#define TAG_IDENT   ( ('1' << 24) + ('G' << 16) + ('A' << 8) + 'T')
+#define TAG_IDENT   (('1' << 24) + ('G' << 16) + ('A' << 8) + 'T')
 #define TAG_VERSION 1
 
 typedef struct {
@@ -257,7 +257,7 @@ MDS file format (Wolfenstein Skeletal Format)
 ==============================================================================
 */
 
-#define MDS_IDENT             ( ('W' << 24) + ('S' << 16) + ('D' << 8) + 'M')
+#define MDS_IDENT             (('W' << 24) + ('S' << 16) + ('D' << 8) + 'M')
 #define MDS_VERSION           4
 #define MDS_MAX_VERTS         6000
 #define MDS_MAX_TRIANGLES     8192

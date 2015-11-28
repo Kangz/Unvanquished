@@ -30,7 +30,7 @@ int g_numDamageRegions[PCL_NUM_CLASSES];
 
 // these are just for logging, the client prints its own messages
 // TODO: Centralize to keep in sync (e.g. bg_mod.c)
-static const char* const modNames[] ={
+static const char* const modNames[] = {
     "MOD_UNKNOWN",
     "MOD_SHOTGUN",
     "MOD_BLASTER",
@@ -162,7 +162,7 @@ static const gentity_t* G_FindKillAssist(const gentity_t* self, const gentity_t*
         }
 
         if (self->credits[playerNum].value > damage ||
-            (self->credits[playerNum].value == damage && self->credits[playerNum].time > when) ) {
+            (self->credits[playerNum].value == damage && self->credits[playerNum].time > when)) {
             assistant = player;
             damage = self->credits[playerNum].value;
             when = self->credits[playerNum].time;
@@ -185,15 +185,15 @@ void G_RewardAttackers(gentity_t* self) {
 
     // Only reward killing players and buildables
     if (self->client) {
-        ownTeam   = (team_t) self->client->pers.team;
+        ownTeam = (team_t) self->client->pers.team;
         maxHealth = self->entity->Get<HealthComponent>()->MaxHealth();
-        value     = BG_GetValueOfPlayer(&self->client->ps);
+        value = BG_GetValueOfPlayer(&self->client->ps);
     } else if (self->s.eType == ET_BUILDABLE) {
-        ownTeam   = (team_t) self->buildableTeam;
+        ownTeam = (team_t) self->buildableTeam;
         maxHealth = self->entity->Get<HealthComponent>()->MaxHealth();
-        value     = BG_IsMainStructure(&self->s)
-                    ? MAIN_STRUCTURE_MOMENTUM_VALUE
-                    : BG_Buildable(self->s.modelindex)->buildPoints;
+        value = BG_IsMainStructure(&self->s)
+                ? MAIN_STRUCTURE_MOMENTUM_VALUE
+                : BG_Buildable(self->s.modelindex)->buildPoints;
 
         // Give partial credits for buildables in construction
         if (!self->spawned) {
@@ -208,7 +208,7 @@ void G_RewardAttackers(gentity_t* self) {
     enemyDamage = 0.0f;
 
     for (playerNum = 0; playerNum < level.maxclients; playerNum++) {
-        player     = &g_entities[playerNum];
+        player = &g_entities[playerNum];
         playerTeam = (team_t) player->client->pers.team;
 
         // Player must be on the other team
@@ -225,8 +225,8 @@ void G_RewardAttackers(gentity_t* self) {
 
     // Give individual rewards
     for (playerNum = 0; playerNum < level.maxclients; playerNum++) {
-        player      = &g_entities[playerNum];
-        playerTeam  = (team_t) player->client->pers.team;
+        player = &g_entities[playerNum];
+        playerTeam = (team_t) player->client->pers.team;
         damageShare = self->credits[playerNum].value;
 
         // Clear reward array
@@ -242,7 +242,7 @@ void G_RewardAttackers(gentity_t* self) {
             continue;
         }
 
-        share  = damageShare / (float)maxHealth;
+        share = damageShare / (float)maxHealth;
         reward = value * share;
 
         if (self->s.eType == ET_BUILDABLE) {
@@ -313,7 +313,7 @@ void G_PlayerDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
         }
     }
 
-    if (meansOfDeath < 0 || meansOfDeath >= (int) ARRAY_LEN(modNames) ) {
+    if (meansOfDeath < 0 || meansOfDeath >= (int) ARRAY_LEN(modNames)) {
         // fall back on the number
         obit = va("%d", meansOfDeath);
     } else {
@@ -354,7 +354,7 @@ void G_PlayerDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
     ent->r.svFlags = SVF_BROADCAST; // send to everyone
 
     if (attacker && attacker->client) {
-        if ( (attacker == self || G_OnSameTeam(self, attacker) ) ) {
+        if ((attacker == self || G_OnSameTeam(self, attacker))) {
             // punish team kills and suicides
             if (attacker->client->pers.team == TEAM_ALIENS) {
                 G_AddCreditToClient(attacker->client, -ALIEN_TK_SUICIDE_PENALTY, true);
@@ -364,9 +364,9 @@ void G_PlayerDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
                 G_AddCreditsToScore(attacker, -HUMAN_TK_SUICIDE_PENALTY);
             }
         } else if (g_showKillerHP.integer) {
-            trap_SendServerCommand(self - g_entities, va("print_tr %s %s %3i", QQ(N_("Your killer, $1$^7, had $2$ HP.\n") ),
+            trap_SendServerCommand(self - g_entities, va("print_tr %s %s %3i", QQ(N_("Your killer, $1$^7, had $2$ HP.\n")),
                                                          Quote(killerName),
-                                                         (int)std::ceil(attacker->entity->Get<HealthComponent>()->Health()) ) );
+                                                         (int)std::ceil(attacker->entity->Get<HealthComponent>()->Health())));
         }
     } else if (attacker->s.eType != ET_BUILDABLE) {
         if (self->client->pers.team == TEAM_ALIENS) {
@@ -426,12 +426,12 @@ void G_PlayerDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
     self->client->respawnTime = level.time + 1700;
 
     // clear misc
-    memset(self->client->ps.misc, 0, sizeof(self->client->ps.misc) );
+    memset(self->client->ps.misc, 0, sizeof(self->client->ps.misc));
 
     {
         static int i;
 
-        if (!(self->client->ps.persistant[PERS_STATE] & PS_NONSEGMODEL) ) {
+        if (!(self->client->ps.persistant[PERS_STATE] & PS_NONSEGMODEL)) {
             switch (i) {
             case 0:
                 anim = BOTH_DEATH1;
@@ -464,11 +464,11 @@ void G_PlayerDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
         }
 
         self->client->ps.legsAnim =
-            ( (self->client->ps.legsAnim & ANIM_TOGGLEBIT) ^ ANIM_TOGGLEBIT) | anim;
+            ((self->client->ps.legsAnim & ANIM_TOGGLEBIT) ^ ANIM_TOGGLEBIT) | anim;
 
-        if (!(self->client->ps.persistant[PERS_STATE] & PS_NONSEGMODEL) ) {
+        if (!(self->client->ps.persistant[PERS_STATE] & PS_NONSEGMODEL)) {
             self->client->ps.torsoAnim =
-                ( (self->client->ps.torsoAnim & ANIM_TOGGLEBIT) ^ ANIM_TOGGLEBIT) | anim;
+                ((self->client->ps.torsoAnim & ANIM_TOGGLEBIT) ^ ANIM_TOGGLEBIT) | anim;
         }
 
         // use own entityid if killed by non-client to prevent uint8_t overflow
@@ -498,7 +498,7 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
             break;
         }
 
-        if (strcmp(token, "{") ) {
+        if (strcmp(token, "{")) {
             COM_ParseError("Missing {");
             break;
         }
@@ -509,13 +509,13 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
         }
 
         // defaults
-        regions[count].name[0]     = '\0';
-        regions[count].minHeight     = 0.0f;
-        regions[count].maxHeight     = 1.0f;
-        regions[count].minAngle      = 0.0f;
-        regions[count].maxAngle      = 360.0f;
-        regions[count].modifier      = 1.0f;
-        regions[count].crouch        = false;
+        regions[count].name[0] = '\0';
+        regions[count].minHeight = 0.0f;
+        regions[count].maxHeight = 1.0f;
+        regions[count].minAngle = 0.0f;
+        regions[count].maxAngle = 360.0f;
+        regions[count].modifier = 1.0f;
+        regions[count].crouch = false;
         regions[count].nonlocational = false;
 
         while (1) {
@@ -526,16 +526,16 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 break;
             }
 
-            if (!Q_stricmp(token, "}") ) {
+            if (!Q_stricmp(token, "}")) {
                 break;
-            } else if (!strcmp(token, "name") ) {
+            } else if (!strcmp(token, "name")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (token[0]) {
                     Q_strncpyz(regions[count].name, token,
-                               sizeof(regions[count].name) );
+                               sizeof(regions[count].name));
                 }
-            } else if (!strcmp(token, "minHeight") ) {
+            } else if (!strcmp(token, "minHeight")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (!token[0]) {
@@ -543,7 +543,7 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 }
 
                 regions[count].minHeight = atof(token);
-            } else if (!strcmp(token, "maxHeight") ) {
+            } else if (!strcmp(token, "maxHeight")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (!token[0]) {
@@ -551,7 +551,7 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 }
 
                 regions[count].maxHeight = atof(token);
-            } else if (!strcmp(token, "minAngle") ) {
+            } else if (!strcmp(token, "minAngle")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (!token[0]) {
@@ -559,7 +559,7 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 }
 
                 regions[count].minAngle = atoi(token);
-            } else if (!strcmp(token, "maxAngle") ) {
+            } else if (!strcmp(token, "maxAngle")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (!token[0]) {
@@ -567,7 +567,7 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 }
 
                 regions[count].maxAngle = atoi(token);
-            } else if (!strcmp(token, "modifier") ) {
+            } else if (!strcmp(token, "modifier")) {
                 token = COM_ParseExt(&buf, false);
 
                 if (!token[0]) {
@@ -575,9 +575,9 @@ static int ParseDmgScript(damageRegion_t* regions, const char* buf) {
                 }
 
                 regions[count].modifier = atof(token);
-            } else if (!strcmp(token, "crouch") ) {
+            } else if (!strcmp(token, "crouch")) {
                 regions[count].crouch = true;
-            } else if (!strcmp(token, "nonlocational") ) {
+            } else if (!strcmp(token, "nonlocational")) {
                 regions[count].nonlocational = true;
             } else {
                 COM_ParseWarning("Unknown token \"%s\"", token);
@@ -653,7 +653,7 @@ void G_InitDamageLocations() {
 // TODO: Move to HealthComponent.
 void G_SelectiveDamage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker,
                        vec3_t dir, vec3_t point, int damage, int dflags, int mod, int team) {
-    if (targ->client && (team != targ->client->pers.team) ) {
+    if (targ->client && (team != targ->client->pers.team)) {
         targ->entity->Damage((float)damage, attacker, Vec3::Load(point), Vec3::Load(dir), dflags,
                              (meansOfDeath_t)mod);
     }
@@ -834,7 +834,7 @@ bool G_RadiusDamage(vec3_t origin, gentity_t* attacker, float damage,
 
         points = damage * (1.0 - dist / radius);
 
-        if (G_CanDamage(ent, origin) ) {
+        if (G_CanDamage(ent, origin)) {
             if (testHit == TEAM_NONE) {
                 VectorSubtract(ent->r.currentOrigin, origin, dir);
                 // push the center of mass higher than the origin so players
@@ -844,7 +844,7 @@ bool G_RadiusDamage(vec3_t origin, gentity_t* attacker, float damage,
 
                 hitSomething = ent->entity->Damage(points, attacker, Vec3::Load(origin), Vec3::Load(dir),
                                                    (DAMAGE_NO_LOCDAMAGE | dflags), (meansOfDeath_t)mod);
-            } else if (G_Team(ent) == testHit && G_Alive(ent) ) {
+            } else if (G_Team(ent) == testHit && G_Alive(ent)) {
                 return true;
             }
         }
@@ -915,10 +915,10 @@ void G_LogDestruction(gentity_t* self, gentity_t* actor, int mod) {
 
     if (actor->client && actor->client->pers.team ==
         BG_Buildable(self->s.modelindex)->team) {
-        G_TeamCommand( (team_t) actor->client->pers.team,
-                       va("print_tr %s %s %s", mod == MOD_DECONSTRUCT ? QQ(N_("$1$ ^3DECONSTRUCTED^7 by $2$\n") ) :
-                          QQ(N_("$1$ ^3DESTROYED^7 by $2$\n") ),
-                          Quote(BG_Buildable(self->s.modelindex)->humanName),
-                          Quote(actor->client->pers.netname) ) );
+        G_TeamCommand((team_t) actor->client->pers.team,
+                      va("print_tr %s %s %s", mod == MOD_DECONSTRUCT ? QQ(N_("$1$ ^3DECONSTRUCTED^7 by $2$\n")) :
+                         QQ(N_("$1$ ^3DESTROYED^7 by $2$\n")),
+                         Quote(BG_Buildable(self->s.modelindex)->humanName),
+                         Quote(actor->client->pers.netname)));
     }
 }

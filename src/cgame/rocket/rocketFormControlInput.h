@@ -47,12 +47,12 @@ class CvarElementFormControlInput : public Rocket::Controls::ElementFormControlI
         virtual void OnAttributeChange(const Rocket::Core::AttributeNameList &changed_attributes) {
             Rocket::Controls::ElementFormControlInput::OnAttributeChange(changed_attributes);
 
-            if (changed_attributes.find("cvar") != changed_attributes.end() ) {
+            if (changed_attributes.find("cvar") != changed_attributes.end()) {
                 cvar = GetAttribute< Rocket::Core::String >("cvar", "");
                 UpdateValue();
             }
 
-            if (changed_attributes.find("type") != changed_attributes.end() ) {
+            if (changed_attributes.find("type") != changed_attributes.end()) {
                 type = GetAttribute< Rocket::Core::String >("type", "");
             }
         }
@@ -77,25 +77,25 @@ class CvarElementFormControlInput : public Rocket::Controls::ElementFormControlI
         virtual void ProcessEvent(Rocket::Core::Event &event) {
             Rocket::Controls::ElementFormControlInput::ProcessEvent(event);
 
-            if (!cvar.Empty() ) {
+            if (!cvar.Empty()) {
                 if (owner == event.GetTargetElement() && event == "show") {
                     UpdateValue();
                 }
 
-                if (this == event.GetTargetElement() ) {
-                    if (event == "blur" && (type != "checkbox" && type != "radio") ) {
-                        SetCvarValueAndFlags(cvar, GetValue() );
+                if (this == event.GetTargetElement()) {
+                    if (event == "blur" && (type != "checkbox" && type != "radio")) {
+                        SetCvarValueAndFlags(cvar, GetValue());
                     } else if (event == "change" && type == "range") {
-                        SetCvarValueAndFlags(cvar, GetValue() );
-                    } else if (event == "click" && !IsDisabled() ) {
+                        SetCvarValueAndFlags(cvar, GetValue());
+                    } else if (event == "click" && !IsDisabled()) {
                         if (type == "checkbox") {
-                            if (HasAttribute("checked") ) {
+                            if (HasAttribute("checked")) {
                                 SetCvarValueAndFlags(cvar, "1");
                             } else {
                                 SetCvarValueAndFlags(cvar, "0");
                             }
                         } else if (type == "radio") {
-                            SetCvarValueAndFlags(cvar, GetValue() );
+                            SetCvarValueAndFlags(cvar, GetValue());
                         }
                     }
                 }
@@ -104,11 +104,11 @@ class CvarElementFormControlInput : public Rocket::Controls::ElementFormControlI
 
 
         void UpdateValue() {
-            if (!type.Empty() ) {
+            if (!type.Empty()) {
                 if (type == "checkbox") {
                     bool result;
 
-                    if (Cvar::ParseCvarValue(Cvar::GetValue(cvar.CString() ).c_str(), result) ) {
+                    if (Cvar::ParseCvarValue(Cvar::GetValue(cvar.CString()).c_str(), result)) {
                         if (result) {
                             SetAttribute("checked", "");
                             SetValue("1");
@@ -118,11 +118,11 @@ class CvarElementFormControlInput : public Rocket::Controls::ElementFormControlI
                         }
                     }
                 } else if (type == "radio") {
-                    if (GetValue() == Cvar::GetValue(cvar.CString() ).c_str() ) {
+                    if (GetValue() == Cvar::GetValue(cvar.CString()).c_str()) {
                         SetAttribute("checked", "");
                     }
                 } else {
-                    SetValue(Cvar::GetValue(cvar.CString() ).c_str() );
+                    SetValue(Cvar::GetValue(cvar.CString()).c_str());
                 }
             }
 
@@ -130,7 +130,7 @@ class CvarElementFormControlInput : public Rocket::Controls::ElementFormControlI
 
     private:
         void SetCvarValueAndFlags(const Rocket::Core::String& cvar, const Rocket::Core::String& value) {
-            Cvar::SetValue(cvar.CString(), value.CString() );
+            Cvar::SetValue(cvar.CString(), value.CString());
             Cvar::AddFlags(cvar.CString(), Cvar::USER_ARCHIVE);
         }
 

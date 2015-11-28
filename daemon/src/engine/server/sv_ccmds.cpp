@@ -140,7 +140,7 @@ static void SV_MapRestart_f() {
 
         Com_Printf("sv_maxclients variable change — restarting.\n");
         // restart the map the slow way
-        Q_strncpyz(mapname, Cvar_VariableString("mapname"), sizeof(mapname) );
+        Q_strncpyz(mapname, Cvar_VariableString("mapname"), sizeof(mapname));
 
         SV_SpawnServer(mapname);
         return;
@@ -153,7 +153,7 @@ static void SV_MapRestart_f() {
     // generate a new serverid
     // TTimo - don't update restartedserverId there, otherwise we won't deal correctly with multiple map_restart
     sv.serverId = com_frameTime;
-    Cvar_Set("sv_serverid", va("%i", sv.serverId) );
+    Cvar_Set("sv_serverid", va("%i", sv.serverId));
 
     // reset all the VM data in place without changing memory allocation
     // note that we do NOT set sv.state = SS_LOADING, so configstrings that
@@ -322,7 +322,7 @@ static void SV_Serverinfo_f() {
     }
 
     Com_Printf("Server info settings:\n");
-    Info_Print(Cvar_InfoString(CVAR_SERVERINFO, false) );
+    Info_Print(Cvar_InfoString(CVAR_SERVERINFO, false));
 }
 
 /*
@@ -340,7 +340,7 @@ static void SV_Systeminfo_f() {
     }
 
     Com_Printf("System info settings:\n");
-    Info_Print(Cvar_InfoString(CVAR_SYSTEMINFO, false) );
+    Info_Print(Cvar_InfoString(CVAR_SYSTEMINFO, false));
 }
 
 /*

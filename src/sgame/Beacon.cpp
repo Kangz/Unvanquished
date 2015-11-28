@@ -68,7 +68,7 @@ namespace Beacon // this should eventually become a class
             return;
         }
 
-        while ( (ent = G_IterateEntities(ent) ) ) {
+        while ((ent = G_IterateEntities(ent))) {
             switch (ent->s.eType) {
             case ET_BUILDABLE:
             case ET_PLAYER:
@@ -174,7 +174,7 @@ namespace Beacon // this should eventually become a class
 
         if (verbose) {
             // Defer removal and play death effects.
-            if (!(ent->s.eFlags & EF_BC_DYING) ) {
+            if (!(ent->s.eFlags & EF_BC_DYING)) {
                 ent->s.eFlags |= EF_BC_DYING;
                 ent->s.bc_etime = level.time + 1500;
                 BaseClustering::Remove(ent);
@@ -196,7 +196,7 @@ namespace Beacon // this should eventually become a class
      * @param normal Optional direction to move towards.
      */
     void MoveTowardsRoom(vec3_t origin) {
-        static const vec3_t vecs[162] ={
+        static const vec3_t vecs[162] = {
             {0.000000, 0.000000, -1.000000}, {0.723607, -0.525725, -0.447220}, {-0.276388, -0.850649, -0.447220},
             {-0.894426, 0.000000, -0.447216}, {-0.276388, 0.850649, -0.447220}, {0.723607, 0.525725, -0.447220},
             {0.276388, -0.850649, 0.447220}, {-0.723607, -0.525725, 0.447220}, {-0.723607, 0.525725, 0.447220},
@@ -286,7 +286,7 @@ namespace Beacon // this should eventually become a class
                 continue;
             }
 
-            if ( (ent->s.eFlags & eFlagsRelevant) != (eFlags & eFlagsRelevant) ) {
+            if ((ent->s.eFlags & eFlagsRelevant) != (eFlags & eFlagsRelevant)) {
                 continue;
             }
 
@@ -294,7 +294,7 @@ namespace Beacon // this should eventually become a class
                 continue;
             }
 
-            if ( (flags & BCF_DATA_UNIQUE) && ent->s.bc_data != data) {
+            if ((flags & BCF_DATA_UNIQUE) && ent->s.bc_data != data) {
                 continue;
             }
 
@@ -312,7 +312,7 @@ namespace Beacon // this should eventually become a class
                     continue;
                 }
 
-                if (!trap_InPVS(ent->s.origin, origin) ) {
+                if (!trap_InPVS(ent->s.origin, origin)) {
                     continue;
                 }
             }
@@ -357,13 +357,13 @@ namespace Beacon // this should eventually become a class
     void Propagate(gentity_t* ent) {
         ent->r.svFlags = SVF_BROADCAST | SVF_CLIENTMASK;
 
-        G_TeamToClientmask( (team_t)ent->s.bc_team, &ent->r.loMask, &ent->r.hiMask);
+        G_TeamToClientmask((team_t)ent->s.bc_team, &ent->r.loMask, &ent->r.hiMask);
 
         // Don't send enemy bases or tagged enemy entities to spectators.
         if (ent->s.eFlags & EF_BC_ENEMY) {
         }
         // Don't send tagged structures to spectators.
-        else if (ent->s.modelindex == BCT_TAG && !(ent->s.eFlags & EF_BC_TAG_PLAYER) ) {
+        else if (ent->s.modelindex == BCT_TAG && !(ent->s.eFlags & EF_BC_TAG_PLAYER)) {
         } else {
             int loMask, hiMask;
             G_TeamToClientmask(TEAM_NONE, &loMask, &hiMask);
@@ -372,7 +372,7 @@ namespace Beacon // this should eventually become a class
         }
 
         // Don't send a player tag to the tagged client itself.
-        if (ent->s.bc_type == BCT_TAG && (ent->s.eFlags & EF_BC_TAG_PLAYER) ) {
+        if (ent->s.bc_type == BCT_TAG && (ent->s.eFlags & EF_BC_TAG_PLAYER)) {
             int loMask, hiMask;
             G_ClientnumToMask(ent->s.bc_target, &loMask, &hiMask);
             ent->r.loMask &= ~loMask;
@@ -403,7 +403,7 @@ namespace Beacon // this should eventually become a class
      * Per-team beacons get their ownership cleared.
      */
     void RemoveOrphaned(int clientNum) {
-        for (gentity_t* ent = nullptr; (ent = G_IterateEntities(ent) ); ) {
+        for (gentity_t* ent = nullptr; (ent = G_IterateEntities(ent)); ) {
             if (ent->s.eType != ET_BEACON) {
                 continue;
             }
@@ -468,8 +468,8 @@ namespace Beacon // this should eventually become a class
      */
     void DetachTags(gentity_t* ent) {
         if (ent->alienTag) {
-            if ( (ent->alienTag->s.eFlags & EF_BC_ENEMY) &&
-                 !(ent->alienTag->s.eFlags & EF_BC_TAG_PLAYER) ) {
+            if ((ent->alienTag->s.eFlags & EF_BC_ENEMY) &&
+                !(ent->alienTag->s.eFlags & EF_BC_TAG_PLAYER)) {
                 ent->alienTag->tagAttachment = nullptr;
                 ent->alienTag = nullptr;
             } else {
@@ -478,8 +478,8 @@ namespace Beacon // this should eventually become a class
         }
 
         if (ent->humanTag) {
-            if ( (ent->humanTag->s.eFlags & EF_BC_ENEMY) &&
-                 !(ent->humanTag->s.eFlags & EF_BC_TAG_PLAYER) ) {
+            if ((ent->humanTag->s.eFlags & EF_BC_ENEMY) &&
+                !(ent->humanTag->s.eFlags & EF_BC_TAG_PLAYER)) {
                 ent->humanTag->tagAttachment = nullptr;
                 ent->humanTag = nullptr;
             } else {
@@ -545,7 +545,7 @@ namespace Beacon // this should eventually become a class
 
         switch (ent->s.eType) {
         case ET_BUILDABLE:
-            if (G_Dead(ent) ) {
+            if (G_Dead(ent)) {
                 return false;
             }
             if (ent->buildableTeam == team) {
@@ -580,7 +580,7 @@ namespace Beacon // this should eventually become a class
     } tagtrace_ent_t;
 
     static int TagTrace_EntCmp(const void* a, const void* b) {
-        return ( ( (const tagtrace_ent_t*)a)->dot < ( (const tagtrace_ent_t*)b)->dot);
+        return (((const tagtrace_ent_t*)a)->dot < ((const tagtrace_ent_t*)b)->dot);
     }
 
     /**
@@ -601,9 +601,9 @@ namespace Beacon // this should eventually become a class
         {
             trace_t tr;
             trap_Trace(&tr, begin, nullptr, nullptr, end, skip, mask, 0);
-            if (EntityTaggable(tr.entityNum, team, true) ) {
+            if (EntityTaggable(tr.entityNum, team, true)) {
                 reticleEnt = g_entities + tr.entityNum;
-                if (!refreshTagged || !CheckRefreshTag(reticleEnt, team) ) {
+                if (!refreshTagged || !CheckRefreshTag(reticleEnt, team)) {
                     return reticleEnt;
                 }
             }
@@ -620,7 +620,7 @@ namespace Beacon // this should eventually become a class
                 continue;
             }
 
-            if (!EntityTaggable(i, team, true) ) {
+            if (!EntityTaggable(i, team, true)) {
                 continue;
             }
 
@@ -631,7 +631,7 @@ namespace Beacon // this should eventually become a class
                 continue;
             }
 
-            if (!trap_InPVS(ent->r.currentOrigin, begin) ) {
+            if (!trap_InPVS(ent->r.currentOrigin, begin)) {
                 continue;
             }
 
@@ -644,7 +644,7 @@ namespace Beacon // this should eventually become a class
                 }
             }
 
-            if (refreshTagged && CheckRefreshTag(ent, team) ) {
+            if (refreshTagged && CheckRefreshTag(ent, team)) {
                 continue;
             }
 
@@ -694,16 +694,16 @@ namespace Beacon // this should eventually become a class
         switch (ent->s.eType) {
         case ET_BUILDABLE:
             targetTeam = ent->buildableTeam;
-            data       = ent->s.modelindex;
-            dead       = G_Dead(ent);
-            player     = false;
+            data = ent->s.modelindex;
+            dead = G_Dead(ent);
+            player = false;
             BG_BuildableBoundingBox(ent->s.modelindex, mins, maxs);
             break;
 
         case ET_PLAYER:
             targetTeam = (team_t)ent->client->pers.team;
-            dead       = G_Dead(ent);
-            player     = true;
+            dead = G_Dead(ent);
+            player = true;
             BG_ClassBoundingBox(ent->client->pers.classSelection, mins, maxs, nullptr, nullptr, nullptr);
 
             // Set beacon data to class (aliens) or weapon (humans).

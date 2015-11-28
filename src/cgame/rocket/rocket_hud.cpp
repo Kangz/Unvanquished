@@ -55,7 +55,7 @@ void Rocket_InitializeHuds(int size) {
     huds.clear();
 
     for (int i = 0; i < size; ++i) {
-        huds.push_back(RocketHud() );
+        huds.push_back(RocketHud());
     }
 
     activeHud = nullptr;
@@ -71,7 +71,7 @@ void Rocket_LoadUnit(const char* path) {
         hudContext->PullDocumentToFront(document);
 
         // Close any other documents which may have the same ID
-        other = hudContext->GetDocument(document->GetId() );
+        other = hudContext->GetDocument(document->GetId());
         if (other && other != document) {
             other->Close();
         }
@@ -84,7 +84,7 @@ void Rocket_AddUnitToHud(int weapon, const char* id) {
     if (id && *id) {
         Rocket::Core::ElementDocument* doc = hudContext->GetDocument(id);
         if (doc) {
-            huds[weapon].push_back(HudUnit(doc) );
+            huds[weapon].push_back(HudUnit(doc));
         }
     }
 }
@@ -107,7 +107,7 @@ void Rocket_ShowHud(int weapon) {
         for (RocketHud::iterator it = activeHud->begin(); it != activeHud->end(); ++it) {
             HudUnit* unit;
             // Check if the new HUD needs this unit
-            if ( (unit = findUnit(currentHud, *it) ) ) {
+            if ((unit = findUnit(currentHud, *it))) {
                 unit->load = false;
 
                 continue;
@@ -131,7 +131,7 @@ void Rocket_ShowHud(int weapon) {
 }
 
 void Rocket_ClearHud(unsigned weapon) {
-    if (weapon < huds.size() ) {
+    if (weapon < huds.size()) {
         huds[weapon].clear();
     }
 }

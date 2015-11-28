@@ -63,7 +63,7 @@ static void R_ColorShiftLightingBytes(byte in[4], byte out[4]) {
     b = in[2] << shift;
 
     // normalize by color instead of saturating to white
-    if ( (r | g | b) > 255) {
+    if ((r | g | b) > 255) {
         int max;
 
         max = r > g ? r : g;
@@ -196,7 +196,7 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
     *pic = nullptr;
 
     // load the file
-    ri.FS_ReadFile( (char*) name, (void**) &buffer);
+    ri.FS_ReadFile((char*) name, (void**) &buffer);
 
     if (!buffer) {
         ri.Error(ERR_DROP, "LoadRGBE: '%s' not found", name);
@@ -208,25 +208,25 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
     w = h = 0;
 
     while (true) {
-        token = COM_ParseExt2( (const char**) &buf_p, true);
+        token = COM_ParseExt2((const char**) &buf_p, true);
 
         if (!token[0]) {
             break;
         }
 
-        if (!Q_stricmp(token, "FORMAT") ) {
-            token = COM_ParseExt2( (const char**) &buf_p, false);
+        if (!Q_stricmp(token, "FORMAT")) {
+            token = COM_ParseExt2((const char**) &buf_p, false);
 
-            if (!Q_stricmp(token, "=") ) {
-                token = COM_ParseExt2( (const char**) &buf_p, false);
+            if (!Q_stricmp(token, "=")) {
+                token = COM_ParseExt2((const char**) &buf_p, false);
 
-                if (!Q_stricmp(token, "32") ) {
-                    token = COM_ParseExt2( (const char**) &buf_p, false);
+                if (!Q_stricmp(token, "32")) {
+                    token = COM_ParseExt2((const char**) &buf_p, false);
 
-                    if (!Q_stricmp(token, "-") ) {
-                        token = COM_ParseExt2( (const char**) &buf_p, false);
+                    if (!Q_stricmp(token, "-")) {
+                        token = COM_ParseExt2((const char**) &buf_p, false);
 
-                        if (!Q_stricmp(token, "bit_rle_rgbe") ) {
+                        if (!Q_stricmp(token, "bit_rle_rgbe")) {
                             formatFound = true;
                         } else {
                             ri.Printf(PRINT_ALL, "LoadRGBE: Expected 'bit_rle_rgbe' found instead '%s'\n", token);
@@ -242,20 +242,20 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
             }
         }
 
-        if (!Q_stricmp(token, "-") ) {
-            token = COM_ParseExt2( (const char**) &buf_p, false);
+        if (!Q_stricmp(token, "-")) {
+            token = COM_ParseExt2((const char**) &buf_p, false);
 
-            if (!Q_stricmp(token, "Y") ) {
-                token = COM_ParseExt2( (const char**) &buf_p, false);
+            if (!Q_stricmp(token, "Y")) {
+                token = COM_ParseExt2((const char**) &buf_p, false);
                 w = atoi(token);
 
-                token = COM_ParseExt2( (const char**) &buf_p, false);
+                token = COM_ParseExt2((const char**) &buf_p, false);
 
-                if (!Q_stricmp(token, "+") ) {
-                    token = COM_ParseExt2( (const char**) &buf_p, false);
+                if (!Q_stricmp(token, "+")) {
+                    token = COM_ParseExt2((const char**) &buf_p, false);
 
-                    if (!Q_stricmp(token, "X") ) {
-                        token = COM_ParseExt2( (const char**) &buf_p, false);
+                    if (!Q_stricmp(token, "X")) {
+                        token = COM_ParseExt2((const char**) &buf_p, false);
                         h = atoi(token);
                         break;
                     } else {
@@ -271,7 +271,7 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
     }
 
     // go to the first byte
-    while ( (c = *buf_p++) != 0) {
+    while ((c = *buf_p++) != 0) {
         if (c == '\n') {
             break;
         }
@@ -295,7 +295,7 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
         ri.Error(ERR_DROP, "LoadRGBE: %s has an invalid image size", name);
     }
 
-    *pic = (float*) Com_Allocate(w * h * 3 * sizeof(float) );
+    *pic = (float*) Com_Allocate(w * h * 3 * sizeof(float));
     floatbuf = *pic;
 
     for (i = 0; i < (w * h); i++) {
@@ -392,8 +392,8 @@ static void R_LoadLightmaps(lump_t* l, const char* bspName) {
     if (!len) {
         char mapName[MAX_QPATH];
 
-        Q_strncpyz(mapName, bspName, sizeof(mapName) );
-        COM_StripExtension3(mapName, mapName, sizeof(mapName) );
+        Q_strncpyz(mapName, bspName, sizeof(mapName));
+        COM_StripExtension3(mapName, mapName, sizeof(mapName));
 
         if (tr.worldHDR_RGBE) {
             // we are about to upload textures
@@ -521,10 +521,10 @@ static void R_LoadLightmaps(lump_t* l, const char* bspName) {
             for (y = 0; y < LIGHTMAP_SIZE; y++) {
                 for (x = 0; x < LIGHTMAP_SIZE; x++) {
                     int index =
-                        (x + (y * tr.fatLightmapSize) ) + ( (xoff * LIGHTMAP_SIZE) + (yoff * tr.fatLightmapSize * LIGHTMAP_SIZE) );
-                    fatbuffer[(index * 4) + 0] = buf_p[( (x + (y * LIGHTMAP_SIZE) ) * 3) + 0];
-                    fatbuffer[(index * 4) + 1] = buf_p[( (x + (y * LIGHTMAP_SIZE) ) * 3) + 1];
-                    fatbuffer[(index * 4) + 2] = buf_p[( (x + (y * LIGHTMAP_SIZE) ) * 3) + 2];
+                        (x + (y * tr.fatLightmapSize)) + ((xoff * LIGHTMAP_SIZE) + (yoff * tr.fatLightmapSize * LIGHTMAP_SIZE));
+                    fatbuffer[(index * 4) + 0] = buf_p[((x + (y * LIGHTMAP_SIZE)) * 3) + 0];
+                    fatbuffer[(index * 4) + 1] = buf_p[((x + (y * LIGHTMAP_SIZE)) * 3) + 1];
+                    fatbuffer[(index * 4) + 2] = buf_p[((x + (y * LIGHTMAP_SIZE)) * 3) + 2];
                     fatbuffer[(index * 4) + 3] = 255;
 
                     R_ColorShiftLightingBytes(&fatbuffer[(index * 4) + 0], &fatbuffer[(index * 4) + 0]);
@@ -545,7 +545,7 @@ static float FatPackU(float input, int lightmapnum) {
     if (tr.fatLightmapSize > 0) {
         int x = lightmapnum % tr.fatLightmapStep;
 
-        return (input / ( (float) tr.fatLightmapStep) ) + ( (1.0 / ( (float) tr.fatLightmapStep) ) * (float) x);
+        return (input / ((float) tr.fatLightmapStep)) + ((1.0 / ((float) tr.fatLightmapStep)) * (float) x);
     }
 
     return input;
@@ -553,9 +553,9 @@ static float FatPackU(float input, int lightmapnum) {
 
 static float FatPackV(float input, int lightmapnum) {
     if (tr.fatLightmapSize > 0) {
-        int y = lightmapnum / ( (float) tr.fatLightmapStep);
+        int y = lightmapnum / ((float) tr.fatLightmapStep);
 
-        return (input / ( (float) tr.fatLightmapStep) ) + ( (1.0 / ( (float) tr.fatLightmapStep) ) * (float) y);
+        return (input / ((float) tr.fatLightmapStep)) + ((1.0 / ((float) tr.fatLightmapStep)) * (float) y);
     }
 
     return input;
@@ -596,8 +596,8 @@ static void R_LoadVisibility(lump_t* l) {
 
     buf = fileBase + l->fileofs;
 
-    s_worldData.numClusters = LittleLong( ( (int*) buf) [0]);
-    s_worldData.clusterBytes = LittleLong( ( (int*) buf) [1]);
+    s_worldData.numClusters = LittleLong(((int*) buf) [0]);
+    s_worldData.clusterBytes = LittleLong(((int*) buf) [1]);
 
     // CM_Load should have given us the vis data to share, so
     // we don't need to allocate another copy
@@ -621,7 +621,7 @@ static void R_LoadVisibility(lump_t* l) {
         const long* src2;
         byte* dest;
 
-        src  = s_worldData.vis + i * s_worldData.clusterBytes;
+        src = s_worldData.vis + i * s_worldData.clusterBytes;
         dest = s_worldData.visvis + i * s_worldData.clusterBytes;
 
         // for each byte in the current cluster's vis data
@@ -636,17 +636,17 @@ static void R_LoadVisibility(lump_t* l) {
                 int index;
 
                 // check if this cluster ( k = ( cluster & 7 ) ) is visible from the current cluster
-                if (!(bitbyte & (1 << k) ) ) {
+                if (!(bitbyte & (1 << k))) {
                     continue;
                 }
 
                 // retrieve vis data for the cluster
-                index = ( (j << 3) | k);
+                index = ((j << 3) | k);
                 src2 = (long*) (s_worldData.vis + index * s_worldData.clusterBytes);
 
                 // OR this vis data with the current cluster's
-                for (unsigned m = 0; m < (s_worldData.clusterBytes / sizeof(long) ); m++) {
-                    ( (long*) dest)[m] |= src2[m];
+                for (unsigned m = 0; m < (s_worldData.clusterBytes / sizeof(long)); m++) {
+                    ((long*) dest)[m] |= src2[m];
                 }
             }
         }
@@ -776,7 +776,7 @@ static void ParseFace(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, int
     ClearBounds(cv->bounds[0], cv->bounds[1]);
     verts += LittleLong(ds->firstVert);
 
-    components = (struct vertexComponent_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(struct vertexComponent_t) );
+    components = (struct vertexComponent_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(struct vertexComponent_t));
 
     for (i = 0; i < numVerts; i++) {
         for (j = 0; j < 3; j++) {
@@ -802,7 +802,7 @@ static void ParseFace(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, int
         cv->verts[i].lightColor = Color::Adapt(verts[i].color);
 
 
-        R_ColorShiftLightingBytes(cv->verts[i].lightColor.ToArray(), cv->verts[i].lightColor.ToArray() );
+        R_ColorShiftLightingBytes(cv->verts[i].lightColor.ToArray(), cv->verts[i].lightColor.ToArray());
     }
 
     // copy triangles
@@ -848,7 +848,7 @@ static void ParseFace(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, int
     for (i = 0; i < numVerts; i++) {
         if (components[i].minVertex == i) {
             for (j = 0; j < 2; j++) {
-                components[i].stBounds[0][j] = rintf(0.5f * (components[i].stBounds[1][j] + components[i].stBounds[0][j]) );
+                components[i].stBounds[0][j] = rintf(0.5f * (components[i].stBounds[1][j] + components[i].stBounds[0][j]));
             }
         }
 
@@ -952,8 +952,8 @@ static void ParseMesh(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf) {
     numPoints = width * height;
 
     // compute min/max texture coords on the fly
-    stBounds[0][0] =  99999.0f;
-    stBounds[0][1] =  99999.0f;
+    stBounds[0][0] = 99999.0f;
+    stBounds[0][1] = 99999.0f;
     stBounds[1][0] = -99999.0f;
     stBounds[1][1] = -99999.0f;
 
@@ -976,7 +976,7 @@ static void ParseMesh(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf) {
 
         points[i].lightColor = Color::Adapt(verts[i].color);
 
-        R_ColorShiftLightingBytes(points[i].lightColor.ToArray(), points[i].lightColor.ToArray() );
+        R_ColorShiftLightingBytes(points[i].lightColor.ToArray(), points[i].lightColor.ToArray());
     }
 
     // center texture coords
@@ -1070,7 +1070,7 @@ static void ParseTriSurf(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, 
     // copy vertexes
     verts += LittleLong(ds->firstVert);
 
-    components = (struct vertexComponent_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(struct vertexComponent_t) );
+    components = (struct vertexComponent_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(struct vertexComponent_t));
 
     for (i = 0; i < numVerts; i++) {
         components[i].minVertex = i;
@@ -1090,7 +1090,7 @@ static void ParseTriSurf(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, 
 
         cv->verts[i].lightColor = Color::Adapt(verts[i].color);
 
-        R_ColorShiftLightingBytes(cv->verts[i].lightColor.ToArray(), cv->verts[i].lightColor.ToArray() );
+        R_ColorShiftLightingBytes(cv->verts[i].lightColor.ToArray(), cv->verts[i].lightColor.ToArray());
     }
 
     // copy triangles
@@ -1136,7 +1136,7 @@ static void ParseTriSurf(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, 
     for (i = 0; i < numVerts; i++) {
         if (components[i].minVertex == i) {
             for (j = 0; j < 2; j++) {
-                components[i].stBounds[0][j] = rintf(0.5f * (components[i].stBounds[1][j] + components[i].stBounds[0][j]) );
+                components[i].stBounds[0][j] = rintf(0.5f * (components[i].stBounds[1][j] + components[i].stBounds[0][j]));
             }
         }
 
@@ -1335,7 +1335,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                 offset1 = 0;
             }
 
-            if (R_MergedWidthPoints(grid1, offset1) ) {
+            if (R_MergedWidthPoints(grid1, offset1)) {
                 continue;
             }
 
@@ -1347,7 +1347,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                         offset2 = 0;
                     }
 
-                    if (R_MergedWidthPoints(grid2, offset2) ) {
+                    if (R_MergedWidthPoints(grid2, offset2)) {
                         continue;
                     }
 
@@ -1378,7 +1378,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                         offset2 = 0;
                     }
 
-                    if (R_MergedHeightPoints(grid2, offset2) ) {
+                    if (R_MergedHeightPoints(grid2, offset2)) {
                         continue;
                     }
 
@@ -1412,7 +1412,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                 offset1 = 0;
             }
 
-            if (R_MergedHeightPoints(grid1, offset1) ) {
+            if (R_MergedHeightPoints(grid1, offset1)) {
                 continue;
             }
 
@@ -1424,7 +1424,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                         offset2 = 0;
                     }
 
-                    if (R_MergedWidthPoints(grid2, offset2) ) {
+                    if (R_MergedWidthPoints(grid2, offset2)) {
                         continue;
                     }
 
@@ -1455,7 +1455,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1) {
                         offset2 = 0;
                     }
 
-                    if (R_MergedHeightPoints(grid2, offset2) ) {
+                    if (R_MergedHeightPoints(grid2, offset2)) {
                         continue;
                     }
 
@@ -1549,7 +1549,7 @@ int R_StitchPatches(int grid1num, int grid2num) {
             offset1 = 0;
         }
 
-        if (R_MergedWidthPoints(grid1, offset1) ) {
+        if (R_MergedWidthPoints(grid1, offset1)) {
             continue;
         }
 
@@ -1696,7 +1696,7 @@ int R_StitchPatches(int grid1num, int grid2num) {
             offset1 = 0;
         }
 
-        if (R_MergedHeightPoints(grid1, offset1) ) {
+        if (R_MergedHeightPoints(grid1, offset1)) {
             continue;
         }
 
@@ -1845,7 +1845,7 @@ int R_StitchPatches(int grid1num, int grid2num) {
             offset1 = 0;
         }
 
-        if (R_MergedWidthPoints(grid1, offset1) ) {
+        if (R_MergedWidthPoints(grid1, offset1)) {
             continue;
         }
 
@@ -1997,7 +1997,7 @@ int R_StitchPatches(int grid1num, int grid2num) {
             offset1 = 0;
         }
 
-        if (R_MergedHeightPoints(grid1, offset1) ) {
+        if (R_MergedHeightPoints(grid1, offset1)) {
             continue;
         }
 
@@ -2189,7 +2189,7 @@ int R_TryStitchingPatch(int grid1num) {
         }
 
         //
-        while (R_StitchPatches(grid1num, j) ) {
+        while (R_StitchPatches(grid1num, j)) {
             numstitches++;
         }
     }
@@ -2269,11 +2269,11 @@ void R_MovePatchSurfacesToHunk() {
 
         hunkgrid->numTriangles = grid->numTriangles;
         hunkgrid->triangles = (srfTriangle_t*) ri.Hunk_Alloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
-        Com_Memcpy(hunkgrid->triangles, grid->triangles, grid->numTriangles * sizeof(srfTriangle_t) );
+        Com_Memcpy(hunkgrid->triangles, grid->triangles, grid->numTriangles * sizeof(srfTriangle_t));
 
         hunkgrid->numVerts = grid->numVerts;
         hunkgrid->verts = (srfVert_t*) ri.Hunk_Alloc(grid->numVerts * sizeof(srfVert_t), h_low);
-        Com_Memcpy(hunkgrid->verts, grid->verts, grid->numVerts * sizeof(srfVert_t) );
+        Com_Memcpy(hunkgrid->verts, grid->verts, grid->numVerts * sizeof(srfVert_t));
 
         R_FreeSurfaceGridMesh(grid);
 
@@ -2534,8 +2534,8 @@ static void R_CreateWorldVBO() {
     s_worldData.numTriangles = numTriangles;
     s_worldData.triangles = triangles = (srfTriangle_t*) ri.Hunk_Alloc(numTriangles * sizeof(srfTriangle_t), h_low);
 
-    vboVerts = (shaderVertex_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(shaderVertex_t) );
-    vboIdxs = (glIndex_t*)ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t) );
+    vboVerts = (shaderVertex_t*)ri.Hunk_AllocateTempMemory(numVerts * sizeof(shaderVertex_t));
+    vboIdxs = (glIndex_t*)ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t));
 
     // set up triangle and vertex arrays
     numVerts = 0;
@@ -2740,7 +2740,7 @@ static void R_CreateWorldVBO() {
             }
 
             vboSurf = (srfVBOMesh_t*) ri.Hunk_Alloc(sizeof(*vboSurf), h_low);
-            memset(vboSurf, 0, sizeof(*vboSurf) );
+            memset(vboSurf, 0, sizeof(*vboSurf));
             vboSurf->surfaceType = SF_VBO_MESH;
 
             vboSurf->numIndexes = numIndexes;
@@ -2767,7 +2767,7 @@ static void R_CreateWorldVBO() {
             for (k = 0; k < s_worldData.numMarkSurfaces; k++) {
                 bspSurface_t** view = s_worldData.viewSurfaces + k;
 
-                if ( (*view)->viewCount == surf1->viewCount) {
+                if ((*view)->viewCount == surf1->viewCount) {
                     *view = mergedSurf;
                 }
             }
@@ -2832,7 +2832,7 @@ static void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump) {
 
     in = (dsurface_t*)(fileBase + surfs->fileofs);
 
-    if (surfs->filelen % sizeof(*in) ) {
+    if (surfs->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -2840,13 +2840,13 @@ static void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump) {
 
     dv = (drawVert_t*)(fileBase + verts->fileofs);
 
-    if (verts->filelen % sizeof(*dv) ) {
+    if (verts->filelen % sizeof(*dv)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
     indexes = (int*)(fileBase + indexLump->fileofs);
 
-    if (indexLump->filelen % sizeof(*indexes) ) {
+    if (indexLump->filelen % sizeof(*indexes)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -2856,7 +2856,7 @@ static void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump) {
     s_worldData.numSurfaces = count;
 
     for (i = 0; i < count; i++, in++, out++) {
-        switch (LittleLong(in->surfaceType) ) {
+        switch (LittleLong(in->surfaceType)) {
         case MST_PATCH:
             ParseMesh(in, dv, out);
             numMeshes++;
@@ -2916,7 +2916,7 @@ static void R_LoadSubmodels(lump_t* l) {
 
     in = (dmodel_t*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -2951,7 +2951,7 @@ static void R_LoadSubmodels(lump_t* l) {
         // ydnar: allocate decal memory
         j = (i == 0 ? MAX_WORLD_DECALS : MAX_ENTITY_DECALS);
         out->decals = (decal_t*) ri.Hunk_Alloc(j * sizeof(*out->decals), h_low);
-        memset(out->decals, 0, j * sizeof(*out->decals) );
+        memset(out->decals, 0, j * sizeof(*out->decals));
     }
 }
 
@@ -2988,18 +2988,18 @@ static void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump) {
 
     ri.Printf(PRINT_DEVELOPER, "...loading nodes and leaves\n");
 
-    memset(&data, 0, sizeof(data) );
+    memset(&data, 0, sizeof(data));
 
     in = (dnode_t*) (void*)(fileBase + nodeLump->fileofs);
 
-    if (nodeLump->filelen % sizeof(dnode_t) || leafLump->filelen % sizeof(dleaf_t) ) {
+    if (nodeLump->filelen % sizeof(dnode_t) || leafLump->filelen % sizeof(dleaf_t)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
     numNodes = nodeLump->filelen / sizeof(dnode_t);
     numLeafs = leafLump->filelen / sizeof(dleaf_t);
 
-    out = (bspNode_t*) ri.Hunk_Alloc( (numNodes + numLeafs) * sizeof(*out), h_low);
+    out = (bspNode_t*) ri.Hunk_Alloc((numNodes + numLeafs) * sizeof(*out), h_low);
 
     s_worldData.nodes = out;
     s_worldData.numnodes = numNodes + numLeafs;
@@ -3079,7 +3079,7 @@ static void R_LoadShaders(lump_t* l) {
 
     in = (dshader_t*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3089,7 +3089,7 @@ static void R_LoadShaders(lump_t* l) {
     s_worldData.shaders = out;
     s_worldData.numShaders = count;
 
-    Com_Memcpy(out, in, count * sizeof(*out) );
+    Com_Memcpy(out, in, count * sizeof(*out));
 
     for (i = 0; i < count; i++) {
         ri.Printf(PRINT_DEVELOPER, "shader: '%s'\n", out[i].shader);
@@ -3113,7 +3113,7 @@ static void R_LoadMarksurfaces(lump_t* l) {
 
     in = (int*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3146,7 +3146,7 @@ static void R_LoadPlanes(lump_t* l) {
 
     in = (dplane_t*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3189,7 +3189,7 @@ static void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump) {
 
     fogs = (dfog_t*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*fogs) ) {
+    if (l->filelen % sizeof(*fogs)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3210,7 +3210,7 @@ static void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump) {
 
     brushes = (dbrush_t*)(fileBase + brushesLump->fileofs);
 
-    if (brushesLump->filelen % sizeof(*brushes) ) {
+    if (brushesLump->filelen % sizeof(*brushes)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3218,7 +3218,7 @@ static void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump) {
 
     sides = (dbrushside_t*)(fileBase + sidesLump->fileofs);
 
-    if (sidesLump->filelen % sizeof(*sides) ) {
+    if (sidesLump->filelen % sizeof(*sides)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
@@ -3360,7 +3360,7 @@ void R_LoadLightGrid(lump_t* l) {
     ri.Printf(PRINT_DEVELOPER, "grid bounds (%i %i %i)\n", w->lightGridBounds[0], w->lightGridBounds[1],
               w->lightGridBounds[2]);
 
-    if (l->filelen != w->numLightGridPoints * sizeof(dgridPoint_t) ) {
+    if (l->filelen != w->numLightGridPoints * sizeof(dgridPoint_t)) {
         ri.Printf(PRINT_WARNING, "WARNING: light grid mismatch\n");
         w->lightGridData1 = nullptr;
         w->lightGridData2 = nullptr;
@@ -3369,11 +3369,11 @@ void R_LoadLightGrid(lump_t* l) {
 
     in = (dgridPoint_t*)(fileBase + l->fileofs);
 
-    if (l->filelen % sizeof(*in) ) {
+    if (l->filelen % sizeof(*in)) {
         ri.Error(ERR_DROP, "LoadMap: funny lump size in %s", s_worldData.name);
     }
 
-    i = w->numLightGridPoints * (sizeof(*gridPoint1) + sizeof(*gridPoint2) );
+    i = w->numLightGridPoints * (sizeof(*gridPoint1) + sizeof(*gridPoint2));
     gridPoint1 = (bspGridPoint1_t*) ri.Hunk_Alloc(i, h_low);
     gridPoint2 = (bspGridPoint2_t*) (gridPoint1 + w->numLightGridPoints);
 
@@ -3414,8 +3414,8 @@ void R_LoadLightGrid(lump_t* l) {
         // Lat = 0 at (1,0,0) to 360 (-1,0,0), encoded in 8-bit sine table format
         // Lng = 0 at (0,0,1) to 180 (0,0,-1), encoded in 8-bit sine table format
 
-        lat = DEG2RAD(in->latLong[1] * (360.0f / 255.0f) );
-        lng = DEG2RAD(in->latLong[0] * (360.0f / 255.0f) );
+        lat = DEG2RAD(in->latLong[1] * (360.0f / 255.0f));
+        lng = DEG2RAD(in->latLong[0] * (360.0f / 255.0f));
 
         direction[0] = cos(lat) * sin(lng);
         direction[1] = sin(lat) * sin(lng);
@@ -3582,7 +3582,7 @@ void R_LoadEntities(lump_t* l) {
             break;
         }
 
-        Q_strncpyz(keyname, token, sizeof(keyname) );
+        Q_strncpyz(keyname, token, sizeof(keyname));
 
         // parse value
         token = COM_ParseExt2(&p, false);
@@ -3591,12 +3591,12 @@ void R_LoadEntities(lump_t* l) {
             continue;
         }
 
-        Q_strncpyz(value, token, sizeof(value) );
+        Q_strncpyz(value, token, sizeof(value));
 
         // check for remapping of shaders for vertex lighting
         s = (char*) "vertexremapshader";
 
-        if (!Q_strncmp(keyname, s, strlen(s) ) ) {
+        if (!Q_strncmp(keyname, s, strlen(s))) {
             s = strchr(value, ';');
 
             if (!s) {
@@ -3611,7 +3611,7 @@ void R_LoadEntities(lump_t* l) {
         // check for remapping of shaders
         s = (char*) "remapshader";
 
-        if (!Q_strncmp(keyname, s, strlen(s) ) ) {
+        if (!Q_strncmp(keyname, s, strlen(s))) {
             s = strchr(value, ';');
 
             if (!s) {
@@ -3625,12 +3625,12 @@ void R_LoadEntities(lump_t* l) {
         }
 
         // check for a different grid size
-        if (!Q_stricmp(keyname, "gridsize") ) {
+        if (!Q_stricmp(keyname, "gridsize")) {
             sscanf(value, "%f %f %f", &w->lightGridSize[0], &w->lightGridSize[1], &w->lightGridSize[2]);
             continue;
         }
         // check for ambient color
-        else if (!Q_stricmp(keyname, "_color") || !Q_stricmp(keyname, "ambientColor") ) {
+        else if (!Q_stricmp(keyname, "_color") || !Q_stricmp(keyname, "ambientColor")) {
             if (r_forceAmbient->value <= 0) {
                 sscanf(value, "%f %f %f", &tr.worldEntity.ambientLight[0], &tr.worldEntity.ambientLight[1],
                        &tr.worldEntity.ambientLight[2]);
@@ -3641,18 +3641,18 @@ void R_LoadEntities(lump_t* l) {
         }
 
         // check for deluxe mapping support
-        if (!Q_stricmp(keyname, "deluxeMapping") && !Q_stricmp(value, "1") ) {
+        if (!Q_stricmp(keyname, "deluxeMapping") && !Q_stricmp(value, "1")) {
             ri.Printf(PRINT_DEVELOPER, "map features directional light mapping\n");
             tr.worldDeluxeMapping = true;
             continue;
         }
         // check for mapOverBrightBits override
-        else if (!Q_stricmp(keyname, "mapOverBrightBits") ) {
+        else if (!Q_stricmp(keyname, "mapOverBrightBits")) {
             tr.mapOverBrightBits = Math::Clamp(atof(value), 0.0, 3.0);
         }
 
         // check for deluxe mapping provided by NetRadiant's q3map2
-        if (!Q_stricmp(keyname, "_q3map2_cmdline") ) {
+        if (!Q_stricmp(keyname, "_q3map2_cmdline")) {
             s = strstr(value, "-deluxe");
 
             if (s) {
@@ -3664,13 +3664,13 @@ void R_LoadEntities(lump_t* l) {
         }
 
         // check for HDR light mapping support
-        if (!Q_stricmp(keyname, "hdrRGBE") && !Q_stricmp(value, "1") ) {
+        if (!Q_stricmp(keyname, "hdrRGBE") && !Q_stricmp(value, "1")) {
             ri.Printf(PRINT_DEVELOPER, "map features HDR light mapping\n");
             tr.worldHDR_RGBE = true;
             continue;
         }
 
-        if (!Q_stricmp(keyname, "classname") && Q_stricmp(value, "worldspawn") ) {
+        if (!Q_stricmp(keyname, "classname") && Q_stricmp(value, "worldspawn")) {
             ri.Printf(PRINT_WARNING, "WARNING: expected worldspawn found '%s'\n", value);
             continue;
         }
@@ -3711,7 +3711,7 @@ void R_LoadEntities(lump_t* l) {
                 break;
             }
 
-            Q_strncpyz(keyname, token, sizeof(keyname) );
+            Q_strncpyz(keyname, token, sizeof(keyname));
 
             // parse value
             token = COM_ParseExt2(&p, false);
@@ -3721,10 +3721,10 @@ void R_LoadEntities(lump_t* l) {
                 continue;
             }
 
-            Q_strncpyz(value, token, sizeof(value) );
+            Q_strncpyz(value, token, sizeof(value));
 
             // check if this entity is a light
-            if (!Q_stricmp(keyname, "classname") && !Q_stricmp(value, "light") ) {
+            if (!Q_stricmp(keyname, "classname") && !Q_stricmp(value, "light")) {
                 isLight = true;
             }
         }
@@ -3747,7 +3747,7 @@ void R_LoadEntities(lump_t* l) {
     s_worldData.numLights = numLights;
 
     // Tr3B: FIXME add 1 dummy light so we don't trash the hunk memory system ...
-    s_worldData.lights = (trRefLight_t*) ri.Hunk_Alloc( (s_worldData.numLights + 1) * sizeof(trRefLight_t), h_low);
+    s_worldData.lights = (trRefLight_t*) ri.Hunk_Alloc((s_worldData.numLights + 1) * sizeof(trRefLight_t), h_low);
 
     // basic light setup
     for (i = 0, light = s_worldData.lights; i < s_worldData.numLights; i++, light++) {
@@ -3815,7 +3815,7 @@ void R_LoadEntities(lump_t* l) {
                 break;
             }
 
-            Q_strncpyz(keyname, token, sizeof(keyname) );
+            Q_strncpyz(keyname, token, sizeof(keyname));
 
             // parse value
             token = COM_ParseExt2(&p, false);
@@ -3825,64 +3825,64 @@ void R_LoadEntities(lump_t* l) {
                 continue;
             }
 
-            Q_strncpyz(value, token, sizeof(value) );
+            Q_strncpyz(value, token, sizeof(value));
 
             // check if this entity is a light
-            if (!Q_stricmp(keyname, "classname") && !Q_stricmp(value, "light") ) {
+            if (!Q_stricmp(keyname, "classname") && !Q_stricmp(value, "light")) {
                 isLight = true;
             }
             // check for origin
-            else if (!Q_stricmp(keyname, "origin") || !Q_stricmp(keyname, "light_origin") ) {
+            else if (!Q_stricmp(keyname, "origin") || !Q_stricmp(keyname, "light_origin")) {
                 sscanf(value, "%f %f %f", &light->l.origin[0], &light->l.origin[1], &light->l.origin[2]);
                 s = &value[0];
             }
             // check for center
-            else if (!Q_stricmp(keyname, "light_center") ) {
+            else if (!Q_stricmp(keyname, "light_center")) {
                 sscanf(value, "%f %f %f", &light->l.center[0], &light->l.center[1], &light->l.center[2]);
                 s = &value[0];
             }
             // check for color
-            else if (!Q_stricmp(keyname, "_color") ) {
+            else if (!Q_stricmp(keyname, "_color")) {
                 sscanf(value, "%f %f %f", &light->l.color[0], &light->l.color[1], &light->l.color[2]);
                 s = &value[0];
             }
             // check for radius
-            else if (!Q_stricmp(keyname, "light_radius") ) {
+            else if (!Q_stricmp(keyname, "light_radius")) {
                 sscanf(value, "%f %f %f", &light->l.radius[0], &light->l.radius[1], &light->l.radius[2]);
                 s = &value[0];
             }
             // check for light_target
-            else if (!Q_stricmp(keyname, "light_target") ) {
+            else if (!Q_stricmp(keyname, "light_target")) {
                 sscanf(value, "%f %f %f", &light->l.projTarget[0], &light->l.projTarget[1], &light->l.projTarget[2]);
                 s = &value[0];
                 light->l.rlType = RL_PROJ;
             }
             // check for light_right
-            else if (!Q_stricmp(keyname, "light_right") ) {
+            else if (!Q_stricmp(keyname, "light_right")) {
                 sscanf(value, "%f %f %f", &light->l.projRight[0], &light->l.projRight[1], &light->l.projRight[2]);
                 s = &value[0];
                 light->l.rlType = RL_PROJ;
             }
             // check for light_up
-            else if (!Q_stricmp(keyname, "light_up") ) {
+            else if (!Q_stricmp(keyname, "light_up")) {
                 sscanf(value, "%f %f %f", &light->l.projUp[0], &light->l.projUp[1], &light->l.projUp[2]);
                 s = &value[0];
                 light->l.rlType = RL_PROJ;
             }
             // check for light_start
-            else if (!Q_stricmp(keyname, "light_start") ) {
+            else if (!Q_stricmp(keyname, "light_start")) {
                 sscanf(value, "%f %f %f", &light->l.projStart[0], &light->l.projStart[1], &light->l.projStart[2]);
                 s = &value[0];
                 light->l.rlType = RL_PROJ;
             }
             // check for light_end
-            else if (!Q_stricmp(keyname, "light_end") ) {
+            else if (!Q_stricmp(keyname, "light_end")) {
                 sscanf(value, "%f %f %f", &light->l.projEnd[0], &light->l.projEnd[1], &light->l.projEnd[2]);
                 s = &value[0];
                 light->l.rlType = RL_PROJ;
             }
             // check for radius
-            else if (!Q_stricmp(keyname, "light") || !Q_stricmp(keyname, "_light") ) {
+            else if (!Q_stricmp(keyname, "light") || !Q_stricmp(keyname, "_light")) {
                 vec_t value2;
 
                 value2 = atof(value);
@@ -3891,7 +3891,7 @@ void R_LoadEntities(lump_t* l) {
                 light->l.radius[2] = value2;
             }
             // check for scale
-            else if (!Q_stricmp(keyname, "light_scale") ) {
+            else if (!Q_stricmp(keyname, "light_scale")) {
                 light->l.scale = atof(value);
 
                 if (light->l.scale >= r_lightScale->value) {
@@ -3899,11 +3899,11 @@ void R_LoadEntities(lump_t* l) {
                 }
             }
             // check for light shader
-            else if (!Q_stricmp(keyname, "texture") ) {
+            else if (!Q_stricmp(keyname, "texture")) {
                 light->l.attenuationShader = RE_RegisterShader(value, RSF_LIGHT_ATTENUATION);
             }
             // check for rotation
-            else if (!Q_stricmp(keyname, "rotation") || !Q_stricmp(keyname, "light_rotation") ) {
+            else if (!Q_stricmp(keyname, "rotation") || !Q_stricmp(keyname, "light_rotation")) {
                 matrix_t rotation;
 
                 sscanf(value, "%f %f %f %f %f %f %f %f %f", &rotation[0], &rotation[1], &rotation[2],
@@ -3912,15 +3912,15 @@ void R_LoadEntities(lump_t* l) {
                 QuatFromMatrix(light->l.rotation, rotation);
             }
             // check if this light does not cast any shadows
-            else if (!Q_stricmp(keyname, "noshadows") && !Q_stricmp(value, "1") ) {
+            else if (!Q_stricmp(keyname, "noshadows") && !Q_stricmp(value, "1")) {
                 light->l.noShadows = true;
             }
             // check if this light does not contribute to the global lightmapping
-            else if (!Q_stricmp(keyname, "noradiosity") && !Q_stricmp(value, "1") ) {
+            else if (!Q_stricmp(keyname, "noradiosity") && !Q_stricmp(value, "1")) {
                 light->noRadiosity = true;
             }
             // check if this light is a parallel sun light
-            else if (!Q_stricmp(keyname, "parallel") && !Q_stricmp(value, "1") ) {
+            else if (!Q_stricmp(keyname, "parallel") && !Q_stricmp(value, "1")) {
                 light->l.rlType = RL_DIRECTIONAL;
             }
         }
@@ -3934,7 +3934,7 @@ void R_LoadEntities(lump_t* l) {
             // reset rotation because it may be set to the rotation of other entities
             QuatClear(light->l.rotation);
         } else {
-            if ( (numOmniLights + numProjLights + numParallelLights) < s_worldData.numLights) {
+            if ((numOmniLights + numProjLights + numParallelLights) < s_worldData.numLights) {
                 switch (light->l.rlType) {
                 case RL_OMNI:
                     numOmniLights++;
@@ -3959,8 +3959,8 @@ void R_LoadEntities(lump_t* l) {
         numEntities++;
     }
 
-    if ( (numOmniLights + numProjLights + numParallelLights) != s_worldData.numLights) {
-        ri.Error(ERR_DROP, "counted %i lights and parsed %i lights", s_worldData.numLights, (numOmniLights + numProjLights + numParallelLights) );
+    if ((numOmniLights + numProjLights + numParallelLights) != s_worldData.numLights) {
+        ri.Error(ERR_DROP, "counted %i lights and parsed %i lights", s_worldData.numLights, (numOmniLights + numProjLights + numParallelLights));
     }
 
     ri.Printf(PRINT_DEVELOPER, "%i total entities parsed\n", numEntities);
@@ -4041,7 +4041,7 @@ static void R_PrecacheInteractionSurface(bspSurface_t* surf, trRefLight_t* light
     surf->lightCount = s_lightCount;
 
     // skip all surfaces that don't matter for lighting only pass
-    if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows) ) {
+    if (surf->shader->isSky || (!surf->shader->interactLight && surf->shader->noShadows)) {
         return;
     }
 
@@ -4049,7 +4049,7 @@ static void R_PrecacheInteractionSurface(bspSurface_t* surf, trRefLight_t* light
     case SF_FACE:
     case SF_GRID:
     case SF_TRIANGLES:
-        intersects = R_PrecacheGenericSurfInteraction( (srfGeneric_t*) surf->data, light);
+        intersects = R_PrecacheGenericSurfInteraction((srfGeneric_t*) surf->data, light);
         break;
 
     default:
@@ -4205,7 +4205,7 @@ static int UpdateLightTriangles(const srfVert_t* verts, int numTriangles, srfTri
         VectorCopy(verts[tri->indexes[1]].xyz, pos[1]);
         VectorCopy(verts[tri->indexes[2]].xyz, pos[2]);
 
-        if (PlaneFromPoints(triPlane, pos[0], pos[1], pos[2]) ) {
+        if (PlaneFromPoints(triPlane, pos[0], pos[1], pos[2])) {
 
             if (light->l.rlType == RL_DIRECTIONAL) {
                 vec3_t lightDirection;
@@ -4296,7 +4296,7 @@ static void R_CreateVBOLightMeshes(trRefLight_t* light) {
     }
 
     // build interaction caches list
-    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]) );
+    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]));
 
     numCaches = 0;
 
@@ -4416,7 +4416,7 @@ static void R_CreateVBOLightMeshes(trRefLight_t* light) {
             VectorCopy(bounds[1], vboSurf->bounds[1]);
 
             // create arrays
-            indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t) );
+            indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t));
             numTriangles = 0;
 
             // build triangle indices
@@ -4576,7 +4576,7 @@ static void R_CreateVBOShadowMeshes(trRefLight_t* light) {
     }
 
     // build interaction caches list
-    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]) );
+    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]));
 
     numCaches = 0;
 
@@ -4719,7 +4719,7 @@ static void R_CreateVBOShadowMeshes(trRefLight_t* light) {
             VectorCopy(bounds[1], vboSurf->bounds[1]);
 
             // create arrays
-            indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t) );
+            indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t));
             numTriangles = 0;
 
             // build triangle indices
@@ -4877,7 +4877,7 @@ static void R_CreateVBOShadowCubeMeshes(trRefLight_t* light) {
     }
 
     // build interaction caches list
-    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]) );
+    iaCachesSorted = (interactionCache_t**) ri.Hunk_AllocateTempMemory(numCaches * sizeof(iaCachesSorted[0]));
 
     numCaches = 0;
 
@@ -4950,7 +4950,7 @@ static void R_CreateVBOShadowCubeMeshes(trRefLight_t* light) {
                         }
                     }
 
-                    if (!(iaCache2->cubeSideBits & (1 << cubeSide) ) ) {
+                    if (!(iaCache2->cubeSideBits & (1 << cubeSide))) {
                         continue;
                     }
 
@@ -5006,7 +5006,7 @@ static void R_CreateVBOShadowCubeMeshes(trRefLight_t* light) {
                 ZeroBounds(vboSurf->bounds[0], vboSurf->bounds[1]);
 
                 // create arrays
-                indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t) );
+                indexes = (glIndex_t*) ri.Hunk_AllocateTempMemory(3 * numTriangles * sizeof(glIndex_t));
                 numTriangles = 0;
 
                 // build triangle indices
@@ -5025,7 +5025,7 @@ static void R_CreateVBOShadowCubeMeshes(trRefLight_t* light) {
                         }
                     }
 
-                    if (!(iaCache2->cubeSideBits & (1 << cubeSide) ) ) {
+                    if (!(iaCache2->cubeSideBits & (1 << cubeSide))) {
                         continue;
                     }
 
@@ -5164,7 +5164,7 @@ void R_PrecacheInteractions() {
     for (i = 0; i < s_worldData.numLights; i++) {
         light = &s_worldData.lights[i];
 
-        if ( (r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity) {
+        if ((r_precomputedLighting->integer || r_vertexLighting->integer) && !light->noRadiosity) {
             continue;
         }
 
@@ -5252,12 +5252,12 @@ unsigned int VertexCoordGenerateHash(const vec3_t xyz) {
     unsigned int hash = 0;
 
     #ifndef HASH_USE_EPSILON
-    hash += ~(*( (unsigned int*) &xyz[0]) << 15);
-    hash ^= (*( (unsigned int*) &xyz[0]) >> 10);
-    hash += (*( (unsigned int*) &xyz[1]) << 3);
-    hash ^= (*( (unsigned int*) &xyz[1]) >> 6);
-    hash += ~(*( (unsigned int*) &xyz[2]) << 11);
-    hash ^= (*( (unsigned int*) &xyz[2]) >> 16);
+    hash += ~(*((unsigned int*) &xyz[0]) << 15);
+    hash ^= (*((unsigned int*) &xyz[0]) >> 10);
+    hash += (*((unsigned int*) &xyz[1]) << 3);
+    hash ^= (*((unsigned int*) &xyz[1]) >> 6);
+    hash += ~(*((unsigned int*) &xyz[2]) << 11);
+    hash ^= (*((unsigned int*) &xyz[2]) >> 16);
     #else
     vec3_t xyz_epsilonspace;
 
@@ -5266,12 +5266,12 @@ unsigned int VertexCoordGenerateHash(const vec3_t xyz) {
     xyz_epsilonspace[1] = floor(xyz_epsilonspace[1]);
     xyz_epsilonspace[2] = floor(xyz_epsilonspace[2]);
 
-    hash += ~(*( (unsigned int*) &xyz_epsilonspace[0]) << 15);
-    hash ^= (*( (unsigned int*) &xyz_epsilonspace[0]) >> 10);
-    hash += (*( (unsigned int*) &xyz_epsilonspace[1]) << 3);
-    hash ^= (*( (unsigned int*) &xyz_epsilonspace[1]) >> 6);
-    hash += ~(*( (unsigned int*) &xyz_epsilonspace[2]) << 11);
-    hash ^= (*( (unsigned int*) &xyz_epsilonspace[2]) >> 16);
+    hash += ~(*((unsigned int*) &xyz_epsilonspace[0]) << 15);
+    hash ^= (*((unsigned int*) &xyz_epsilonspace[0]) >> 10);
+    hash += (*((unsigned int*) &xyz_epsilonspace[1]) << 3);
+    hash ^= (*((unsigned int*) &xyz_epsilonspace[1]) >> 6);
+    hash += ~(*((unsigned int*) &xyz_epsilonspace[2]) << 11);
+    hash ^= (*((unsigned int*) &xyz_epsilonspace[2]) >> 16);
 
     #endif
 
@@ -5280,9 +5280,9 @@ unsigned int VertexCoordGenerateHash(const vec3_t xyz) {
 }
 
 vertexHash_t** NewVertexHashTable() {
-    vertexHash_t** hashTable = (vertexHash_t**) Com_Allocate(HASHTABLE_SIZE * sizeof(vertexHash_t*) );
+    vertexHash_t** hashTable = (vertexHash_t**) Com_Allocate(HASHTABLE_SIZE * sizeof(vertexHash_t*));
 
-    Com_Memset(hashTable, 0, HASHTABLE_SIZE * sizeof(vertexHash_t*) );
+    Com_Memset(hashTable, 0, HASHTABLE_SIZE * sizeof(vertexHash_t*));
 
     return hashTable;
 }
@@ -5324,8 +5324,8 @@ vertexHash_t* FindVertexInHashTable(vertexHash_t** hashTable, const vec3_t xyz, 
     for (vertexHash = hashTable[hash]; vertexHash; vertexHash = vertexHash->next) {
         #ifndef HASH_USE_EPSILON
 
-        if ( (vertexHash->vcd.xyz[0] != xyz[0] || vertexHash->vcd.xyz[1] != xyz[1] ||
-              vertexHash->vcd.xyz[2] != xyz[2]) ) {
+        if ((vertexHash->vcd.xyz[0] != xyz[0] || vertexHash->vcd.xyz[1] != xyz[1] ||
+             vertexHash->vcd.xyz[2] != xyz[2])) {
             continue;
         }
 
@@ -5337,9 +5337,9 @@ vertexHash_t* FindVertexInHashTable(vertexHash_t** hashTable, const vec3_t xyz, 
 
         #else
 
-        if ( (fabs(xyz[0] - vertexHash->vcd.xyz[0]) ) > HASH_XYZ_EPSILON ||
-             (fabs(xyz[1] - vertexHash->vcd.xyz[1]) ) > HASH_XYZ_EPSILON ||
-             (fabs(xyz[2] - vertexHash->vcd.xyz[2]) ) > HASH_XYZ_EPSILON) {
+        if ((fabs(xyz[0] - vertexHash->vcd.xyz[0])) > HASH_XYZ_EPSILON ||
+            (fabs(xyz[1] - vertexHash->vcd.xyz[1])) > HASH_XYZ_EPSILON ||
+            (fabs(xyz[2] - vertexHash->vcd.xyz[2])) > HASH_XYZ_EPSILON) {
             continue;
         }
 
@@ -5358,7 +5358,7 @@ vertexHash_t* AddVertexToHashTable(vertexHash_t** hashTable, vec3_t xyz, void* d
         return nullptr;
     }
 
-    vertexHash = (vertexHash_t*) Com_Allocate(sizeof(vertexHash_t) );
+    vertexHash = (vertexHash_t*) Com_Allocate(sizeof(vertexHash_t));
 
     if (!vertexHash) {
         return nullptr;
@@ -5464,7 +5464,7 @@ void R_BuildCubeMaps() {
 
     startTime = ri.Milliseconds();
 
-    memset(&rf, 0, sizeof(refdef_t) );
+    memset(&rf, 0, sizeof(refdef_t));
 
     for (i = 0; i < 6; i++) {
         tr.cubeTemp[i] = (byte*) ri.Z_Malloc(REF_CUBEMAP_SIZE * REF_CUBEMAP_SIZE * 4);
@@ -5523,17 +5523,17 @@ void R_BuildCubeMaps() {
         // ri.Printf(PRINT_ALL, "rendering cubemap at (%i %i %i)\n", (int)cubeProbe->origin[0], (int)cubeProbe->origin[1],
         // (int)cubeProbe->origin[2]);
 
-        if ( (j + 1) >= nextTicCount) {
-            size_t ticsNeeded = (size_t)( ( (double)(j + 1) / tr.cubeProbes.currentElements) * 50.0);
+        if ((j + 1) >= nextTicCount) {
+            size_t ticsNeeded = (size_t)(((double)(j + 1) / tr.cubeProbes.currentElements) * 50.0);
 
             do {
                 ri.Printf(PRINT_ALL, "*");
                 Cmd::ExecuteCommand("updatescreen");
             } while (++tics < ticsNeeded);
 
-            nextTicCount = (size_t)( (tics / 50.0) * tr.cubeProbes.currentElements);
+            nextTicCount = (size_t)((tics / 50.0) * tr.cubeProbes.currentElements);
 
-            if ( (j + 1) == tr.cubeProbes.currentElements) {
+            if ((j + 1) == tr.cubeProbes.currentElements) {
                 if (tics < 51) {
                     ri.Printf(PRINT_ALL, "*");
                 }
@@ -5667,8 +5667,8 @@ void R_BuildCubeMaps() {
 
                 for (y = 0; y < REF_CUBEMAP_SIZE; y++) {
                     for (x = 0; x < REF_CUBEMAP_SIZE; x++) {
-                        xy = ( (y * REF_CUBEMAP_SIZE) + x) * 4;
-                        xy2 = ( (y * REF_CUBEMAP_SIZE) + ( (REF_CUBEMAP_SIZE - 1) - x) ) * 4;
+                        xy = ((y * REF_CUBEMAP_SIZE) + x) * 4;
+                        xy2 = ((y * REF_CUBEMAP_SIZE) + ((REF_CUBEMAP_SIZE - 1) - x)) * 4;
                         dest[xy2 + 0] = temp[xy + 0];
                         dest[xy2 + 1] = temp[xy + 1];
                         dest[xy2 + 2] = temp[xy + 2];
@@ -5683,8 +5683,8 @@ void R_BuildCubeMaps() {
 
                 for (y = 0; y < REF_CUBEMAP_SIZE; y++) {
                     for (x = 0; x < REF_CUBEMAP_SIZE; x++) {
-                        xy = ( (y * REF_CUBEMAP_SIZE) + x) * 4;
-                        xy2 = ( ( ( (REF_CUBEMAP_SIZE - 1) - y) * REF_CUBEMAP_SIZE) + x) * 4;
+                        xy = ((y * REF_CUBEMAP_SIZE) + x) * 4;
+                        xy2 = ((((REF_CUBEMAP_SIZE - 1) - y) * REF_CUBEMAP_SIZE) + x) * 4;
                         dest[xy2 + 0] = temp[xy + 0];
                         dest[xy2 + 1] = temp[xy + 1];
                         dest[xy2 + 2] = temp[xy + 2];
@@ -5700,15 +5700,15 @@ void R_BuildCubeMaps() {
 
             for (y = 0; y < REF_CUBEMAP_SIZE; y++) {
                 for (x = 0; x < REF_CUBEMAP_SIZE; x++) {
-                    xy = ( (y * REF_CUBEMAP_SIZE) + x) * 4;
+                    xy = ((y * REF_CUBEMAP_SIZE) + x) * 4;
 
                     r = dest[xy + 0];
                     g = dest[xy + 1];
                     b = dest[xy + 2];
 
-                    if ( (r > g) && (r > b) ) {
+                    if ((r > g) && (r > b)) {
                         best = r;
-                    } else if ( (g > r) && (g > b) ) {
+                    } else if ((g > r) && (g > b)) {
                         best = g;
                     } else {
                         best = b;
@@ -5735,7 +5735,7 @@ void R_BuildCubeMaps() {
         cubeProbe->cubemap->filterType = FT_LINEAR;
         cubeProbe->cubemap->wrapType = WT_EDGE_CLAMP;
 
-        R_UploadImage( (const byte**) tr.cubeTemp, 6, 1, cubeProbe->cubemap);
+        R_UploadImage((const byte**) tr.cubeTemp, 6, 1, cubeProbe->cubemap);
     }
 
     ri.Printf(PRINT_ALL, "\n");
@@ -5798,11 +5798,11 @@ void RE_LoadWorldMap(const char* name) {
     tr.worldDeluxeMapping = false;
     tr.worldHDR_RGBE = false;
 
-    Com_Memset(&s_worldData, 0, sizeof(s_worldData) );
-    Q_strncpyz(s_worldData.name, name, sizeof(s_worldData.name) );
+    Com_Memset(&s_worldData, 0, sizeof(s_worldData));
+    Q_strncpyz(s_worldData.name, name, sizeof(s_worldData.name));
 
-    Q_strncpyz(s_worldData.baseName, COM_SkipPath(s_worldData.name), sizeof(s_worldData.name) );
-    COM_StripExtension3(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName) );
+    Q_strncpyz(s_worldData.baseName, COM_SkipPath(s_worldData.name), sizeof(s_worldData.name));
+    COM_StripExtension3(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
 
     startMarker = (byte*) ri.Hunk_Alloc(0, h_low);
 
@@ -5819,7 +5819,7 @@ void RE_LoadWorldMap(const char* name) {
 
     // swap all the lumps
     for (unsigned i = 0; i < sizeof(dheader_t) / 4; i++) {
-        ( (int*) header) [i] = LittleLong( ( (int*) header) [i]);
+        ((int*) header) [i] = LittleLong(((int*) header) [i]);
     }
 
     // load into heap

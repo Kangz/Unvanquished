@@ -62,8 +62,8 @@ bool BG_GetTrajectoryPitch(vec3_t origin, vec3_t target, float v0, float g,
 
     tmp = sqrt(tmp);
 
-    angles[0] = atanf( (v02 + tmp) / (g * t2[0]) );
-    angles[1] = atanf( (v02 - tmp) / (g * t2[0]) );
+    angles[0] = atanf((v02 + tmp) / (g * t2[0]));
+    angles[1] = atanf((v02 - tmp) / (g * t2[0]));
 
     // calculate the corresponding directions for both angles
     dir1[0] = dir2[0] = t3[0];
@@ -119,7 +119,7 @@ bool BG_IsMainStructure(entityState_t* es) {
         return false;
     }
 
-    return BG_IsMainStructure( (buildable_t)es->modelindex);
+    return BG_IsMainStructure((buildable_t)es->modelindex);
 }
 
 /**

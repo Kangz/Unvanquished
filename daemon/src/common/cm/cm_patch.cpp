@@ -83,7 +83,7 @@ static bool CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c) {
 
     // calculate the exact curve midpoint
     for (i = 0; i < 3; i++) {
-        cmid[i] = 0.5 * (0.5 * (a[i] + b[i]) + 0.5 * (b[i] + c[i]) );
+        cmid[i] = 0.5 * (0.5 * (a[i] + b[i]) + 0.5 * (b[i] + c[i]));
     }
 
     // see if the curve is far enough away from the linear mid
@@ -215,7 +215,7 @@ static void CM_SubdivideGridColumns(cGrid_t* grid) {
         // first see if we can collapse the approximating column away
         //
         for (j = 0; j < grid->height; j++) {
-            if (CM_NeedsSubdivision(grid->points[i][j], grid->points[i + 1][j], grid->points[i + 2][j]) ) {
+            if (CM_NeedsSubdivision(grid->points[i][j], grid->points[i + 1][j], grid->points[i + 2][j])) {
                 break;
             }
         }
@@ -308,7 +308,7 @@ static void CM_RemoveDegenerateColumns(cGrid_t* grid) {
 
     for (i = 0; i < grid->width - 1; i++) {
         for (j = 0; j < grid->height; j++) {
-            if (!CM_ComparePoints(grid->points[i][j], grid->points[i + 1][j]) ) {
+            if (!CM_ComparePoints(grid->points[i][j], grid->points[i + 1][j])) {
                 break;
             }
         }
@@ -603,7 +603,7 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
             }
 
             facet = &facets[numFacets];
-            Com_Memset(facet, 0, sizeof(*facet) );
+            Com_Memset(facet, 0, sizeof(*facet));
 
             if (gridPlanes[i][j][0] == gridPlanes[i][j][1]) {
                 if (gridPlanes[i][j][0] == -1) {
@@ -622,7 +622,7 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
                 facet->borderNoAdjust[3] = noAdjust[EN_LEFT];
                 CM_SetBorderInward(facet, grid, i, j, -1);
 
-                if (CM_ValidateFacet(facet) ) {
+                if (CM_ValidateFacet(facet)) {
                     CM_AddFacetBevels(facet);
                     numFacets++;
                 }
@@ -646,7 +646,7 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
 
                 CM_SetBorderInward(facet, grid, i, j, 0);
 
-                if (CM_ValidateFacet(facet) ) {
+                if (CM_ValidateFacet(facet)) {
                     CM_AddFacetBevels(facet);
                     numFacets++;
                 }
@@ -656,7 +656,7 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
                 }
 
                 facet = &facets[numFacets];
-                Com_Memset(facet, 0, sizeof(*facet) );
+                Com_Memset(facet, 0, sizeof(*facet));
 
                 facet->surfacePlane = gridPlanes[i][j][1];
                 facet->numBorders = 3;
@@ -676,7 +676,7 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
 
                 CM_SetBorderInward(facet, grid, i, j, 1);
 
-                if (CM_ValidateFacet(facet) ) {
+                if (CM_ValidateFacet(facet)) {
                     CM_AddFacetBevels(facet);
                     numFacets++;
                 }
@@ -687,10 +687,10 @@ static void CM_SurfaceCollideFromGrid(cGrid_t* grid, cSurfaceCollide_t* sc) {
     // copy the results out
     sc->numPlanes = numPlanes;
     sc->numFacets = numFacets;
-    sc->facets = (cFacet_t*) CM_Alloc(numFacets * sizeof(*sc->facets) );
-    Com_Memcpy(sc->facets, facets, numFacets * sizeof(*sc->facets) );
-    sc->planes = (cPlane_t*) CM_Alloc(numPlanes * sizeof(*sc->planes) );
-    Com_Memcpy(sc->planes, planes, numPlanes * sizeof(*sc->planes) );
+    sc->facets = (cFacet_t*) CM_Alloc(numFacets * sizeof(*sc->facets));
+    Com_Memcpy(sc->facets, facets, numFacets * sizeof(*sc->facets));
+    sc->planes = (cPlane_t*) CM_Alloc(numPlanes * sizeof(*sc->planes));
+    Com_Memcpy(sc->planes, planes, numPlanes * sizeof(*sc->planes));
 }
 
 /*
@@ -712,7 +712,7 @@ cSurfaceCollide_t* CM_GeneratePatchCollide(int width, int height, vec3_t* points
         Sys::Drop("CM_GeneratePatchFacets: bad parameters: (%i, %i, %p)", width, height, (void*) points);
     }
 
-    if (!(width & 1) || !(height & 1) ) {
+    if (!(width & 1) || !(height & 1)) {
         Sys::Drop("CM_GeneratePatchFacets: even sizes are invalid for quadratic meshes");
     }
 
@@ -746,7 +746,7 @@ cSurfaceCollide_t* CM_GeneratePatchCollide(int width, int height, vec3_t* points
     // we now have a grid of points exactly on the curve
     // the approximate surface defined by these points will be
     // collided against
-    sc = (cSurfaceCollide_t*) CM_Alloc(sizeof(*sc) );
+    sc = (cSurfaceCollide_t*) CM_Alloc(sizeof(*sc));
     ClearBounds(sc->bounds[0], sc->bounds[1]);
 
     for (i = 0; i < grid.width; i++) {

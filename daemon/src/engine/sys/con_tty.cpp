@@ -80,9 +80,9 @@ Transform Q3 colour codes to ANSI escape sequences
 */
 static void CON_AnsiColorPrint(const char* msg) {
     std::string buffer;
-    for (const auto& token : Color::Parser(msg, Color::Color() ) ) {
+    for (const auto& token : Color::Parser(msg, Color::Color())) {
         if (token.Type() == Color::Token::COLOR) {
-            if (!buffer.empty() ) {
+            if (!buffer.empty()) {
                 fputs(buffer.c_str(), stderr);
                 buffer.clear();
             }
@@ -90,7 +90,7 @@ static void CON_AnsiColorPrint(const char* msg) {
             if (token.Color().Alpha() == 0) {
                 fputs("\x1b[0m", stderr);
             } else {
-                auto c4b = Color::To4bit(token.Color() );
+                auto c4b = Color::To4bit(token.Color());
                 bool bright = c4b & 8;
                 int number = c4b & ~8;
 
@@ -105,11 +105,11 @@ static void CON_AnsiColorPrint(const char* msg) {
                 buffer.clear();
                 fputs("\033[0;49;37m\n", stderr);
             } else {
-                buffer.append(token.Begin(), token.Size() );
+                buffer.append(token.Begin(), token.Size());
             }
         }
     }
-    if (!buffer.empty() ) {
+    if (!buffer.empty()) {
         fputs(buffer.c_str(), stderr);
     }
 }
@@ -244,7 +244,7 @@ void CON_Init_TTY() {
 
     const char* term = getenv("TERM");
     bool stdinIsATTY = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && isatty(STDERR_FILENO) &&
-                       !(term && (!strcmp(term, "raw") || !strcmp(term, "dumb") ) );
+                       !(term && (!strcmp(term, "raw") || !strcmp(term, "dumb")));
     if (!stdinIsATTY) {
         Log::Notice("tty console mode disabled\n");
         ttycon_on = false;
@@ -296,7 +296,7 @@ char* CON_Input_TTY() {
             // we have something
             // backspace?
             // NOTE TTimo testing a lot of values .. seems it's the only way to get it to work everywhere
-            if ( (key == TTY_erase) || (key == 127) || (key == 8) ) {
+            if ((key == TTY_erase) || (key == 127) || (key == 8)) {
                 CON_Hide();
                 TTY_field.DeletePrev();
                 CON_Show();
@@ -305,7 +305,7 @@ char* CON_Input_TTY() {
             }
 
             // check if this is a control char
-            if ( (key) && (key) < ' ') {
+            if ((key) && (key) < ' ') {
                 if (key == '\n') {
                     TTY_field.RunCommand(com_consoleCommand.Get());
                     WriteToStdout("\n]");
@@ -379,11 +379,11 @@ char* CON_Input_TTY() {
         timeout.tv_sec = 0;
         timeout.tv_usec = 0;
 
-        if (select(STDIN_FILENO + 1, &fdset, nullptr, nullptr, &timeout) == -1 || !FD_ISSET(STDIN_FILENO, &fdset) ) {
+        if (select(STDIN_FILENO + 1, &fdset, nullptr, nullptr, &timeout) == -1 || !FD_ISSET(STDIN_FILENO, &fdset)) {
             return nullptr;
         }
 
-        len = read(STDIN_FILENO, text, sizeof(text) );
+        len = read(STDIN_FILENO, text, sizeof(text));
 
         if (len == 0) {
             // eof!
@@ -411,7 +411,7 @@ CON_Print_TTY
 void CON_Print_TTY(const char* msg) {
     CON_Hide();
 
-    if (ttycon_on && com_ansiColor.Get() ) {
+    if (ttycon_on && com_ansiColor.Get()) {
         CON_AnsiColorPrint(msg);
     } else {
         fputs(msg, stderr);

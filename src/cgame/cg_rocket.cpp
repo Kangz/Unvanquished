@@ -47,7 +47,7 @@ typedef struct {
     int cvarFlags;
 } cvarTable_t;
 
-static const cvarTable_t rocketCvarTable[] ={
+static const cvarTable_t rocketCvarTable[] = {
     { &rocket_hudFile, "rocket_hudFile", "ui/rockethud.txt", 0 },
     { &rocket_menuFile, "rocket_menuFile", "ui/rocket.txt", 0 },
     { &rocket_pak, "rocket_pak", "", 0 },
@@ -103,7 +103,7 @@ void CG_Rocket_Init(glconfig_t gl) {
     // Load custom rocket pak if necessary
     if (*rocket_pak.string) {
         // Only load stuff from ui/
-        if (!trap_FS_LoadPak(rocket_pak.string, "ui/") ) {
+        if (!trap_FS_LoadPak(rocket_pak.string, "ui/")) {
             Com_Error(ERR_DROP, "Unable to load custom UI pak: %s.", rocket_pak.string);
         }
     }
@@ -140,11 +140,11 @@ void CG_Rocket_Init(glconfig_t gl) {
         }
 
         // Set the cursor
-        if (!Q_stricmp(token, "cursor") ) {
+        if (!Q_stricmp(token, "cursor")) {
             token = COM_Parse2(&text_p);
 
             // Skip non-RML files
-            if (Q_stricmp(token + strlen(token) - 4, ".rml") ) {
+            if (Q_stricmp(token + strlen(token) - 4, ".rml")) {
                 continue;
             }
 
@@ -152,7 +152,7 @@ void CG_Rocket_Init(glconfig_t gl) {
             continue;
         }
 
-        if (!Q_stricmp(token, "main") ) {
+        if (!Q_stricmp(token, "main")) {
             int i;
 
             token = COM_Parse2(&text_p);
@@ -199,7 +199,7 @@ void CG_Rocket_Init(glconfig_t gl) {
             continue;
         }
 
-        if (!Q_stricmp(token, "misc") ) {
+        if (!Q_stricmp(token, "misc")) {
             token = COM_Parse2(&text_p);
 
             if (*token != '{') {
@@ -218,7 +218,7 @@ void CG_Rocket_Init(glconfig_t gl) {
                 }
 
                 // Skip non-RML files
-                if (Q_stricmp(token + strlen(token) - 4, ".rml") ) {
+                if (Q_stricmp(token + strlen(token) - 4, ".rml")) {
                     Com_Printf("^3WARNING: Non-RML file listed in %s: \"%s\" . Skipping.", rocket_menuFile.string, token);
                     continue;
                 }
@@ -230,7 +230,7 @@ void CG_Rocket_Init(glconfig_t gl) {
             continue;
         }
 
-        if (!Q_stricmp(token, "fonts") ) {
+        if (!Q_stricmp(token, "fonts")) {
             token = COM_Parse2(&text_p);
 
             if (*token != '{') {
@@ -259,7 +259,7 @@ void CG_Rocket_Init(glconfig_t gl) {
 
     // Check if we need to display a server connect/disconnect error
     text[0] = '\0';
-    trap_Cvar_VariableStringBuffer("com_errorMessage", text, sizeof(text) );
+    trap_Cvar_VariableStringBuffer("com_errorMessage", text, sizeof(text));
     if (*text) {
         trap_Cvar_Set("ui_errorMessage", text);
         Rocket_DocumentAction(rocketInfo.menu[ROCKETMENU_ERROR].id, "open");
@@ -304,7 +304,7 @@ void CG_Rocket_LoadHuds() {
             break;
         }
 
-        if (!Q_stricmp(token, "units") ) {
+        if (!Q_stricmp(token, "units")) {
             while (1) {
                 int toklen;
 
@@ -320,7 +320,7 @@ void CG_Rocket_LoadHuds() {
                 }
 
                 // Skip non-RML files and opening brace
-                if (toklen < 4 || Q_stricmp(token + toklen - 4, ".rml") ) {
+                if (toklen < 4 || Q_stricmp(token + toklen - 4, ".rml")) {
                     continue;
                 }
 
@@ -330,7 +330,7 @@ void CG_Rocket_LoadHuds() {
             continue;
         }
 
-        if (!Q_stricmp(token, "human.hudgroup") ) {
+        if (!Q_stricmp(token, "human.hudgroup")) {
             // Clear old values
             for (i = WP_BLASTER; i <= WP_LUCIFER_CANNON; ++i) {
                 Rocket_ClearHud(i);
@@ -365,7 +365,7 @@ void CG_Rocket_LoadHuds() {
             continue;
         }
 
-        if (!Q_stricmp(token, "spectator.hudgroup") ) {
+        if (!Q_stricmp(token, "spectator.hudgroup")) {
             for (i = WP_NONE; i < WP_NUM_WEAPONS; ++i) {
                 Rocket_ClearHud(i);
             }
@@ -394,7 +394,7 @@ void CG_Rocket_LoadHuds() {
             continue;
         }
 
-        if (!Q_stricmp(token, "alien.hudgroup") ) {
+        if (!Q_stricmp(token, "alien.hudgroup")) {
             for (i = WP_ALEVEL0; i <= WP_ALEVEL4; ++i) {
                 Rocket_ClearHud(i);
             }
@@ -429,7 +429,7 @@ void CG_Rocket_LoadHuds() {
         }
 
         for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; ++i) {
-            if (!Q_stricmp(token, va("%s.hudgroup", BG_Weapon(i)->name) ) ) {
+            if (!Q_stricmp(token, va("%s.hudgroup", BG_Weapon(i)->name))) {
                 Rocket_ClearHud(i);
                 while (1) {
                     token = COM_Parse2(&text_p);
@@ -461,9 +461,9 @@ void CG_Rocket_LoadHuds() {
 }
 
 int CG_StringToNetSource(const char* src) {
-    if (!Q_stricmp(src, "local") ) {
+    if (!Q_stricmp(src, "local")) {
         return AS_LOCAL;
-    } else if (!Q_stricmp(src, "favorites") ) {
+    } else if (!Q_stricmp(src, "favorites")) {
         return AS_FAVORITES;
     } else {
         return AS_GLOBAL;
@@ -493,7 +493,7 @@ void CG_Rocket_Frame(cgClientState_t state) {
         switch (rocketInfo.cstate.connState) {
         case CA_DISCONNECTED:
             // Kill the server if its still running
-            if (trap_Cvar_VariableIntegerValue("sv_running") ) {
+            if (trap_Cvar_VariableIntegerValue("sv_running")) {
                 trap_Cvar_Set("sv_killserver", "1");
             }
             break;
@@ -526,8 +526,8 @@ void CG_Rocket_Frame(cgClientState_t state) {
 
     // Continue to attempt to update serverlisting
     if (rocketInfo.data.retrievingServers) {
-        if (!trap_LAN_UpdateVisiblePings(rocketInfo.currentNetSrc) ) {
-            CG_Rocket_BuildServerList(CG_NetSourceToString(rocketInfo.currentNetSrc) );
+        if (!trap_LAN_UpdateVisiblePings(rocketInfo.currentNetSrc)) {
+            CG_Rocket_BuildServerList(CG_NetSourceToString(rocketInfo.currentNetSrc));
         }
     }
 
@@ -542,7 +542,7 @@ void CG_Rocket_Frame(cgClientState_t state) {
     }
 
     // Update scores as long as they are showing
-    if ( (cg.showScores || cg.intermissionStarted) && cg.scoresRequestTime + 2000 < cg.time) {
+    if ((cg.showScores || cg.intermissionStarted) && cg.scoresRequestTime + 2000 < cg.time) {
         CG_RequestScores();
     }
 
@@ -554,7 +554,7 @@ void CG_Rocket_Frame(cgClientState_t state) {
 const char* CG_Rocket_GetTag() {
     static char tag[100];
 
-    Rocket_GetElementTag(tag, sizeof(tag) );
+    Rocket_GetElementTag(tag, sizeof(tag));
 
     return tag;
 }
@@ -562,14 +562,14 @@ const char* CG_Rocket_GetTag() {
 const char* CG_Rocket_GetAttribute(const char* attribute) {
     static char buffer[MAX_STRING_CHARS];
 
-    Rocket_GetAttribute("", "", attribute, buffer, sizeof(buffer) );
+    Rocket_GetAttribute("", "", attribute, buffer, sizeof(buffer));
 
     return buffer;
 }
 
 const char* CG_Rocket_QuakeToRML(const char* in) {
     static char buffer[MAX_STRING_CHARS];
-    Rocket_QuakeToRMLBuffer(in, buffer, sizeof(buffer) );
+    Rocket_QuakeToRMLBuffer(in, buffer, sizeof(buffer));
     return buffer;
 }
 

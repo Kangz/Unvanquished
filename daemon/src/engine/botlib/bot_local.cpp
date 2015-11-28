@@ -77,7 +77,7 @@ void BotCalcSteerDir(Bot_t* bot, rVec &dir) {
 }
 
 void FindWaypoints(Bot_t* bot, float* corners, unsigned char* cornerFlags, dtPolyRef* cornerPolys, int* numCorners, int maxCorners) {
-    if (!bot->corridor.getPathCount() ) {
+    if (!bot->corridor.getPathCount()) {
         Com_Log(LOG_ERROR, "FindWaypoints Called without a path!");
         *numCorners = 0;
         return;
@@ -89,7 +89,7 @@ void FindWaypoints(Bot_t* bot, float* corners, unsigned char* cornerFlags, dtPol
 bool PointInPolyExtents(Bot_t* bot, dtPolyRef ref, rVec point, rVec extents) {
     rVec closest;
 
-    if (dtStatusFailed(bot->nav->query->closestPointOnPolyBoundary(ref, point, closest) ) ) {
+    if (dtStatusFailed(bot->nav->query->closestPointOnPolyBoundary(ref, point, closest))) {
         return false;
     }
 
@@ -144,12 +144,12 @@ static void InvalidateRouteResults(Bot_t* bot) {
             continue;
         }
 
-        if (!bot->nav->query->isValidPolyRef(res.startRef, &bot->nav->filter) ) {
+        if (!bot->nav->query->isValidPolyRef(res.startRef, &bot->nav->filter)) {
             res.invalid = true;
             continue;
         }
 
-        if (!bot->nav->query->isValidPolyRef(res.endRef, &bot->nav->filter) ) {
+        if (!bot->nav->query->isValidPolyRef(res.endRef, &bot->nav->filter)) {
             res.invalid = true;
             continue;
         }
@@ -184,7 +184,7 @@ static dtRouteResult* FindRouteResult(Bot_t* bot, dtPolyRef start) {
 
 static void AddRouteResult(Bot_t* bot, dtPolyRef start, dtPolyRef end, dtStatus status) {
     // only store route failures or partial results
-    if (!dtStatusFailed(status) && !dtStatusDetail(status, DT_PARTIAL_RESULT) ) {
+    if (!dtStatusFailed(status) && !dtStatusDetail(status, DT_PARTIAL_RESULT)) {
         return;
     }
 
@@ -216,7 +216,7 @@ bool FindRoute(Bot_t* bot, rVec s, botRouteTargetInternal rtarget, bool allowPar
 
     InvalidateRouteResults(bot);
 
-    if (!BotFindNearestPoly(bot, s, &startRef, start) ) {
+    if (!BotFindNearestPoly(bot, s, &startRef, start)) {
         return false;
     }
 
@@ -231,7 +231,7 @@ bool FindRoute(Bot_t* bot, rVec s, botRouteTargetInternal rtarget, bool allowPar
     dtRouteResult* res = FindRouteResult(bot, startRef);
 
     if (res) {
-        if (dtStatusFailed(res->status) ) {
+        if (dtStatusFailed(res->status)) {
             return false;
         }
 
@@ -244,7 +244,7 @@ bool FindRoute(Bot_t* bot, rVec s, botRouteTargetInternal rtarget, bool allowPar
 
     AddRouteResult(bot, startRef, endRef, status);
 
-    if (dtStatusFailed(status) ) {
+    if (dtStatusFailed(status)) {
         return false;
     }
 

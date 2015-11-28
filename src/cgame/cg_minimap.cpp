@@ -44,7 +44,7 @@ static bool ParseFloats(float* res, const int number, const char** text) {
     int i = number;
 
     while (i--> 0) {
-        if (!*(token = COM_Parse(text)) ) {
+        if (!*(token = COM_Parse(text))) {
             return false;
         }
 
@@ -67,50 +67,50 @@ static bool CG_ParseMinimapZone(minimapZone_t* z, const char** text) {
 
     z->scale = 1.0f;
 
-    if (!*(token = COM_Parse(text)) || Q_stricmp(token, "{") ) {
+    if (!*(token = COM_Parse(text)) || Q_stricmp(token, "{")) {
         CG_Printf(S_ERROR "expected a { at the beginning of a zones\n");
         return false;
     }
 
     while (1) {
-        if (!*(token = COM_Parse(text)) ) {
+        if (!*(token = COM_Parse(text))) {
             break;
         }
 
-        if (!Q_stricmp(token, "bounds") ) {
-            if (!ParseFloats(z->boundsMin, 3, text) || !ParseFloats(z->boundsMax, 3, text) ) {
+        if (!Q_stricmp(token, "bounds")) {
+            if (!ParseFloats(z->boundsMin, 3, text) || !ParseFloats(z->boundsMax, 3, text)) {
                 CG_Printf(S_ERROR "error while parsing 'bounds'\n");
                 return false;
             }
 
             hasBounds = true;
-        } else if (!Q_stricmp(token, "image") ) {
-            if (!*(token = COM_Parse(text)) ) {
+        } else if (!Q_stricmp(token, "image")) {
+            if (!*(token = COM_Parse(text))) {
                 CG_Printf(S_ERROR "error while parsing the image name while parsing 'image'\n");
             }
 
             z->image = trap_R_RegisterShader(token, RSF_DEFAULT);
 
-            if (!ParseFloats(z->imageMin, 2, text) || !ParseFloats(z->imageMax, 2, text) ) {
+            if (!ParseFloats(z->imageMin, 2, text) || !ParseFloats(z->imageMax, 2, text)) {
                 CG_Printf(S_ERROR "error while parsing 'image'\n");
                 return false;
             }
 
             hasImage = true;
         } else if (!Q_stricmp(token, "scale")) {
-            if (!*(token = COM_Parse(text)) ) {
+            if (!*(token = COM_Parse(text))) {
                 CG_Printf(S_ERROR "error while parsing the value  while parsing 'scale'\n");
             }
 
             z->scale = atof(token);
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             break;
         } else {
             Com_Printf(S_ERROR "unknown token '%s'\n", token);
         }
     }
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         CG_Printf(S_ERROR "expected a } at the end of a zone\n");
         return false;
     }
@@ -143,23 +143,23 @@ static bool CG_ParseMinimap(minimap_t* m, const char* filename) {
     m->scale = 1.0f;
     m->bgColor.SetAlpha(0.333f); // black, approx. 1/3 opacity
 
-    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer) ) ) {
+    if (!BG_ReadWholeFile(filename, text_buffer, sizeof(text_buffer))) {
         return false;
     }
 
     text = text_buffer;
 
-    if (!*(token = COM_Parse(&text)) || Q_stricmp(token, "{") ) {
+    if (!*(token = COM_Parse(&text)) || Q_stricmp(token, "{")) {
         CG_Printf(S_ERROR "expected a { at the beginning of %s\n", filename);
         return false;
     }
 
     while (1) {
-        if (!*(token = COM_Parse(&text)) ) {
+        if (!*(token = COM_Parse(&text))) {
             break;
         }
 
-        if (!Q_stricmp(token, "zone") ) {
+        if (!Q_stricmp(token, "zone")) {
             m->nZones++;
 
             if (m->nZones > MAX_MINIMAP_ZONES) {
@@ -167,28 +167,28 @@ static bool CG_ParseMinimap(minimap_t* m, const char* filename) {
                 return false;
             }
 
-            if (!CG_ParseMinimapZone(&m->zones[m->nZones - 1], &text) ) {
+            if (!CG_ParseMinimapZone(&m->zones[m->nZones - 1], &text)) {
                 CG_Printf(S_ERROR "error while reading zone n°%i in %s\n", m->nZones, filename);
                 return false;
             }
-        } else if (!Q_stricmp(token, "backgroundColor") ) {
-            if (!ParseFloats(m->bgColor.ToArray(), 4, &text) ) {
+        } else if (!Q_stricmp(token, "backgroundColor")) {
+            if (!ParseFloats(m->bgColor.ToArray(), 4, &text)) {
                 CG_Printf(S_ERROR "error while parsing 'backgroundColor' in %s\n", filename);
                 return false;
             }
-        } else if (!Q_stricmp(token, "globalScale") ) {
-            if (!ParseFloats(&m->scale, 1, &text) ) {
+        } else if (!Q_stricmp(token, "globalScale")) {
+            if (!ParseFloats(&m->scale, 1, &text)) {
                 CG_Printf(S_ERROR "error while parsing 'globalScale' in %s\n", filename);
                 return false;
             }
-        } else if (!Q_stricmp(token, "}") ) {
+        } else if (!Q_stricmp(token, "}")) {
             break;
         } else {
             Com_Printf(S_ERROR "%s: unknown token '%s'\n", filename, token);
         }
     }
 
-    if (Q_stricmp(token, "}") ) {
+    if (Q_stricmp(token, "}")) {
         CG_Printf(S_ERROR "expected a } at the end of %s\n", filename);
         return false;
     }
@@ -238,10 +238,10 @@ static void CG_SetupMinimapTransform(const rectDef_t* rect, const minimap_t* min
     c = cos(angle) * scale;
 
     // Simply a 2x2 rotoscale matrix
-    transform[0] =  c;
-    transform[1] =  s;
+    transform[0] = c;
+    transform[1] = s;
     transform[2] = -s;
-    transform[3] =  c;
+    transform[3] = c;
 
     // the minimap is shown with Z pointing to the viewer but OpenGL has Z pointing to the screen
     // thus the 2d axis don't have the same orientation
@@ -333,7 +333,7 @@ static void CG_UpdateMinimapActive(minimap_t* m) {
     m->active = active;
 
     if ((cg_minimapActive.integer != 0) != active) {
-        trap_Cvar_Set("cg_minimapActive", va("%d", active) );
+        trap_Cvar_Set("cg_minimapActive", va("%d", active));
     }
 }
 
@@ -350,10 +350,10 @@ until you reach the bounds
 ================
 */
 static minimapZone_t* CG_ChooseMinimapZone(minimap_t* m) {
-    if (m->lastZone < 0 || !CG_IsInMinimapZone(&m->zones[m->lastZone]) ) {
+    if (m->lastZone < 0 || !CG_IsInMinimapZone(&m->zones[m->lastZone])) {
         int i;
         for (i = 0; i < m->nZones; i++) {
-            if (CG_IsInMinimapZone(&m->zones[i]) ) {
+            if (CG_IsInMinimapZone(&m->zones[i])) {
                 break;
             }
         }
@@ -576,7 +576,7 @@ void CG_InitMinimap() {
 
     m->defined = true;
 
-    if (!CG_ParseMinimap(m, va("minimaps/%s.minimap", cgs.mapname) ) ) {
+    if (!CG_ParseMinimap(m, va("minimaps/%s.minimap", cgs.mapname))) {
         m->defined = false;
         CG_Printf(S_WARNING "could not parse the minimap, defaulting to no minimap.\n");
     } else if (m->nZones == 0) {

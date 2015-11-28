@@ -42,7 +42,7 @@ Maryland 20850 USA.
 std::vector<RocketDataFormatter*> dataFormatterList;
 
 void Rocket_RegisterDataFormatter(const char* name) {
-    dataFormatterList.push_back(new RocketDataFormatter(name, dataFormatterList.size() ) );
+    dataFormatterList.push_back(new RocketDataFormatter(name, dataFormatterList.size()));
 }
 
 void Rocket_DataFormatterRawData(int handle, char* name, int nameLength, char* data, int dataLength) {

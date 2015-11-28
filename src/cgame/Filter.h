@@ -86,7 +86,7 @@ class Filter {
                 total += s.second;
             }
 
-            return total * (1.0f / samples.size( ) );
+            return total * (1.0f / samples.size( ));
         }
 
         /**
@@ -117,7 +117,7 @@ class Filter {
             for (auto s: samples) {
                 float weight;
 
-                weight = Gaussian( (float)(time - s.first) / width);
+                weight = Gaussian((float)(time - s.first) / width);
                 total_weight += weight;
                 total += s.second * weight;
             }

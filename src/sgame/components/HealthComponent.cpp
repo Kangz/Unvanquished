@@ -178,7 +178,7 @@ void HealthComponent::HandleDamage(float amount, gentity_t* source, Util::option
 
             default:
                 client->ps.stats[STAT_STATE] |= SS_POISONED;
-                client->lastPoisonTime   = level.time;
+                client->lastPoisonTime = level.time;
                 client->lastPoisonClient = source;
                 break;
             }

@@ -71,7 +71,7 @@ static int stderr_fd;
 static const int CURSES_DEFAULT_COLOR = 32;
 
 static void Con_ClearColor(WINDOW* win) {
-    wattrset(win, COLOR_PAIR(CURSES_DEFAULT_COLOR) );
+    wattrset(win, COLOR_PAIR(CURSES_DEFAULT_COLOR));
 }
 /*
 ==================
@@ -81,20 +81,20 @@ Use grey instead of black
 ==================
 */
 static void CON_SetColor(WINDOW* win, const Color::Color& color) {
-    if (!com_ansiColor.Get() ) {
+    if (!com_ansiColor.Get()) {
         Con_ClearColor(win);
     } else {
-        wattrset(win, COLOR_PAIR(Color::To4bit(color)) );
+        wattrset(win, COLOR_PAIR(Color::To4bit(color)));
     }
 }
 
 static INLINE void CON_UpdateCursor() {
     // pdcurses uses a different mechanism to move the cursor than ncurses
     #ifdef _WIN32
-    move(LINES - 1, Color::StrlenNocolor(PROMPT) + 8 + input_field.GetViewCursorPos() );
+    move(LINES - 1, Color::StrlenNocolor(PROMPT) + 8 + input_field.GetViewCursorPos());
     wnoutrefresh(stdscr);
     #else
-    wmove(inputwin, 0, input_field.GetViewCursorPos() );
+    wmove(inputwin, 0, input_field.GetViewCursorPos());
     wnoutrefresh(inputwin);
     #endif
 }
@@ -109,42 +109,42 @@ static void CON_ColorPrint(WINDOW* win, const char* msg, bool stripcodes) {
     Con_ClearColor(win);
 
     std::string buffer;
-    for (const auto& token : Color::Parser(msg, Color::Color() ) ) {
+    for (const auto& token : Color::Parser(msg, Color::Color())) {
 
         if (token.Type() == Color::Token::COLOR) {
-            if (!buffer.empty() ) {
-                waddstr(win, buffer.c_str() );
+            if (!buffer.empty()) {
+                waddstr(win, buffer.c_str());
                 buffer.clear();
             }
 
             if (token.Color().Alpha() == 0) {
                 Con_ClearColor(win);
             } else {
-                CON_SetColor(win, token.Color() );
+                CON_SetColor(win, token.Color());
             }
 
             if (!stripcodes) {
-                buffer.append(token.Begin(), token.Size() );
+                buffer.append(token.Begin(), token.Size());
             }
         } else if (token.Type() == Color::Token::ESCAPE) {
             if (!stripcodes) {
-                buffer.append(token.Begin(), token.Size() );
+                buffer.append(token.Begin(), token.Size());
             } else {
                 buffer += Color::Constants::ESCAPE;
             }
         } else if (token.Type() == Color::Token::CHARACTER) {
             if (*token.Begin() == '\n') {
-                waddstr(win, buffer.c_str() );
+                waddstr(win, buffer.c_str());
                 buffer.clear();
                 Con_ClearColor(win);
                 waddch(win, '\n');
             } else {
-                buffer.append(token.Begin(), token.Size() );
+                buffer.append(token.Begin(), token.Size());
             }
         }
     }
 
-    waddstr(win, buffer.c_str() );
+    waddstr(win, buffer.c_str());
 }
 
 /*
@@ -226,7 +226,7 @@ static void CON_Redraw() {
     }
 
     // Display the title and input prompt
-    move(0, (COLS - Color::StrlenNocolor(TITLE) ) / 2);
+    move(0, (COLS - Color::StrlenNocolor(TITLE)) / 2);
     CON_ColorPrint(stdscr, TITLE, true);
     move(LINES - 1, 8);
     CON_ColorPrint(stdscr, PROMPT, true);
@@ -291,7 +291,7 @@ void CON_Init() {
     signal(SIGTTOU, SIG_IGN);
 
     // Make sure we're on a tty
-    if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) ) {
+    if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)) {
         CON_Init_TTY();
         return;
     }
@@ -319,7 +319,7 @@ void CON_Init() {
         wnoutrefresh(stdscr);
 
         // Set up colors
-        if (has_colors() ) {
+        if (has_colors()) {
             use_default_colors();
             start_color();
             init_pair(CURSES_DEFAULT_COLOR, -1, -1);
@@ -407,7 +407,7 @@ char* CON_Input() {
         case '\n':
         case '\r':
         case KEY_ENTER:
-            Log::Notice(PROMPT "^*%s", Str::UTF32To8(input_field.GetText()).c_str() );
+            Log::Notice(PROMPT "^*%s", Str::UTF32To8(input_field.GetText()).c_str());
             input_field.RunCommand(com_consoleCommand.Get());
             werase(inputwin);
             wnoutrefresh(inputwin);
@@ -580,7 +580,7 @@ char* CON_Input() {
                 // convert non-ASCII to UTF-8, then insert
                 // FIXME: assumes Latin-1
                 for (count = 0; count < width; ++count) {
-                    input_field.AddChar( (chr >> ( (width - count - 1) * 8) ) & 0xFF);
+                    input_field.AddChar((chr >> ((width - count - 1) * 8)) & 0xFF);
                 }
                 break;
 
@@ -589,9 +589,9 @@ char* CON_Input() {
 
                 if (width > 0) {
                     for (count = 0; count < width; ++count) {
-                        buf[count] = (chr >> ( (width - count - 1) * 8) ) & 0xFF;
+                        buf[count] = (chr >> ((width - count - 1) * 8)) & 0xFF;
                     }
-                    input_field.AddChar(Q_UTF8_CodePoint(buf) );
+                    input_field.AddChar(Q_UTF8_CodePoint(buf));
                 }
                 break;
             }
@@ -632,7 +632,7 @@ void CON_Print(const char* msg) {
     }
 
     // Add the message to the log buffer
-    if (insert + strlen(msg) >= logbuf + sizeof(logbuf) ) {
+    if (insert + strlen(msg) >= logbuf + sizeof(logbuf)) {
         memmove(logbuf, logbuf + sizeof(logbuf) / 2, sizeof(logbuf) / 2);
         memset(logbuf + sizeof(logbuf) / 2, 0, sizeof(logbuf) / 2);
         insert -= sizeof(logbuf) / 2;
