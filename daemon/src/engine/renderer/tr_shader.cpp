@@ -67,15 +67,15 @@ static long generateHashValue(const char* fname, const int size) {
         letter = tolower(fname[i]);
 
         if (letter == '.') {
-            break; // don't include extension
+            break;             // don't include extension
         }
 
         if (letter == '\\') {
-            letter = '/'; // damn path names
+            letter = '/';             // damn path names
         }
 
         if (letter == PATH_SEP) {
-            letter = '/'; // damn path names
+            letter = '/';             // damn path names
         }
 
         hash += (long)(letter) * (i + 119);
@@ -1200,7 +1200,7 @@ static bool ParseMap(const char** text, char* buffer, int bufferSize) {
     }
 
     len = strlen(buffer);
-    buffer[len - 1] = 0; // replace last ' ' with tailing zero
+    buffer[len - 1] = 0;       // replace last ' ' with tailing zero
 
     return true;
 }
@@ -2598,7 +2598,7 @@ static void ParseGlowMap(shaderStage_t* stage, const char** text) {
     stage->active = true;
     stage->type = ST_GLOWMAP;
     stage->rgbGen = CGEN_IDENTITY;
-    stage->stateBits = GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE; // blend add
+    stage->stateBits = GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE;     // blend add
 
     if (ParseMap(text, buffer, sizeof(buffer))) {
         LoadMap(stage, buffer);
@@ -3007,7 +3007,7 @@ static bool ParseShader(const char* _text) {
                 implicitCullType = CT_TWO_SIDED;
             } else if (!Q_stricmp(token, "implicitMapGL1")) {
                 GL1 = true;
-            } else { // "implicitMap"
+            } else {         // "implicitMap"
                 implicitStateBits = GLS_DEPTHMASK_TRUE;
                 implicitCullType = CT_FRONT_SIDED;
             }
@@ -4024,7 +4024,7 @@ shader_t* R_FindShader(const char* name, shaderType_t type,
         }
     }
 
-    shader.altShader[0].index = flags; // save for later use (in case of alternativer shaders)
+    shader.altShader[0].index = flags;       // save for later use (in case of alternativer shaders)
 
     // make sure the render thread is stopped, because we are probably
     // going to have to upload an image
@@ -4154,7 +4154,7 @@ shader_t* R_FindShader(const char* name, shaderType_t type,
 
     case SHADER_LIGHT: {
         stages[0].type = ST_ATTENUATIONMAP_Z;
-        stages[0].bundle[0].image[0] = tr.noFalloffImage; // FIXME should be attenuationZImage
+        stages[0].bundle[0].image[0] = tr.noFalloffImage;                               // FIXME should be attenuationZImage
         stages[0].active = true;
         stages[0].rgbGen = CGEN_IDENTITY;
         stages[0].stateBits = GLS_DEFAULT;
@@ -4267,7 +4267,7 @@ it and returns a valid (possibly default) shader_t to be used internally.
 */
 shader_t* R_GetShaderByHandle(qhandle_t hShader) {
     if (hShader < 0) {
-        ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader); // bk: FIXME name
+        ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);            // bk: FIXME name
         return tr.defaultShader;
     }
 
@@ -4716,7 +4716,7 @@ void R_SetAltShaderTokens(const char* list) {
     char* p;
 
     memset(whenTokens, 0, sizeof(whenTokens));
-    Q_strncpyz(whenTokens, list, sizeof(whenTokens) - 1); // will have double-NUL termination
+    Q_strncpyz(whenTokens, list, sizeof(whenTokens) - 1);         // will have double-NUL termination
 
     p = whenTokens - 1;
 

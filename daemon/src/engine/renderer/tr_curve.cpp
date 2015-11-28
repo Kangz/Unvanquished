@@ -181,18 +181,18 @@ static void MakeMeshNormals(int width, int height, srfVert_t ctrl[MAX_GRID_SIZE]
                     }
 
                     if (x < 0 || x >= width || y < 0 || y >= height) {
-                        break; // edge of patch
+                        break;                         // edge of patch
                     }
 
                     VectorSubtract(ctrl[y][x].xyz, base, temp);
 
                     if (VectorNormalize2(temp, temp) == 0) {
-                        continue; // degenerate edge, get more dist
+                        continue;                         // degenerate edge, get more dist
                     } else {
                         good[k] = true;
                         VectorCopy(temp, around[k]);
                         Vector2Copy(ctrl[y][x].st, st[k]);
-                        break; // good edge
+                        break;                         // good edge
                     }
                 }
             }
@@ -203,7 +203,7 @@ static void MakeMeshNormals(int width, int height, srfVert_t ctrl[MAX_GRID_SIZE]
 
             for (k = 0; k < 8; k++) {
                 if (!good[k] || !good[(k + 1) & 7]) {
-                    continue; // didn't get two points
+                    continue;                     // didn't get two points
                 }
 
                 CrossProduct(around[(k + 1) & 7], around[k], normal);
@@ -309,7 +309,7 @@ static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int 
     Com_Memcpy(copy, errorTable, sizeof(copy));
 
     for (i = 0; i < width; i++) {
-        errorTable[1][i] = copy[0][i]; // [width-1-i];
+        errorTable[1][i] = copy[0][i];                 // [width-1-i];
     }
 
     for (i = 0; i < height; i++) {
@@ -491,7 +491,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height, srfVert_t points[MA
                 d = DotProduct(midxyz, dir);
                 VectorScale(dir, d, projected);
                 VectorSubtract(midxyz, projected, midxyz2);
-                len = VectorLengthSquared(midxyz2); // we will do the sqrt later
+                len = VectorLengthSquared(midxyz2);                    // we will do the sqrt later
 
                 if (len > maxLen) {
                     maxLen = len;
@@ -509,12 +509,12 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height, srfVert_t points[MA
             // see if we want to insert subdivided columns
             if (width + 2 > MAX_GRID_SIZE) {
                 errorTable[dir][j + 1] = 1.0f / maxLen;
-                continue; // can't subdivide any more
+                continue;                 // can't subdivide any more
             }
 
             if (maxLen <= r_subdivisions->value) {
                 errorTable[dir][j + 1] = 1.0f / maxLen;
-                continue; // didn't need subdivision
+                continue;                 // didn't need subdivision
             }
 
             errorTable[dir][j + 2] = 1.0f / maxLen;

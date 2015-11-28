@@ -351,7 +351,7 @@ void CL_ShutdownCGame() {
  * ====================
  */
 bool GetNews(bool begin) {
-    if (begin) { // if not already using curl, start the download
+    if (begin) {     // if not already using curl, start the download
         CL_RequestMotd();
         Cvar_Set("cl_newsString", "Retrieving…");
     }
@@ -463,9 +463,9 @@ static void LAN_GetServerInfo(int source, int n, char* buf, int buflen) {
         Info_SetValueForKey(info, "game", server->game, false);
         Info_SetValueForKey(info, "nettype", va("%i", server->netType), false);
         Info_SetValueForKey(info, "addr", NET_AdrToStringwPort(server->adr), false);
-        Info_SetValueForKey(info, "friendlyFire", va("%i", server->friendlyFire), false); // NERVE - SMF
-        Info_SetValueForKey(info, "needpass", va("%i", server->needpass), false); // NERVE - SMF
-        Info_SetValueForKey(info, "gamename", server->gameName, false); // Arnout
+        Info_SetValueForKey(info, "friendlyFire", va("%i", server->friendlyFire), false);               // NERVE - SMF
+        Info_SetValueForKey(info, "needpass", va("%i", server->needpass), false);               // NERVE - SMF
+        Info_SetValueForKey(info, "gamename", server->gameName, false);            // Arnout
         Q_strncpyz(buf, info, buflen);
     } else {
         if (buf) {
@@ -777,7 +777,7 @@ void CL_AdjustTimeDelta() {
 
     if (deltaDelta > RESET_TIME) {
         cl.serverTimeDelta = newDelta;
-        cl.oldServerTime = cl.snap.serverTime; // FIXME: is this a problem for cgame?
+        cl.oldServerTime = cl.snap.serverTime;         // FIXME: is this a problem for cgame?
         cl.serverTime = cl.snap.serverTime;
 
         if (cl_showTimeDelta->integer) {
@@ -973,7 +973,7 @@ void CL_SetCGameTime() {
 
         if (cls.state != CA_ACTIVE) {
             Cvar_Set("timescale", "1");
-            return; // end of demo
+            return;             // end of demo
         }
     }
 }
@@ -985,7 +985,7 @@ void CL_SetCGameTime() {
  */
 void  CL_OnTeamChanged(int newTeam) {
     if (p_team->integer == newTeam
-        && p_team->modificationCount > 0) { // to make sure, we run the hook initially as well
+        && p_team->modificationCount > 0) {                // to make sure, we run the hook initially as well
         return;
     }
 

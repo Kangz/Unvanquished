@@ -36,7 +36,7 @@ Maryland 20850 USA.
 
 typedef struct {
     int numpoints;
-    vec3_t p[4]; // variable sized
+    vec3_t p[4];       // variable sized
 } winding_t;
 
 #define MAX_POINTS_ON_WINDING 64

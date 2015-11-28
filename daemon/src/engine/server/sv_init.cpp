@@ -242,7 +242,7 @@ SV_BoundMaxClients
 */
 void SV_BoundMaxClients(int minimum) {
     // get the current maxclients value
-    Cvar_Get("sv_maxclients", "20", 0); // NERVE - SMF - changed to 20 from 8
+    Cvar_Get("sv_maxclients", "20", 0);       // NERVE - SMF - changed to 20 from 8
 
     sv_maxclients->modified = false;
 
@@ -336,7 +336,7 @@ void SV_ChangeMaxClients() {
 
     // free old clients arrays
     // Z_Free( svs.clients );
-    free(svs.clients); // RF, avoid trying to allocate large chunk on a fragmented zone
+    free(svs.clients);        // RF, avoid trying to allocate large chunk on a fragmented zone
 
     // allocate new clients
     // RF, avoid trying to allocate large chunk on a fragmented zone
@@ -488,7 +488,7 @@ void SV_SpawnServer(const char* server) {
             isBot = SV_IsBot(&svs.clients[i]);
 
             // connect the client again
-            denied = gvm.GameClientConnect(reason, sizeof(reason), i, false, isBot); // firstTime = false
+            denied = gvm.GameClientConnect(reason, sizeof(reason), i, false, isBot);                   // firstTime = false
 
             if (denied) {
                 // this generally shouldn't happen, because the client
@@ -510,7 +510,7 @@ void SV_SpawnServer(const char* server) {
                     client->gentity = ent;
 
                     client->deltaMessage = -1;
-                    client->nextSnapshotTime = svs.time; // generate a snapshot immediately
+                    client->nextSnapshotTime = svs.time;                     // generate a snapshot immediately
 
                     gvm.GameClientBegin(i);
                 }
@@ -568,10 +568,10 @@ void SV_Init() {
     Cvar_Get("protocol", va("%i", PROTOCOL_VERSION), CVAR_SERVERINFO);
     sv_mapname = Cvar_Get("mapname", "nomap", CVAR_SERVERINFO | CVAR_ROM);
     Cvar_Get("layout", "", CVAR_SERVERINFO | CVAR_ROM);
-    Cvar_Get("g_layouts", "", 0); // FIXME
+    Cvar_Get("g_layouts", "", 0);       // FIXME
     sv_privateClients = Cvar_Get("sv_privateClients", "0", CVAR_SERVERINFO);
     sv_hostname = Cvar_Get("sv_hostname", "Unnamed Unvanquished Server", CVAR_SERVERINFO);
-    sv_maxclients = Cvar_Get("sv_maxclients", "20", CVAR_SERVERINFO | CVAR_LATCH); // NERVE - SMF - changed to 20 from 8
+    sv_maxclients = Cvar_Get("sv_maxclients", "20", CVAR_SERVERINFO | CVAR_LATCH);        // NERVE - SMF - changed to 20 from 8
     sv_maxRate = Cvar_Get("sv_maxRate", "0", CVAR_SERVERINFO);
     sv_minPing = Cvar_Get("sv_minPing", "0", CVAR_SERVERINFO);
     sv_maxPing = Cvar_Get("sv_maxPing", "0", CVAR_SERVERINFO);
@@ -610,7 +610,7 @@ void SV_Init() {
 
     sv_lanForceRate = Cvar_Get("sv_lanForceRate", "1", 0);
 
-    sv_showAverageBPS = Cvar_Get("sv_showAverageBPS", "0", 0); // NERVE - SMF - net debugging
+    sv_showAverageBPS = Cvar_Get("sv_showAverageBPS", "0", 0);        // NERVE - SMF - net debugging
 
     // the download netcode tops at 18/20 kb/s, no need to make you think you can go above
     sv_dl_maxRate = Cvar_Get("sv_dl_maxRate", "42000", 0);

@@ -131,7 +131,7 @@ typedef struct {
     void (* VQNormal)(byte* status, void* qdata);
     void (* VQBuffer)(byte* status, void* qdata);
 
-    long samplesPerPixel; // defaults to 2
+    long samplesPerPixel;             // defaults to 2
     byte* gray;
     unsigned int xsize, ysize, maxsize, minsize;
 
@@ -224,7 +224,7 @@ long RllDecodeMonoToStereo(unsigned char* from, short* to, unsigned int size, ch
         to[z * 2 + 0] = to[z * 2 + 1] = (short)(prev);
     }
 
-    return size; // * 2 * sizeof(short));
+    return size;     // * 2 * sizeof(short));
 }
 
 // -----------------------------------------------------------------------------
@@ -260,7 +260,7 @@ long RllDecodeStereoToStereo(unsigned char* from, short* to, unsigned int size, 
         to[z + 1] = (short)(prevR);
     }
 
-    return (size >> 1); // *sizeof(short));
+    return (size >> 1);       // *sizeof(short));
 }
 
 /******************************************************************************
@@ -379,14 +379,14 @@ static void blitVQQuad32fs(byte** status, unsigned char* data) {
         celdata <<= 2;
 
         switch (code) {
-        case    0x8000: // vq code
+        case    0x8000:                 // vq code
             blit8_32((byte*) &vq8[(*data) * 128], status[index], spl);
             data++;
             index += 5;
             break;
 
-        case    0xc000: // drop
-            index++; // skip 8x8
+        case    0xc000:                 // drop
+            index++;                     // skip 8x8
 
             for (i = 0; i < 4; i++) {
                 if (!newd) {
@@ -400,13 +400,13 @@ static void blitVQQuad32fs(byte** status, unsigned char* data) {
                 code = (unsigned short)(celdata & 0xc000);
                 celdata <<= 2;
 
-                switch (code) { // code in top two bits of code
-                case    0x8000: // 4x4 vq code
+                switch (code) {                         // code in top two bits of code
+                case    0x8000:                                 // 4x4 vq code
                     blit4_32((byte*) &vq4[(*data) * 32], status[index], spl);
                     data++;
                     break;
 
-                case    0xc000: // 2x2 vq code
+                case    0xc000:                                 // 2x2 vq code
                     blit2_32((byte*) &vq2[(*data) * 8], status[index], spl);
                     data++;
                     blit2_32((byte*) &vq2[(*data) * 8], status[index] + 8, spl);
@@ -417,7 +417,7 @@ static void blitVQQuad32fs(byte** status, unsigned char* data) {
                     data++;
                     break;
 
-                case    0x4000: // motion compensation
+                case    0x4000:                                 // motion compensation
                     move4_32(status[index] + cin.mcomp[(*data)], status[index], spl);
                     data++;
                     break;
@@ -428,7 +428,7 @@ static void blitVQQuad32fs(byte** status, unsigned char* data) {
 
             break;
 
-        case    0x4000: // motion compensation
+        case    0x4000:                 // motion compensation
             move8_32(status[index] + cin.mcomp[(*data)], status[index], spl);
             data++;
             index += 5;
@@ -1004,11 +1004,11 @@ static void setupQuad(long xOff, long yOff) {
 
     numQuadCels = (cinTable[currentHandle].CIN_WIDTH * cinTable[currentHandle].CIN_HEIGHT) / (16);
     numQuadCels += numQuadCels / 4 + numQuadCels / 16;
-    numQuadCels += 64; // for overflow
+    numQuadCels += 64;     // for overflow
 
     numQuadCels = (cinTable[currentHandle].xsize * cinTable[currentHandle].ysize) / (16);
     numQuadCels += numQuadCels / 4;
-    numQuadCels += 64; // for overflow
+    numQuadCels += 64;     // for overflow
 
     cinTable[currentHandle].onQuad = 0;
 
@@ -1021,8 +1021,8 @@ static void setupQuad(long xOff, long yOff) {
     temp = nullptr;
 
     for (i = (numQuadCels - 64); i < numQuadCels; i++) {
-        cin.qStatus[0][i] = temp; // eoq
-        cin.qStatus[1][i] = temp; // eoq
+        cin.qStatus[0][i] = temp;             // eoq
+        cin.qStatus[1][i] = temp;             // eoq
     }
 }
 
@@ -1201,7 +1201,7 @@ redump:
             cinTable[currentHandle].buf = cin.linbuf;
         }
 
-        if (cinTable[currentHandle].numQuads == 0) { // first frame
+        if (cinTable[currentHandle].numQuads == 0) {                   // first frame
             Com_Memcpy(cin.linbuf + cinTable[currentHandle].screenDelta, cin.linbuf, cinTable[currentHandle].samplesPerLine * cinTable[currentHandle].ysize);
         }
 
@@ -1252,7 +1252,7 @@ redump:
 
     case    ROQ_PACKET:
         cinTable[currentHandle].inMemory = cinTable[currentHandle].roq_flags;
-        cinTable[currentHandle].RoQFrameSize = 0; // for header
+        cinTable[currentHandle].RoQFrameSize = 0;                   // for header
         break;
 
     case    ROQ_QUAD_HANG:
@@ -1845,7 +1845,7 @@ void CL_PlayCinematic_f() {
     if (CL_handle >= 0) {
         do {
             SCR_RunCinematic();
-        } while (cinTable[currentHandle].buf == nullptr && cinTable[currentHandle].status == FMV_PLAY); // wait for first frame (load codebook and sound)
+        } while (cinTable[currentHandle].buf == nullptr && cinTable[currentHandle].status == FMV_PLAY);             // wait for first frame (load codebook and sound)
     }
 }
 

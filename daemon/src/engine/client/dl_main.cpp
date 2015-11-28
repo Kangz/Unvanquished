@@ -173,6 +173,7 @@ dlStatus_t DL_DownloadLoop() {
     }
 
     while ((msg = curl_multi_info_read(dl_multi, &dls)) && msg->easy_handle != dl_request) {
+        ;
     }
 
     if (!msg || msg->msg != CURLMSG_DONE) {

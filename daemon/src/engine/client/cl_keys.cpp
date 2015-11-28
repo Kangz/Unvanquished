@@ -205,7 +205,7 @@ static const keyname_t keynames[] = {
 
     { "PAUSE", K_PAUSE                  },
 
-    { "SEMICOLON", ';'                      }, // because a raw semicolon separates commands
+    { "SEMICOLON", ';'                      },                  // because a raw semicolon separates commands
 
     { "WORLD_0", K_WORLD_0                },
     { "WORLD_1", K_WORLD_1                },
@@ -615,7 +615,7 @@ void Console_Key(int key) {
         }
 
         if (cls.state == CA_DISCONNECTED) {
-            SCR_UpdateScreen(); // force an update, because the command may take some time
+            SCR_UpdateScreen();             // force an update, because the command may take some time
         }
         return;
     }
@@ -654,20 +654,20 @@ void Console_Key(int key) {
         return;
     }
 
-    if (key == K_MWHEELUP) { // ----(SA) added some mousewheel functionality to the console
+    if (key == K_MWHEELUP) {     // ----(SA) added some mousewheel functionality to the console
         Con_PageUp();
 
-        if (keys[K_CTRL].down) { // hold <ctrl> to accelerate scrolling
+        if (keys[K_CTRL].down) {           // hold <ctrl> to accelerate scrolling
             Con_ScrollUp(consoleState.visibleAmountOfLines);
         }
 
         return;
     }
 
-    if (key == K_MWHEELDOWN) { // ----(SA) added some mousewheel functionality to the console
+    if (key == K_MWHEELDOWN) {     // ----(SA) added some mousewheel functionality to the console
         Con_PageDown();
 
-        if (keys[K_CTRL].down) { // hold <ctrl> to accelerate scrolling
+        if (keys[K_CTRL].down) {           // hold <ctrl> to accelerate scrolling
             Con_ScrollDown(consoleState.visibleAmountOfLines);
         }
 
@@ -819,7 +819,7 @@ int Key_GetTeam(const char* arg, const char* cmd) {
     };
     int t, l;
 
-    if (!*arg) { // empty string
+    if (!*arg) {     // empty string
         goto fail;
     }
 
@@ -862,7 +862,7 @@ team == -1 clears all bindings for the key, then sets the spec/global binding
 ===================
 */
 void Key_SetBinding(int keynum, int team, const char* binding) {
-    char* lcbinding; // fretn - make a copy of our binding lowercase
+    char* lcbinding;     // fretn - make a copy of our binding lowercase
     // so name toggle scripts work again: bind x name BzZIfretn?
     // resulted into bzzifretn?
 
@@ -893,7 +893,7 @@ void Key_SetBinding(int keynum, int team, const char* binding) {
         // allocate memory for new binding
         keys[keynum].binding[team] = CopyString(binding);
         lcbinding = CopyString(binding);
-        Q_strlwr(lcbinding); // saves doing it on all the generateHashValues in Key_GetBindingByString
+        Q_strlwr(lcbinding);            // saves doing it on all the generateHashValues in Key_GetBindingByString
         Z_Free(lcbinding);
     } else {
         keys[keynum].binding[team] = nullptr;
@@ -1340,7 +1340,8 @@ static modifierMask_t getModifierMask(const char* mods) {
 
     --mods;
 
-    while (*++mods == ' ') { /* skip leading spaces */
+    while (*++mods == ' ') {       /* skip leading spaces */
+        ;
     }
 
     ptr = mods;
@@ -1372,11 +1373,13 @@ static modifierMask_t getModifierMask(const char* mods) {
                 // right, parsed a word - skip it, maybe a comma, and any spaces
                 ptr += modifierKeys[i].count - 1;
 
-                while (*++ptr == ' ') { /**/
+                while (*++ptr == ' ') {                   /**/
+                    ;
                 }
 
                 if (*ptr == ',') {
-                    while (*++ptr == ' ') { /**/
+                    while (*++ptr == ' ') {                       /**/
+                        ;
                     }
                 }
 
@@ -1409,15 +1412,15 @@ static int checkKeysDown(modifierMask_t mask) {
 
     for (i = 0; modifierKeys[i].bit; ++i) {
         if ((mask.down & modifierKeys[i].bit) && keys[modifierKeys[i].index].down == 0) {
-            return 0; // should be pressed, isn't pressed
+            return 0;             // should be pressed, isn't pressed
         }
 
         if ((mask.up & modifierKeys[i].bit) && keys[modifierKeys[i].index].down) {
-            return 0; // should not be pressed, is pressed
+            return 0;             // should not be pressed, is pressed
         }
     }
 
-    return 1; // all (not) pressed as requested
+    return 1;     // all (not) pressed as requested
 }
 
 /*
@@ -1433,7 +1436,7 @@ void Key_ModCase_f() {
     int argc = Cmd_Argc();
     int index = 0;
     int max = 0;
-    int count = (argc - 1) / 2; // round down :-)
+    int count = (argc - 1) / 2;       // round down :-)
     const char* v;
 
     int mods[1 << NUM_RECOGNISED_MODIFIERS];
@@ -1449,7 +1452,7 @@ void Key_ModCase_f() {
         modifierMask_t mask = getModifierMask(Cmd_Argv(2 * index + 1));
 
         if (mask.bits == 0) {
-            return; // parse failure (reported) - abort
+            return;             // parse failure (reported) - abort
         }
 
         mods[index] = checkKeysDown(mask) ? mask.bits : 0;
@@ -1523,7 +1526,7 @@ bool consoleButtonWasPressed = false;
 
 void CL_KeyEvent(int key, bool down, unsigned time) {
     char* kb;
-    bool bypassMenu = false; // NERVE - SMF
+    bool bypassMenu = false;     // NERVE - SMF
     bool onlybinds = false;
 
     if (key < 1) {
@@ -1629,7 +1632,7 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
         if (!(cls.keyCatchers & KEYCATCH_UI)) {
             if (cls.state == CA_ACTIVE && !clc.demoplaying) {
                 // Arnout: on request
-                if (cls.keyCatchers & KEYCATCH_CONSOLE) { // get rid of the console
+                if (cls.keyCatchers & KEYCATCH_CONSOLE) {                 // get rid of the console
                     Con_ToggleConsole_f();
                 } else {
                     Cmd::BufferCommandText("toggleMenu");
@@ -1691,8 +1694,8 @@ void CL_KeyEvent(int key, bool down, unsigned time) {
     } else {
         // send the bound action
         kb = keys[key].binding[bindTeam]
-             ? keys[key].binding[bindTeam] // prefer the team bind
-             : keys[key].binding[0]; // default to global
+             ? keys[key].binding[bindTeam]           // prefer the team bind
+             : keys[key].binding[0];                 // default to global
 
         if (kb) {
             // down-only command

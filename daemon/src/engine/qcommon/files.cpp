@@ -214,7 +214,7 @@ int FS_FCloseFile(fileHandle_t handle) {
             handleTable[handle].file.Close();
             if (handleTable[handle].renameTo) {
                 std::string renameTo = std::move(*handleTable[handle].renameTo);
-                handleTable[handle].renameTo = Util::nullopt; // tidy up after abusing std::move
+                handleTable[handle].renameTo = Util::nullopt;                 // tidy up after abusing std::move
                 try {
                     FS::RawPath::MoveFile(renameTo, renameTo + TEMP_SUFFIX);
                 } catch (std::system_error& err) {
@@ -634,7 +634,7 @@ void FS_LoadAllMapMetadata() {
         try {
             FS::PakPath::LoadPakPrefix(*FS::FindPak(x), va("meta/%s/", x.substr(4).c_str()));
         } catch (std::system_error&) {
-        } // ignore and move on
+        }                                       // ignore and move on
     }
 }
 

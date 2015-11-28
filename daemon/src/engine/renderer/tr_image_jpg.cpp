@@ -86,8 +86,8 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height,
     struct jpeg_error_mgr jerr;
 
     /* More stuff */
-    JSAMPARRAY buffer; /* Output row buffer */
-    unsigned int row_stride; /* physical row width in output buffer */
+    JSAMPARRAY buffer;                /* Output row buffer */
+    unsigned int row_stride;              /* physical row width in output buffer */
     unsigned int pixelcount, memcount;
     unsigned int sindex, dindex;
     byte* out;
@@ -267,9 +267,9 @@ JPEG SAVING
 /* Expanded data destination object for stdio output */
 
 typedef struct {
-    struct jpeg_destination_mgr pub; /* public fields */
+    struct jpeg_destination_mgr pub;     /* public fields */
 
-    byte* outfile; /* target stream */
+    byte* outfile;                            /* target stream */
     int size;
 } my_destination_mgr;
 
@@ -375,9 +375,9 @@ int SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality, int image_width, 
 
     struct jpeg_error_mgr jerr;
 
-    JSAMPROW row_pointer[1]; /* pointer to JSAMPLE row[s] */
+    JSAMPROW row_pointer[1];                          /* pointer to JSAMPLE row[s] */
     my_dest_ptr dest;
-    int row_stride; /* physical row width in image buffer */
+    int row_stride;                             /* physical row width in image buffer */
     size_t outcount;
 
     /* Step 1: allocate and initialize JPEG compression object */
@@ -393,10 +393,10 @@ int SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality, int image_width, 
     jpegDest(&cinfo, buffer, bufSize);
 
     /* Step 3: set parameters for compression */
-    cinfo.image_width = image_width; /* image width and height, in pixels */
+    cinfo.image_width = image_width;     /* image width and height, in pixels */
     cinfo.image_height = image_height;
-    cinfo.input_components = 3; /* # of color components per pixel */
-    cinfo.in_color_space = JCS_RGB; /* colorspace of input image */
+    cinfo.input_components = 3;     /* # of color components per pixel */
+    cinfo.in_color_space = JCS_RGB;     /* colorspace of input image */
 
     jpeg_set_defaults(&cinfo);
     jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
@@ -412,7 +412,7 @@ int SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality, int image_width, 
 
     /* Step 5: while (scan lines remain to be written) */
     /*           jpeg_write_scanlines(...); */
-    row_stride = image_width * cinfo.input_components; // + padding;  /* JSAMPLEs per row in image_buffer */
+    row_stride = image_width * cinfo.input_components;     // + padding;  /* JSAMPLEs per row in image_buffer */
 
     while (cinfo.next_scanline < cinfo.image_height) {
         /* jpeg_write_scanlines expects an array of pointers to scanlines.

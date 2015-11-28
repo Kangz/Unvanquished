@@ -108,7 +108,7 @@ void LoadTGA(const char* name, byte** pic, int* width, int* height,
     *pic = targa_rgba;
 
     if (targa_header.id_length != 0) {
-        buf_p += targa_header.id_length; // skip TARGA image comment
+        buf_p += targa_header.id_length;         // skip TARGA image comment
     }
 
     if (targa_header.image_type == 2 || targa_header.image_type == 3) {

@@ -224,7 +224,7 @@ void QDECL PRINTF_LIKE(1) Com_DPrintf(const char* fmt, ...) {
     char msg[MAXPRINTMSG];
 
     if (!com_developer || com_developer->integer != 1) {
-        return; // don't confuse non-developers with techie stuff...
+        return;         // don't confuse non-developers with techie stuff...
     }
 
     va_start(argptr, fmt);
@@ -1224,7 +1224,7 @@ int Com_EventLoop() {
                 static int seed;
 
                 if (Q_random(&seed) < com_dropsim->value) {
-                    break; // drop this packet
+                    break;                             // drop this packet
                 }
             }
 
@@ -1326,11 +1326,11 @@ A way to force a bus error for development reasons
 */
 static void NORETURN Com_Crash_f() {
     *(volatile int*) 0 = 0x12345678;
-    Sys::OSExit(1); // silence warning
+    Sys::OSExit(1);     // silence warning
 }
 
 void Com_SetRecommended() {
-    cvar_t* r_highQualityVideo; // , *com_recommended;
+    cvar_t* r_highQualityVideo;       // , *com_recommended;
     bool goodVideo;
 
     // will use this for recommended settings as well.. do i outside the lower check so it gets done even with command line stuff
@@ -1672,18 +1672,18 @@ void Com_Frame() {
             }
         }
     } else {
-        minMsec = 1; // Bad things happen if this is 0
+        minMsec = 1;         // Bad things happen if this is 0
     }
 
     com_frameTime = Com_EventLoop();
 
     if (lastTime > com_frameTime) {
-        lastTime = com_frameTime; // possible on first frame
+        lastTime = com_frameTime;         // possible on first frame
     }
 
     msec = com_frameTime - lastTime;
 
-    IN_Frame(); // must be called at least once
+    IN_Frame();     // must be called at least once
 
     while (msec < minMsec) {
         // give cycles back to the OS

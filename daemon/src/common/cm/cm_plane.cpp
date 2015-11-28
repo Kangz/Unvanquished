@@ -186,7 +186,7 @@ CM_CreateNewFloatPlane
 ================
 */
 static int CM_CreateNewFloatPlane(vec4_t plane) {
-    cPlane_t* p; // , temp;
+    cPlane_t* p;     // , temp;
 
     // create a new plane
     if (numPlanes == SHADER_MAX_TRIANGLES) {
@@ -257,7 +257,7 @@ int CM_FindPlane(const float* p1, const float* p2, const float* p3) {
         for (p = planeHashTable[h]; p; p = p->hashChain) {
             // check points on the plane
             if (DotProduct(plane, p->plane) < 0) {
-                continue; // allow backwards planes?
+                continue;                 // allow backwards planes?
             }
 
             d = DotProduct(p1, p->plane) - p->plane[3];
@@ -350,7 +350,7 @@ bool CM_ValidateFacet(cFacet_t* facet) {
     }
 
     if (!w) {
-        return false; // winding was completely chopped away
+        return false;         // winding was completely chopped away
     }
 
     // see if the facet is unreasonably large
@@ -359,7 +359,7 @@ bool CM_ValidateFacet(cFacet_t* facet) {
 
     for (j = 0; j < 3; j++) {
         if (bounds[1][j] - bounds[0][j] > MAX_WORLD_COORD) {
-            return false; // we must be missing a plane
+            return false;             // we must be missing a plane
         }
 
         if (bounds[0][j] >= MAX_WORLD_COORD) {
@@ -371,7 +371,7 @@ bool CM_ValidateFacet(cFacet_t* facet) {
         }
     }
 
-    return true; // winding is fine
+    return true;     // winding is fine
 }
 
 /*
@@ -468,12 +468,12 @@ void CM_AddFacetBevels(cFacet_t* facet) {
 
         for (k = 0; k < 3; k++) {
             if (vec[k] == -1 || vec[k] == 1) {
-                break; // axial
+                break;                 // axial
             }
         }
 
         if (k < 3) {
-            continue; // only test non-axial edges
+            continue;             // only test non-axial edges
         }
 
         // try the six possible slanted axials from this edge
@@ -496,7 +496,7 @@ void CM_AddFacetBevels(cFacet_t* facet) {
                     d = DotProduct(w->p[l], plane) - plane[3];
 
                     if (d > 0.1) {
-                        break; // point in front
+                        break;                         // point in front
                     }
                 }
 

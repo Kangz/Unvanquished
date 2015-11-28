@@ -95,7 +95,7 @@ bool GLimp_SpawnRenderThread(void (* function)()) {
         warned = true;
     }
 
-    if (renderThread != nullptr) { /* hopefully just a zombie at this point... */
+    if (renderThread != nullptr) {     /* hopefully just a zombie at this point... */
         Com_Printf("Already a render thread? Trying to clean it up...\n");
         GLimp_ShutdownRenderThread();
     }
@@ -922,7 +922,7 @@ static void GLimp_InitExtensions() {
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB, &glConfig2.maxVertexUniforms);
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS_ARB, &glConfig2.maxVertexAttribs);
 
-    int reservedComponents = 36 * 10; // approximation how many uniforms we have besides the bone matrices
+    int reservedComponents = 36 * 10;     // approximation how many uniforms we have besides the bone matrices
     glConfig2.maxVertexSkinningBones = Math::Clamp((glConfig2.maxVertexUniforms - reservedComponents) / 16, 0, MAX_BONES);
     glConfig2.vboVertexSkinningAvailable = r_vboVertexSkinning->integer && ((glConfig2.maxVertexSkinningBones >= 12) ? true : false);
 
@@ -1211,7 +1211,7 @@ success:
     reportDriverType(false);
     reportHardwareType(false);
 
-    { // allow overriding where the user really does know better
+    {     // allow overriding where the user really does know better
         cvar_t* forceGL;
         glDriverType_t driverType = GLDRV_UNKNOWN;
         glHardwareType_t hardwareType = GLHW_UNKNOWN;

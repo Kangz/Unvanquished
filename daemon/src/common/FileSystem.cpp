@@ -165,7 +165,7 @@ namespace FS {
         HANDLE h = CreateFileW(Str::UTF8To16(path).c_str(), access[mode], FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, create[mode], FILE_ATTRIBUTE_NORMAL, NULL);
         if (h == INVALID_HANDLE_VALUE) {
             _doserrno = GetLastError();
-            errno = _doserrno == ERROR_FILE_NOT_FOUND || _doserrno == ERROR_PATH_NOT_FOUND ? ENOENT : 0; // Needed to check if we need to create the path
+            errno = _doserrno == ERROR_FILE_NOT_FOUND || _doserrno == ERROR_PATH_NOT_FOUND ? ENOENT : 0;     // Needed to check if we need to create the path
             return -1;
         }
         int fd = _open_osfhandle(reinterpret_cast<intptr_t>(h), modes[mode] | O_BINARY | O_NOINHERIT);

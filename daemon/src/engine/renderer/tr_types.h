@@ -129,7 +129,7 @@ typedef struct {
     #if defined(REFBONE_NAMES)
     char name[64];
     #endif
-    short parentIndex; // parent index (-1 if root)
+    short parentIndex;      // parent index (-1 if root)
     transform_t t;
 } refBone_t;
 
@@ -140,11 +140,11 @@ typedef enum {
 } refSkeletonType_t;
 
 typedef ALIGNED (16, struct {
-    refSkeletonType_t type; // skeleton has been reset
+    refSkeletonType_t type;     // skeleton has been reset
 
     unsigned short numBones;
 
-    vec3_t bounds[2]; // bounds of all applied animations
+    vec3_t bounds[2];                  // bounds of all applied animations
     vec_t scale;
 
     refBone_t bones[MAX_BONES];
@@ -156,30 +156,30 @@ typedef struct {
     refEntityType_t reType;
     int renderfx;
 
-    qhandle_t hModel; // opaque type outside refresh
+    qhandle_t hModel;           // opaque type outside refresh
 
     // most recent data
-    vec3_t lightingOrigin; // so multi-part models can be lit identically (RF_LIGHTING_ORIGIN)
+    vec3_t lightingOrigin;        // so multi-part models can be lit identically (RF_LIGHTING_ORIGIN)
 
-    vec3_t axis[3]; // rotation vectors
-    bool nonNormalizedAxes; // axis are not normalized, i.e. they have scale
+    vec3_t axis[3];          // rotation vectors
+    bool nonNormalizedAxes;      // axis are not normalized, i.e. they have scale
     vec3_t origin;
     int frame;
 
     // previous data for frame interpolation
-    vec3_t oldorigin; // also used as MODEL_BEAM's "to"
+    vec3_t oldorigin;        // also used as MODEL_BEAM's "to"
     int oldframe;
-    float backlerp; // 0.0 = current, 1.0 = old
+    float backlerp;         // 0.0 = current, 1.0 = old
 
     // texturing
-    int skinNum; // inline skin index
-    qhandle_t customSkin; // nullptr for default skin
-    qhandle_t customShader; // use one image for the entire thing
+    int skinNum;           // inline skin index
+    qhandle_t customSkin;     // nullptr for default skin
+    qhandle_t customShader;     // use one image for the entire thing
 
     // misc
-    Color::Color32Bit shaderRGBA; // colors used by rgbgen entity shaders
-    float shaderTexCoord[2]; // texture coordinates used by tcMod entity modifiers
-    float shaderTime; // subtracted from refdef time to control effect start times
+    Color::Color32Bit shaderRGBA;     // colors used by rgbgen entity shaders
+    float shaderTexCoord[2];       // texture coordinates used by tcMod entity modifiers
+    float shaderTime;     // subtracted from refdef time to control effect start times
 
     // extra sprite information
     float radius;
@@ -188,7 +188,7 @@ typedef struct {
     // Ridah, entity fading (gibs, debris, etc)
     int fadeStartTime, fadeEndTime;
 
-    int entityNum; // currentState.number, so we can attach rendering effects to specific entities (Zombie)
+    int entityNum;       // currentState.number, so we can attach rendering effects to specific entities (Zombie)
 
     #if defined(USE_REFENTITY_NOSHADOWID)
     // extra light interaction information
@@ -225,9 +225,9 @@ typedef struct {
     vec3_t origin;
     quat_t rotation;
     vec3_t center;
-    vec3_t color; // range from 0.0 to 1.0, should be color normalized
+    vec3_t color;        // range from 0.0 to 1.0, should be color normalized
 
-    float scale; // r_lightScale if not set
+    float scale;         // r_lightScale if not set
 
     // omni-directional light specific
     vec3_t radius;
@@ -240,9 +240,9 @@ typedef struct {
     vec3_t projEnd;
 
     bool noShadows;
-    short noShadowID; // don't cast shadows of all entities with this id
+    short noShadowID;        // don't cast shadows of all entities with this id
 
-    bool inverseShadows; // don't cast light and draw shadows by darken the scene
+    bool inverseShadows;     // don't cast light and draw shadows by darken the scene
     // this is useful for drawing player shadows with shadow mapping
 } refLight_t;
 
@@ -257,11 +257,11 @@ typedef struct {
     int x, y, width, height;
     float fov_x, fov_y;
     vec3_t vieworg;
-    vec3_t viewaxis[3]; // transformation matrix
-    vec3_t blurVec; // motion blur direction
+    vec3_t viewaxis[3];       // transformation matrix
+    vec3_t blurVec;           // motion blur direction
 
-    int time; // time in milliseconds for shader effects and other time dependent rendering issues
-    int rdflags; // RDF_NOWORLDMODEL, etc
+    int time;        // time in milliseconds for shader effects and other time dependent rendering issues
+    int rdflags;        // RDF_NOWORLDMODEL, etc
 
     // 1 bits will prevent the associated area from rendering at all
     byte areamask[MAX_MAP_AREA_BYTES];
@@ -328,9 +328,9 @@ typedef struct {
     char renderer_string[MAX_STRING_CHARS];
     char vendor_string[MAX_STRING_CHARS];
     char version_string[MAX_STRING_CHARS];
-    char extensions_string[MAX_STRING_CHARS * 4]; // TTimo - bumping, some cards have a big extension string
+    char extensions_string[MAX_STRING_CHARS * 4];                       // TTimo - bumping, some cards have a big extension string
 
-    int maxTextureSize; // queried from GL
+    int maxTextureSize;                      // queried from GL
     int unused;
 
     int colorBits, depthBits, stencilBits;
@@ -340,8 +340,8 @@ typedef struct {
 
     textureCompression_t textureCompression;
     bool textureEnvAddAvailable;
-    bool anisotropicAvailable; // ----(SA)  added
-    float maxAnisotropy; // ----(SA)  added
+    bool anisotropicAvailable;                 // ----(SA)  added
+    float maxAnisotropy;                    // ----(SA)  added
 
     int vidWidth, vidHeight;
     // aspect is the screen's physical width / height, which may be different
@@ -353,7 +353,7 @@ typedef struct {
     // synonymous with "does rendering consume the entire screen?", therefore
     // a Win32 ICD that used CDS will have this set to TRUE
     bool isFullscreen;
-    bool smpActive; // dual processor
+    bool smpActive;     // dual processor
 } glconfig_t;
 
 // XreaL BEGIN

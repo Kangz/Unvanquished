@@ -27,7 +27,7 @@ bool AddTriangleToVBOTriangleList(growList_t* vboTriangles, skelTriangle_t* tri,
     md5Vertex_t* v;
     int boneIndex;
     int numNewReferences;
-    int newReferences[MAX_WEIGHTS * 3]; // a single triangle can have up to 12 new bone references !
+    int newReferences[MAX_WEIGHTS * 3];               // a single triangle can have up to 12 new bone references !
     bool hasWeights;
 
     hasWeights = false;

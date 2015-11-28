@@ -117,7 +117,7 @@ void Netchan_TransmitNextFragment(netchan_t* chan) {
     int fragmentLength;
 
     // write the packet header
-    MSG_InitOOB(&send, send_buf, sizeof(send_buf)); // <-- only do the oob here
+    MSG_InitOOB(&send, send_buf, sizeof(send_buf));           // <-- only do the oob here
 
     MSG_WriteLong(&send, chan->outgoingSequence | FRAGMENT_BIT);
 
@@ -258,7 +258,7 @@ bool Netchan_Process(netchan_t* chan, msg_t* msg) {
         fragmentStart = MSG_ReadShort(msg);
         fragmentLength = MSG_ReadShort(msg);
     } else {
-        fragmentStart = 0; // stop warning message
+        fragmentStart = 0;         // stop warning message
         fragmentLength = 0;
     }
 
@@ -368,8 +368,8 @@ bool Netchan_Process(netchan_t* chan, msg_t* msg) {
         Com_Memcpy(msg->data + 4, chan->fragmentBuffer, chan->fragmentLength);
         msg->cursize = chan->fragmentLength + 4;
         chan->fragmentLength = 0;
-        msg->readcount = 4; // past the sequence number
-        msg->bit = 32; // past the sequence number
+        msg->readcount = 4;         // past the sequence number
+        msg->bit = 32;         // past the sequence number
 
         // TTimo
         // clients were not acking fragmented messages

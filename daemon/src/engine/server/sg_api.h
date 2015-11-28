@@ -48,24 +48,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAX_ENT_CLUSTERS  16
 
 typedef struct {
-    bool linked; // false if not in any good cluster
+    bool linked;     // false if not in any good cluster
     int linkcount;
 
-    int svFlags; // SVF_NOCLIENT, SVF_BROADCAST, etc.
-    int singleClient; // only send to this client when SVF_SINGLECLIENT is set
-    int hiMask, loMask; // if SVF_CLIENTMASK is set, then only send to the
+    int svFlags;          // SVF_NOCLIENT, SVF_BROADCAST, etc.
+    int singleClient;          // only send to this client when SVF_SINGLECLIENT is set
+    int hiMask, loMask;          // if SVF_CLIENTMASK is set, then only send to the
     // clients specified by the following 64-bit bitmask:
     // hiMask: high-order bits (32..63)
     // loMask: low-order bits (0..31)
-    float clientRadius; // if SVF_CLIENTS_IN_RANGE, send to all clients within this range
+    float clientRadius;           // if SVF_CLIENTS_IN_RANGE, send to all clients within this range
 
-    bool bmodel; // if false, assume an explicit mins/maxs bounding box
+    bool bmodel;     // if false, assume an explicit mins/maxs bounding box
     // only set by trap_SetBrushModel
     vec3_t mins, maxs;
-    int contents; // CONTENTS_TRIGGER, CONTENTS_SOLID, CONTENTS_BODY, etc.
+    int contents;          // CONTENTS_TRIGGER, CONTENTS_SOLID, CONTENTS_BODY, etc.
     // a non-solid entity should have this set to 0
 
-    vec3_t absmin, absmax; // derived from mins/maxs and origin + rotation
+    vec3_t absmin, absmax;     // derived from mins/maxs and origin + rotation
 
     // currentOrigin will be used for all collision detection and world linking.
     // it will not necessarily be the same as the trajectory evaluation for the current
@@ -88,16 +88,16 @@ typedef struct {
 
     bool snapshotCallback;
 
-    int numClusters; // if -1, use headnode instead
+    int numClusters;     // if -1, use headnode instead
     int clusternums[MAX_ENT_CLUSTERS];
-    int lastCluster; // if all the clusters don't fit in clusternums
-    int originCluster; // Gordon: calced upon linking, for origin only bmodel vis checks
+    int lastCluster;     // if all the clusters don't fit in clusternums
+    int originCluster;     // Gordon: calced upon linking, for origin only bmodel vis checks
     int areanum, areanum2;
 } entityShared_t;
 
 // the server looks at a sharedEntity_t structure, which must be at the start of a gentity_t structure
 typedef struct {
-    entityState_t s; // communicated by the server to clients
-    entityShared_t r; // shared by both the server and game module
+    entityState_t s;      // communicated by the server to clients
+    entityShared_t r;     // shared by both the server and game module
 } sharedEntity_t;
 

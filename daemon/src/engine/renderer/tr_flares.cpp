@@ -54,19 +54,19 @@ up to five or more times in a frame with 3D status bar icons).
 
 // flare states maintain visibility over multiple frames for fading layers: view, mirror, menu
 typedef struct flare_s {
-    struct flare_s* next; // for active chain
+    struct flare_s* next;     // for active chain
 
     int addedFrame;
 
-    bool inPortal; // true if in a portal view of the scene
+    bool inPortal;           // true if in a portal view of the scene
     int frameSceneNum;
     void* surface;
     int fogNum;
 
     int fadeTime;
 
-    bool visible; // state of last test
-    float drawIntensity; // may be non 0 even if !visible due to fading
+    bool visible;           // state of last test
+    float drawIntensity;              // may be non 0 even if !visible due to fading
 
     int windowX, windowY;
     float eyeZ;
@@ -106,7 +106,7 @@ This is called at surface tesselation time
 */
 void RB_AddFlare(void* surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal) {
     int i;
-    flare_t* f; // , *oldest; //unused
+    flare_t* f;     // , *oldest; //unused
     vec3_t local;
     vec4_t eye, clip, normalized, window;
     float distBias = 512.0;
@@ -130,7 +130,7 @@ void RB_AddFlare(void* surface, int fogNum, vec3_t point, vec3_t color, vec3_t n
 
     if (window[0] < 0 || window[0] >= backEnd.viewParms.viewportWidth ||
         window[1] < 0 || window[1] >= backEnd.viewParms.viewportHeight) {
-        return; // shouldn't happen, since we check the clip[] above, except for FP rounding
+        return;         // shouldn't happen, since we check the clip[] above, except for FP rounding
     }
 
     // see if a flare with a matching surface, scene, and view exists

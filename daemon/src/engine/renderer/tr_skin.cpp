@@ -143,7 +143,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
     qhandle_t hSkin;
     skin_t* skin;
     skinSurface_t* surf;
-    skinModel_t* model; // ----(SA) added
+    skinModel_t* model;       // ----(SA) added
     char* text, * text_p;
     const char* token;
     char surfName[MAX_QPATH];
@@ -164,7 +164,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 
         if (!Q_stricmp(skin->name, name)) {
             if (skin->numSurfaces == 0) {
-                return 0; // default skin
+                return 0;                 // default skin
             }
 
             return hSkin;
@@ -196,7 +196,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
     tr.skins[hSkin] = skin;
     Q_strncpyz(skin->name, name, sizeof(skin->name));
     skin->numSurfaces = 0;
-    skin->numModels = 0; // ----(SA) added
+    skin->numModels = 0;     // ----(SA) added
 
     // ----(SA)  end
 
@@ -252,7 +252,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 
     // never let a skin have 0 shaders
     if (skin->numSurfaces == 0) {
-        return 0; // use default skin
+        return 0;         // use default skin
     }
 
     return hSkin;

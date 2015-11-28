@@ -59,16 +59,16 @@ namespace Color {
      * ColorAdaptor to convert different representations of RGB(A) colors to BasicColor
      *
      * Specializations must provide the following members:
-     *      static (AdaptedType) Adapt( TemplateType ); // Creates an object matching the Color concept
+     *  static (AdaptedType) Adapt( TemplateType ); // Creates an object matching the Color concept
      *
      * Requirements for AdaptedType:
-     *      static bool is_color = true;
-     *      typedef (unspecified) component_type; // See ColorComponentTraits
-     *      static component_type component_max = (unspecified); // See ColorComponentTraits
-     *      component_type Red()   const; // Red component
-     *      component_type Green() const; // Green component
-     *      component_type Blue()  const; // Blue component
-     *      component_type Alpha() const; // Alpha component
+     *  static bool is_color = true;
+     *  typedef (unspecified) component_type; // See ColorComponentTraits
+     *  static component_type component_max = (unspecified); // See ColorComponentTraits
+     *  component_type Red()   const; // Red component
+     *  component_type Green() const; // Green component
+     *  component_type Blue()  const; // Blue component
+     *  component_type Alpha() const; // Alpha component
      *
      */
     template<class T>

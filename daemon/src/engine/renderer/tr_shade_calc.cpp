@@ -178,7 +178,7 @@ static float GetOpValue(const expOperation_t* op) {
         break;
 
     case OP_DISTANCE:
-        value = 0.0; // FIXME ?
+        value = 0.0;                 // FIXME ?
         break;
 
     default:
@@ -286,8 +286,8 @@ float RB_EvalExpression(const expression_t* exp, float defaultValue) {
 
             numValues = table->numValues;
 
-            index = value1 * numValues; // float index into the table?s elements
-            lerp = index - floor(index); // being inbetween two elements of the table
+            index = value1 * numValues;                             // float index into the table?s elements
+            lerp = index - floor(index);                                // being inbetween two elements of the table
 
             oldIndex = (int) index;
             newIndex = (int) index + 1;
@@ -658,7 +658,7 @@ void RB_CalcTexMatrix(const textureBundle_t* bundle, matrix_t matrix) {
     for (j = 0; j < bundle->numTexMods; j++) {
         switch (bundle->texMods[j].type) {
         case TMOD_NONE:
-            j = TR_MAX_TEXMODS; // break out of for loop
+            j = TR_MAX_TEXMODS;                     // break out of for loop
             break;
 
         case TMOD_TURBULENT: {

@@ -197,7 +197,7 @@ void ChopWindingInPlace(winding_t** inout, vec3_t normal, vec_t dist, vec_t epsi
     vec_t dists[MAX_POINTS_ON_WINDING + 4];
     int sides[MAX_POINTS_ON_WINDING + 4];
     int counts[3];
-    static vec_t dot; // VC 4.2 optimizer bug if not static
+    static vec_t dot;     // VC 4.2 optimizer bug if not static
     int i, j;
     vec_t* p1, * p2;
     vec3_t mid;
@@ -234,10 +234,10 @@ void ChopWindingInPlace(winding_t** inout, vec3_t normal, vec_t dist, vec_t epsi
     }
 
     if (!counts[1]) {
-        return; // inout stays the same
+        return;         // inout stays the same
     }
 
-    maxpts = in->numpoints + 4; // can't use counts[0]+2 because
+    maxpts = in->numpoints + 4;     // can't use counts[0]+2 because
     // of fp grouping errors
 
     f = AllocWinding(maxpts);

@@ -32,7 +32,7 @@ R_LoadMD3
 =================
 */
 bool R_LoadMD3(model_t* mod, int lod, void* buffer, const char* modName) {
-    int i, j, k; // , l;
+    int i, j, k;                // , l;
 
     md3Header_t* md3Model;
     md3Frame_t* md3Frame;
@@ -45,7 +45,7 @@ bool R_LoadMD3(model_t* mod, int lod, void* buffer, const char* modName) {
 
     mdvModel_t* mdvModel;
     mdvFrame_t* frame;
-    mdvSurface_t* surf; // , *surface;
+    mdvSurface_t* surf;       // , *surface;
     srfTriangle_t* tri;
     mdvXyz_t* v;
     mdvNormal_t* n;

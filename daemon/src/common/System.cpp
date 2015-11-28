@@ -89,7 +89,7 @@ namespace Sys {
             // Determine the maximum available timer resolution
             ULONG minRes, curRes;
             if (pNtQueryTimerResolution(&minRes, &maxRes, &curRes) != 0) {
-                maxRes = 10000; // Default to 1ms
+                maxRes = 10000;         // Default to 1ms
             }
         }
 

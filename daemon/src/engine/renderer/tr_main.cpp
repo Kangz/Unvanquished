@@ -422,7 +422,7 @@ int R_CullPointAndRadius(vec3_t pt, float radius) {
         return CULL_CLIP;
     }
 
-    return CULL_IN; // completely inside frustum
+    return CULL_IN;     // completely inside frustum
 }
 
 /*
@@ -1395,7 +1395,7 @@ static bool SurfIsOffscreen(const drawSurf_t* drawSurf) {
 
         VectorSubtract(tess.verts[tess.indexes[i]].xyz, tr.orientation.viewOrigin, normal);
 
-        len = VectorLengthSquared(normal); // lose the sqrt
+        len = VectorLengthSquared(normal);            // lose the sqrt
 
         if (len < shortest) {
             shortest = len;
@@ -1460,7 +1460,7 @@ static bool R_MirrorViewBySurface(drawSurf_t* drawSurf) {
     newParms.isPortal = true;
 
     if (!R_GetPortalOrientations(drawSurf, &surface, &camera, newParms.pvsOrigin, &newParms.isMirror)) {
-        return false; // bad portal, no portalentity
+        return false;         // bad portal, no portalentity
     }
 
     R_MirrorPoint(oldParms.orientation.origin, &surface, &camera, newParms.orientation.origin);
@@ -1612,7 +1612,7 @@ static void R_SortDrawSurfs() {
                 return;
             }
 
-            break; // only one mirror view at a time
+            break;             // only one mirror view at a time
         }
     }
 
@@ -1649,7 +1649,7 @@ void R_AddEntitySurfaces() {
         // simple generated models, like sprites and beams, are not culled
         switch (ent->e.reType) {
         case RT_PORTALSURFACE:
-            break; // don't draw anything
+            break;                     // don't draw anything
 
         case RT_SPRITE:
 
@@ -1690,7 +1690,7 @@ void R_AddEntitySurfaces() {
                     R_AddBSPModelSurfaces(ent);
                     break;
 
-                case MOD_BAD: // null model axis
+                case MOD_BAD:                                 // null model axis
                     if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
                         break;
                     }
@@ -1763,7 +1763,7 @@ void R_AddEntityInteractions(trRefLight_t* light) {
         // simple generated models, like sprites and beams, are not culled
         switch (ent->e.reType) {
         case RT_PORTALSURFACE:
-            break; // don't draw anything
+            break;                     // don't draw anything
 
         case RT_SPRITE:
             break;
@@ -1789,7 +1789,7 @@ void R_AddEntityInteractions(trRefLight_t* light) {
                     R_AddBrushModelInteractions(ent, light, iaType);
                     break;
 
-                case MOD_BAD: // null model axis
+                case MOD_BAD:                                 // null model axis
                     break;
 
                 default:
@@ -2188,7 +2188,7 @@ void R_RenderView(viewParms_t* parms) {
     tr.viewParms = *parms;
     tr.viewParms.frameSceneNum = tr.frameSceneNum;
     tr.viewParms.frameCount = tr.frameCount;
-    tr.viewParms.viewCount = tr.viewCount; // % MAX_VIEWS;
+    tr.viewParms.viewCount = tr.viewCount;     // % MAX_VIEWS;
 
     firstDrawSurf = tr.refdef.numDrawSurfs;
     firstInteraction = tr.refdef.numInteractions;

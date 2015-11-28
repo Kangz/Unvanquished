@@ -126,43 +126,43 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // punctuation
 typedef struct punctuation_s {
-    const char* p; // punctuation character(s)
-    int n; // punctuation indication
-    struct punctuation_s* next; // next punctuation
+    const char* p;               // punctuation character(s)
+    int n;                      // punctuation indication
+    struct punctuation_s* next;     // next punctuation
 } punctuation_t;
 
 // token
 typedef struct token_s {
-    char string[MAX_TOKEN_CHARS]; // available token
-    int type; // last read token type
-    int subtype; // last read token sub type
-    unsigned long int intvalue; // integer value
-    double floatvalue; // floating point value
-    char* whitespace_p; // start of white space before token
-    char* endwhitespace_p; // start of white space before token
-    int line; // line the token was on
-    int linescrossed; // lines crossed in white space
-    struct token_s* next; // next token in chain
+    char string[MAX_TOKEN_CHARS];                    // available token
+    int type;                   // last read token type
+    int subtype;                   // last read token sub type
+    unsigned long int intvalue;     // integer value
+    double floatvalue;                // floating point value
+    char* whitespace_p;                  // start of white space before token
+    char* endwhitespace_p;                  // start of white space before token
+    int line;                   // line the token was on
+    int linescrossed;                   // lines crossed in white space
+    struct token_s* next;        // next token in chain
 } token_t;
 
 // script file
 typedef struct script_s {
-    char filename[1024]; // file name of the script
-    char* buffer; // buffer containing the script
-    char* script_p; // current pointer in the script
-    char* end_p; // pointer to the end of the script
-    char* lastscript_p; // script pointer before reading token
-    char* whitespace_p; // begin of the white space
+    char filename[1024];                  // file name of the script
+    char* buffer;                // buffer containing the script
+    char* script_p;                // current pointer in the script
+    char* end_p;                // pointer to the end of the script
+    char* lastscript_p;                // script pointer before reading token
+    char* whitespace_p;                // begin of the white space
     char* endwhitespace_p;
-    int length; // length of the script in bytes
-    int line; // current line in script
-    int lastline; // line before reading token
-    int tokenavailable; // set by UnreadLastToken
-    int flags; // several script flags
-    punctuation_t* punctuations; // the punctuations used in the script
+    int length;                 // length of the script in bytes
+    int line;                 // current line in script
+    int lastline;                 // line before reading token
+    int tokenavailable;                 // set by UnreadLastToken
+    int flags;                 // several script flags
+    punctuation_t* punctuations;       // the punctuations used in the script
     punctuation_t** punctuationtable;
-    token_t token; // available token
-    struct script_s* next; // next script in a chain
+    token_t token;             // available token
+    struct script_s* next;     // next script in a chain
 } script_t;
 
 #define DEFINE_FIXED  0x0001
@@ -181,39 +181,39 @@ typedef struct script_s {
 
 // macro definitions
 typedef struct define_s {
-    char* name; // define name
-    int flags; // define flags
-    int builtin; // > 0 if builtin define
-    int numparms; // number of define parameters
-    token_t* parms; // define parameters
-    token_t* tokens; // macro tokens (possibly containing parm tokens)
-    struct define_s* next; // next defined macro in a list
+    char* name;                // define name
+    int flags;                 // define flags
+    int builtin;                 // > 0 if builtin define
+    int numparms;                 // number of define parameters
+    token_t* parms;             // define parameters
+    token_t* tokens;             // macro tokens (possibly containing parm tokens)
+    struct define_s* next;     // next defined macro in a list
 
-    struct define_s* hashnext; // next define in the hash chain
+    struct define_s* hashnext;     // next define in the hash chain
 } define_t;
 
 // indents
 // used for conditional compilation directives:
 // #if, #else, #elif, #ifdef, #ifndef
 typedef struct indent_s {
-    int type; // indent type
-    int skip; // true if skipping current indent
-    script_t* script; // script the indent was in
-    struct indent_s* next; // next indent on the indent stack
+    int type;                 // indent type
+    int skip;                 // true if skipping current indent
+    script_t* script;            // script the indent was in
+    struct indent_s* next;     // next indent on the indent stack
 } indent_t;
 
 // source file
 typedef struct source_s {
-    char filename[MAX_QPATH]; // file name of the script
-    char includepath[MAX_QPATH]; // path to include files
-    punctuation_t* punctuations; // punctuations to use
-    script_t* scriptstack; // stack with scripts of the source
-    token_t* tokens; // tokens to read first
-    define_t* defines; // list with macro definitions
-    define_t** definehash; // hash chain with defines
-    indent_t* indentstack; // stack with indents
-    int skip; // > 0 if skipping conditional code
-    token_t token; // last read token
+    char filename[MAX_QPATH];                // file name of the script
+    char includepath[MAX_QPATH];                // path to include files
+    punctuation_t* punctuations;     // punctuations to use
+    script_t* scriptstack;          // stack with scripts of the source
+    token_t* tokens;           // tokens to read first
+    define_t* defines;          // list with macro definitions
+    define_t** definehash;          // hash chain with defines
+    indent_t* indentstack;          // stack with indents
+    int skip;               // > 0 if skipping conditional code
+    token_t token;           // last read token
 } source_t;
 
 #define MAX_DEFINEPARMS 128
@@ -339,7 +339,7 @@ static void Parse_CreatePunctuationTable(script_t* script, punctuation_t* punctu
 
                 if (lastp) {
                     lastp->next = newp;
-                } else {                                     script->punctuationtable[(unsigned int) newp->p[0]] = newp;
+                } else {script->punctuationtable[(unsigned int) newp->p[0]] = newp;
                 }
 
                 break;
@@ -353,7 +353,7 @@ static void Parse_CreatePunctuationTable(script_t* script, punctuation_t* punctu
 
             if (lastp) {
                 lastp->next = newp;
-            } else {                                     script->punctuationtable[(unsigned int) newp->p[0]] = newp;
+            } else {script->punctuationtable[(unsigned int) newp->p[0]] = newp;
             }
         }
     }
@@ -405,12 +405,12 @@ Parse_SetScriptPunctuations
 static void Parse_SetScriptPunctuations(script_t* script, punctuation_t* p) {
     if (p) {
         Parse_CreatePunctuationTable(script, p);
-    } else {                                                        Parse_CreatePunctuationTable(script, Default_Punctuations);
+    } else {Parse_CreatePunctuationTable(script, Default_Punctuations);
     }
 
     if (p) {
         script->punctuations = p;
-    } else {                                       script->punctuations = Default_Punctuations;
+    } else {script->punctuations = Default_Punctuations;
     }
 }
 
@@ -564,7 +564,7 @@ static int Parse_ReadEscapeCharacter(script_t* script, char* ch) {
                 c = c - 'A' + 10;
             } else if (c >= 'a' && c <= 'z') {
                 c = c - 'a' + 10;
-            } else {                                                                                                                                                           break;
+            } else {break;
             }
 
             val = (val << 4) + c;
@@ -581,7 +581,7 @@ static int Parse_ReadEscapeCharacter(script_t* script, char* ch) {
         break;
     }
 
-    default: // NOTE: decimal ASCII code, NOT octal
+    default:             // NOTE: decimal ASCII code, NOT octal
     {
         if (*script->script_p < '0' || *script->script_p > '9') {
             Parse_ScriptError(script, "unknown escape char");
@@ -592,7 +592,7 @@ static int Parse_ReadEscapeCharacter(script_t* script, char* ch) {
 
             if (c >= '0' && c <= '9') {
                 c = c - '0';
-            } else {                                             break;
+            } else {break;
             }
 
             val = val * 10 + c;
@@ -633,7 +633,7 @@ static int Parse_ReadString(script_t* script, token_t* token, int quote) {
 
     if (quote == '\"') {
         token->type = TT_STRING;
-    } else {                                                  token->type = TT_LITERAL;
+    } else {token->type = TT_LITERAL;
     }
 
     len = 0;
@@ -798,7 +798,7 @@ static void Parse_NumberValue(char* string, int subtype, unsigned long int* intv
                 *intvalue += *string - 'a' + 10;
             } else if (*string >= 'A' && *string <= 'F') {
                 *intvalue += *string - 'A' + 10;
-            } else {                                                                                                                                                               *intvalue += *string - '0';
+            } else {*intvalue += *string - '0';
             }
 
             string++;
@@ -890,7 +890,7 @@ static int Parse_ReadNumber(script_t* script, token_t* token) {
     }
 
     #endif // BINARYNUMBERS
-    else { // decimal or octal integer or floating point number
+    else {   // decimal or octal integer or floating point number
         octal = false;
         dot = false;
 
@@ -919,7 +919,7 @@ static int Parse_ReadNumber(script_t* script, token_t* token) {
 
         if (octal) {
             token->subtype |= TT_OCTAL;
-        } else {                                             token->subtype |= TT_DECIMAL;
+        } else {token->subtype |= TT_DECIMAL;
         }
 
         if (dot) {
@@ -1512,7 +1512,7 @@ static int Parse_ReadDefineParms(source_t* source, define_t* define, token_t** p
 
                 if (last) {
                     last->next = t;
-                } else {                                parms[numparms] = t;
+                } else {parms[numparms] = t;
                 }
 
                 last = t;
@@ -1792,7 +1792,7 @@ static int Parse_ExpandDefine(source_t* source, token_t* deftoken, define_t* def
 
                 if (last) {
                     last->next = t;
-                } else {                                first = t;
+                } else {first = t;
                 }
 
                 last = t;
@@ -1803,7 +1803,7 @@ static int Parse_ExpandDefine(source_t* source, token_t* deftoken, define_t* def
                 // the stringizing operator must be followed by a define parameter
                 if (dt->next) {
                     parmnum = Parse_FindDefineParm(define, dt->next->string);
-                } else {                                                                                parmnum = -1;
+                } else {parmnum = -1;
                 }
 
                 //
@@ -1831,7 +1831,7 @@ static int Parse_ExpandDefine(source_t* source, token_t* deftoken, define_t* def
 
             if (last) {
                 last->next = t;
-            } else {                                first = t;
+            } else {first = t;
             }
 
             last = t;
@@ -2147,7 +2147,7 @@ static int Parse_EvaluateTokens(source_t* source, token_t* tokens, signed long i
 
             if (lastvalue) {
                 lastvalue->next = v;
-            } else {                                          firstvalue = v;
+            } else {firstvalue = v;
             }
 
             lastvalue = v;
@@ -2192,7 +2192,7 @@ static int Parse_EvaluateTokens(source_t* source, token_t* tokens, signed long i
 
             if (lastvalue) {
                 lastvalue->next = v;
-            } else {                                          firstvalue = v;
+            } else {firstvalue = v;
             }
 
             lastvalue = v;
@@ -2312,7 +2312,7 @@ static int Parse_EvaluateTokens(source_t* source, token_t* tokens, signed long i
 
                 if (lastoperator) {
                     lastoperator->next = o;
-                } else {                                                firstoperator = o;
+                } else {firstoperator = o;
                 }
 
                 lastoperator = o;
@@ -2547,12 +2547,12 @@ static int Parse_EvaluateTokens(source_t* source, token_t* tokens, signed long i
             //
             if (v->prev) {
                 v->prev->next = v->next;
-            } else {                                            firstvalue = v->next;
+            } else {firstvalue = v->next;
             }
 
             if (v->next) {
                 v->next->prev = v->prev;
-            } else {                                            lastvalue = v->prev;
+            } else {lastvalue = v->prev;
             }
 
             // Z_Free(v);
@@ -2562,12 +2562,12 @@ static int Parse_EvaluateTokens(source_t* source, token_t* tokens, signed long i
         // remove the operator
         if (o->prev) {
             o->prev->next = o->next;
-        } else {                                            firstoperator = o->next;
+        } else {firstoperator = o->next;
         }
 
         if (o->next) {
             o->next->prev = o->prev;
-        } else {                                            lastoperator = o->prev;
+        } else {lastoperator = o->prev;
         }
 
         // Z_Free(o);
@@ -2650,7 +2650,7 @@ static int Parse_Evaluate(source_t* source, signed long int* intvalue,
 
                 if (lasttoken) {
                     lasttoken->next = t;
-                } else {                                          firsttoken = t;
+                } else {firsttoken = t;
                 }
 
                 lasttoken = t;
@@ -2661,7 +2661,7 @@ static int Parse_Evaluate(source_t* source, signed long int* intvalue,
 
                 if (lasttoken) {
                     lasttoken->next = t;
-                } else {                                          firsttoken = t;
+                } else {firsttoken = t;
                 }
 
                 lasttoken = t;
@@ -2686,11 +2686,11 @@ static int Parse_Evaluate(source_t* source, signed long int* intvalue,
 
             if (lasttoken) {
                 lasttoken->next = t;
-            } else {                                          firsttoken = t;
+            } else {firsttoken = t;
             }
 
             lasttoken = t;
-        } else { // can't evaluate the token
+        } else {     // can't evaluate the token
             Parse_SourceError(source, "can't evaluate %s", token.string);
             return false;
         }
@@ -2756,7 +2756,7 @@ static int Parse_DollarEvaluate(source_t* source, signed long int* intvalue,
 
                 if (lasttoken) {
                     lasttoken->next = t;
-                } else {                                          firsttoken = t;
+                } else {firsttoken = t;
                 }
 
                 lasttoken = t;
@@ -2767,7 +2767,7 @@ static int Parse_DollarEvaluate(source_t* source, signed long int* intvalue,
 
                 if (lasttoken) {
                     lasttoken->next = t;
-                } else {                                          firsttoken = t;
+                } else {firsttoken = t;
                 }
 
                 lasttoken = t;
@@ -2810,11 +2810,11 @@ static int Parse_DollarEvaluate(source_t* source, signed long int* intvalue,
 
             if (lasttoken) {
                 lasttoken->next = t;
-            } else {                                          firsttoken = t;
+            } else {firsttoken = t;
             }
 
             lasttoken = t;
-        } else { // can't evaluate the token
+        } else {     // can't evaluate the token
             Parse_SourceError(source, "can't evaluate %s", token.string);
             return false;
         }
@@ -2968,7 +2968,7 @@ static int Parse_Directive_undef(source_t* source) {
             } else {
                 if (lastdefine) {
                     lastdefine->hashnext = define->hashnext;
-                } else {                                                               source->definehash[hash] = define->hashnext;
+                } else {source->definehash[hash] = define->hashnext;
                 }
 
                 Parse_FreeDefine(define);
@@ -3061,6 +3061,7 @@ static int Parse_Directive_pragma(source_t* source) {
     Parse_SourceWarning(source, "#pragma directive not supported");
 
     while (Parse_ReadLine(source, &token)) {
+        ;
     }
 
     return true;
@@ -3445,7 +3446,7 @@ static int Parse_Directive_define(source_t* source) {
 
                 if (last) {
                     last->next = t;
-                } else {                                define->parms = t;
+                } else {define->parms = t;
                 }
 
                 last = t;
@@ -3491,7 +3492,7 @@ static int Parse_Directive_define(source_t* source) {
 
         if (last) {
             last->next = t;
-        } else {                                define->tokens = t;
+        } else {define->tokens = t;
         }
 
         last = t;
@@ -3936,7 +3937,7 @@ static define_t* Parse_CopyDefine(define_t* define) {
 
         if (lasttoken) {
             lasttoken->next = newtoken;
-        } else {                                                 newdefine->tokens = newtoken;
+        } else {newdefine->tokens = newtoken;
         }
 
         lasttoken = newtoken;
@@ -3951,7 +3952,7 @@ static define_t* Parse_CopyDefine(define_t* define) {
 
         if (lasttoken) {
             lasttoken->next = newtoken;
-        } else {                                                 newdefine->parms = newtoken;
+        } else {newdefine->parms = newtoken;
         }
 
         lasttoken = newtoken;

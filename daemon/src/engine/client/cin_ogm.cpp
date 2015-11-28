@@ -63,30 +63,30 @@ theora:
 typedef struct {
     fileHandle_t ogmFile;
 
-    ogg_sync_state oy; /* sync and verify incoming physical bitstream */
+    ogg_sync_state oy;       /* sync and verify incoming physical bitstream */
     // ogg_stream_state os; /* take physical pages, weld into a logical stream of packets */
     ogg_stream_state os_audio;
     ogg_stream_state os_video;
 
-    vorbis_dsp_state vd; /* central working state for the packet->PCM decoder */
-    vorbis_info vi; /* struct that stores all the static vorbis bitstream settings */
-    vorbis_comment vc; /* struct that stores all the bitstream user comments */
+    vorbis_dsp_state vd;     /* central working state for the packet->PCM decoder */
+    vorbis_info vi;          /* struct that stores all the static vorbis bitstream settings */
+    vorbis_comment vc;       /* struct that stores all the bitstream user comments */
 
     bool videoStreamIsTheora;
 
-    theora_info th_info; // dump_video.c(example decoder): ti
-    theora_comment th_comment; // dump_video.c(example decoder): tc
-    theora_state th_state; // dump_video.c(example decoder): td
+    theora_info th_info;          // dump_video.c(example decoder): ti
+    theora_comment th_comment;       // dump_video.c(example decoder): tc
+    theora_state th_state;         // dump_video.c(example decoder): td
 
     yuv_buffer th_yuvbuffer;
 
     unsigned char* outputBuffer;
     unsigned outputWidht;
     unsigned outputHeight;
-    unsigned outputBufferSize; // in Pixel (so "real Bytesize" = outputBufferSize*4)
-    int VFrameCount; // output video-stream
+    unsigned outputBufferSize;          // in Pixel (so "real Bytesize" = outputBufferSize*4)
+    int VFrameCount;               // output video-stream
     ogg_int64_t Vtime_unit;
-    int currentTime; // input from Run-function
+    int currentTime;               // input from Run-function
 } cin_ogm_t;
 
 static cin_ogm_t g_ogm;
@@ -192,7 +192,7 @@ static bool loadAudio() {
         if ((samples = vorbis_synthesis_pcmout(&g_ogm.vd, &pcm)) > 0) {
             // vorbis -> raw
             ptr = rawBuffer;
-            samplesNeeded = (SIZEOF_RAWBUFF) / (2 * 2); // (width*channel)
+            samplesNeeded = (SIZEOF_RAWBUFF) / (2 * 2);                 // (width*channel)
 
             if (samples < samplesNeeded) {
                 samplesNeeded = samples;
@@ -206,7 +206,7 @@ static bool loadAudio() {
                           left[i] <= 1.0f) ? left[i] * 32767.f : 32767 * ((left[i] > 0.0f) - (left[i] < 0.0f));
                 ptr[1] = (right[i] >= -1.0f &&
                           right[i] <= 1.0f) ? right[i] * 32767.f : 32767 * ((right[i] > 0.0f) - (right[i] < 0.0f));
-                ptr += 2; // numChans;
+                ptr += 2;                 // numChans;
             }
 
             if (i > 0) {
@@ -372,6 +372,7 @@ static int loadVideoFrame() {
         ogg_packet op;
 
         while (ogg_stream_packetout(&g_ogm.os_video, &op)) {
+            ;
         }
     }
 
@@ -410,7 +411,7 @@ static bool loadFrame() {
                 if (status > 0) {
                     anyDataTransferred = true;
                 } else {
-                    anyDataTransferred = false; // error (we don't need any videodata and we had no transferred)
+                    anyDataTransferred = false;                     // error (we don't need any videodata and we had no transferred)
                 }
             }
 
@@ -421,12 +422,12 @@ static bool loadFrame() {
                     // try to load a datablock from file
                     anyDataTransferred |= !loadBlockToSync();
                 } else {
-                    anyDataTransferred = true; // successful loadPagesToStreams()
+                    anyDataTransferred = true;                     // successful loadPagesToStreams()
                 }
             }
 
             // load all Audio after loading new pages ...
-            if (g_ogm.VFrameCount > 1) { // wait some videoframes (it's better to have some delay, than laggy sound)
+            if (g_ogm.VFrameCount > 1) {             // wait some videoframes (it's better to have some delay, than laggy sound)
                 audioWantsMoreData = loadAudio();
             }
         }
@@ -442,11 +443,11 @@ typedef struct {
     char streamtype[8];
     char subtype[4];
 
-    ogg_int32_t size; /* size of the structure */
+    ogg_int32_t size;     /* size of the structure */
 
-    ogg_int64_t time_unit; /* in reference time */ // in 10^-7 seconds (dT between frames)
+    ogg_int64_t time_unit; /* in reference time */     // in 10^-7 seconds (dT between frames)
     ogg_int64_t samples_per_unit;
-    ogg_int32_t default_len; /* in media time */
+    ogg_int32_t default_len;     /* in media time */
 
     ogg_int32_t buffersize;
     ogg_int16_t bits_per_sample;
@@ -502,7 +503,7 @@ int Cin_OGM_Init(const char* filename) {
         return -1;
     }
 
-    ogg_sync_init(&g_ogm.oy); /* Now we can read pages */
+    ogg_sync_init(&g_ogm.oy);        /* Now we can read pages */
 
     // FIXME? can serialno be 0 in ogg? (better way to check inited?)
     // TODO: support for more than one audio stream? / detect files with one stream(or without correct ones)
@@ -679,7 +680,7 @@ void Cin_OGM_Shutdown() {
 
     vorbis_dsp_clear(&g_ogm.vd);
     vorbis_comment_clear(&g_ogm.vc);
-    vorbis_info_clear(&g_ogm.vi); /* must be called last (comment from vorbis example code) */
+    vorbis_info_clear(&g_ogm.vi);        /* must be called last (comment from vorbis example code) */
 
     ogg_stream_clear(&g_ogm.os_audio);
     ogg_stream_clear(&g_ogm.os_video);

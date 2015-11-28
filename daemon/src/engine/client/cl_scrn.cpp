@@ -312,7 +312,7 @@ void SCR_UpdateScreen() {
     static int recursive = 0;
 
     if (!scr_initialized) {
-        return; // not initialized yet
+        return;         // not initialized yet
     }
 
     if (++recursive >= 2) {

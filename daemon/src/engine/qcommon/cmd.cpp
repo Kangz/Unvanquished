@@ -44,9 +44,9 @@ Maryland 20850 USA.
 
 typedef struct cmdContext_s {
     int argc;
-    char* argv[MAX_STRING_TOKENS]; // points into cmd.tokenized
-    char tokenized[BIG_INFO_STRING + MAX_STRING_TOKENS]; // will have 0 bytes inserted
-    char cmd[BIG_INFO_STRING]; // the original command we received (no token processing)
+    char* argv[MAX_STRING_TOKENS];       // points into cmd.tokenized
+    char tokenized[BIG_INFO_STRING + MAX_STRING_TOKENS];       // will have 0 bytes inserted
+    char cmd[BIG_INFO_STRING];       // the original command we received (no token processing)
 } cmdContext_t;
 
 static cmdContext_t cmd;
@@ -164,11 +164,11 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
     // text which is processed here is already of limited length...
     char* textOutStart = textOut;
 
-    *textOut = '\0'; // initial NUL-termination in case of early exit
+    *textOut = '\0';     // initial NUL-termination in case of early exit
 
     while (1) {
         if (tokens && cmd.argc == MAX_STRING_TOKENS) {
-            goto done; // this is usually something malicious
+            goto done;             // this is usually something malicious
         }
 
         while (1) {
@@ -178,12 +178,12 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
             }
 
             if (!*text) {
-                goto done; // all tokens parsed
+                goto done;                 // all tokens parsed
             }
 
             // skip // comments
             if (text[0] == '/' && text[1] == '/') {
-                goto done; // all tokens parsed
+                goto done;                 // all tokens parsed
             }
 
             // skip /* */ comments
@@ -194,12 +194,12 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
                 }
 
                 if (!*text) {
-                    goto done; // all tokens parsed
+                    goto done;                     // all tokens parsed
                 }
 
                 text += 2;
             } else {
-                break; // we are ready to parse a token
+                break;                 // we are ready to parse a token
             }
         }
 
@@ -234,7 +234,7 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
                 }
 
                 if (*text) {
-                    ++text; // terminating ", if any
+                    ++text;                          // terminating ", if any
                 }
             }
         }
@@ -242,7 +242,7 @@ static void Tokenise(const char* text, char* textOut, bool tokens, bool ignoreQu
         *textOut++ = tokens ? '\0' : ' ';
 
         if (!*text) {
-            goto done; // all tokens parsed
+            goto done;             // all tokens parsed
         }
     }
 
@@ -323,7 +323,7 @@ static const char* EscapeString(const char* in, bool quote) {
         case '\\':
 doquote:
             quoted = true;
-            *out++ = '\\'; // could set out == end - is fine
+            *out++ = '\\';             // could set out == end - is fine
             break;
         }
 
@@ -337,7 +337,7 @@ doquote:
     }
 
     if (out > end) {
-        out -= 2; // an escape overran; allow overwrite
+        out -= 2;         // an escape overran; allow overwrite
     }
 
     if (quote) {

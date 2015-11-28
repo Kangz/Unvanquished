@@ -78,7 +78,7 @@ typedef struct {
     int height;
     bool wrapWidth;
     bool wrapHeight;
-    vec3_t points[MAX_GRID_SIZE][MAX_GRID_SIZE]; // [width][height]
+    vec3_t points[MAX_GRID_SIZE][MAX_GRID_SIZE];           // [width][height]
 } cGrid_t;
 
 // struct patchCollide_s *CM_GeneratePatchCollide(int width, int height, vec3_t * points, bool addBevels);

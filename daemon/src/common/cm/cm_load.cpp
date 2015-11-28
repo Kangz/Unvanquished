@@ -156,7 +156,7 @@ void CMod_LoadSubmodels(lump_t* l) {
         }
 
         if (i == 0) {
-            continue; // world model doesn't need other info
+            continue;             // world model doesn't need other info
         }
 
         // make a "leaf" just to hold the model's brushes and surfaces
@@ -543,7 +543,7 @@ static void CMod_CreateBrushSideWindings() {
                 }
 
                 if (chopSide->planeNum == (side->planeNum ^ 1)) {
-                    continue; // back side clipaway
+                    continue;                     // back side clipaway
                 }
 
                 plane = &cm.planes[chopSide->planeNum ^ 1];

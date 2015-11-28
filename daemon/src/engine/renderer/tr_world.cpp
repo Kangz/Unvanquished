@@ -233,7 +233,7 @@ R_AddWorldSurface
 */
 static bool R_AddWorldSurface(bspSurface_t* surf, int fogIndex, int planeBits) {
     if (surf->viewCount == tr.viewCountNoReset) {
-        return false; // already in this view
+        return false;         // already in this view
     }
 
     surf->viewCount = tr.viewCountNoReset;
@@ -398,11 +398,11 @@ static void R_RecursiveWorldNode(bspNode_t* node, int planeBits, int decalBits) 
                     r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustums[0][i]);
 
                     if (r == 2) {
-                        return; // culled
+                        return;                         // culled
                     }
 
                     if (r == 1) {
-                        planeBits &= ~(1 << i); // all descendants will also be in front
+                        planeBits &= ~(1 << i);                            // all descendants will also be in front
                     }
                 }
             }
@@ -475,7 +475,7 @@ static void R_RecursiveInteractionNode(bspNode_t* node, trRefLight_t* light, int
                     }
 
                     if (r == 1) {
-                        planeBits &= ~(1 << i); // all descendants will also be in front
+                        planeBits &= ~(1 << i);                            // all descendants will also be in front
                     }
                 }
             }
@@ -773,7 +773,7 @@ void R_AddWorldSurfaces() {
         bspNode_t** node;
 
         for (i = 0, node = tr.world->skyNodes; i < tr.world->numSkyNodes; i++, node++) {
-            R_AddLeafSurfaces(*node, 0, FRUSTUM_CLIPALL); // no decals on skybox nodes
+            R_AddLeafSurfaces(*node, 0, FRUSTUM_CLIPALL);                // no decals on skybox nodes
         }
     } else {
         // determine which leaves are in the PVS / areamask

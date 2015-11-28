@@ -659,7 +659,7 @@ int BoxOnPlaneSide(const vec3_t emins, const vec3_t emaxs, const struct cplane_s
     // general case
     dist[0] = dist[1] = 0;
 
-    if (p->signbits < 8) { // >= 8: default case is original code (dist[0]=dist[1]=0)
+    if (p->signbits < 8) {     // >= 8: default case is original code (dist[0]=dist[1]=0)
         for (i = 0; i < 3; i++) {
             b = (p->signbits >> i) & 1;
             dist[b] += p->normal[i] * emaxs[i];
@@ -925,6 +925,7 @@ int NearestPowerOfTwo(int val) {
     int answer;
 
     for (answer = 1; answer < val; answer <<= 1) {
+        ;
     }
 
     return answer;
@@ -1107,8 +1108,8 @@ vec_t DistanceBetweenLineSegmentsSquared(const vec3_t sP0, const vec3_t sP1,
 
     if (D < LINE_DISTANCE_EPSILON) {
         // the lines are almost parallel
-        sN = 0.0; // force using point P0 on segment S1
-        sD = 1.0; // to prevent possible division by 0.0 later
+        sN = 0.0;         // force using point P0 on segment S1
+        sD = 1.0;         // to prevent possible division by 0.0 later
         tN = e;
         tD = c;
     } else {
@@ -2716,10 +2717,10 @@ void QuatFromAngles(quat_t q, vec_t pitch, vec_t yaw, vec_t roll) {
     sr = sin(DEG2RAD(roll));
     cr = cos(DEG2RAD(roll));
 
-    q[0] = sr * cp * cy - cr * sp * sy; // x
-    q[1] = cr * sp * cy + sr * cp * sy; // y
-    q[2] = cr * cp * sy - sr * sp * cy; // z
-    q[3] = cr * cp * cy + sr * sp * sy; // w
+    q[0] = sr * cp * cy - cr * sp * sy;       // x
+    q[1] = cr * sp * cy + sr * cp * sy;       // y
+    q[2] = cr * cp * sy - sr * sp * cy;       // z
+    q[3] = cr * cp * cy + sr * sp * sy;       // w
     #endif
 }
 
@@ -3133,7 +3134,7 @@ void TransCombine(const transform_t* a, const transform_t* b,
 // compute the inverse transform
 void TransInverse(const transform_t* in, transform_t* out) {
     quat_t inverse;
-    static transform_t tmp; // static for proper alignment in QVMs
+    static transform_t tmp;     // static for proper alignment in QVMs
 
     TransInit(&tmp);
     VectorNegate(in->trans, tmp.trans);

@@ -64,7 +64,7 @@ long GenerateImageHashValue(const char* fname) {
         letter = tolower(fname[i]);
 
         if (letter == '\\') {
-            letter = '/'; // damn path names
+            letter = '/';             // damn path names
         }
 
         hash += (long)(letter) * (i + 119);
@@ -278,7 +278,7 @@ void R_ImageList_f() {
         case GL_COMPRESSED_RGBA:
             Com_sprintf(buffer, sizeof(buffer), "      ");
             out += buffer;
-            imageDataSize *= 4; // FIXME
+            imageDataSize *= 4;                     // FIXME
             break;
 
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
@@ -532,20 +532,20 @@ static void R_MipMap2(unsigned* in, int inWidth, int inHeight) {
     temp = (unsigned int*) ri.Hunk_AllocateTempMemory(outWidth * outHeight * 4);
     outpix = (byte*) temp;
 
-    inWidthMask = (inWidth << 2) - 1; // applied to row indices
-    inHeightMask = inHeight - 1; // applied to in indices
+    inWidthMask = (inWidth << 2) - 1;       // applied to row indices
+    inHeightMask = inHeight - 1;     // applied to in indices
 
     row[1] = (byte*) &in[(-1 & inHeightMask) * inWidth];
     row[2] = (byte*) &in[0];
     row[3] = (byte*) &in[(1 & inHeightMask) * inWidth];
 
-    for (i = 0; i < inHeight; i += 2) { // count source, row pairs
+    for (i = 0; i < inHeight; i += 2) {     // count source, row pairs
         row[0] = row[1];
         row[1] = row[2];
         row[2] = row[3];
         row[3] = (byte*) &in[((i + 2) & inHeightMask) * inWidth];
 
-        for (j = 0; j < inWidth * 4; j += 8) { // count source, bytes comprising texel pairs
+        for (j = 0; j < inWidth * 4; j += 8) {         // count source, bytes comprising texel pairs
             for (k = j; k < j + 4; k++) {
                 const int km1 = (k - 4) & inWidthMask;
                 const int kp1 = (k + 4) & inWidthMask;
@@ -590,7 +590,7 @@ static void R_MipMap(byte* in, int width, int height) {
     height >>= 1;
 
     if (width == 0 || height == 0) {
-        width += height; // get largest
+        width += height;         // get largest
 
         for (i = 0; i < width; i++, out += 4, in += 8) {
             out[0] = (in[0] + in[4]) >> 1;

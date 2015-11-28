@@ -273,7 +273,7 @@ static void R_CopyVertexData(VBO_t* vbo, byte* outData, vboData_t inData) {
             if ((vbo->attribBits & ATTR_POSITION)) {
                 vec4_t tmp;
                 VectorScale(inData.xyz[v], 1.0f / 512.0f, tmp);
-                tmp[3] = 1.0f; // unused
+                tmp[3] = 1.0f;                   // unused
 
                 floatToSnorm16(tmp, ptr[v].position);
             }
@@ -290,7 +290,7 @@ static void R_CopyVertexData(VBO_t* vbo, byte* outData, vboData_t inData) {
             if ((vbo->attribBits & ATTR_POSITION)) {
                 vec4_t tmp;
                 VectorCopy(inData.xyz[v], tmp);
-                tmp[3] = 1.0f; // unused
+                tmp[3] = 1.0f;                   // unused
 
                 floatToSnorm16(tmp, ptr[v].position);
             }
@@ -401,6 +401,7 @@ static GLsizei R_RotateRingbuffer(glRingbuffer_t* rb) {
                             10000000) == GL_TIMEOUT_EXPIRED) {
         ri.Printf(PRINT_WARNING, "long wait for GL buffer");
     }
+    ;
     glDeleteSync(rb->syncs[rb->activeSegment]);
 
     return rb->activeSegment * rb->segmentElements;

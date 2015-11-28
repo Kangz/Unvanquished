@@ -64,7 +64,7 @@ int CM_PointLeafnum_r(const vec3_t p, int num) {
         }
     }
 
-    c_pointcontents++; // optimize counter
+    c_pointcontents++;     // optimize counter
 
     return -1 - num;
 }
@@ -329,11 +329,11 @@ void CM_FloodAreaConnections() {
     cm.floodvalid++;
     floodnum = 0;
 
-    area = cm.areas; // Ridah, optimization
+    area = cm.areas;     // Ridah, optimization
 
     for (i = 0; i < cm.numAreas; i++, area++) {
         if (area->floodvalid == cm.floodvalid) {
-            continue; // already flooded into
+            continue;             // already flooded into
         }
 
         floodnum++;

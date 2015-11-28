@@ -25,49 +25,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_local.h"
 
 typedef struct {
-    unsigned int dwColorSpaceLowValue; // low boundary of color space that is to
+    unsigned int dwColorSpaceLowValue;     // low boundary of color space that is to
     // be treated as Color Key, inclusive
 
-    unsigned int dwColorSpaceHighValue; // high boundary of color space that is
+    unsigned int dwColorSpaceHighValue;     // high boundary of color space that is
     // to be treated as Color Key, inclusive
 } DDCOLORKEY_t;
 
 typedef struct {
-    unsigned int dwCaps; // capabilities of surface wanted
+    unsigned int dwCaps;     // capabilities of surface wanted
     unsigned int dwCaps2;
     unsigned int dwCaps3;
     unsigned int dwCaps4;
 } DDSCAPS2_t;
 
 typedef struct {
-    unsigned int dwSize; // size of structure
-    unsigned int dwFlags; // pixel format flags
-    unsigned int dwFourCC; // (FOURCC code)
+    unsigned int dwSize;     // size of structure
+    unsigned int dwFlags;     // pixel format flags
+    unsigned int dwFourCC;     // (FOURCC code)
 
-    unsigned int dwRGBBitCount; // how many bits per pixel
-    unsigned int dwRBitMask; // mask for red bit
-    unsigned int dwGBitMask; // mask for green bits
-    unsigned int dwBBitMask; // mask for blue bits
-    unsigned int dwABitMask; // mask for alpha channel
+    unsigned int dwRGBBitCount;     // how many bits per pixel
+    unsigned int dwRBitMask;     // mask for red bit
+    unsigned int dwGBitMask;     // mask for green bits
+    unsigned int dwBBitMask;     // mask for blue bits
+    unsigned int dwABitMask;     // mask for alpha channel
 } DDS_PIXELFORMAT_t;
 
 typedef struct {
-    unsigned int dwSize; // size of the DDSURFACEDESC structure
-    unsigned int dwFlags; // determines what fields are valid
-    unsigned int dwHeight; // height of surface to be created
-    unsigned int dwWidth; // width of input surface
+    unsigned int dwSize;     // size of the DDSURFACEDESC structure
+    unsigned int dwFlags;     // determines what fields are valid
+    unsigned int dwHeight;     // height of surface to be created
+    unsigned int dwWidth;     // width of input surface
 
-    unsigned int dwPitchOrLinearSize; // Formless late-allocated optimized surface size
+    unsigned int dwPitchOrLinearSize;     // Formless late-allocated optimized surface size
 
-    unsigned int dwDepth; // the depth if this is a volume texture
+    unsigned int dwDepth;     // the depth if this is a volume texture
 
-    unsigned int dwMipMapCount; // number of mip-map levels requestde
+    unsigned int dwMipMapCount;     // number of mip-map levels requestde
 
-    unsigned int dwReserved[11]; // reserved
+    unsigned int dwReserved[11];     // reserved
 
-    DDS_PIXELFORMAT_t ddpfPixelFormat; // pixel format description of the surface
+    DDS_PIXELFORMAT_t ddpfPixelFormat;     // pixel format description of the surface
 
-    DDSCAPS2_t ddsCaps; // direct draw surface capabilities
+    DDSCAPS2_t ddsCaps;       // direct draw surface capabilities
     unsigned int dwReserved2;
 } DDSHEADER_t;
 
@@ -137,7 +137,7 @@ void R_LoadDDSImageData(void* pImageData, const char* name, byte** data,
                         int* width, int* height, int* numLayers,
                         int* numMips, int* bits) {
     byte* buff;
-    DDSHEADER_t* ddsd; // used to get at the dds header in the read buffer
+    DDSHEADER_t* ddsd;      // used to get at the dds header in the read buffer
 
     // mip count and pointers to image data for each mip
     // level, idx 0 = top level last pointer does not start

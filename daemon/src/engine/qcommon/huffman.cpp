@@ -431,7 +431,7 @@ void Huff_Decompress(msg_t* mbuf, int offset) {
             break;
         }
 
-        Huff_Receive(huff.tree, &ch, buffer); /* Get a character */
+        Huff_Receive(huff.tree, &ch, buffer);            /* Get a character */
 
         if (ch == NYT) {
             /* We got a NYT, get the symbol associated with it */
@@ -442,9 +442,9 @@ void Huff_Decompress(msg_t* mbuf, int offset) {
             }
         }
 
-        seq[j] = ch; /* Write symbol */
+        seq[j] = ch;           /* Write symbol */
 
-        Huff_addRef(&huff, (byte) ch); /* Increment node */
+        Huff_addRef(&huff, (byte) ch);              /* Increment node */
     }
 
     mbuf->cursize = cch + offset;
@@ -480,11 +480,11 @@ void Huff_Compress(msg_t* mbuf, int offset) {
 
     for (i = 0; i < size; i++) {
         ch = buffer[i];
-        Huff_transmit(&huff, ch, seq); /* Transmit symbol */
-        Huff_addRef(&huff, (byte) ch); /* Do update */
+        Huff_transmit(&huff, ch, seq);            /* Transmit symbol */
+        Huff_addRef(&huff, (byte) ch);              /* Do update */
     }
 
-    bloc += 8; // next byte
+    bloc += 8;     // next byte
 
     mbuf->cursize = (bloc >> 3) + offset;
     Com_Memcpy(mbuf->data + offset, seq, (bloc >> 3));

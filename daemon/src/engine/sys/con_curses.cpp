@@ -394,7 +394,7 @@ char* CON_Input() {
 
                 CON_ColorPrint(inputwin, Str::UTF32To8(input_field.GetViewText()).c_str(), false);
                 #ifdef _WIN32
-                wrefresh(inputwin); // If this is not done the cursor moves strangely
+                wrefresh(inputwin);                            // If this is not done the cursor moves strangely
                 #else
                 wnoutrefresh(inputwin);
                 #endif
@@ -413,13 +413,13 @@ char* CON_Input() {
             wnoutrefresh(inputwin);
             continue;
 
-        case 21: // Ctrl-U
+        case 21:                 // Ctrl-U
             input_field.Clear();
             werase(inputwin);
             wnoutrefresh(inputwin);
             continue;
 
-        case 11: // Ctrl-K
+        case 11:                 // Ctrl-K
             input_field.DeleteEnd();
             continue;
 
@@ -448,12 +448,12 @@ char* CON_Input() {
             input_field.HistoryNext();
             continue;
 
-        case 1: // Ctrl-A
+        case 1:                 // Ctrl-A
         case KEY_HOME:
             input_field.CursorStart();
             continue;
 
-        case 5: // Ctrl-E
+        case 5:                 // Ctrl-E
         case KEY_END:
             input_field.CursorEnd();
             continue;
@@ -500,24 +500,24 @@ char* CON_Input() {
             input_field.DeletePrev();
             continue;
 
-        case 4: // Ctrl-D
+        case 4:                 // Ctrl-D
         case KEY_DC:
             input_field.DeleteNext();
             continue;
 
-        case 20: // Ctrl-T
+        case 20:                 // Ctrl-T
             input_field.SwapWithNext();
             continue;
         }
 
         // Other characters
         if (chr >= ' ') {
-            int width = 1; // Q_UTF8_WidthCP( chr );
+            int width = 1;            // Q_UTF8_WidthCP( chr );
             int count;
             char buf[20];
 
             if (chr >= 0x100) {
-                continue; // !!!
+                continue;                 // !!!
 
             }
             if (chr >= 0xC2 && chr <= 0xF4) {

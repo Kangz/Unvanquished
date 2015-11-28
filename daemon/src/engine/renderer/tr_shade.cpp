@@ -180,7 +180,7 @@ void GLSL_InitGPUShaders() {
         try {
             GLSL_InitGPUShadersOrError();
         } catch (const ShaderException&e) {
-            Sys::Error("Built-in shaders failed: %s", e.what()); // Fatal.
+            Sys::Error("Built-in shaders failed: %s", e.what());             // Fatal.
         }
         ;
         if (externalFailed) {
@@ -670,7 +670,7 @@ static void Render_vertexLighting_DBS_entity(int stage) {
     }
 
     // set uniforms
-    VectorCopy(backEnd.viewParms.orientation.origin, viewOrigin); // in world space
+    VectorCopy(backEnd.viewParms.orientation.origin, viewOrigin);        // in world space
 
     // u_AlphaTest
     gl_vertexLightingShader_DBS_entity->SetUniform_AlphaTest(pStage->stateBits);
@@ -1026,7 +1026,7 @@ static void Render_lightMapping(int stage, bool asColorMap, bool normalMapping) 
     // u_DeformGen
     gl_lightMappingShader->SetUniform_Time(backEnd.refdef.floatTime - backEnd.currentEntity->e.shaderTime);
 
-    gl_lightMappingShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // in world space
+    gl_lightMappingShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);        // in world space
 
     gl_lightMappingShader->SetUniform_ModelMatrix(backEnd.orientation.transformMatrix);
     gl_lightMappingShader->SetUniform_ModelViewProjectionMatrix(glState.modelViewProjectionMatrix[glState.stackIndex]);
@@ -1737,6 +1737,7 @@ static void Render_forwardLighting_DBS_directional(shaderStage_t* diffuseStage, 
 
         if (r_parallelShadowSplits->integer >= 2) {
             GL_BindToTMU(7, tr.sunShadowMapFBOImage[2]);
+            ;
             GL_BindToTMU(12, tr.sunShadowClipMapFBOImage[2]);
         }
 
@@ -1782,7 +1783,7 @@ static void Render_reflection_CB(int stage) {
 
     // end choose right shader program ------------------------------
 
-    gl_reflectionShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // in world space
+    gl_reflectionShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);        // in world space
 
     gl_reflectionShader->SetUniform_ModelMatrix(backEnd.orientation.transformMatrix);
     gl_reflectionShader->SetUniform_ModelViewProjectionMatrix(glState.modelViewProjectionMatrix[glState.stackIndex]);
@@ -1827,7 +1828,7 @@ static void Render_skybox(int stage) {
 
     gl_skyboxShader->BindProgram(pStage->deformIndex);
 
-    gl_skyboxShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // in world space
+    gl_skyboxShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);        // in world space
 
     gl_skyboxShader->SetUniform_ModelMatrix(backEnd.orientation.transformMatrix);
     gl_skyboxShader->SetUniform_ModelViewProjectionMatrix(glState.modelViewProjectionMatrix[glState.stackIndex]);
@@ -1999,7 +2000,7 @@ static void Render_liquid(int stage) {
     gl_liquidShader->SetRequiredVertexPointers();
 
     // set uniforms
-    VectorCopy(backEnd.viewParms.orientation.origin, viewOrigin); // in world space
+    VectorCopy(backEnd.viewParms.orientation.origin, viewOrigin);        // in world space
 
     fogDensity = RB_EvalExpression(&pStage->fogDensityExp, 0.001);
     VectorCopy(tess.svars.color, fogColor);
@@ -2099,7 +2100,7 @@ static void Render_fog() {
         eyeT = DotProduct(backEnd.orientation.viewOrigin, fogDepthVector) + fogDepthVector[3];
     } else {
         Vector4Set(fogDepthVector, 0, 0, 0, 1);
-        eyeT = 1; // non-surface fog always has eye inside
+        eyeT = 1;         // non-surface fog always has eye inside
     }
 
     // see if the viewpoint is outside
@@ -2207,7 +2208,7 @@ void Tess_ComputeColor(shaderStage_t* pStage) {
             tess.svars.color.SetRed(1.0 - Math::Clamp(backEnd.currentLight->l.color[0], 0.0f, 1.0f));
             tess.svars.color.SetGreen(1.0 - Math::Clamp(backEnd.currentLight->l.color[1], 0.0f, 1.0f));
             tess.svars.color.SetBlue(1.0 - Math::Clamp(backEnd.currentLight->l.color[2], 0.0f, 1.0f));
-            tess.svars.color.SetAlpha(0.0); // FIXME
+            tess.svars.color.SetAlpha(0.0);                               // FIXME
         } else if (backEnd.currentEntity) {
             tess.svars.color = backEnd.currentEntity->e.shaderRGBA;
             tess.svars.color.Clamp();
@@ -2298,7 +2299,7 @@ void Tess_ComputeColor(shaderStage_t* pStage) {
 
     case AGEN_ENTITY: {
         if (backEnd.currentLight) {
-            tess.svars.color.SetAlpha(1.0); // FIXME ?
+            tess.svars.color.SetAlpha(1.0);                               // FIXME ?
         } else if (backEnd.currentEntity) {
             tess.svars.color.SetAlpha(Math::Clamp(backEnd.currentEntity->e.shaderRGBA.Alpha() * (1.0 / 255.0), 0.0, 1.0));
         } else {
@@ -2310,7 +2311,7 @@ void Tess_ComputeColor(shaderStage_t* pStage) {
 
     case AGEN_ONE_MINUS_ENTITY: {
         if (backEnd.currentLight) {
-            tess.svars.color.SetAlpha(0.0); // FIXME ?
+            tess.svars.color.SetAlpha(0.0);                               // FIXME ?
         } else if (backEnd.currentEntity) {
             tess.svars.color.SetAlpha(1.0 - Math::Clamp(backEnd.currentEntity->e.shaderRGBA.Alpha() * (1.0 / 255.0), 0.0, 1.0));
         } else {

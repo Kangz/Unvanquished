@@ -179,7 +179,7 @@ void RE_ProjectDecal(qhandle_t hShader, int numPoints, vec3_t* points, vec4_t pr
     }
 
     /* basic setup */
-    temp.shader = R_GetShaderByHandle(hShader); /* debug code */
+    temp.shader = R_GetShaderByHandle(hShader);        /* debug code */
     temp.numPlanes = temp.shader->entityMergable;
     temp.color = color;
     temp.numPlanes = numPoints + 2;
@@ -517,7 +517,7 @@ static void ProjectDecalOntoWinding(decalProjector_t* dp, int numPoints, vec3_t 
     /* chop the winding by all the projector planes */
     pingPong = 0;
 
-    for (i = 0; i < dp->numPlanes; i++) { // %    dp->numPlanes
+    for (i = 0; i < dp->numPlanes; i++) {     // %    dp->numPlanes
         ChopWindingBehindPlane(numPoints, points[pingPong], &numPoints, points[!pingPong], dp->planes[i], 0.0f);
         pingPong ^= 1;
 

@@ -171,7 +171,7 @@ qhandle_t RE_RegisterModel(const char* name) {
             strcat(filename, namebuf);
         }
 
-        filename[strlen(filename) - 1] = '3'; // try MD3 first
+        filename[strlen(filename) - 1] = '3';              // try MD3 first
         ri.FS_ReadFile(filename, (void**) &buffer);
 
         loadmodel = mod;
@@ -394,7 +394,7 @@ int RE_LerpTagET(orientation_t* tag, const refEntity_t* refent, const char* tagN
     int i;
     float frontLerp, backLerp;
     model_t* model;
-    char tagName[MAX_QPATH]; // , *ch;
+    char tagName[MAX_QPATH];            // , *ch;
     int retval;
     qhandle_t handle;
     int startFrame, endFrame;

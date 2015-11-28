@@ -228,7 +228,7 @@ void R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POL
 
     // add this fragment to the returned list
     if (numClipPoints + (*returnedPoints) > maxPoints) {
-        return; // not enough space for this polygon
+        return;         // not enough space for this polygon
     }
 
     mf = fragmentBuffer + (*returnedFragments);
@@ -367,7 +367,7 @@ int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection
                                            fragmentBuffer, &returnedPoints, &returnedFragments);
 
                         if (returnedFragments == maxFragments) {
-                            return returnedFragments; // not enough space for more fragments
+                            return returnedFragments;                             // not enough space for more fragments
                         }
                     }
 
@@ -391,7 +391,7 @@ int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection
                                            fragmentBuffer, &returnedPoints, &returnedFragments);
 
                         if (returnedFragments == maxFragments) {
-                            return returnedFragments; // not enough space for more fragments
+                            return returnedFragments;                             // not enough space for more fragments
                         }
                     }
                 }
@@ -417,7 +417,7 @@ int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection
                                    fragmentBuffer, &returnedPoints, &returnedFragments);
 
                 if (returnedFragments == maxFragments) {
-                    return returnedFragments; // not enough space for more fragments
+                    return returnedFragments;                     // not enough space for more fragments
                 }
             }
         } else if (*surfaces[i] == SF_TRIANGLES && !r_noMarksOnTrisurfs->integer) {
@@ -435,7 +435,7 @@ int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection
                                    fragmentBuffer, &returnedPoints, &returnedFragments);
 
                 if (returnedFragments == maxFragments) {
-                    return returnedFragments; // not enough space for more fragments
+                    return returnedFragments;                     // not enough space for more fragments
                 }
             }
         }

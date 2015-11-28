@@ -60,10 +60,10 @@ typedef enum {
     LOG_OFF = -3,
     LOG_ERROR = -2,
     LOG_WARN = -1,
-    LOG_NOTICE = 0, /*< information regarded worth notifying about; the default */
-    LOG_INFO = 1, /*< general helpful (even outside of debugging) but not necessary information */
+    LOG_NOTICE = 0,     /*< information regarded worth notifying about; the default */
+    LOG_INFO = 1,     /*< general helpful (even outside of debugging) but not necessary information */
     LOG_DEBUG = 2,
-    LOG_TRACE = 3, /*< this is for finest grained debug-tracing, that should not be executed in NDEBUG */
+    LOG_TRACE = 3,     /*< this is for finest grained debug-tracing, that should not be executed in NDEBUG */
     LOG_ALL = 4
 } log_level_t;
 
@@ -78,7 +78,7 @@ typedef struct {
  */
 typedef enum {
     PRINT_ALL,
-    PRINT_DEVELOPER, // only print when "developer 1"
+    PRINT_DEVELOPER,     // only print when "developer 1"
     PRINT_WARNING,
     PRINT_ERROR
 } printParm_t;
@@ -89,9 +89,9 @@ typedef enum {
 
 // parameters to the main Error routine
 typedef enum {
-    ERR_FATAL, // exit the entire game with a popup window
-    ERR_DROP, // print to console and disconnect from game
-    ERR_SERVERDISCONNECT, // don't kill server
+    ERR_FATAL,     // exit the entire game with a popup window
+    ERR_DROP,     // print to console and disconnect from game
+    ERR_SERVERDISCONNECT,     // don't kill server
 } errorParm_t;
 
 // this is only here so the functions in q_shared.c and bg_*.c can link

@@ -66,18 +66,18 @@ namespace Color {
                 }
 
                 if (hue <= 0.5) {
-                    color = 1; // red
+                    color = 1;                // red
                 } else if (hue <= 1.5) {
-                    color = 3; // yellow
+                    color = 3;                // yellow
                 } else if (hue <= 2.5) {
-                    color = 2; // green
+                    color = 2;                // green
                 } else if (hue <= 3.5) {
-                    color = 6; // cyan
+                    color = 6;                // cyan
                 } else if (hue <= 4.5) {
-                    color = 4; // blue
+                    color = 4;                // blue
                 } else if (hue <= 5.5) {
-                    color = 5; // magenta
-                } else {                                                          color = 1; // red
+                    color = 5;                // magenta
+                } else {color = 1;            // red
                 }
             } else if (cmax >= 0.5) {
                 color = 7;

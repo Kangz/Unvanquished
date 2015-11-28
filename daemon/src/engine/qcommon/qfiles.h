@@ -70,11 +70,11 @@ typedef struct {
 
     int dataOffset;
     int dataLength;
-    int litLength; // ( dataLength - litLength ) should be byteswapped on load
-    int bssLength; // zero filled memory appended to datalength
+    int litLength;     // ( dataLength - litLength ) should be byteswapped on load
+    int bssLength;     // zero filled memory appended to datalength
 
     // !!! below here is VM_MAGIC_VER2 !!!
-    int jtrgLength; // number of jump table targets
+    int jtrgLength;     // number of jump table targets
 } vmHeader_t;
 
 /*
@@ -98,7 +98,7 @@ typedef struct {
     unsigned short bytes_per_line;
     unsigned short palette_type;
     char filler[58];
-    unsigned char data; // unbounded
+    unsigned char data;      // unbounded
 } pcx_t;
 
 /*
@@ -148,7 +148,7 @@ typedef struct md3Frame_s {
 } md3Frame_t;
 
 typedef struct md3Tag_s {
-    char name[64]; // tag name
+    char name[64];         // tag name
     vec3_t origin;
     vec3_t axis[3];
 } md3Tag_t;
@@ -164,29 +164,29 @@ typedef struct md3Tag_s {
 ** XyzNormals   sizeof( md3XyzNormal_t ) * numVerts * numFrames
 */
 typedef struct {
-    int ident; //
+    int ident;      //
 
-    char name[64]; // polyset name
+    char name[64];       // polyset name
 
     int flags;
-    int numFrames; // all surfaces in a model should have the same
+    int numFrames;      // all surfaces in a model should have the same
 
-    int numShaders; // all surfaces in a model should have the same
+    int numShaders;      // all surfaces in a model should have the same
     int numVerts;
 
     int numTriangles;
     int ofsTriangles;
 
-    int ofsShaders; // offset from start of md3Surface_t
-    int ofsSt; // texture coords are common for all frames
-    int ofsXyzNormals; // numVerts * numFrames
+    int ofsShaders;      // offset from start of md3Surface_t
+    int ofsSt;      // texture coords are common for all frames
+    int ofsXyzNormals;      // numVerts * numFrames
 
-    int ofsEnd; // next surface follows
+    int ofsEnd;      // next surface follows
 } md3Surface_t;
 
 typedef struct {
     char name[64];
-    int shaderIndex; // for in-game use
+    int shaderIndex;      // for in-game use
 } md3Shader_t;
 
 typedef struct {
@@ -206,7 +206,7 @@ typedef struct {
     int ident;
     int version;
 
-    char name[64]; // model name
+    char name[64];       // model name
 
     int flags;
 
@@ -216,11 +216,11 @@ typedef struct {
 
     int numSkins;
 
-    int ofsFrames; // offset for first frame
-    int ofsTags; // numFrames * numTags
-    int ofsSurfaces; // first surface, others follow
+    int ofsFrames;      // offset for first frame
+    int ofsTags;      // numFrames * numTags
+    int ofsSurfaces;      // first surface, others follow
 
-    int ofsEnd; // end of file
+    int ofsEnd;      // end of file
 } md3Header_t;
 
 /*
@@ -268,8 +268,8 @@ MDS file format (Wolfenstein Skeletal Format)
 #define MDS_TRANSLATION_SCALE (1.0 / 64)
 
 typedef struct {
-    int boneIndex; // these are indexes into the boneReferences,
-    float boneWeight; // not the global per-frame bone list
+    int boneIndex;        // these are indexes into the boneReferences,
+    float boneWeight;      // not the global per-frame bone list
     vec3_t offset;
 } mdsWeight_t;
 
@@ -277,9 +277,9 @@ typedef struct {
     vec3_t normal;
     vec2_t texCoords;
     int numWeights;
-    int fixedParent; // stay equi-distant from this parent
+    int fixedParent;             // stay equi-distant from this parent
     float fixedDist;
-    mdsWeight_t weights[1]; // variable sized
+    mdsWeight_t weights[1];       // variable sized
 } mdsVertex_t;
 
 typedef struct {
@@ -289,13 +289,13 @@ typedef struct {
 typedef struct {
     int ident;
 
-    char name[64]; // polyset name
+    char name[64];       // polyset name
     char shader[64];
-    int shaderIndex; // for in-game use
+    int shaderIndex;      // for in-game use
 
     int minLod;
 
-    int ofsHeader; // this will be a negative number
+    int ofsHeader;      // this will be a negative number
 
     int numVerts;
     int ofsVerts;
@@ -303,7 +303,7 @@ typedef struct {
     int numTriangles;
     int ofsTriangles;
 
-    int ofsCollapseMap; // numVerts * int
+    int ofsCollapseMap;      // numVerts * int
 
     // Bone references are a set of ints representing all the bones
     // present in any vertex weights for this surface.  This is
@@ -313,48 +313,48 @@ typedef struct {
     int numBoneReferences;
     int ofsBoneReferences;
 
-    int ofsEnd; // next surface follows
+    int ofsEnd;     // next surface follows
 } mdsSurface_t;
 
 typedef struct {
     // float     angles[3];
     // float     ofsAngles[2];
-    short angles[4]; // to be converted to axis at run-time (this is also better for lerping)
-    short ofsAngles[2]; // PITCH/YAW, head in this direction from parent to go to the offset position
+    short angles[4];       // to be converted to axis at run-time (this is also better for lerping)
+    short ofsAngles[2];       // PITCH/YAW, head in this direction from parent to go to the offset position
 } mdsBoneFrameCompressed_t;
 
 // NOTE: this only used at run-time
 typedef struct {
-    float matrix[3][3]; // 3x3 rotation
-    vec3_t translation; // translation vector
+    float matrix[3][3];          // 3x3 rotation
+    vec3_t translation;     // translation vector
 } mdsBoneFrame_t;
 
 typedef struct {
-    vec3_t bounds[2]; // bounds of all surfaces of all LODs for this frame
-    vec3_t localOrigin; // midpoint of bounds, used for sphere cull
-    float radius; // dist from localOrigin to corner
-    vec3_t parentOffset; // one bone is an ascendant of all other bones, it starts the hierachy at this position
-    mdsBoneFrameCompressed_t bones[1]; // [numBones]
+    vec3_t bounds[2];                         // bounds of all surfaces of all LODs for this frame
+    vec3_t localOrigin;                       // midpoint of bounds, used for sphere cull
+    float radius;                        // dist from localOrigin to corner
+    vec3_t parentOffset;                       // one bone is an ascendant of all other bones, it starts the hierachy at this position
+    mdsBoneFrameCompressed_t bones[1];       // [numBones]
 } mdsFrame_t;
 
 typedef struct {
     int numSurfaces;
-    int ofsSurfaces; // first surface, others follow
-    int ofsEnd; // next lod follows
+    int ofsSurfaces;     // first surface, others follow
+    int ofsEnd;     // next lod follows
 } mdsLOD_t;
 
 typedef struct {
-    char name[64]; // name of tag
+    char name[64];        // name of tag
     float torsoWeight;
-    int boneIndex; // our index in the bones
+    int boneIndex;       // our index in the bones
 } mdsTag_t;
 
 #define BONEFLAG_TAG 1 // this bone is actually a tag
 
 typedef struct {
-    char name[64]; // name of bone
-    int parent; // not sure if this is required, no harm throwing it in
-    float torsoWeight; // scale torso rotation about torsoParent by this
+    char name[64];        // name of bone
+    int parent;       // not sure if this is required, no harm throwing it in
+    float torsoWeight;     // scale torso rotation about torsoParent by this
     float parentDist;
     int flags;
 } mdsBoneInfo_t;
@@ -363,7 +363,7 @@ typedef struct {
     int ident;
     int version;
 
-    char name[64]; // model name
+    char name[64];        // model name
 
     float lodScale;
     float lodBias;
@@ -371,18 +371,18 @@ typedef struct {
     // frames and bones are shared by all levels of detail
     int numFrames;
     int numBones;
-    int ofsFrames; // md4Frame_t[numFrames]
-    int ofsBones; // mdsBoneInfo_t[numBones]
-    int torsoParent; // index of bone that is the parent of the torso
+    int ofsFrames;     // md4Frame_t[numFrames]
+    int ofsBones;     // mdsBoneInfo_t[numBones]
+    int torsoParent;     // index of bone that is the parent of the torso
 
     int numSurfaces;
     int ofsSurfaces;
 
     // tag data
     int numTags;
-    int ofsTags; // mdsTag_t[numTags]
+    int ofsTags;     // mdsTag_t[numTags]
 
-    int ofsEnd; // end of file
+    int ofsEnd;     // end of file
 } mdsHeader_t;
 
 /*
@@ -491,16 +491,16 @@ typedef struct {
 
 typedef struct {
     int planeNum;
-    int children[2]; // negative numbers are -(leafs+1), not nodes
-    int mins[3]; // for frustom culling
+    int children[2];       // negative numbers are -(leafs+1), not nodes
+    int mins[3];       // for frustom culling
     int maxs[3];
 } dnode_t;
 
 typedef struct {
-    int cluster; // -1 = opaque cluster (do I still store these?)
+    int cluster;     // -1 = opaque cluster (do I still store these?)
     int area;
 
-    int mins[3]; // for frustum culling
+    int mins[3];       // for frustum culling
     int maxs[3];
 
     int firstLeafSurface;
@@ -511,20 +511,20 @@ typedef struct {
 } dleaf_t;
 
 typedef struct {
-    int planeNum; // positive plane side faces out of the leaf
+    int planeNum;     // positive plane side faces out of the leaf
     int shaderNum;
 } dbrushside_t;
 
 typedef struct {
     int firstSide;
     int numSides;
-    int shaderNum; // the shader that determines the contents flags
+    int shaderNum;     // the shader that determines the contents flags
 } dbrush_t;
 
 typedef struct {
     char shader[64];
     int brushNum;
-    int visibleSide; // the brush side that ray tests need to clip against (-1 == none)
+    int visibleSide;      // the brush side that ray tests need to clip against (-1 == none)
 } dfog_t;
 
 // light grid
@@ -557,7 +557,7 @@ typedef struct {
     int surfaceType;
 
     int firstVert;
-    int numVerts; // ydnar: num verts + foliage origins (for cleaner lighting code in q3map)
+    int numVerts;        // ydnar: num verts + foliage origins (for cleaner lighting code in q3map)
 
     int firstIndex;
     int numIndexes;
@@ -567,10 +567,10 @@ typedef struct {
     int lightmapWidth, lightmapHeight;
 
     vec3_t lightmapOrigin;
-    vec3_t lightmapVecs[3]; // for patches, [0] and [1] are lodbounds
+    vec3_t lightmapVecs[3];       // for patches, [0] and [1] are lodbounds
 
-    int patchWidth; // ydnar: num foliage instances
-    int patchHeight; // ydnar: num foliage mesh verts
+    int patchWidth;        // ydnar: num foliage instances
+    int patchHeight;        // ydnar: num foliage mesh verts
 } dsurface_t;
 
 // ----(SA) added so I didn't change the dsurface_t struct (and thereby the bsp format) for something that doesn't need to be stored in the bsp

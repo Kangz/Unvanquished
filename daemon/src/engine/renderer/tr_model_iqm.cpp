@@ -477,19 +477,19 @@ bool R_LoadIQModel(model_t* mod, void* buffer, int filesize,
     size = PAD(size, 16);
     size += header->num_joints * header->num_frames * sizeof(transform_t);
     if (header->ofs_bounds) {
-        size += header->num_frames * 6 * sizeof(float); // model bounds
+        size += header->num_frames * 6 * sizeof(float);         // model bounds
     }
-    size += header->num_vertexes * 3 * sizeof(float); // positions
-    size += header->num_vertexes * 3 * sizeof(float); // normals
-    size += header->num_vertexes * 3 * sizeof(float); // tangents
-    size += header->num_vertexes * 3 * sizeof(float); // bitangents
-    size += header->num_vertexes * 2 * sizeof(int16_t); // texcoords
-    size += header->num_vertexes * 4 * sizeof(byte); // blendIndexes
-    size += header->num_vertexes * 4 * sizeof(byte); // blendWeights
-    size += header->num_vertexes * 4 * sizeof(byte); // colors
-    size += header->num_triangles * 3 * sizeof(int); // triangles
-    size += header->num_joints * sizeof(int); // parents
-    size += len_names; // joint and anim names
+    size += header->num_vertexes * 3 * sizeof(float);           // positions
+    size += header->num_vertexes * 3 * sizeof(float);           // normals
+    size += header->num_vertexes * 3 * sizeof(float);           // tangents
+    size += header->num_vertexes * 3 * sizeof(float);           // bitangents
+    size += header->num_vertexes * 2 * sizeof(int16_t);         // texcoords
+    size += header->num_vertexes * 4 * sizeof(byte);            // blendIndexes
+    size += header->num_vertexes * 4 * sizeof(byte);            // blendWeights
+    size += header->num_vertexes * 4 * sizeof(byte);            // colors
+    size += header->num_triangles * 3 * sizeof(int);            // triangles
+    size += header->num_joints * sizeof(int);                   // parents
+    size += len_names;                                          // joint and anim names
 
     IQModel = (IQModel_t*)ri.Hunk_Alloc(size, h_low);
     mod->type = MOD_IQM;

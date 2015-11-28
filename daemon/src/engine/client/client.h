@@ -55,23 +55,23 @@ Maryland 20850 USA.
 
 // snapshots are a view of the server at a given time
 typedef struct {
-    bool valid; // cleared if delta parsing was invalid
-    int snapFlags; // rate delayed and dropped commands
+    bool valid;          // cleared if delta parsing was invalid
+    int snapFlags;               // rate delayed and dropped commands
 
-    int serverTime; // server time the message is valid for (in msec)
+    int serverTime;               // server time the message is valid for (in msec)
 
-    int messageNum; // copied from netchan->incoming_sequence
-    int deltaNum; // messageNum the delta is from
-    int ping; // time from when cmdNum-1 was sent to time packet was reeceived
-    byte areamask[MAX_MAP_AREA_BYTES]; // portalarea visibility bits
+    int messageNum;               // copied from netchan->incoming_sequence
+    int deltaNum;               // messageNum the delta is from
+    int ping;               // time from when cmdNum-1 was sent to time packet was reeceived
+    byte areamask[MAX_MAP_AREA_BYTES];                // portalarea visibility bits
 
-    int cmdNum; // the next cmdNum the server is expecting
-    playerState_t ps; // complete information about the current player at this time
+    int cmdNum;               // the next cmdNum the server is expecting
+    playerState_t ps;     // complete information about the current player at this time
 
-    unsigned numEntities; // all of the entities that need to be presented
-    int parseEntitiesNum; // at the time of this snapshot
+    unsigned numEntities;          // all of the entities that need to be presented
+    int parseEntitiesNum;               // at the time of this snapshot
 
-    int serverCommandNum; // execute all commands up to this before
+    int serverCommandNum;               // execute all commands up to this before
     // making the snapshot current
 } clSnapshot_t;
 
@@ -93,9 +93,9 @@ new gameState_t, potentially several times during an established connection
 */
 
 typedef struct {
-    int p_cmdNumber; // cl.cmdNumber when packet was sent
-    int p_serverTime; // usercmd->serverTime when packet was sent
-    int p_realtime; // cls.realtime when packet was sent
+    int p_cmdNumber;     // cl.cmdNumber when packet was sent
+    int p_serverTime;     // usercmd->serverTime when packet was sent
+    int p_realtime;     // cls.realtime when packet was sent
 } outPacket_t;
 
 // the parseEntities array must be large enough to hold PACKET_BACKUP frames of
@@ -111,44 +111,44 @@ typedef struct {
 extern int g_console_field_width;
 
 typedef struct {
-    GameStateCSs gameState; // configstrings
-    int timeoutcount; // it requres several frames in a timeout condition
+    GameStateCSs gameState;     // configstrings
+    int timeoutcount;     // it requres several frames in a timeout condition
     // to disconnect, preventing debugging breaks from
     // causing immediate disconnects on continue
-    clSnapshot_t snap; // latest received from server
+    clSnapshot_t snap;     // latest received from server
 
-    int serverTime; // may be paused during play
-    int oldServerTime; // to prevent time from flowing bakcwards
-    int oldFrameServerTime; // to check tournament restarts
-    int serverTimeDelta; // cl.serverTime = cls.realtime + cl.serverTimeDelta
+    int serverTime;              // may be paused during play
+    int oldServerTime;              // to prevent time from flowing bakcwards
+    int oldFrameServerTime;              // to check tournament restarts
+    int serverTimeDelta;              // cl.serverTime = cls.realtime + cl.serverTimeDelta
     // this value changes as net lag varies
-    bool extrapolatedSnapshot; // set if any cgame frame has been forced to extrapolate
+    bool extrapolatedSnapshot;         // set if any cgame frame has been forced to extrapolate
     // cleared when CL_AdjustTimeDelta looks at it
-    bool newSnapshots; // set on parse of any valid packet
+    bool newSnapshots;         // set on parse of any valid packet
 
-    char mapname[MAX_QPATH]; // extracted from CS_SERVERINFO
+    char mapname[MAX_QPATH];               // extracted from CS_SERVERINFO
 
-    int parseEntitiesNum; // index (not anded off) into cl_parse_entities[]
+    int parseEntitiesNum;              // index (not anded off) into cl_parse_entities[]
 
-    int mouseDx[2], mouseDy[2]; // added to by mouse events
+    int mouseDx[2], mouseDy[2];                  // added to by mouse events
     int mouseIndex;
-    int joystickAxis[MAX_JOYSTICK_AXIS]; // set by joystick events
+    int joystickAxis[MAX_JOYSTICK_AXIS];                // set by joystick events
 
     // cgame communicates a few values to the client system
-    int cgameUserCmdValue; // current weapon to add to usercmd_t
-    int cgameFlags; // flags that can be set by the gamecode
+    int cgameUserCmdValue;        // current weapon to add to usercmd_t
+    int cgameFlags;        // flags that can be set by the gamecode
     float cgameSensitivity;
 
     // cmds[cmdNumber] is the predicted command, [cmdNumber-1] is the last
     // properly generated command
-    usercmd_t cmds[CMD_BACKUP]; // each message will send several old cmds
-    int cmdNumber; // incremented each frame, because multiple
+    usercmd_t cmds[CMD_BACKUP];       // each message will send several old cmds
+    int cmdNumber;           // incremented each frame, because multiple
     // frames may need to be packed into a single packet
 
     // Arnout: double tapping
     doubleTap_t doubleTap;
 
-    outPacket_t outPackets[PACKET_BACKUP]; // information about each packet we have sent out
+    outPacket_t outPackets[PACKET_BACKUP];       // information about each packet we have sent out
 
     // the client maintains its own idea of view angles, which are
     // sent to the server each frame.  It is cleared to 0 upon entering each level.
@@ -157,12 +157,12 @@ typedef struct {
     // and teleport direction changes
     vec3_t viewangles;
 
-    int serverId; // included in each client message so the server
+    int serverId;        // included in each client message so the server
     // can tell if it is for a prior map_restart
     // big stuff at end of structure so most offsets are 15 bits or less
     clSnapshot_t snapshots[PACKET_BACKUP];
 
-    entityState_t entityBaselines[MAX_GENTITIES]; // for delta compression when not in previous frame
+    entityState_t entityBaselines[MAX_GENTITIES];       // for delta compression when not in previous frame
 
     entityState_t parseEntities[MAX_PARSE_ENTITIES];
 } clientActive_t;
@@ -183,20 +183,20 @@ demo through a file.
 
 typedef struct {
     int clientNum;
-    int lastPacketSentTime; // for retransmits during connection
-    int lastPacketTime; // for timeouts
+    int lastPacketSentTime;          // for retransmits during connection
+    int lastPacketTime;          // for timeouts
 
     netadr_t serverAddress;
-    int connectTime; // for connection retransmits
-    int connectPacketCount; // for display on connection dialog
-    char serverMessage[MAX_STRING_TOKENS]; // for display on connection dialog
+    int connectTime;          // for connection retransmits
+    int connectPacketCount;          // for display on connection dialog
+    char serverMessage[MAX_STRING_TOKENS];           // for display on connection dialog
 
-    int challenge; // from the server to use for connecting
-    int checksumFeed; // from the server for checksum calculations
+    int challenge;          // from the server to use for connecting
+    int checksumFeed;          // from the server for checksum calculations
 
     // these are our reliable messages that go to the server
     int reliableSequence;
-    int reliableAcknowledge; // the last one the server has executed
+    int reliableAcknowledge;      // the last one the server has executed
     // TTimo - NOTE: incidentally, reliableCommands[0] is never used (always start at reliableAcknowledge+1)
     char reliableCommands[MAX_RELIABLE_COMMANDS][MAX_TOKEN_CHARS];
 
@@ -215,30 +215,30 @@ typedef struct {
 
     // reliable messages received from server
     int serverCommandSequence;
-    int lastExecutedServerCommand; // last server command grabbed or executed with CL_GetServerCommand
+    int lastExecutedServerCommand;      // last server command grabbed or executed with CL_GetServerCommand
     char serverCommands[MAX_RELIABLE_COMMANDS][MAX_TOKEN_CHARS];
 
     // file transfer from server
     fileHandle_t download;
     int downloadNumber;
-    int downloadBlock; // block we are waiting for
-    int downloadCount; // how many bytes we got
-    int downloadSize; // how many bytes we got
-    int downloadFlags; // misc download behaviour flags sent by the server
-    char downloadList[MAX_INFO_STRING]; // list of paks we need to download
+    int downloadBlock;              // block we are waiting for
+    int downloadCount;              // how many bytes we got
+    int downloadSize;              // how many bytes we got
+    int downloadFlags;              // misc download behaviour flags sent by the server
+    char downloadList[MAX_INFO_STRING];               // list of paks we need to download
 
     // www downloading
-    bool bWWWDl; // we have a www download going
-    bool bWWWDlAborting; // disable the CL_WWWDownload until server gets us a gamestate (used for aborts)
-    char redirectedList[MAX_INFO_STRING]; // list of files that we downloaded through a redirect since last FS_ComparePaks
-    char badChecksumList[MAX_INFO_STRING]; // list of files for which wwwdl redirect is broken (wrong checksum)
+    bool bWWWDl;     // we have a www download going
+    bool bWWWDlAborting;     // disable the CL_WWWDownload until server gets us a gamestate (used for aborts)
+    char redirectedList[MAX_INFO_STRING];           // list of files that we downloaded through a redirect since last FS_ComparePaks
+    char badChecksumList[MAX_INFO_STRING];           // list of files for which wwwdl redirect is broken (wrong checksum)
     char newsString[MAX_NEWS_STRING];
 
     // demo information
     char demoName[MAX_QPATH];
     bool demorecording;
     bool demoplaying;
-    bool demowaiting; // don't record until a non-delta message is received
+    bool demowaiting;         // don't record until a non-delta message is received
     bool firstDemoFrameSkipped;
     fileHandle_t demofile;
 
@@ -246,9 +246,9 @@ typedef struct {
     fileHandle_t wavefile;
     int wavetime;
 
-    int timeDemoFrames; // counter of rendered frames
-    int timeDemoStart; // cls.realtime before first frame
-    int timeDemoBaseTime; // each frame will be at this time + frameNum * 50
+    int timeDemoFrames;              // counter of rendered frames
+    int timeDemoStart;              // cls.realtime before first frame
+    int timeDemoBaseTime;              // each frame will be at this time + frameNum * 50
 
     // big stuff at end of structure so most offsets are 15 bits or less
     netchan_t netchan;
@@ -279,7 +279,7 @@ typedef struct {
     int load;
     char mapName[MAX_NAME_LENGTH];
     char game[MAX_NAME_LENGTH];
-    char label[MAX_FEATLABEL_CHARS]; // for featured servers, nullptr otherwise
+    char label[MAX_FEATLABEL_CHARS];           // for featured servers, nullptr otherwise
     int netType;
     int clients;
     int bots;
@@ -288,17 +288,17 @@ typedef struct {
     int maxPing;
     int ping;
     bool visible;
-    int friendlyFire; // NERVE - SMF
+    int friendlyFire;          // NERVE - SMF
     int needpass;
-    char gameName[MAX_NAME_LENGTH]; // Arnout
+    char gameName[MAX_NAME_LENGTH];           // Arnout
 } serverInfo_t;
 
 typedef struct {
-    connstate_t state; // connection status
-    int keyCatchers; // bit flags
+    connstate_t state;     // connection status
+    int keyCatchers;             // bit flags
 
-    char servername[MAX_OSPATH]; // name of server from original connect
-    char reconnectCmd[MAX_STRING_CHARS]; // command to be used on reconnection
+    char servername[MAX_OSPATH];              // name of server from original connect
+    char reconnectCmd[MAX_STRING_CHARS];              // command to be used on reconnection
 
     // when the server clears the hunk, all of these must be restarted
     bool rendererStarted;
@@ -308,14 +308,14 @@ typedef struct {
     bool cgameStarted;
 
     int framecount;
-    int frametime; // msec since last frame
+    int frametime;          // msec since last frame
 
-    int realtime; // ignores pause
-    int realFrametime; // ignoring pause, so console always works
+    int realtime;          // ignores pause
+    int realFrametime;          // ignoring pause, so console always works
 
     // master server sequence information
     int numMasterPackets;
-    unsigned int receivedMasterPackets; // bitfield
+    unsigned int receivedMasterPackets;     // bitfield
 
     int numlocalservers;
     serverInfo_t localServers[MAX_OTHER_SERVERS];
@@ -332,7 +332,7 @@ typedef struct {
     int numfavoriteservers;
     serverInfo_t favoriteServers[MAX_OTHER_SERVERS];
 
-    int pingUpdateSource; // source currently pinging or updating
+    int pingUpdateSource;              // source currently pinging or updating
 
     int masterNum;
 
@@ -347,7 +347,7 @@ typedef struct {
     qhandle_t charSetShader;
     qhandle_t whiteShader;
     qhandle_t consoleShader;
-    qhandle_t consoleShader2; // NERVE - SMF - merged from WolfSP
+    qhandle_t consoleShader2;       // NERVE - SMF - merged from WolfSP
     bool useLegacyConsoleFont;
     bool useLegacyConsoleFace;
     fontInfo_t* consoleFont;
@@ -355,11 +355,11 @@ typedef struct {
     // www downloading
     // in the static stuff since this may have to survive server disconnects
     // if new stuff gets added, CL_ClearStaticDownload code needs to be updated for clear up
-    bool bWWWDlDisconnected; // keep going with the download after server disconnect
+    bool bWWWDlDisconnected;     // keep going with the download after server disconnect
     char downloadName[MAX_OSPATH];
-    char downloadTempName[MAX_OSPATH]; // in wwwdl mode, this is OS path (it's a qpath otherwise)
-    char originalDownloadName[MAX_QPATH]; // if we get a redirect, keep a copy of the original file path
-    bool downloadRestart; // if true, we need to do another FS_Restart because we downloaded a pak
+    char downloadTempName[MAX_OSPATH];           // in wwwdl mode, this is OS path (it's a qpath otherwise)
+    char originalDownloadName[MAX_QPATH];           // if we get a redirect, keep a copy of the original file path
+    bool downloadRestart;     // if true, we need to do another FS_Restart because we downloaded a pak
 } clientStatic_t;
 
 extern clientStatic_t cls;
@@ -563,11 +563,11 @@ unsigned int    Key_GetKeyTime();
 // cl_input
 //
 typedef struct {
-    int down[2]; // key nums holding it down
-    unsigned downtime; // msec timestamp
-    unsigned msec; // msec down this frame if both a down and up happened
-    bool active; // current state
-    bool wasPressed; // set when down, not cleared when up
+    int down[2];            // key nums holding it down
+    unsigned downtime;     // msec timestamp
+    unsigned msec;     // msec down this frame if both a down and up happened
+    bool active;     // current state
+    bool wasPressed;     // set when down, not cleared when up
 } kbutton_t;
 
 typedef enum {
@@ -653,11 +653,11 @@ struct console_t {
 
     std::vector<std::string> lines;
 
-    int lastReadLineIndex; // keep track fo the last read line, so we can show the user, what was added since he last opened the console
-    int scrollLineIndex; // bottom of console is supposed displays this line
-    float bottomDisplayedLine; // bottom of console displays this line, is trying to move towards:
+    int lastReadLineIndex;          // keep track fo the last read line, so we can show the user, what was added since he last opened the console
+    int scrollLineIndex;          // bottom of console is supposed displays this line
+    float bottomDisplayedLine;        // bottom of console displays this line, is trying to move towards:
 
-    int textWidthInChars; // characters across screen
+    int textWidthInChars;          // characters across screen
 
     /**
      * the amount of lines that fit onto the screen
@@ -684,7 +684,7 @@ struct console_t {
      */
     int height;
 
-    float currentAnimationFraction; // changes between 0.0 and 1.0 at scr_conspeed
+    float currentAnimationFraction;        // changes between 0.0 and 1.0 at scr_conspeed
     bool isOpened;
 
     /**

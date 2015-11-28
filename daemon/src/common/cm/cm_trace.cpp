@@ -336,7 +336,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
         b = &cm.brushes[brushnum];
 
         if (b->checkcount == cm.checkcount) {
-            continue; // already checked this brush in another leaf
+            continue;             // already checked this brush in another leaf
         }
 
         b->checkcount = cm.checkcount;
@@ -365,7 +365,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf) {
         }
 
         if (surface->checkcount == cm.checkcount) {
-            continue; // already checked this surface in another leaf
+            continue;             // already checked this surface in another leaf
         }
 
         surface->checkcount = cm.checkcount;
@@ -621,11 +621,11 @@ void CM_TracePointThroughSurfaceCollide(traceWork_t* tw, const cSurfaceCollide_t
         intersect = intersection[facet->surfacePlane];
 
         if (intersect < 0) {
-            continue; // surface is behind the starting point
+            continue;             // surface is behind the starting point
         }
 
         if (intersect > tw->trace.fraction) {
-            continue; // already hit something closer
+            continue;             // already hit something closer
         }
 
         for (j = 0; j < facet->numBorders; j++) {
@@ -921,7 +921,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             d2 = DotProduct(tw->end, plane->normal) - (plane->dist + tw->biSphere.endRadius);
 
             if (d2 > 0) {
-                getout = true; // endpoint is not in solid
+                getout = true;                 // endpoint is not in solid
             }
 
             if (d1 > 0) {
@@ -995,7 +995,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             d2 = DotProduct(endp, plane->normal) - dist;
 
             if (d2 > 0) {
-                getout = true; // endpoint is not in solid
+                getout = true;                 // endpoint is not in solid
             }
 
             if (d1 > 0) {
@@ -1058,7 +1058,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush) {
             d2 = DotProduct(tw->end, plane->normal) - dist;
 
             if (d2 > 0) {
-                getout = true; // endpoint is not in solid
+                getout = true;                 // endpoint is not in solid
             }
 
             if (d1 > 0) {
@@ -1238,7 +1238,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
         b = &cm.brushes[brushnum];
 
         if (b->checkcount == cm.checkcount) {
-            continue; // already checked this brush in another leaf
+            continue;             // already checked this brush in another leaf
         }
 
         b->checkcount = cm.checkcount;
@@ -1274,7 +1274,7 @@ void CM_TraceThroughLeaf(traceWork_t* tw, cLeaf_t* leaf) {
         }
 
         if (surface->checkcount == cm.checkcount) {
-            continue; // already checked this surface in another leaf
+            continue;             // already checked this surface in another leaf
         }
 
         surface->checkcount = cm.checkcount;
@@ -1406,12 +1406,12 @@ void CM_TraceThroughSphere(traceWork_t* tw, vec3_t origin, float radius, vec3_t 
     b = 2.0f * (dir[0] * v1[0] + dir[1] * v1[1] + dir[2] * v1[2]);
     c = v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2] - (radius + RADIUS_EPSILON) * (radius + RADIUS_EPSILON);
 
-    d = b * b - 4.0f * c; // * a;
+    d = b * b - 4.0f * c;     // * a;
 
     if (d > 0) {
         sqrtd = sqrtf(d);
         // = (- b + sqrtd) * 0.5f; // / (2.0f * a);
-        fraction = (-b - sqrtd) * 0.5f; /// (2.0f * a);
+        fraction = (-b - sqrtd) * 0.5f;           /// (2.0f * a);
 
         //
         if (fraction < 0) {
@@ -1506,12 +1506,12 @@ void CM_TraceThroughVerticalCylinder(traceWork_t* tw, vec3_t origin, float radiu
     b = 2.0f * (v1[0] * dir[0] + v1[1] * dir[1]);
     c = v1[0] * v1[0] + v1[1] * v1[1] - (radius + RADIUS_EPSILON) * (radius + RADIUS_EPSILON);
 
-    d = b * b - 4.0f * c; // * a;
+    d = b * b - 4.0f * c;     // * a;
 
     if (d > 0) {
         sqrtd = sqrtf(d);
         // = (- b + sqrtd) * 0.5f;// / (2.0f * a);
-        fraction = (-b - sqrtd) * 0.5f; /// (2.0f * a);
+        fraction = (-b - sqrtd) * 0.5f;           /// (2.0f * a);
 
         //
         if (fraction < 0) {
@@ -1674,7 +1674,7 @@ static void CM_TraceThroughTree(traceWork_t* tw, int num, float p1f, float p2f, 
     float midf;
 
     if (tw->trace.fraction <= p1f) {
-        return; // already hit something nearer
+        return;         // already hit something nearer
     }
 
     // if < 0, we are in a leaf node
@@ -1787,20 +1787,20 @@ static void CM_Trace(trace_t* results, const vec3_t start, const vec3_t end, vec
 
     cmod = CM_ClipHandleToModel(model);
 
-    cm.checkcount++; // for multi-check avoidance
+    cm.checkcount++;     // for multi-check avoidance
 
-    c_traces++; // for statistics, may be zeroed
+    c_traces++;     // for statistics, may be zeroed
 
     // fill in a default trace
     Com_Memset(&tw, 0, sizeof(tw));
-    tw.trace.fraction = 1; // assume it goes the entire distance until shown otherwise
+    tw.trace.fraction = 1;     // assume it goes the entire distance until shown otherwise
     VectorCopy(origin, tw.modelOrigin);
     tw.type = type;
 
     if (!cm.numNodes) {
         *results = tw.trace;
 
-        return; // map not loaded, shouldn't happen
+        return;         // map not loaded, shouldn't happen
     }
 
     // allow nullptr to be passed in for 0,0,0
@@ -2109,13 +2109,13 @@ void CM_BiSphereTrace(trace_t* results, const vec3_t start, const vec3_t end, fl
 
     cmod = CM_ClipHandleToModel(model);
 
-    cm.checkcount++; // for multi-check avoidance
+    cm.checkcount++;     // for multi-check avoidance
 
-    c_traces++; // for statistics, may be zeroed
+    c_traces++;     // for statistics, may be zeroed
 
     // fill in a default trace
     Com_Memset(&tw, 0, sizeof(tw));
-    tw.trace.fraction = 1.0f; // assume it goes the entire distance until shown otherwise
+    tw.trace.fraction = 1.0f;     // assume it goes the entire distance until shown otherwise
     VectorCopy(vec3_origin, tw.modelOrigin);
     tw.type = TT_BISPHERE;
     tw.testLateralCollision = true;
@@ -2124,7 +2124,7 @@ void CM_BiSphereTrace(trace_t* results, const vec3_t start, const vec3_t end, fl
     if (!cm.numNodes) {
         *results = tw.trace;
 
-        return; // map not loaded, shouldn't happen
+        return;         // map not loaded, shouldn't happen
     }
 
     // set basic parms

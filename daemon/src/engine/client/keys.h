@@ -41,7 +41,7 @@ Maryland 20850 USA.
 
 typedef struct {
     bool down;
-    int repeats; // if > 1, it is autorepeating
+    int repeats;          // if > 1, it is autorepeating
     char* binding[MAX_TEAMS];
 } qkey_t;
 

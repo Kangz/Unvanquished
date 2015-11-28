@@ -756,10 +756,10 @@ void Sys_SendPacket(int length, const void* data, netadr_t to) {
     NetadrToSockadr(&to, (struct sockaddr*) &addr);
 
     if (usingSocks && addr.ss_family == AF_INET /*to.type == NA_IP*/) {
-        socksBuf[0] = 0; // reserved
+        socksBuf[0] = 0;           // reserved
         socksBuf[1] = 0;
-        socksBuf[2] = 0; // fragment (not fragmented)
-        socksBuf[3] = 1; // address type: IPV4
+        socksBuf[2] = 0;           // fragment (not fragmented)
+        socksBuf[3] = 1;           // address type: IPV4
         *(int*) &socksBuf[4] = ((struct sockaddr_in*) &addr)->sin_addr.s_addr;
         *(short*) &socksBuf[8] = ((struct sockaddr_in*) &addr)->sin_port;
         memcpy(&socksBuf[10], data, length);
@@ -963,7 +963,7 @@ SOCKET NET_IPSocket(const char* net_interface, int port, struct sockaddr_in* bin
     if (bindto) {
         // random port? find what was chosen
         if (address.sin_port == 0) {
-            struct sockaddr_in addr; // enough space
+            struct sockaddr_in addr;             // enough space
             socklen_t addrlen = sizeof(addr);
 
             if (!getsockname(newsocket, (struct sockaddr*) &addr, &addrlen) && addrlen) {
@@ -1043,7 +1043,7 @@ SOCKET NET_IP6Socket(const char* net_interface, int port, struct sockaddr_in6* b
     if (bindto) {
         // random port? find what was chosen
         if (address.sin6_port == 0) {
-            struct sockaddr_in6 addr; // enough space
+            struct sockaddr_in6 addr;             // enough space
             socklen_t addrlen = sizeof(addr);
 
             if (!getsockname(newsocket, (struct sockaddr*) &addr, &addrlen) && addrlen) {
@@ -1198,7 +1198,7 @@ void NET_OpenSocks(int port) {
         rfc1929 = false;
     }
 
-    buf[0] = 5; // SOCKS version
+    buf[0] = 5;       // SOCKS version
 
     // method count
     if (rfc1929) {
@@ -1209,10 +1209,10 @@ void NET_OpenSocks(int port) {
         len = 3;
     }
 
-    buf[2] = 0; // method #1 - method id #00: no authentication
+    buf[2] = 0;       // method #1 - method id #00: no authentication
 
     if (rfc1929) {
-        buf[2] = 2; // method #2 - method id #02: username/password
+        buf[2] = 2;           // method #2 - method id #02: username/password
     }
 
     if (send(socks_socket, (char*) buf, len, 0) == SOCKET_ERROR) {
@@ -1234,10 +1234,10 @@ void NET_OpenSocks(int port) {
     }
 
     switch (buf[1]) {
-    case 0: // no authentication
+    case 0:             // no authentication
         break;
 
-    case 2: // username/password authentication
+    case 2:             // username/password authentication
         break;
 
     default:
@@ -1254,7 +1254,7 @@ void NET_OpenSocks(int port) {
         ulen = strlen(net_socksUsername->string);
         plen = strlen(net_socksPassword->string);
 
-        buf[0] = 1; // username/password authentication version
+        buf[0] = 1;           // username/password authentication version
         buf[1] = ulen;
 
         if (ulen) {
@@ -1293,12 +1293,12 @@ void NET_OpenSocks(int port) {
     }
 
     // send the UDP associate request
-    buf[0] = 5; // SOCKS version
-    buf[1] = 3; // command: UDP associate
-    buf[2] = 0; // reserved
-    buf[3] = 1; // address type: IPV4
+    buf[0] = 5;       // SOCKS version
+    buf[1] = 3;       // command: UDP associate
+    buf[2] = 0;       // reserved
+    buf[3] = 1;       // address type: IPV4
     *(int*) &buf[4] = INADDR_ANY;
-    *(short*) &buf[8] = htons((short) port); // port
+    *(short*) &buf[8] = htons((short) port);                // port
 
     if (send(socks_socket, (char*) buf, 10, 0) == SOCKET_ERROR) {
         Com_Printf("NET_OpenSocks: send: %s\n", NET_ErrorString());
@@ -1462,7 +1462,7 @@ static int NET_EnsureValidPortNo(int port) {
     }
 
     port &= 0xFFFF;
-    return (port < 1024) ? 1024 : port; // the usual 1024 reserved ports
+    return (port < 1024) ? 1024 : port;       // the usual 1024 reserved ports
 }
 
 /*

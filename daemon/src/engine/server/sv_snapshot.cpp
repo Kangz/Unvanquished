@@ -124,7 +124,7 @@ static void SV_EmitPacketEntities(const clientSnapshot_t* from, clientSnapshot_t
         }
     }
 
-    MSG_WriteBits(msg, (MAX_GENTITIES - 1), GENTITYNUM_BITS); // end of packetentities
+    MSG_WriteBits(msg, (MAX_GENTITIES - 1), GENTITYNUM_BITS);          // end of packetentities
 }
 
 /*
@@ -481,7 +481,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
                 SV_AddEntToSnapshot(playerEnt, master, ment, eNums);
             }
 
-            continue; // master needs to be added, but not this dummy ent
+            continue;             // master needs to be added, but not this dummy ent
         }
         // ----(SA) end
         else if (ent->r.svFlags & SVF_VISDUMMY_MULTIPLE) {
@@ -801,8 +801,8 @@ void SV_SendClientIdle(client_t* client) {
 
     SV_SendMessageToClient(&msg, client);
 
-    sv.bpsTotalBytes += msg.cursize; // NERVE - SMF - net debugging
-    sv.ubpsTotalBytes += msg.uncompsize / 8; // NERVE - SMF - net debugging
+    sv.bpsTotalBytes += msg.cursize;     // NERVE - SMF - net debugging
+    sv.ubpsTotalBytes += msg.uncompsize / 8;     // NERVE - SMF - net debugging
 }
 
 /*
@@ -864,8 +864,8 @@ void SV_SendClientSnapshot(client_t* client) {
 
     SV_SendMessageToClient(&msg, client);
 
-    sv.bpsTotalBytes += msg.cursize; // NERVE - SMF - net debugging
-    sv.ubpsTotalBytes += msg.uncompsize / 8; // NERVE - SMF - net debugging
+    sv.bpsTotalBytes += msg.cursize;     // NERVE - SMF - net debugging
+    sv.ubpsTotalBytes += msg.uncompsize / 8;     // NERVE - SMF - net debugging
 }
 
 /*
@@ -877,10 +877,10 @@ SV_SendClientMessages
 void SV_SendClientMessages() {
     int i;
     client_t* c;
-    int numclients = 0; // NERVE - SMF - net debugging
+    int numclients = 0;          // NERVE - SMF - net debugging
 
-    sv.bpsTotalBytes = 0; // NERVE - SMF - net debugging
-    sv.ubpsTotalBytes = 0; // NERVE - SMF - net debugging
+    sv.bpsTotalBytes = 0;     // NERVE - SMF - net debugging
+    sv.ubpsTotalBytes = 0;     // NERVE - SMF - net debugging
 
     // Gordon: update any changed configstrings from this frame
     SV_UpdateConfigStrings();
@@ -892,7 +892,7 @@ void SV_SendClientMessages() {
         // rain - changed <= CS_ZOMBIE to < CS_ZOMBIE so that the
         // disconnect reason is properly sent in the network stream
         if (c->state < CS_ZOMBIE) {
-            continue; // not connected
+            continue;             // not connected
         }
 
         // RF, needed to insert this otherwise bots would cause error drops in sv_net_chan.c:
@@ -902,10 +902,10 @@ void SV_SendClientMessages() {
         }
 
         if (svs.time < c->nextSnapshotTime) {
-            continue; // not time yet
+            continue;             // not time yet
         }
 
-        numclients++; // NERVE - SMF - net debugging
+        numclients++;         // NERVE - SMF - net debugging
 
         // send additional message fragments if the last message
         // was too large to send at once

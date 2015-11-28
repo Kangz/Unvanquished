@@ -240,16 +240,16 @@ typedef int clipHandle_t;
 
 typedef enum {
     MESSAGE_EMPTY = 0,
-    MESSAGE_WAITING, // rate/packet limited
-    MESSAGE_WAITING_OVERFLOW, // packet too large with message
+    MESSAGE_WAITING,       // rate/packet limited
+    MESSAGE_WAITING_OVERFLOW,       // packet too large with message
 } messageStatus_t;
 
 // paramters for command buffer stuffing
 typedef enum {
-    EXEC_NOW, // don't return until completed, a VM should NEVER use this,
+    EXEC_NOW,       // don't return until completed, a VM should NEVER use this,
     // because some commands might cause the VM to be unloaded...
-    EXEC_INSERT, // insert at current position, but don't run yet
-    EXEC_APPEND // add to end of the command buffer
+    EXEC_INSERT,       // insert at current position, but don't run yet
+    EXEC_APPEND       // add to end of the command buffer
 } cbufExec_t;
 
 //
@@ -487,10 +487,10 @@ inline float Q_rsqrt(float number) {
     #endif
     #else
     y = Q_uintBitsToFloat(0x5f3759df - (Q_floatBitsToUint(number) >> 1));
-    y *= (1.5f - (x * y * y)); // initial iteration
+    y *= (1.5f - (x * y * y));                 // initial iteration
     #endif
     #ifdef RSQRT_PRECISE
-    y *= (1.5f - (x * y * y)); // second iteration for higher precision
+    y *= (1.5f - (x * y * y));                 // second iteration for higher precision
     #endif
     return y;
 }
@@ -617,8 +617,8 @@ vec_t VectorLengthSquared(const vec3_t v);
 vec_t Distance(const vec3_t p1, const vec3_t p2);
 vec_t DistanceSquared(const vec3_t p1, const vec3_t p2);
 void  CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross);
-vec_t VectorNormalize(vec3_t v); // returns vector length
-void  VectorNormalizeFast(vec3_t v); // does NOT return vector length, uses rsqrt approximation
+vec_t VectorNormalize(vec3_t v);            // returns vector length
+void  VectorNormalizeFast(vec3_t v);            // does NOT return vector length, uses rsqrt approximation
 vec_t VectorNormalize2(const vec3_t v, vec3_t out);
 void  VectorInverse(vec3_t v);
 
@@ -657,7 +657,7 @@ float AngleDelta(float angle1, float angle2);
 float AngleBetweenVectors(const vec3_t a, const vec3_t b);
 void  AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
 
-vec_t PlaneNormalize(vec4_t plane); // returns normal length
+vec_t PlaneNormalize(vec4_t plane);            // returns normal length
 
 /* greebo: This calculates the intersection point of three planes.
  * Returns <0,0,0> if no intersection point could be found, otherwise returns the coordinates of the intersection point
@@ -1152,7 +1152,7 @@ void QuatTransformVectorInverse(const quat_t q, const vec3_t in, vec3_t out);
     #define sseSwizzle(a, mask) _mm_shuffle_ps((a), (a), SWZ_ ## mask)
 
 inline __m128 unitQuat() {
-    return _mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f); // order is reversed
+    return _mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f);               // order is reversed
 }
 inline __m128 sseLoadInts(const int vec[4]) {
     return *(__m128*)vec;
@@ -1448,7 +1448,7 @@ void TransEndLerp(transform_t* t);
 typedef struct {
     bool frameMemory;
     int currentElements;
-    int maxElements; // will reallocate and move when exceeded
+    int maxElements;                  // will reallocate and move when exceeded
     void** elements;
 } growList_t;
 
@@ -1505,10 +1505,10 @@ int        Com_HashKey(char* string, int maxlen);
 
 #ifndef TT_STRING
 // token types
-    #define TT_STRING      1 // string
-    #define TT_LITERAL     2 // literal
-    #define TT_NUMBER      3 // number
-    #define TT_NAME        4 // name
+    #define TT_STRING      1// string
+    #define TT_LITERAL     2// literal
+    #define TT_NUMBER      3// number
+    #define TT_NAME        4// name
     #define TT_PUNCTUATION 5 // punctuation
 #endif
 
@@ -1527,7 +1527,7 @@ typedef struct pc_token_s {
 void      COM_MatchToken(char** buf_p, char* match);
 
 bool  SkipBracedSection(const char** program);
-bool  SkipBracedSection_Depth(const char** program, int depth); // start at given depth if already
+bool  SkipBracedSection_Depth(const char** program, int depth);            // start at given depth if already
 void      SkipRestOfLine(const char** data);
 
 void      Parse1DMatrix(const char** buf_p, int x, float* m);
@@ -1724,8 +1724,8 @@ inline int PlaneTypeForNormal(vec3_t normal)
 typedef struct cplane_s {
     vec3_t normal;
     float dist;
-    byte type; // for fast side tests: 0,1,2 = axial, 3 = nonaxial
-    byte signbits; // signx + (signy<<1) + (signz<<2), used as lookup during collision
+    byte type;               // for fast side tests: 0,1,2 = axial, 3 = nonaxial
+    byte signbits;               // signx + (signy<<1) + (signz<<2), used as lookup during collision
     byte pad[2];
 } cplane_t;
 
@@ -1741,15 +1741,15 @@ typedef enum {
 
 // a trace is returned when a box is swept through the world
 typedef struct {
-    bool allsolid; // if true, plane is not valid
-    bool startsolid; // if true, the initial point was in a solid area
-    float fraction; // time completed, 1.0 = didn't hit anything
-    vec3_t endpos; // final position
-    cplane_t plane; // surface normal at impact, transformed to world space
-    int surfaceFlags; // surface hit
-    int contents; // contents on other side of surface hit
-    int entityNum; // entity the contacted sirface is a part of
-    float lateralFraction; // fraction of collision tangetially to the trace direction
+    bool allsolid;             // if true, plane is not valid
+    bool startsolid;             // if true, the initial point was in a solid area
+    float fraction;                // time completed, 1.0 = didn't hit anything
+    vec3_t endpos;               // final position
+    cplane_t plane;             // surface normal at impact, transformed to world space
+    int surfaceFlags;                  // surface hit
+    int contents;                  // contents on other side of surface hit
+    int entityNum;                  // entity the contacted sirface is a part of
+    float lateralFraction;                // fraction of collision tangetially to the trace direction
 } trace_t;
 
 // trace->entityNum can also be 0 to (MAX_GENTITIES-1)
@@ -1784,14 +1784,14 @@ typedef struct {
 // other channels will always override a playing sound on that channel
 typedef enum {
     CHAN_AUTO,
-    CHAN_LOCAL, // menu sounds, etc
+    CHAN_LOCAL,       // menu sounds, etc
     CHAN_WEAPON,
     CHAN_VOICE,
     CHAN_ITEM,
     CHAN_BODY,
-    CHAN_LOCAL_SOUND, // chat messages, etc
-    CHAN_ANNOUNCER, // announcer voices, etc
-    CHAN_VOICE_BG, // xkan - background sound for voice (radio static, etc.)
+    CHAN_LOCAL_SOUND,       // chat messages, etc
+    CHAN_ANNOUNCER,       // announcer voices, etc
+    CHAN_VOICE_BG,       // xkan - background sound for voice (radio static, etc.)
 } soundChannel_t;
 
 /*
@@ -1880,10 +1880,10 @@ typedef std::array<std::string, MAX_CONFIGSTRINGS> GameStateCSs;
 //
 // NOTE: all fields in here must be 32 bits (or those within sub-structures)
 typedef struct playerState_s {
-    int commandTime; // cmd->serverTime of last executed command
+    int commandTime;                // cmd->serverTime of last executed command
     int pm_type;
-    int bobCycle; // for view bobbing and footstep generation
-    int pm_flags; // ducked, jump_held, etc
+    int bobCycle;                // for view bobbing and footstep generation
+    int pm_flags;                // ducked, jump_held, etc
     int pm_time;
 
     vec3_t origin;
@@ -1892,50 +1892,50 @@ typedef struct playerState_s {
     int gravity;
 
     int speed;
-    int delta_angles[3]; // add to command angles to get view direction
+    int delta_angles[3];                 // add to command angles to get view direction
     // changed by spawns, rotating objects, and teleporters
 
-    int groundEntityNum; // ENTITYNUM_NONE = in air
+    int groundEntityNum;             // ENTITYNUM_NONE = in air
 
-    int legsTimer; // don't change low priority animations until this runs out
-    int legsAnim; // mask off ANIM_TOGGLEBIT
+    int legsTimer;             // don't change low priority animations until this runs out
+    int legsAnim;             // mask off ANIM_TOGGLEBIT
 
-    int torsoTimer; // don't change low priority animations until this runs out
-    int torsoAnim; // mask off ANIM_TOGGLEBIT
+    int torsoTimer;             // don't change low priority animations until this runs out
+    int torsoAnim;             // mask off ANIM_TOGGLEBIT
 
-    int movementDir; // a number 0 to 7 that represents the relative angle
+    int movementDir;             // a number 0 to 7 that represents the relative angle
     // of movement to the view angle (axial and diagonals)
     // when at rest, the value will remain unchanged
     // used to twist the legs during strafing
 
-    int eFlags; // copied to entityState_t->eFlags
+    int eFlags;             // copied to entityState_t->eFlags
 
-    int eventSequence; // pmove generated events
+    int eventSequence;             // pmove generated events
     int events[MAX_EVENTS];
     int eventParms[MAX_EVENTS];
-    int oldEventSequence; // so we can see which events have been added since we last converted to entityState_t
+    int oldEventSequence;             // so we can see which events have been added since we last converted to entityState_t
 
-    int externalEvent; // events set on player from another source
+    int externalEvent;             // events set on player from another source
     int externalEventParm;
     int externalEventTime;
 
-    int clientNum; // ranges from 0 to MAX_CLIENTS-1
+    int clientNum;             // ranges from 0 to MAX_CLIENTS-1
 
     // weapon info
-    int weapon; // copied to entityState_t->weapon
+    int weapon;             // copied to entityState_t->weapon
     int weaponstate;
 
-    vec3_t viewangles; // for fixed views
+    vec3_t viewangles;             // for fixed views
     int viewheight;
 
     // damage feedback
-    int damageEvent; // when it changes, latch the other parms
+    int damageEvent;             // when it changes, latch the other parms
     int damageYaw;
     int damagePitch;
     int damageCount;
 
     int stats[MAX_STATS];
-    int persistant[MAX_PERSISTANT]; // stats that aren't cleared on death
+    int persistant[MAX_PERSISTANT];               // stats that aren't cleared on death
 
     // ----------------------------------------------------------------------
     // So to use persistent variables here, which don't need to come from the server,
@@ -1945,19 +1945,19 @@ typedef struct playerState_s {
 
     // Arnout: use the pmoveExt_t structure in bg_public.h to store this kind of data now (presistant on client, not network transmitted)
 
-    int ping; // server to game info for scoreboard
+    int ping;             // server to game info for scoreboard
     int pmove_framecount;
     int entityEventSequence;
 
     int generic1;
     int loopSound;
     int otherEntityNum;
-    vec3_t grapplePoint; // location of grapple to pull towards if PMF_GRAPPLE_PULL
-    int weaponAnim; // mask off ANIM_TOGGLEBIT
+    vec3_t grapplePoint;                    // location of grapple to pull towards if PMF_GRAPPLE_PULL
+    int weaponAnim;                       // mask off ANIM_TOGGLEBIT
     int ammo;
-    int clips; // clips held
-    int tauntTimer; // don't allow another taunt until this runs out
-    int misc[MAX_MISC]; // misc data
+    int clips;                       // clips held
+    int tauntTimer;                       // don't allow another taunt until this runs out
+    int misc[MAX_MISC];                         // misc data
 } playerState_t;
 
 // ====================================================================
@@ -2010,7 +2010,7 @@ typedef struct usercmd_s {
     int angles[3];
 
     signed char forwardmove, rightmove, upmove;
-    byte doubleTap; // Arnout: only 3 bits used
+    byte doubleTap;                    // Arnout: only 3 bits used
 
     byte weapon;
     byte flags;
@@ -2057,10 +2057,10 @@ inline bool usercmdButtonsDiffer(const byte* a, const byte* b) {
 
 typedef enum {
     TR_STATIONARY,
-    TR_INTERPOLATE, // non-parametric, but interpolate between snapshots
+    TR_INTERPOLATE,       // non-parametric, but interpolate between snapshots
     TR_LINEAR,
     TR_LINEAR_STOP,
-    TR_SINE, // value = base + sin( time / duration ) * delta
+    TR_SINE,       // value = base + sin( time / duration ) * delta
     TR_GRAVITY,
     TR_BUOYANCY,
 } trType_t;
@@ -2068,10 +2068,10 @@ typedef enum {
 typedef struct {
     trType_t trType;
     int trTime;
-    int trDuration; // if non 0, trTime + trDuration = stop time
+    int trDuration;                  // if non 0, trTime + trDuration = stop time
     // ----(SA)  removed
     vec3_t trBase;
-    vec3_t trDelta; // velocity, etc
+    vec3_t trDelta;               // velocity, etc
     // ----(SA)  removed
 } trajectory_t;
 
@@ -2090,7 +2090,7 @@ typedef enum {
     ET_PLAYER,
     ET_ITEM,
 
-    ET_BUILDABLE, // buildable type
+    ET_BUILDABLE,                   // buildable type
 
     ET_LOCATION,
 
@@ -2113,7 +2113,7 @@ typedef enum {
 
     ET_BEACON,
 
-    ET_EVENTS // any of the EV_* events can be added freestanding
+    ET_EVENTS                   // any of the EV_* events can be added freestanding
     // by setting eType to ET_EVENTS + eventNum
     // this avoids having to set eFlags and eventNum
 } entityType_t;
@@ -2121,12 +2121,12 @@ typedef enum {
 const char* Com_EntityTypeName(entityType_t entityType);
 
 typedef struct entityState_s {
-    int number; // entity index
-    entityType_t eType; // entityType_t
+    int number;                      // entity index
+    entityType_t eType;             // entityType_t
     int eFlags;
 
-    trajectory_t pos; // for calculating position
-    trajectory_t apos; // for calculating angles
+    trajectory_t pos;             // for calculating position
+    trajectory_t apos;             // for calculating angles
 
     int time;
     int time2;
@@ -2137,53 +2137,53 @@ typedef struct entityState_s {
     vec3_t angles;
     vec3_t angles2;
 
-    int otherEntityNum; // shotgun sources, etc
+    int otherEntityNum;                      // shotgun sources, etc
     int otherEntityNum2;
 
     // FIXME: separate field, but doing this for compat reasons
 #define otherEntityNum3 groundEntityNum
 
-    int groundEntityNum; // ENTITYNUM_NONE = in air
+    int groundEntityNum;                      // ENTITYNUM_NONE = in air
 
-    int constantLight; // r + (g<<8) + (b<<16) + (intensity<<24)
-    int loopSound; // constantly loop this sound
+    int constantLight;                      // r + (g<<8) + (b<<16) + (intensity<<24)
+    int loopSound;                      // constantly loop this sound
 
     int modelindex;
     int modelindex2;
-    int clientNum; // 0 to (MAX_CLIENTS - 1), for players and corpses
+    int clientNum;                      // 0 to (MAX_CLIENTS - 1), for players and corpses
     int frame;
 
-    int solid; // for client side prediction, trap_linkentity sets this properly
+    int solid;                      // for client side prediction, trap_linkentity sets this properly
 
     // old style events, in for compatibility only
-    int event; // impulse events -- muzzle flashes, footsteps, etc
+    int event;             // impulse events -- muzzle flashes, footsteps, etc
     int eventParm;
 
-    int eventSequence; // pmove generated events
+    int eventSequence;             // pmove generated events
     int events[MAX_EVENTS];
     int eventParms[MAX_EVENTS];
 
     // for players
-    int weapon; // determines weapon and flash model, etc
-    int legsAnim; // mask off ANIM_TOGGLEBIT
-    int torsoAnim; // mask off ANIM_TOGGLEBIT
+    int weapon;             // determines weapon and flash model, etc
+    int legsAnim;             // mask off ANIM_TOGGLEBIT
+    int torsoAnim;             // mask off ANIM_TOGGLEBIT
 
-    int misc; // bit flags
+    int misc;                       // bit flags
     int generic1;
-    int weaponAnim; // mask off ANIM_TOGGLEBIT
+    int weaponAnim;                       // mask off ANIM_TOGGLEBIT
 } entityState_t;
 
 typedef enum {
     CA_UNINITIALIZED,
-    CA_DISCONNECTED, // not talking to a server
-    CA_CONNECTING, // sending request packets to the server
-    CA_CHALLENGING, // sending challenge packets to the server
-    CA_CONNECTED, // netchan_t established, getting gamestate
-    CA_DOWNLOADING, // downloading a file
-    CA_LOADING, // only during cgame initialization, never during main loop
-    CA_PRIMED, // got gamestate, waiting for first frame
-    CA_ACTIVE, // game views should be displayed
-    CA_CINEMATIC // playing a cinematic or a static pic, not connected to a server
+    CA_DISCONNECTED,       // not talking to a server
+    CA_CONNECTING,       // sending request packets to the server
+    CA_CHALLENGING,       // sending challenge packets to the server
+    CA_CONNECTED,       // netchan_t established, getting gamestate
+    CA_DOWNLOADING,       // downloading a file
+    CA_LOADING,       // only during cgame initialization, never during main loop
+    CA_PRIMED,       // got gamestate, waiting for first frame
+    CA_ACTIVE,       // game views should be displayed
+    CA_CINEMATIC       // playing a cinematic or a static pic, not connected to a server
 } connstate_t;
 
 // font support
@@ -2194,18 +2194,18 @@ typedef enum {
 #define GLYPH_CHAREND   127
 #define GLYPHS_PER_FONT (GLYPH_END - GLYPH_START + 1)
 typedef struct {
-    int height; // number of scan lines
-    int top; // top of glyph in buffer
-    int bottom; // bottom of glyph in buffer
-    int pitch; // width for copying
-    int xSkip; // x adjustment
-    int imageWidth; // width of actual image
-    int imageHeight; // height of actual image
-    float s; // x offset in image where glyph starts
-    float t; // y offset in image where glyph starts
+    int height;           // number of scan lines
+    int top;           // top of glyph in buffer
+    int bottom;           // bottom of glyph in buffer
+    int pitch;           // width for copying
+    int xSkip;           // x adjustment
+    int imageWidth;           // width of actual image
+    int imageHeight;           // height of actual image
+    float s;         // x offset in image where glyph starts
+    float t;         // y offset in image where glyph starts
     float s2;
     float t2;
-    qhandle_t glyph; // handle to the shader with the glyph
+    qhandle_t glyph;     // handle to the shader with the glyph
     char shaderName[32];
 } glyphInfo_t;
 
@@ -2215,7 +2215,7 @@ typedef glyphInfo_t glyphBlock_t[256];
 
 typedef struct {
     void* face, * faceData, * fallback, * fallbackData;
-    glyphInfo_t* glyphBlock[0x110000 / 256]; // glyphBlock_t
+    glyphInfo_t* glyphBlock[0x110000 / 256];      // glyphBlock_t
     int pointSize;
     int height;
     float glyphScale;
@@ -2264,8 +2264,8 @@ int        Com_GMTime(qtime_t* qtime);
 // cinematic states
 typedef enum {
     FMV_IDLE,
-    FMV_PLAY, // play
-    FMV_EOF, // all other conditions, i.e. stop/EOF/abort
+    FMV_PLAY,       // play
+    FMV_EOF,       // all other conditions, i.e. stop/EOF/abort
     FMV_ID_BLT,
     FMV_ID_IDLE,
     FMV_LOOPED,

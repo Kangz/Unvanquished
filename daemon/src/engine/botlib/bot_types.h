@@ -57,8 +57,8 @@ typedef struct {
 } botNavCmd_t;
 
 typedef enum {
-    BOT_TARGET_STATIC, // target stays in one place always
-    BOT_TARGET_DYNAMIC // target can move
+    BOT_TARGET_STATIC,     // target stays in one place always
+    BOT_TARGET_DYNAMIC     // target can move
 } botRouteTargetType_t;
 
 // type: determines if the object can move or not
@@ -82,7 +82,7 @@ enum navPolyFlags {
     POLYFLAGS_TELEPORT = 1 << 7,
     POLYFLAGS_CROUCH   = 1 << 8,
     POLYFLAGS_SWIM     = 1 << 9,
-    POLYFLAGS_ALL      = 0xffff, // All abilities.
+    POLYFLAGS_ALL      = 0xffff,     // All abilities.
 };
 
 enum navPolyAreas {

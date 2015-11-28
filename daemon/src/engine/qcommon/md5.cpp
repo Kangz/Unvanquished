@@ -182,12 +182,12 @@ static void MD5Update(struct MD5Context* ctx, unsigned char const* buf,
     t = ctx->bits[0];
 
     if ((ctx->bits[0] = t + ((uint32_t) len << 3)) < t) {
-        ctx->bits[1]++; /* Carry from low to high */
+        ctx->bits[1]++;           /* Carry from low to high */
     }
 
     ctx->bits[1] += len >> 29;
 
-    t = (t >> 3) & 0x3f; /* Bytes already in shsInfo->data */
+    t = (t >> 3) & 0x3f;       /* Bytes already in shsInfo->data */
 
     /* Handle any leading odd-sized chunks */
 
@@ -269,7 +269,7 @@ static void MD5Final(struct MD5Context* ctx, unsigned char* digest) {
         memcpy(digest, ctx->buf, 16);
     }
 
-    memset(ctx, 0, sizeof(*ctx)); /* In case it's sensitive */
+    memset(ctx, 0, sizeof(*ctx));           /* In case it's sensitive */
 }
 
 #endif /* USE_OPENSSL */

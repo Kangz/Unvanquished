@@ -142,7 +142,7 @@ float R_InterpolateLightGrid(world_t* w, int from[3], int to[3],
                 gp2 = w->lightGridData2 + x * gridStep[0] + y * gridStep[1] + z * gridStep[2];
 
                 if (!(gp1->ambient[0] || gp1->ambient[1] || gp1->ambient[2])) {
-                    continue; // ignore samples in walls
+                    continue;                     // ignore samples in walls
                 }
 
                 factor = *xFactor * *yFactor * *zFactor;
@@ -298,7 +298,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent, vec3_t 
         VectorNormalize(ent->lightDir);
     }
 
-    if ((ent->e.renderfx & RF_MINLIGHT)) { // && VectorLength(ent->ambientLight) <= 0)
+    if ((ent->e.renderfx & RF_MINLIGHT)) {       // && VectorLength(ent->ambientLight) <= 0)
         // give everything a minimum light add
         ent->ambientLight[0] += tr.identityLight * 0.125f;
         ent->ambientLight[1] += tr.identityLight * 0.125f;
@@ -1031,7 +1031,7 @@ static void R_AddEdgeToLightScissor(trRefLight_t* light, const vec3_t in_world1,
             int sides = R_ClipEdgeToPlane(*frust, in_world1, in_world2, clip1, clip2);
 
             if (!sides) {
-                continue; // edge behind plane
+                continue;                 // edge behind plane
             }
 
             R_AddPointToLightScissor(light, clip1);

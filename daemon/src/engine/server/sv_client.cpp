@@ -96,6 +96,7 @@ void SV_GetChallenge(netadr_t from) {
 
     NET_OutOfBandPrint(NS_SERVER, from, "challengeResponse %i", challenge->challenge);
 
+    return;
 }
 
 /*
@@ -187,7 +188,7 @@ void SV_DirectConnect(netadr_t from, const Cmd::Args& args) {
         for (i = 0; i < MAX_CHALLENGES; i++) {
             if (NET_CompareAdr(from, svs.challenges[i].adr)) {
                 if (challenge == svs.challenges[i].challenge) {
-                    break; // good
+                    break;                     // good
                 }
             }
         }
@@ -357,7 +358,7 @@ gotnewcl:
     Q_strncpyz(newcl->userinfo, userinfo, sizeof(newcl->userinfo));
 
     // get the game a chance to reject this connection or modify the userinfo
-    denied = gvm.GameClientConnect(reason, sizeof(reason), clientNum, true, false); // firstTime = true
+    denied = gvm.GameClientConnect(reason, sizeof(reason), clientNum, true, false);          // firstTime = true
 
     if (denied) {
         NET_OutOfBandPrint(NS_SERVER, from, "print\n[err_dialog]%s", reason);
@@ -437,10 +438,10 @@ or crashing -- SV_FinalCommand() will handle that
 */
 void SV_DropClient(client_t* drop, const char* reason) {
     if (drop->state == CS_ZOMBIE) {
-        return; // already dropped
+        return;         // already dropped
     }
     Com_DPrintf("Going to CS_ZOMBIE for %s\n", drop->name);
-    drop->state = CS_ZOMBIE; // become free in a few seconds
+    drop->state = CS_ZOMBIE;     // become free in a few seconds
 
     // call the prog function for removing a client
     // this will remove the body, among other things
@@ -576,7 +577,7 @@ void SV_ClientEnterWorld(client_t* client, usercmd_t* cmd) {
     client->gentity = ent;
 
     client->deltaMessage = -1;
-    client->nextSnapshotTime = svs.time; // generate a snapshot immediately
+    client->nextSnapshotTime = svs.time;     // generate a snapshot immediately
     client->lastUsercmd = *cmd;
 
     // call the game begin function
@@ -775,8 +776,8 @@ void SV_WWWDownload_f(client_t* cl, const Cmd::Args& args) {
 // abort an attempted download
 void SV_BadDownload(client_t* cl, msg_t* msg) {
     MSG_WriteByte(msg, svc_download);
-    MSG_WriteShort(msg, 0); // client is expecting block zero
-    MSG_WriteLong(msg, -1); // illegal file size
+    MSG_WriteShort(msg, 0);        // client is expecting block zero
+    MSG_WriteLong(msg, -1);        // illegal file size
 
     *cl->downloadName = 0;
 }
@@ -800,7 +801,7 @@ static bool SV_CheckFallbackURL(client_t* cl, const char* pakName, msg_t* msg) {
     Q_strncpyz(cl->downloadURL, va("%s/%s", sv_wwwFallbackURL->string, pakName), sizeof(cl->downloadURL));
 
     MSG_WriteByte(msg, svc_download);
-    MSG_WriteShort(msg, -1); // block -1 means ftp/http download
+    MSG_WriteShort(msg, -1);        // block -1 means ftp/http download
     MSG_WriteString(msg, va("%s/%s", sv_wwwFallbackURL->string, pakName));
     MSG_WriteLong(msg, 0);
     MSG_WriteLong(msg, 0);
@@ -823,14 +824,14 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
     char errorMessage[1024];
     int download_flag;
 
-    bool bTellRate = false; // verbosity
+    bool bTellRate = false;     // verbosity
 
     if (!*cl->downloadName) {
-        return; // Nothing being downloaded
+        return;         // Nothing being downloaded
     }
 
     if (cl->bWWWing) {
-        return; // The client acked and is downloading with ftp/http
+        return;         // The client acked and is downloading with ftp/http
     }
 
     if (!cl->download) {
@@ -858,7 +859,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
             }
 
             SV_BadDownload(cl, msg);
-            MSG_WriteString(msg, errorMessage); // (could SV_DropClient instead?)
+            MSG_WriteString(msg, errorMessage);                // (could SV_DropClient instead?)
 
             return;
         }
@@ -900,7 +901,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
                     // once cl->downloadName is set (and possibly we have our listening socket), let the client know
                     cl->bWWWDl = true;
                     MSG_WriteByte(msg, svc_download);
-                    MSG_WriteShort(msg, -1); // block -1 means ftp/http download
+                    MSG_WriteShort(msg, -1);                        // block -1 means ftp/http download
                     // compatible with legacy svc_download protocol: [size] [size bytes]
                     // download URL, size of the download file, download flags
                     MSG_WriteString(msg, cl->downloadURL);
@@ -911,7 +912,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
                         download_flag |= (1 << DL_FLAG_DISCON);
                     }
 
-                    MSG_WriteLong(msg, download_flag); // flags
+                    MSG_WriteLong(msg, download_flag);                        // flags
                     return;
                 } else {
                     // that should NOT happen - even regular download would fail then anyway
@@ -954,7 +955,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
             Com_sprintf(errorMessage, sizeof(errorMessage), "File \"%s\" not found on server for autodownloading.\n",
                         cl->downloadName);
             SV_BadDownload(cl, msg);
-            MSG_WriteString(msg, errorMessage); // (could SV_DropClient instead?)
+            MSG_WriteString(msg, errorMessage);                // (could SV_DropClient instead?)
             return;
         }
 
@@ -994,7 +995,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
         cl->downloadBlockSize[cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW] = 0;
         cl->downloadCurrentBlock++;
 
-        cl->downloadEOF = true; // We have added the EOF block
+        cl->downloadEOF = true;         // We have added the EOF block
     }
 
     // Loop up to window size times based on how many blocks we can fit in the
@@ -1031,7 +1032,7 @@ void SV_WriteDownloadToClient(client_t* cl, msg_t* msg) {
         // automatically start retransmitting
 
         if (cl->downloadClientBlock == cl->downloadCurrentBlock) {
-            return; // Nothing to transmit
+            return;             // Nothing to transmit
         }
 
         if (cl->downloadXmitBlock == cl->downloadCurrentBlock) {
@@ -1105,7 +1106,7 @@ void SV_UserinfoChanged(client_t* cl) {
     // if the client is on the same subnet as the server and we aren't running an
     // Internet server, assume that they don't need a rate choke
     if (Sys_IsLANAddress(cl->netchan.remoteAddress) && isLanOnly.Get() && sv_lanForceRate->integer == 1) {
-        cl->rate = 99999; // lans should not rate limit
+        cl->rate = 99999;         // lans should not rate limit
     } else {
         val = Info_ValueForKey(cl->userinfo, "rate");
 
@@ -1171,7 +1172,7 @@ static void SV_UpdateUserinfo_f(client_t* cl, const Cmd::Args& args) {
         return;
     }
 
-    Q_strncpyz(cl->userinfo, args.Argv(1).c_str(), sizeof(cl->userinfo)); // FIXME QUOTING INFO
+    Q_strncpyz(cl->userinfo, args.Argv(1).c_str(), sizeof(cl->userinfo));     // FIXME QUOTING INFO
 
     SV_UserinfoChanged(cl);
     // call prog code to allow overrides
@@ -1280,7 +1281,7 @@ static bool SV_ClientCommand(client_t* cl, msg_t* msg, bool premaprestart) {
     // but not other people
     // We don't do this when the client hasn't been active yet, since it is
     // by protocol to spam a lot of commands when downloading
-    if (!com_cl_running->integer && cl->state >= CS_ACTIVE && // (SA) this was commented out in Wolf.  Did we do that?
+    if (!com_cl_running->integer && cl->state >= CS_ACTIVE &&      // (SA) this was commented out in Wolf.  Did we do that?
         sv_floodProtect->integer && svs.time < cl->nextReliableTime && floodprotect) {
         // ignore any other text messages from this client but let them keep playing
         // TTimo - moved the ignored verbose to the actual processing in SV_ExecuteClientCommand, only printing if the core doesn't intercept
@@ -1297,7 +1298,7 @@ static bool SV_ClientCommand(client_t* cl, msg_t* msg, bool premaprestart) {
     cl->lastClientCommand = seq;
     Com_sprintf(cl->lastClientCommandString, sizeof(cl->lastClientCommandString), "%s", s);
 
-    return true; // continue processing
+    return true;     // continue processing
 }
 
 // ==================================================================================
@@ -1313,7 +1314,7 @@ void SV_ClientThink(client_t* cl, usercmd_t* cmd) {
     cl->lastUsercmd = *cmd;
 
     if (cl->state != CS_ACTIVE) {
-        return; // may have been kicked during the last usercmd
+        return;         // may have been kicked during the last usercmd
     }
 
     gvm.GameClientThink(cl - svs.clients);
@@ -1506,11 +1507,11 @@ void SV_ExecuteClientMessage(client_t* cl, msg_t* msg) {
             }
 
             if (!SV_ClientCommand(cl, msg, true)) {
-                return; // we couldn't execute it because of the flood protection
+                return;                 // we couldn't execute it because of the flood protection
             }
 
             if (cl->state == CS_ZOMBIE) {
-                return; // disconnect command
+                return;                 // disconnect command
             }
         } while (1);
 
@@ -1530,11 +1531,11 @@ void SV_ExecuteClientMessage(client_t* cl, msg_t* msg) {
         }
 
         if (!SV_ClientCommand(cl, msg, false)) {
-            return; // we couldn't execute it because of the flood protection
+            return;             // we couldn't execute it because of the flood protection
         }
 
         if (cl->state == CS_ZOMBIE) {
-            return; // disconnect command
+            return;             // disconnect command
         }
     } while (1);
 

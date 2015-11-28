@@ -118,7 +118,7 @@ static void AddSkyPolygon(int nump, vec3_t vecs) {
         }
 
         if (dv < 0.001) {
-            continue; // don't divide by zero
+            continue;             // don't divide by zero
         }
 
         j = vec_to_st[axis][0];
@@ -276,7 +276,7 @@ Tess_ClipSkyPolygons
 ================
 */
 void Tess_ClipSkyPolygons() {
-    vec3_t p[5]; // need one extra point for clipping
+    vec3_t p[5];       // need one extra point for clipping
     unsigned int i, j;
 
     ClearSkyBox();
@@ -312,15 +312,15 @@ static void MakeSkyVec(float s, float t, int axis, vec2_t outSt, vec4_t outXYZ) 
         { 1, 3, 2 },
         { -1, -3, 2 },
 
-        { -2, -1, 3 }, // 0 degrees yaw, look straight up
-        { 2, -1, -3} // look straight down
+        { -2, -1, 3 },         // 0 degrees yaw, look straight up
+        { 2, -1, -3}          // look straight down
     };
 
     vec3_t b;
     int j, k;
     float boxSize;
 
-    boxSize = backEnd.viewParms.zFar / 1.75; // div sqrt(3)
+    boxSize = backEnd.viewParms.zFar / 1.75;     // div sqrt(3)
     b[0] = s * boxSize;
     b[1] = t * boxSize;
     b[2] = boxSize;
@@ -565,7 +565,7 @@ static void BuildCloudData() {
 
     assert(tess.surfaceShader->isSky);
 
-    sky_min = 1.0 / 256.0f; // FIXME: not correct?
+    sky_min = 1.0 / 256.0f;     // FIXME: not correct?
     sky_max = 255.0 / 256.0f;
 
     // set up for drawing
@@ -708,7 +708,7 @@ void Tess_StageIteratorSky() {
 
             gl_skyboxShader->BindProgram(0);
 
-            gl_skyboxShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // in world space
+            gl_skyboxShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);                // in world space
 
             gl_skyboxShader->SetUniform_ModelMatrix(backEnd.orientation.transformMatrix);
             gl_skyboxShader->SetUniform_ModelViewProjectionMatrix(glState.modelViewProjectionMatrix[glState.stackIndex]);

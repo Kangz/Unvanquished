@@ -415,7 +415,7 @@ void Tess_AddTetrahedron(vec4_t tetraVerts[4], const Color::Color& colorf) {
 
     // side triangles
     for (k = 0; k < 3; k++) {
-        VectorCopy(tetraVerts[3], tess.verts[tess.numVertexes].xyz); // offset
+        VectorCopy(tetraVerts[3], tess.verts[tess.numVertexes].xyz);                // offset
         tess.verts[tess.numVertexes].color = color;
         tess.indexes[tess.numIndexes++] = tess.numVertexes;
         tess.numVertexes++;

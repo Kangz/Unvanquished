@@ -125,7 +125,7 @@ bool BotFindNearestPoly(Bot_t* bot, rVec coord, dtPolyRef* nearestPoly, rVec &ne
         extents[1] += 900;
         status = navQuery->findNearestPoly(start, extents, navFilter, nearestPoly, nearPoint);
         if (dtStatusFailed(status) || *nearestPoly == 0) {
-            return false; // failed
+            return false;             // failed
         }
     }
     return true;
@@ -158,7 +158,7 @@ static void InvalidateRouteResults(Bot_t* bot) {
 
 static dtRouteResult* FindRouteResult(Bot_t* bot, dtPolyRef start) {
     if (bot->needReplan) {
-        return nullptr; // force replan
+        return nullptr;         // force replan
     }
 
     for (int i = 0; i < MAX_ROUTE_CACHE; i++) {

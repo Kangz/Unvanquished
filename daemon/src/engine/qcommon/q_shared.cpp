@@ -217,7 +217,7 @@ const char* COM_GetExtension(const char* name) {
         i--;
 
         if (name[i] == '/' || i == 0) {
-            return ""; // no extension
+            return "";             // no extension
         }
     }
 
@@ -272,7 +272,7 @@ void COM_StripExtension3(const char* src, char* dest, int destsize) {
         length--;
 
         if (dest[length] == '/') {
-            return; // no extension
+            return;             // no extension
         }
     }
 
@@ -298,7 +298,7 @@ void COM_DefaultExtension(char* path, int maxSize, const char* extension) {
 
     while (*src != '/' && src != path) {
         if (*src == '.') {
-            return; // it has an extension
+            return;             // it has an extension
         }
 
         src--;
@@ -519,7 +519,7 @@ int COM_Compress(char* data_p) {
                 ws = false;
                 // skip /* */ comments
             } else if (c == '/' && datai[1] == '*') {
-                datai += 2; // Arnout: skip over '/*'
+                datai += 2;                 // Arnout: skip over '/*'
 
                 while (*datai && (*datai != '*' || datai[1] != '/')) {
                     datai++;
@@ -1164,12 +1164,12 @@ some cvar values need to be safe from foreign characters
 ============
 */
 const char* Com_ClearForeignCharacters(const char* str) {
-    static char* clean = nullptr; // much longer than needed
+    static char* clean = nullptr;     // much longer than needed
     int i, j, size;
 
     free(clean);
     size = strlen(str);
-    clean = (char*)Com_Allocate(size + 1); // guaranteed sufficient
+    clean = (char*)Com_Allocate(size + 1);        // guaranteed sufficient
 
     i = -1;
     j = 0;
@@ -1178,37 +1178,37 @@ const char* Com_ClearForeignCharacters(const char* str) {
         int c = str[i] & 0xFF;
         if (c < 0x80) {
             if (j == size) {
-                break; // out of buffer space
+                break;                                          // out of buffer space
             }
             clean[j++] = str[i];
         } else if (c >= 0xC2 && c <= 0xF4) {
             int u, width = Q_UTF8_Width(str + i);
 
             if (j + width > size) {
-                break; // out of buffer space
+                break;                                          // out of buffer space
 
             }
             if (width == 1) {
-                continue; // should be multibyte
+                continue;                                          // should be multibyte
 
             }
             u = Q_UTF8_CodePoint(str + i);
 
             // Filtering out...
             if (Q_UTF8_WidthCP(u) != width) {
-                continue; // over-long form
+                continue;                                             // over-long form
             }
             if (u == 0xFEFF || u == 0xFFFE) {
-                continue; // BOM
+                continue;                                            // BOM
             }
             if (u >= 0x80 && u < 0xA0) {
-                continue; // undefined (from ISO8859-1)
+                continue;                                            // undefined (from ISO8859-1)
             }
             if (u >= 0xD800 && u < 0xE000) {
-                continue; // UTF-16 surrogate halves
+                continue;                                            // UTF-16 surrogate halves
             }
             if (u >= 0x110000) {
-                continue; // out of range
+                continue;                                            // out of range
 
             }
             // width is in the range 1..4
@@ -1334,9 +1334,10 @@ void Q_strncpyz(char* dest, const char* src, int destsize)
     /* Not enough room in dst, add NUL and traverse rest of src */
     if (n == 0) {
         if (destsize != 0) {
-            *d = '\0'; /* NUL-terminate dst */
+            *d = '\0';                          /* NUL-terminate dst */
         }
         while (*s++) {
+            ;
         }
     }
 }
@@ -1355,7 +1356,7 @@ int Q_strncmp(const char* s1, const char* s2, int n) {
         c2 = *s2++;
 
         if (!n--) {
-            return 0; // strings are equal until end point
+            return 0;             // strings are equal until end point
         }
 
         if (c1 != c2) {
@@ -1363,7 +1364,7 @@ int Q_strncmp(const char* s1, const char* s2, int n) {
         }
     } while (c1);
 
-    return 0; // strings are equal
+    return 0;     // strings are equal
 }
 
 int Q_stricmp(const char* s1, const char* s2) {
@@ -1421,7 +1422,7 @@ int Q_strnicmp(const char* string1, const char* string2, int n) {
         c2 = *string2++;
 
         if (!n--) {
-            return 0; // Strings are equal until end point
+            return 0;             // Strings are equal until end point
         }
 
         if (c1 != c2) {
@@ -1439,7 +1440,7 @@ int Q_strnicmp(const char* string1, const char* string2, int n) {
         }
     } while (c1);
 
-    return 0; // Strings are equal
+    return 0;     // Strings are equal
 }
 
 /*
@@ -1675,7 +1676,7 @@ char* QDECL PRINTF_LIKE(1) va(const char* format, ...) {
     va_list argptr;
 #define MAX_VA_STRING 32000
     static char temp_buffer[MAX_VA_STRING + 1];
-    static char string[MAX_VA_STRING]; // in case va is called by nested functions
+    static char string[MAX_VA_STRING];       // in case va is called by nested functions
     static int index = 0;
     char* buf;
     int len;
@@ -1719,7 +1720,7 @@ FIXME: overflow check?
 */
 const char* Info_ValueForKey(const char* s, const char* key) {
     char pkey[BIG_INFO_KEY];
-    static char value[2][BIG_INFO_VALUE]; // use two buffers so compares
+    static char value[2][BIG_INFO_VALUE];         // use two buffers so compares
     // work without stomping on each other
     static int valueindex = 0;
     char* o;

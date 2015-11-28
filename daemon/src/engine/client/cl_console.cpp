@@ -123,7 +123,7 @@ Con_Clear_f
 */
 void Con_Clear_f() {
     consoleState.lines.clear();
-    Con_ScrollToBottom(); // go to end
+    Con_ScrollToBottom();     // go to end
 }
 
 /*
@@ -277,7 +277,7 @@ bool Con_CheckResize() {
 
     if (textWidthInChars == consoleState.textWidthInChars) {
         // nothing
-    } else if (textWidthInChars < 1) { // video hasn't been initialized yet
+    } else if (textWidthInChars < 1) {   // video hasn't been initialized yet
         consoleState.textWidthInChars = DEFAULT_CONSOLE_WIDTH;
         consoleState.lines.clear();
         consoleState.bottomDisplayedLine = 0;
@@ -471,7 +471,7 @@ bool CL_InternalConsolePrint(const char* text) {
             Con_Linefeed();
             break;
 
-        default: // display character and advance
+        default:                 // display character and advance
             consoleState.lines.back().append(token.Begin(), token.Size());
             if (wordLen > 0) {
                 --wordLen;
@@ -654,7 +654,7 @@ void Con_DrawConsoleScrollbar() {
 
     const float scrollHandlePostition = (scrollBarLengthPerLine == scrollBarLengthPerLine)
                                         ? scrollBarLengthPerLine * (consoleState.bottomDisplayedLine - relativeScrollLineIndex)
-                                        : 0; // we may get this: +/- NaN is never equal to itself
+                                        : 0;   // we may get this: +/- NaN is never equal to itself
 
     // draw the scrollBar
     Color::Color color(0.2f, 0.2f, 0.2f, 0.75f * consoleState.currentAlphaFactor);
@@ -666,7 +666,7 @@ void Con_DrawConsoleScrollbar() {
         color = Color::Color(0.5f, 0.5f, 0.5f, consoleState.currentAlphaFactor);
 
         SCR_FillRect(scrollBarX, scrollBarY + scrollHandlePostition, scrollBarWidth, scrollHandleLength, color);
-    } else if (!consoleState.lines.empty()) { // this happens when line appending gets us over the top position in a roll-lock situation (scrolling itself won't do that)
+    } else if (!consoleState.lines.empty()) {   // this happens when line appending gets us over the top position in a roll-lock situation (scrolling itself won't do that)
         color = Color::Color(
             (-scrollHandlePostition * 5.0f)/10,
             0.5f,
@@ -811,7 +811,7 @@ void Con_DrawConsoleContent() {
 
     Con_DrawConsoleScrollbar( );
 
-    re.SetColor(console_color_alpha); // set back to white
+    re.SetColor(console_color_alpha);       // set back to white
 }
 
 /*
@@ -827,10 +827,10 @@ void Con_DrawAnimatedConsole() {
     Con_DrawBackground( );
 
     // clip about text and content to the console
-    contentClipping [0] = consoleState.margin.sides + consoleState.border.sides; // x
-    contentClipping [1] = consoleState.margin.top + consoleState.border.top; // y
-    contentClipping [2] = cls.glconfig.vidWidth - consoleState.margin.sides - consoleState.border.sides; // x-end
-    contentClipping [3] = consoleState.margin.top + consoleState.border.top + consoleState.height; // y-end
+    contentClipping [0] = consoleState.margin.sides + consoleState.border.sides;       // x
+    contentClipping [1] = consoleState.margin.top + consoleState.border.top;       // y
+    contentClipping [2] = cls.glconfig.vidWidth - consoleState.margin.sides - consoleState.border.sides;       // x-end
+    contentClipping [3] = consoleState.margin.top + consoleState.border.top + consoleState.height;        // y-end
     re.SetClipRegion(contentClipping);
 
 
@@ -844,7 +844,7 @@ void Con_DrawAnimatedConsole() {
     // input, scrollbackindicator, scrollback text
     Con_DrawConsoleContent( );
 
-    re.SetClipRegion(nullptr); // unclip
+    re.SetClipRegion(nullptr);       // unclip
 }
 
 /*
@@ -938,8 +938,8 @@ void Con_UpdateConsoleState() {
      */
 
     consoleState.visibleAmountOfLines = (consoleState.height - consoleState.padding.top - consoleState.padding.bottom)
-                                        / charHeight // rowheight in pixel -> amount of rows
-                                        - 2; // dont count the input and the scrollbackindicator
+                                        / charHeight     // rowheight in pixel -> amount of rows
+                                        - 2;      // dont count the input and the scrollbackindicator
 
 }
 
@@ -965,7 +965,7 @@ void Con_RunAnimatedConsole() {
     if (con_height->value < con_margin->value || (consoleState.visibleAmountOfLines < 1 && consoleState.currentAnimationFraction == 1.0f)) {
         Cvar_Reset(con_height->name);
         Cvar_Reset(con_margin->name);
-        Con_UpdateConsoleState( ); // recalculate
+        Con_UpdateConsoleState( );         // recalculate
     }
 
     consoleVidWidth = cls.glconfig.vidWidth - 2 * (consoleState.margin.sides + consoleState.padding.sides);
@@ -976,7 +976,7 @@ void Con_RunAnimatedConsole() {
         // to be sure, its not the caus of this happening and resulting in a loop
         Cvar_Reset(con_borderWidth->name);
         Cvar_Reset(con_margin->name);
-        Con_UpdateConsoleState( ); // recalculate
+        Con_UpdateConsoleState( );          // recalculate
     }
 
     // check for console width changes from a vid mode change
@@ -1022,7 +1022,7 @@ void Con_RunConsole() {
     if (!consoleState.isOpened && consoleState.currentAnimationFraction >= 0.0f) {
         consoleState.currentAnimationFraction -= con_animationSpeed->value * cls.realFrametime * 0.001;
 
-        if (consoleState.currentAnimationFraction <= 0.0f  || con_animationType->integer == ANIMATION_TYPE_NONE) { // we are closed, do some last onClose work
+        if (consoleState.currentAnimationFraction <= 0.0f  || con_animationType->integer == ANIMATION_TYPE_NONE) {// we are closed, do some last onClose work
             consoleState.currentAnimationFraction = 0.0f;
             consoleState.lastReadLineIndex = consoleState.lines.size()-1;
         }

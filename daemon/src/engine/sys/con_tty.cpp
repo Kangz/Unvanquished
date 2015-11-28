@@ -163,7 +163,7 @@ static void CON_Hide() {
             CON_Back();
         }
 
-        CON_Back(); // Delete "]"
+        CON_Back();         // Delete "]"
         ttycon_hide++;
     }
 }
@@ -199,7 +199,7 @@ Never exit without calling this, or your terminal will be left in a pretty bad s
 */
 void CON_Shutdown_TTY() {
     if (ttycon_on) {
-        CON_Back(); // Delete "]"
+        CON_Back();         // Delete "]"
         tcsetattr(STDIN_FILENO, TCSADRAIN, &TTY_tc);
     }
 
@@ -319,7 +319,7 @@ char* CON_Input_TTY() {
                     return nullptr;
                 }
 
-                if (key == '\x15') { // ^U
+                if (key == '\x15') {                 // ^U
                     CON_Hide();
                     TTY_field.Clear();
                     CON_Show();
@@ -375,7 +375,7 @@ char* CON_Input_TTY() {
         struct timeval timeout;
 
         FD_ZERO(&fdset);
-        FD_SET(STDIN_FILENO, &fdset); // stdin
+        FD_SET(STDIN_FILENO, &fdset);            // stdin
         timeout.tv_sec = 0;
         timeout.tv_usec = 0;
 
@@ -395,7 +395,7 @@ char* CON_Input_TTY() {
             return nullptr;
         }
 
-        text[len - 1] = 0; // rip off the /n and terminate
+        text[len - 1] = 0;           // rip off the /n and terminate
 
         return text;
     }

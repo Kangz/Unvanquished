@@ -417,7 +417,7 @@ void GL_CheckErrors_(const char* fileName, int line) {
 typedef struct vidmode_s {
     const char* description;
     int width, height;
-    float pixelAspect; // pixel width / height
+    float pixelAspect;                  // pixel width / height
 } vidmode_t;
 
 static const vidmode_t r_vidModes[] = {
@@ -548,12 +548,12 @@ static void RB_TakeScreenshot(int x, int y, int width, int height, char* fileNam
     buffer = RB_ReadPixels(x, y, width, height, 18);
     Com_Memset(buffer, 0, 18);
 
-    buffer[2] = 2; // uncompressed type
+    buffer[2] = 2;               // uncompressed type
     buffer[12] = width & 255;
     buffer[13] = width >> 8;
     buffer[14] = height & 255;
     buffer[15] = height >> 8;
-    buffer[16] = 24; // pixel size
+    buffer[16] = 24;               // pixel size
 
     dataSize = 3 * width * height;
 
@@ -628,7 +628,7 @@ R_TakeScreenshot
 ==================
 */
 void R_TakeScreenshot(const char* name, ssFormat_t format) {
-    static char fileName[MAX_OSPATH]; // bad things may happen if two screenshots per frame are taken.
+    static char fileName[MAX_OSPATH];                       // bad things may happen if two screenshots per frame are taken.
     screenshotCommand_t* cmd;
     int lastNumber;
 
@@ -651,7 +651,7 @@ void R_TakeScreenshot(const char* name, ssFormat_t format) {
                         1900 + t.tm_year, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec, lastNumber, name);
 
             if (!ri.FS_FileExists(fileName)) {
-                break; // file doesn't exist
+                break;                         // file doesn't exist
             }
         }
 
@@ -1220,10 +1220,10 @@ void R_Register() {
     r_noShadowFrustums = ri.Cvar_Get("r_noShadowFrustums", "0", CVAR_CHEAT);
     r_noLightFrustums = ri.Cvar_Get("r_noLightFrustums", "1", CVAR_CHEAT);
 
-    r_maxPolys = ri.Cvar_Get("r_maxpolys", "10000", 0); // 600 in vanilla Q3A
+    r_maxPolys = ri.Cvar_Get("r_maxpolys", "10000", 0);                // 600 in vanilla Q3A
     AssertCvarRange(r_maxPolys, 600, 30000, true);
 
-    r_maxPolyVerts = ri.Cvar_Get("r_maxpolyverts", "100000", 0); // 3000 in vanilla Q3A
+    r_maxPolyVerts = ri.Cvar_Get("r_maxpolyverts", "100000", 0);                // 3000 in vanilla Q3A
     AssertCvarRange(r_maxPolyVerts, 3000, 200000, true);
 
     r_showTris = ri.Cvar_Get("r_showTris", "0", CVAR_CHEAT);

@@ -312,7 +312,7 @@ void SV_MasterHeartbeat(const char* hbname) {
     netenabled = Cvar_VariableIntegerValue("net_enabled");
 
     if (isLanOnly.Get() || !(netenabled & (NET_ENABLEV4 | NET_ENABLEV6))) {
-        return; // only dedicated servers send heartbeats
+        return;         // only dedicated servers send heartbeats
     }
 
     // if not time yet, don't send anything
@@ -355,7 +355,7 @@ Informs all masters that this server is going down
 void SV_MasterShutdown() {
     // send a heartbeat right now
     svs.nextHeartbeatTime = -9999;
-    SV_MasterHeartbeat(HEARTBEAT_DEAD); // NERVE - SMF - changed to flatline
+    SV_MasterHeartbeat(HEARTBEAT_DEAD);        // NERVE - SMF - changed to flatline
 
     // send it again to minimize chance of drops
     // svs.nextHeartbeatTime = -9999;
@@ -374,7 +374,7 @@ void SV_MasterGameStat(const char* data) {
     netadr_t adr;
 
     if (!isLanOnly.Get()) {
-        return; // only dedicated servers send stats
+        return;         // only dedicated servers send stats
     }
 
     Com_Printf("Resolving %s\n", MASTER_SERVER_NAME);
@@ -423,8 +423,8 @@ bool SV_VerifyChallenge(const char* challenge) {
     }
 
     for (i = 0; i < j; i++) {
-        if (challenge[i] == '\\' || challenge[i] == '/' || challenge[i] == '%' || challenge[i] == ';' || challenge[i] == '"' || challenge[i] < 32 || // non-ascii
-            challenge[i] > 126 // non-ascii
+        if (challenge[i] == '\\' || challenge[i] == '/' || challenge[i] == '%' || challenge[i] == ';' || challenge[i] == '"' || challenge[i] < 32 ||                      // non-ascii
+            challenge[i] > 126            // non-ascii
             ) {
             return false;
         }
@@ -477,7 +477,7 @@ void SVC_Status(netadr_t from, const Cmd::Args& args) {
             playerLength = strlen(player);
 
             if (statusLength + playerLength >= (int) sizeof(status)) {
-                break; // can't hold any more
+                break;                 // can't hold any more
             }
 
             strcpy(status + statusLength, player);
@@ -585,7 +585,7 @@ void SVC_Info(netadr_t from, const Cmd::Args& args) {
         Info_SetValueForKey(infostring, "maxPing", va("%i", sv_maxPing->integer), false);
     }
 
-    Info_SetValueForKey(infostring, "gamename", GAMENAME_STRING, false); // Arnout: to be able to filter out Quake servers
+    Info_SetValueForKey(infostring, "gamename", GAMENAME_STRING, false);        // Arnout: to be able to filter out Quake servers
 
     NET_OutOfBandPrint(NS_SERVER, from, "infoResponse\n%s", infostring);
 }
@@ -623,9 +623,9 @@ bool SV_CheckDRDoS(netadr_t from) {
     exactFrom = from;
 
     if (from.type == NA_IP) {
-        from.ip[3] = 0; // xx.xx.xx.0
+        from.ip[3] = 0;           // xx.xx.xx.0
     } else if (from.type == NA_IP6) {
-        memset(from.ip6 + 7, 0, 9); // mask to /56
+        memset(from.ip6 + 7, 0, 9);           // mask to /56
     } else {
         // So we got a connectionless packet but it's not IPv4, so
         // what is it?  I don't care, it doesn't matter, we'll just block it.
@@ -663,8 +663,8 @@ bool SV_CheckDRDoS(netadr_t from) {
         }
     }
 
-    if (globalCount == MAX_INFO_RECEIPTS) { // All receipts happened in last 2 seconds.
-        if (lastGlobalLogTime + 1000 <= svs.time) { // Limit one log every second.
+    if (globalCount == MAX_INFO_RECEIPTS) {     // All receipts happened in last 2 seconds.
+        if (lastGlobalLogTime + 1000 <= svs.time) {         // Limit one log every second.
             Com_Printf("Detected flood of getinfo/getstatus connectionless packets\n");
             lastGlobalLogTime = svs.time;
         }
@@ -672,8 +672,8 @@ bool SV_CheckDRDoS(netadr_t from) {
         return true;
     }
 
-    if (specificCount >= 3) { // Already sent 3 to this IP address in last 2 seconds.
-        if (lastSpecificLogTime + 1000 <= svs.time) { // Limit one log every second.
+    if (specificCount >= 3) {     // Already sent 3 to this IP address in last 2 seconds.
+        if (lastSpecificLogTime + 1000 <= svs.time) {         // Limit one log every second.
             Com_Printf("Possible DRDoS attack to address %i.%i.%i.%i, ignoring getinfo/getstatus connectionless packet\n",
                        exactFrom.ip[0], exactFrom.ip[1], exactFrom.ip[2], exactFrom.ip[3]);
             lastSpecificLogTime = svs.time;
@@ -701,7 +701,7 @@ Redirect all printfs
 class RconEnvironment : public Cmd::DefaultEnvironment {
     public:
         RconEnvironment(netadr_t from, size_t bufferSize) : from(from), bufferSize(bufferSize) {
-        }
+        };
 
         virtual void Print(Str::StringRef text) OVERRIDE {
             if (text.size() + buffer.size() > bufferSize - 1) {
@@ -784,7 +784,7 @@ connectionless packets.
 */
 void SV_ConnectionlessPacket(netadr_t from, msg_t* msg) {
     MSG_BeginReadingOOB(msg);
-    MSG_ReadLong(msg); // skip the -1 marker
+    MSG_ReadLong(msg);        // skip the -1 marker
 
     if (!Q_strncmp("connect", (char*) &msg->data[4], 7)) {
         Huff_Decompress(msg, 12);
@@ -846,7 +846,7 @@ void SV_PacketEvent(netadr_t from, msg_t* msg) {
     // read the qport out of the message so we can fix up
     // stupid address translating routers
     MSG_BeginReadingOOB(msg);
-    MSG_ReadLong(msg); // sequence number
+    MSG_ReadLong(msg);        // sequence number
     qport = MSG_ReadShort(msg) & 0xffff;
 
     // find which client the message is from
@@ -879,7 +879,7 @@ void SV_PacketEvent(netadr_t from, msg_t* msg) {
             // to make sure they don't need to retransmit the final
             // reliable message, but they don't do any other processing
             if (cl->state != CS_ZOMBIE) {
-                cl->lastPacketTime = svs.time; // don't timeout
+                cl->lastPacketTime = svs.time;                 // don't timeout
                 SV_ExecuteClientMessage(cl, msg);
             }
         }
@@ -984,7 +984,7 @@ void SV_CheckTimeouts() {
         if (cl->state == CS_ZOMBIE && cl->lastPacketTime < zombiepoint) {
             // using the client id cause the cl->name is empty at this point
             Com_DPrintf("Going from CS_ZOMBIE to CS_FREE for client %d\n", i);
-            cl->state = CS_FREE; // can now be reused
+            cl->state = CS_FREE;             // can now be reused
 
             continue;
         }
@@ -994,7 +994,7 @@ void SV_CheckTimeouts() {
             // cause a timeout
             if (++cl->timeoutCount > 5) {
                 SV_DropClient(cl, "timed out");
-                cl->state = CS_FREE; // don't bother with zombie state
+                cl->state = CS_FREE;                 // don't bother with zombie state
             }
         } else {
             cl->timeoutCount = 0;
@@ -1161,7 +1161,7 @@ void SV_Frame(int msec) {
     if (com_speeds->integer) {
         startTime = Sys_Milliseconds();
     } else {
-        startTime = 0; // quite a compiler warning
+        startTime = 0;         // quite a compiler warning
     }
 
     // update ping based on the all received frames

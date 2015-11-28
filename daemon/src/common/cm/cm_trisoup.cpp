@@ -204,7 +204,7 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
         p2 = triSoup->points[i][1];
         p3 = triSoup->points[i][2];
 
-        facet->surfacePlane = triSoup->trianglePlanes[i]; // CM_FindPlane(p1, p2, p3);
+        facet->surfacePlane = triSoup->trianglePlanes[i];           // CM_FindPlane(p1, p2, p3);
 
         // try and make a quad out of two triangles
         #if 0
@@ -218,16 +218,16 @@ static void CM_SurfaceCollideFromTriangleSoup(cTriangleSoup_t* triSoup, cSurface
             i6 = triSoup->indexes[i * 3 + 5];
 
             if (i4 == i3 && i5 == i2) {
-                p4 = triSoup->points[i][5]; // vertex at i6
+                p4 = triSoup->points[i][5];                     // vertex at i6
 
-                if (CM_GenerateFacetFor4Points(facet, p1, p2, p4, p3)) { // test->facets[count], v1, v2, v4, v3))
+                if (CM_GenerateFacetFor4Points(facet, p1, p2, p4, p3)) {                    // test->facets[count], v1, v2, v4, v3))
                     CM_SetBorderInward(facet, triSoup, i, 0);
 
                     if (CM_ValidateFacet(facet)) {
                         CM_AddFacetBevels(facet);
                         numFacets++;
 
-                        i++; // skip next tri
+                        i++;                         // skip next tri
                         continue;
                     }
                 }

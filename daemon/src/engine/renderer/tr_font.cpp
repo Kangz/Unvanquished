@@ -182,7 +182,7 @@ static glyphInfo_t* RE_ConstructGlyphInfo(unsigned char* imageOut, int* xOut, in
         }
 
         if (index == 0) {
-            return nullptr; // nothing to render
+            return nullptr;             // nothing to render
         }
 
         FT_Load_Glyph(face, index, FT_LOAD_DEFAULT);
@@ -269,7 +269,7 @@ static glyphInfo_t* RE_ConstructGlyphInfo(unsigned char* imageOut, int* xOut, in
         glyph.t = (float) *yOut / FONT_SIZE;
         glyph.s2 = glyph.s + (float) scaledWidth / FONT_SIZE;
         glyph.t2 = glyph.t + (float) scaledHeight / FONT_SIZE;
-        glyph.shaderName[0] = 1; // flag that we have a glyph here
+        glyph.shaderName[0] = 1;         // flag that we have a glyph here
 
         *xOut += scaledWidth + 1;
 
@@ -417,7 +417,7 @@ static void RE_StoreImage(fontInfo_t* font, int chunk, int page, int from, int t
     h = RE_RegisterShaderFromImage(fileName, image);
 
     for (j = from; j < to; j++) {
-        if (font->glyphBlock[chunk][j].shaderName[0]) { // non-0 if we have a glyph here
+        if (font->glyphBlock[chunk][j].shaderName[0]) {             // non-0 if we have a glyph here
             font->glyphBlock[chunk][j].glyph = h;
             Q_strncpyz(font->glyphBlock[chunk][j].shaderName, fileName, sizeof(font->glyphBlock[chunk][j].shaderName));
         }
@@ -616,7 +616,7 @@ static fontHandle_t RE_RegisterFont_Internal(const char* fontName, const char* f
 
     len = ri.FS_ReadFile(fileName, nullptr);
 
-    if (len > 0x5004 && len <= 0x5004 + MAX_QPATH) { // 256 glyphs, scale info, and the bitmap name
+    if (len > 0x5004 && len <= 0x5004 + MAX_QPATH) {     // 256 glyphs, scale info, and the bitmap name
         glyphInfo_t* glyphs;
         int height = 0;
 
@@ -812,7 +812,7 @@ void RE_UnregisterFont(fontInfo_t* font) {
         }
 
         if (font && font != &registeredFont[i]) {
-            continue; // name & size don't match
+            continue;             // name & size don't match
         }
 
         RE_UnregisterFont_Internal(i);

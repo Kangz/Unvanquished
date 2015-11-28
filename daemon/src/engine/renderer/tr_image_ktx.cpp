@@ -281,9 +281,9 @@ void SaveImageKTX(const char* path, image_t* img) {
     case GL_SRGB8:
         hdr.glType = GL_UNSIGNED_BYTE;
         hdr.glTypeSize = 1;
-        hdr.glFormat = GL_RGBA; // GL_RGB;
-        hdr.glBaseInternalFormat = GL_RGBA; // GL_RGB;
-        components = 4; // 3;
+        hdr.glFormat = GL_RGBA;                     // GL_RGB;
+        hdr.glBaseInternalFormat = GL_RGBA;         // GL_RGB;
+        components = 4;                             // 3;
         break;
 
     case GL_RGB10:
@@ -487,17 +487,17 @@ void SaveImageKTX(const char* path, image_t* img) {
     case GL_RGB8I:
         hdr.glType = GL_BYTE;
         hdr.glTypeSize = 1;
-        hdr.glFormat = GL_RGBA_INTEGER; // GL_RGB_INTEGER;
-        hdr.glBaseInternalFormat = GL_RGBA; // GL_RGB;
-        components = 4; // 3;
+        hdr.glFormat = GL_RGBA_INTEGER;                     // GL_RGB_INTEGER;
+        hdr.glBaseInternalFormat = GL_RGBA;                 // GL_RGB;
+        components = 4;                                     // 3;
         break;
 
     case GL_RGB8UI:
         hdr.glType = GL_UNSIGNED_BYTE;
         hdr.glTypeSize = 1;
-        hdr.glFormat = GL_RGBA_INTEGER; // GL_RGB_INTEGER;
-        hdr.glBaseInternalFormat = GL_RGBA; // GL_RGB;
-        components = 4; // 3;
+        hdr.glFormat = GL_RGBA_INTEGER;                     // GL_RGB_INTEGER;
+        hdr.glBaseInternalFormat = GL_RGBA;                 // GL_RGB;
+        components = 4;                                     // 3;
         break;
 
     case GL_RGB16I:

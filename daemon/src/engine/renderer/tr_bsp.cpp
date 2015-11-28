@@ -305,7 +305,7 @@ void LoadRGBEToFloats(const char* name, float** pic, int* width, int* height) {
             sample.b[2] = *buf_p++;
             sample.b[3] = *buf_p++;
 
-            *floatbuf++ = sample.f / 255.0f; // FIXME XMap2's output is 255 times too high
+            *floatbuf++ = sample.f / 255.0f;             // FIXME XMap2's output is 255 times too high
         }
     }
 
@@ -664,7 +664,7 @@ static shader_t* ShaderForShaderNum(int shaderNum) {
     shader_t* shader;
     dshader_t* dsh;
 
-    shaderNum = LittleLong(shaderNum) + 0; // silence the warning
+    shaderNum = LittleLong(shaderNum) + 0;        // silence the warning
 
     if (shaderNum < 0 || shaderNum >= s_worldData.numShaders) {
         ri.Error(ERR_DROP, "ShaderForShaderNum: bad num %i", shaderNum);
@@ -1030,7 +1030,7 @@ static void ParseTriSurf(dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf, 
     bool updated;
 
     // get lightmap
-    surf->lightmapNum = -1; // FIXME LittleLong(ds->lightmapNum);
+    surf->lightmapNum = -1;     // FIXME LittleLong(ds->lightmapNum);
 
     if (tr.worldDeluxeMapping && surf->lightmapNum >= 2) {
         surf->lightmapNum /= 2;
@@ -2540,7 +2540,7 @@ static void R_CreateWorldVBO() {
     // set up triangle and vertex arrays
     numVerts = 0;
     numTriangles = 0;
-    tess.buildingVBO = true; // no batch splitting please
+    tess.buildingVBO = true;     // no batch splitting please
     tess.verts = vboVerts;
     tess.numVertexes = 0;
     tess.indexes = vboIdxs;
@@ -2930,7 +2930,7 @@ static void R_LoadSubmodels(lump_t* l) {
 
         model = R_AllocModel();
 
-        assert(model != nullptr); // this should never happen
+        assert(model != nullptr);            // this should never happen
 
         if (model == nullptr) {
             ri.Error(ERR_DROP, "R_LoadSubmodels: R_AllocModel() failed");
@@ -3019,7 +3019,7 @@ static void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump) {
         p = LittleLong(in->planeNum);
         out->plane = s_worldData.planes + p;
 
-        out->contents = CONTENTS_NODE; // differentiate from leafs
+        out->contents = CONTENTS_NODE;         // differentiate from leafs
 
         for (j = 0; j < 2; j++) {
             p = LittleLong(in->children[j]);
@@ -3677,7 +3677,7 @@ void R_LoadEntities(lump_t* l) {
     }
 
     pOld = p;
-    numEntities = 1; // parsed worldspawn so far
+    numEntities = 1;     // parsed worldspawn so far
 
     // count lights
     while (1) {
@@ -4035,7 +4035,7 @@ static void R_PrecacheInteractionSurface(bspSurface_t* surf, trRefLight_t* light
     bool intersects;
 
     if (surf->lightCount == s_lightCount) {
-        return; // already checked this surface
+        return;         // already checked this surface
     }
 
     surf->lightCount = s_lightCount;
@@ -4223,7 +4223,7 @@ static int UpdateLightTriangles(const srfVert_t* verts, int numTriangles, srfTri
                 tri->facingLight = surfaceShader->cullType == CT_TWO_SIDED || (d > 0 && surfaceShader->cullType != CT_BACK_SIDED);
             }
         } else {
-            tri->facingLight = true; // FIXME ?
+            tri->facingLight = true;             // FIXME ?
         }
 
         if (R_CullLightTriangle(light, pos) == CULL_OUT) {
@@ -5126,7 +5126,7 @@ static void R_CalcInteractionCubeSideBits(trRefLight_t* light) {
                 continue;
             }
 
-            light->shadowLOD = 0; // important for R_CalcLightCubeSideBits
+            light->shadowLOD = 0;             // important for R_CalcLightCubeSideBits
             iaCache->cubeSideBits = R_CalcLightCubeSideBits(light, localBounds);
         }
     }
@@ -5612,7 +5612,7 @@ void R_BuildCubeMaps() {
                 rf.viewaxis[0][1] = -1;
                 rf.viewaxis[0][2] = 0;
 
-                rf.viewaxis[1][0] = -1; // -1
+                rf.viewaxis[1][0] = -1;                                     // -1
                 rf.viewaxis[1][1] = 0;
                 rf.viewaxis[1][2] = 0;
 

@@ -82,7 +82,7 @@ void BindAnimatedImage(textureBundle_t* bundle) {
     index >>= FUNCTABLE_SIZE2;
 
     if (index < 0) {
-        index = 0; // may happen with shader time offsets
+        index = 0;         // may happen with shader time offsets
     }
 
     index %= bundle->numImages;
@@ -411,7 +411,7 @@ void GL_State(uint32_t stateBits) {
                 break;
 
             default:
-                srcFactor = GL_ONE; // to get warning to shut up
+                srcFactor = GL_ONE;                         // to get warning to shut up
                 ri.Error(ERR_DROP, "GL_State: invalid src blend state bits");
             }
 
@@ -449,7 +449,7 @@ void GL_State(uint32_t stateBits) {
                 break;
 
             default:
-                dstFactor = GL_ONE; // to get warning to shut up
+                dstFactor = GL_ONE;                         // to get warning to shut up
                 ri.Error(ERR_DROP, "GL_State: invalid dst blend state bits");
             }
 
@@ -985,8 +985,8 @@ static void RB_SetupLightAttenuationForEntity(trRefLight_t* light, const trRefEn
     // build the attenuation matrix using the entity transform
     switch (light->l.rlType) {
     case RL_OMNI: {
-        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.5); // bias
-        MatrixMultiplyScale(light->attenuationMatrix, 0.5, 0.5, 0.5); // scale
+        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.5);                            // bias
+        MatrixMultiplyScale(light->attenuationMatrix, 0.5, 0.5, 0.5);                            // scale
         MatrixMultiply2(light->attenuationMatrix, light->projectionMatrix);
         MatrixMultiply2(light->attenuationMatrix, modelToLight);
 
@@ -995,8 +995,8 @@ static void RB_SetupLightAttenuationForEntity(trRefLight_t* light, const trRefEn
     }
 
     case RL_PROJ: {
-        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.0); // bias
-        MatrixMultiplyScale(light->attenuationMatrix, 0.5f, 0.5f, 1.0f / std::min(light->falloffLength, 1.0f)); // scale
+        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.0);                            // bias
+        MatrixMultiplyScale(light->attenuationMatrix, 0.5f, 0.5f, 1.0f / std::min(light->falloffLength, 1.0f));                               // scale
         MatrixMultiply2(light->attenuationMatrix, light->projectionMatrix);
         MatrixMultiply2(light->attenuationMatrix, modelToLight);
 
@@ -1005,8 +1005,8 @@ static void RB_SetupLightAttenuationForEntity(trRefLight_t* light, const trRefEn
     }
 
     case RL_DIRECTIONAL: {
-        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.5); // bias
-        MatrixMultiplyScale(light->attenuationMatrix, 0.5, 0.5, 0.5); // scale
+        MatrixSetupTranslation(light->attenuationMatrix, 0.5, 0.5, 0.5);                            // bias
+        MatrixMultiplyScale(light->attenuationMatrix, 0.5, 0.5, 0.5);                            // scale
         MatrixMultiply2(light->attenuationMatrix, light->projectionMatrix);
         MatrixMultiply2(light->attenuationMatrix, modelToLight);
         break;
@@ -2330,7 +2330,7 @@ void RB_RenderGlobalFog() {
     // go back to the world modelview matrix
     backEnd.orientation = backEnd.viewParms.world;
 
-    gl_fogGlobalShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // world space
+    gl_fogGlobalShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);        // world space
 
     {
         fog_t* fog;
@@ -2437,7 +2437,7 @@ void RB_RenderBloom() {
         glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, tr.currentRenderImage->uploadWidth,
                             tr.currentRenderImage->uploadHeight);
 
-        GL_PopMatrix(); // special 1/4th of the screen contrastRenderFBO ortho
+        GL_PopMatrix();         // special 1/4th of the screen contrastRenderFBO ortho
 
         R_BindFBO(tr.contrastRenderFBO);
         GL_ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -3279,7 +3279,7 @@ static void RB_RenderDebugUtils() {
 
         // end choose right shader program ------------------------------
 
-        gl_reflectionShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin); // in world space
+        gl_reflectionShader->SetUniform_ViewOrigin(backEnd.viewParms.orientation.origin);            // in world space
 
         GL_State(0);
         GL_Cull(CT_FRONT_SIDED);
@@ -3614,7 +3614,7 @@ static void RB_RenderDebugUtils() {
 
                     gl_genericShader->SetUniform_ColorModulate(CGEN_CUSTOM_RGB, AGEN_CUSTOM);
                 }
-            } // i == 1
+            }             // i == 1
             else {
                 GL_State(GLS_POLYMODE_LINE | GLS_DEPTHTEST_DISABLE);
                 GL_Cull(CT_TWO_SIDED);
@@ -4039,7 +4039,7 @@ static void RB_RenderView() {
                      GL_UNSIGNED_BYTE, tr.refdef.pixelTarget);
 
         for (i = 0; i < tr.refdef.pixelTargetWidth * tr.refdef.pixelTargetHeight; i++) {
-            tr.refdef.pixelTarget[(i * 4) + 3] = 255; // set the alpha pure white
+            tr.refdef.pixelTarget[(i * 4) + 3] = 255;                 // set the alpha pure white
         }
     }
 
@@ -5133,7 +5133,7 @@ void RB_RenderThread() {
         data = GLimp_RendererSleep();
 
         if (!data) {
-            return; // all done, renderer is shutting down
+            return;             // all done, renderer is shutting down
         }
 
         renderThreadActive = true;

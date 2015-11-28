@@ -314,8 +314,8 @@ void CL_StopRecord_f() {
     clc.demofile = 0;
 
     clc.demorecording = false;
-    Cvar_Set("cl_demorecording", "0"); // fretn
-    Cvar_Set("cl_demofilename", ""); // bani
+    Cvar_Set("cl_demorecording", "0");        // fretn
+    Cvar_Set("cl_demofilename", "");        // bani
     Com_Printf("%s", "Stopped demo.\n");
 }
 
@@ -413,9 +413,9 @@ void CL_Record(const char* name) {
     }
 
     clc.demorecording = true;
-    Cvar_Set("cl_demorecording", "1"); // fretn
+    Cvar_Set("cl_demorecording", "1");        // fretn
     Q_strncpyz(clc.demoName, demoName, sizeof(clc.demoName));
-    Cvar_Set("cl_demofilename", clc.demoName); // bani
+    Cvar_Set("cl_demofilename", clc.demoName);        // bani
 
     // don't start saving messages until a non-delta compressed message is received
     clc.demowaiting = true;
@@ -593,7 +593,7 @@ CL_DemoFilename
 */
 void CL_WavFilename(int number, char* fileName) {
     if (number < 0 || number > 9999) {
-        Com_sprintf(fileName, MAX_OSPATH, "wav9999"); // fretn - removed .tga
+        Com_sprintf(fileName, MAX_OSPATH, "wav9999");            // fretn - removed .tga
         return;
     }
 
@@ -601,21 +601,21 @@ void CL_WavFilename(int number, char* fileName) {
 }
 
 typedef struct wav_hdr_s {
-    unsigned int ChunkID; // big endian
-    unsigned int ChunkSize; // little endian
-    unsigned int Format; // big endian
+    unsigned int ChunkID;       // big endian
+    unsigned int ChunkSize;       // little endian
+    unsigned int Format;       // big endian
 
-    unsigned int Subchunk1ID; // big endian
-    unsigned int Subchunk1Size; // little endian
-    unsigned short AudioFormat; // little endian
-    unsigned short NumChannels; // little endian
-    unsigned int SampleRate; // little endian
-    unsigned int ByteRate; // little endian
-    unsigned short BlockAlign; // little endian
-    unsigned short BitsPerSample; // little endian
+    unsigned int Subchunk1ID;       // big endian
+    unsigned int Subchunk1Size;       // little endian
+    unsigned short AudioFormat;     // little endian
+    unsigned short NumChannels;     // little endian
+    unsigned int SampleRate;       // little endian
+    unsigned int ByteRate;       // little endian
+    unsigned short BlockAlign;     // little endian
+    unsigned short BitsPerSample;     // little endian
 
-    unsigned int Subchunk2ID; // big endian
-    unsigned int Subchunk2Size; // little endian
+    unsigned int Subchunk2ID;       // big endian
+    unsigned int Subchunk2Size;       // little endian
 
     unsigned int NumSamples;
 } wav_hdr_t;
@@ -625,19 +625,19 @@ wav_hdr_t hdr;
 static void CL_WriteWaveHeader() {
     memset(&hdr, 0, sizeof(hdr));
 
-    hdr.ChunkID = 0x46464952; // "RIFF"
-    hdr.ChunkSize = 0; // total filesize - 8 bytes
-    hdr.Format = 0x45564157; // "WAVE"
+    hdr.ChunkID = 0x46464952;     // "RIFF"
+    hdr.ChunkSize = 0;     // total filesize - 8 bytes
+    hdr.Format = 0x45564157;     // "WAVE"
 
-    hdr.Subchunk1ID = 0x20746d66; // "fmt "
-    hdr.Subchunk1Size = 16; // 16 = pcm
-    hdr.AudioFormat = 1; // 1 = linear quantization
-    hdr.NumChannels = 2; // 2 = stereo
+    hdr.Subchunk1ID = 0x20746d66;     // "fmt "
+    hdr.Subchunk1Size = 16;     // 16 = pcm
+    hdr.AudioFormat = 1;     // 1 = linear quantization
+    hdr.NumChannels = 2;     // 2 = stereo
 
     // TODO
     // hdr.SampleRate = dma.speed;
 
-    hdr.BitsPerSample = 16; // 16bits
+    hdr.BitsPerSample = 16;     // 16bits
 
     // SampleRate * NumChannels * BitsPerSample/8
     hdr.ByteRate = hdr.SampleRate * hdr.NumChannels * (hdr.BitsPerSample / 8);
@@ -645,9 +645,9 @@ static void CL_WriteWaveHeader() {
     // NumChannels * BitsPerSample/8
     hdr.BlockAlign = hdr.NumChannels * (hdr.BitsPerSample / 8);
 
-    hdr.Subchunk2ID = 0x61746164; // "data"
+    hdr.Subchunk2ID = 0x61746164;     // "data"
 
-    hdr.Subchunk2Size = 0; // NumSamples * NumChannels * BitsPerSample/8
+    hdr.Subchunk2Size = 0;     // NumSamples * NumChannels * BitsPerSample/8
 
     // ...
     FS_Write(&hdr.ChunkID, 44, clc.wavefile);
@@ -690,7 +690,7 @@ void CL_WriteWaveOpen() {
             len = FS_FileExists(name);
 
             if (len <= 0) {
-                break; // file doesn't exist
+                break;                 // file doesn't exist
             }
         }
     }
@@ -854,7 +854,7 @@ void CL_ShutdownAll() {
 
     // shutdown the renderer
     if (re.Shutdown) {
-        re.Shutdown(false); // don't destroy window or context
+        re.Shutdown(false);            // don't destroy window or context
     }
 
     cls.uiStarted = false;
@@ -919,7 +919,7 @@ void CL_MapLoading() {
 
     // if we are already connected to the local host, stay connected
     if (cls.state >= CA_CONNECTED && !Q_stricmp(cls.servername, "localhost")) {
-        cls.state = CA_CONNECTED; // so the connect screen is drawn
+        cls.state = CA_CONNECTED;         // so the connect screen is drawn
         memset(cls.updateInfoString, 0, sizeof(cls.updateInfoString));
         memset(clc.serverMessage, 0, sizeof(clc.serverMessage));
         cl.gameState.fill("");
@@ -930,8 +930,8 @@ void CL_MapLoading() {
         Cvar_Set("sv_nextmap", "");
         CL_Disconnect(false);
         Q_strncpyz(cls.servername, "localhost", sizeof(cls.servername));
-        *cls.reconnectCmd = 0; // can't reconnect to this!
-        cls.state = CA_CHALLENGING; // so the connect screen is drawn
+        *cls.reconnectCmd = 0;         // can't reconnect to this!
+        cls.state = CA_CHALLENGING;         // so the connect screen is drawn
         cls.keyCatchers = 0;
         SCR_UpdateScreen();
         clc.connectTime = -RETRANSMIT_TIMEOUT;
@@ -962,7 +962,7 @@ Clear download information that we keep in cls (disconnected download support)
 */
 void CL_ClearStaticDownload() {
     downloadLogger.Debug("Clearing the download info");
-    assert(!cls.bWWWDlDisconnected); // reset before calling
+    assert(!cls.bWWWDlDisconnected);        // reset before calling
     cls.downloadRestart = false;
     cls.downloadTempName[0] = '\0';
     cls.downloadName[0] = '\0';
@@ -1244,7 +1244,7 @@ void CL_Connect_f() {
     Q_strncpyz(cls.servername, server, sizeof(cls.servername));
     Q_strncpyz(cls.reconnectCmd, Cmd::GetCurrentArgs().EscapedArgs(0).c_str(), sizeof(cls.reconnectCmd));
 
-    Audio::StopAllSounds(); // NERVE - SMF
+    Audio::StopAllSounds();     // NERVE - SMF
 
     Cvar_Set("ui_connecting", "1");
 
@@ -1295,7 +1295,7 @@ void CL_Connect_f() {
     Cvar_Set("com_errorMessage", "");
 
     cls.keyCatchers = 0;
-    clc.connectTime = -99999; // CL_CheckForResend() will fire immediately
+    clc.connectTime = -99999;     // CL_CheckForResend() will fire immediately
     clc.connectPacketCount = 0;
 
     // server connection string
@@ -1501,7 +1501,7 @@ void CL_Vid_Restart_f() {
     CL_StartHunkUsers();
 
     #ifdef _WIN32
-    IN_Restart(); // fretn
+    IN_Restart();     // fretn
     #endif
 
     // start the cgame if connected
@@ -1646,7 +1646,7 @@ void CL_Video_f() {
             Com_sprintf(filename, MAX_OSPATH, "videos/video%d%d%d%d.avi", a, b, c, d);
 
             if (!FS_FileExists(filename)) {
-                break; // file doesn't exist
+                break;                 // file doesn't exist
             }
         }
 
@@ -1687,7 +1687,7 @@ void CL_DownloadsComplete() {
         downloadLogger.Debug(" The paks to load are '%s'", Cvar_VariableString("sv_paks"));
 
         FS::PakPath::ClearPaks();
-        FS_LoadServerPaks(Cvar_VariableString("sv_paks"), clc.demoplaying); // We possibly downloaded a pak, restart the file system to load it
+        FS_LoadServerPaks(Cvar_VariableString("sv_paks"), clc.demoplaying);         // We possibly downloaded a pak, restart the file system to load it
 
         if (!cls.bWWWDlDisconnected) {
             // inform the server so we get new gamestate info
@@ -1756,7 +1756,7 @@ void CL_BeginDownload(const char* localName, const char* remoteName) {
     Cvar_Set("cl_downloadCount", "0");
     Cvar_SetValue("cl_downloadTime", cls.realtime);
 
-    clc.downloadBlock = 0; // Starting new file
+    clc.downloadBlock = 0;     // Starting new file
     clc.downloadCount = 0;
 
     CL_AddReliableCommand(va("download %s", Cmd_QuoteString(remoteName)));
@@ -1798,7 +1798,7 @@ void CL_NextDownload() {
         if ((s = strchr(s, '@')) != nullptr) {
             *s++ = 0;
         } else {
-            s = localName + strlen(localName); // point at the nul byte
+            s = localName + strlen(localName);                // point at the nul byte
         }
 
         CL_BeginDownload(localName, remoteName);
@@ -1867,8 +1867,8 @@ void CL_CheckForResend() {
     int port;
     char info[MAX_INFO_STRING];
     char data[MAX_INFO_STRING];
-    char pkt[1024 + 1]; // EVEN BALANCE - T.RAY
-    int pktlen; // EVEN BALANCE - T.RAY
+    char pkt[1024 + 1];       // EVEN BALANCE - T.RAY
+    int pktlen;      // EVEN BALANCE - T.RAY
 
     // don't send anything if playing back a demo
     if (clc.demoplaying) {
@@ -1884,7 +1884,7 @@ void CL_CheckForResend() {
         return;
     }
 
-    clc.connectTime = cls.realtime; // for retransmit requests
+    clc.connectTime = cls.realtime;     // for retransmit requests
     clc.connectPacketCount++;
 
     switch (cls.state) {
@@ -2054,7 +2054,7 @@ int CL_GSRSequenceInformation(byte** data) {
     }
 
     if (num <= 0 || ind <= 0 || ind > num) {
-        return -1; // nonsensical response
+        return -1;         // nonsensical response
     }
 
     if (cls.numMasterPackets > 0 && num != cls.numMasterPackets) {
@@ -2119,7 +2119,7 @@ void CL_ServerLinksResponsePacket(msg_t* msg) {
 
     // parse through server response string
     cls.numserverLinks = 0;
-    buffptr = msg->data + 31; // skip header
+    buffptr = msg->data + 31;     // skip header
     buffend = msg->data + msg->cursize;
 
     // Each link contains:
@@ -2214,6 +2214,7 @@ void CL_ServersResponsePacket(const netadr_t* from, msg_t* msg, bool extended) {
         // now skip to the server list
         for (; buffptr < buffend && *buffptr != '\\' && *buffptr != '/';
              buffptr++) {
+            ;
         }
     }
 
@@ -2363,7 +2364,7 @@ Responses to broadcasts, etc
 */
 void CL_ConnectionlessPacket(netadr_t from, msg_t* msg) {
     MSG_BeginReadingOOB(msg);
-    MSG_ReadLong(msg); // skip the -1
+    MSG_ReadLong(msg);        // skip the -1
 
     Cmd::Args args(MSG_ReadStringLine(msg));
 
@@ -2417,7 +2418,7 @@ void CL_ConnectionlessPacket(netadr_t from, msg_t* msg) {
 
         Netchan_Setup(NS_CLIENT, &clc.netchan, from, Cvar_VariableValue("net_qport"));
         cls.state = CA_CONNECTED;
-        clc.lastPacketSentTime = -9999; // send first packet immediately
+        clc.lastPacketSentTime = -9999;         // send first packet immediately
         return;
     }
 
@@ -2491,7 +2492,7 @@ void CL_PacketEvent(netadr_t from, msg_t* msg) {
     clc.lastPacketTime = cls.realtime;
 
     if (cls.state < CA_CONNECTED) {
-        return; // can't be a valid sequenced packet
+        return;         // can't be a valid sequenced packet
     }
 
     if (msg->cursize < 4) {
@@ -2509,7 +2510,7 @@ void CL_PacketEvent(netadr_t from, msg_t* msg) {
     }
 
     if (!Netchan_Process(&clc.netchan, msg)) {
-        return; // out of order, duplicated, etc
+        return;         // out of order, duplicated, etc
     }
 
     // the header is different lengths for reliable and unreliable messages
@@ -2639,9 +2640,9 @@ void CL_WWWDownload() {
             // but in this case we can't get anything from server
             // if we just reconnect it's likely we'll get the same disconnected download message, and error out again
             // this may happen for a regular dl or an auto update
-            const char* error = va("Download failure while getting '%s'\n", cls.downloadName); // get the msg before clearing structs
+            const char* error = va("Download failure while getting '%s'\n", cls.downloadName);                // get the msg before clearing structs
 
-            cls.bWWWDlDisconnected = false; // need clearing structs before ERR_DROP, or it goes into endless reload
+            cls.bWWWDlDisconnected = false;             // need clearing structs before ERR_DROP, or it goes into endless reload
             CL_ClearStaticDownload();
             Com_Error(ERR_DROP, "%s", error);
         } else {
@@ -2791,9 +2792,9 @@ void QDECL PRINTF_LIKE(2) CL_RefPrintf(int print_level, const char* fmt, ...) {
     if (print_level == PRINT_ALL) {
         Com_Printf("%s", msg);
     } else if (print_level == PRINT_WARNING) {
-        Com_Printf("%s%s", Color::CString(Color::Yellow), msg); // yellow
+        Com_Printf("%s%s", Color::CString(Color::Yellow), msg);              // yellow
     } else if (print_level == PRINT_DEVELOPER) {
-        Com_DPrintf("%s%s", Color::CString(Color::Red), msg); // red
+        Com_DPrintf("%s%s", Color::CString(Color::Red), msg);              // red
     }
 }
 
@@ -3020,7 +3021,7 @@ void CL_Init() {
 
     CL_ClearState();
 
-    cls.state = CA_DISCONNECTED; // no longer CA_UNINITIALIZED
+    cls.state = CA_DISCONNECTED;     // no longer CA_UNINITIALIZED
 
     cls.realtime = 0;
 
@@ -3091,7 +3092,7 @@ void CL_Init() {
 
     cl_serverStatusResendTime = Cvar_Get("cl_serverStatusResendTime", "750", 0);
 
-    cl_doubletapdelay = Cvar_Get("cl_doubletapdelay", "250", 0); // Arnout: double tap
+    cl_doubletapdelay = Cvar_Get("cl_doubletapdelay", "250", 0);        // Arnout: double tap
     m_pitch = Cvar_Get("m_pitch", "0.022", CVAR_ARCHIVE);
     m_yaw = Cvar_Get("m_yaw", "0.022", 0);
     m_forward = Cvar_Get("m_forward", "0.25", 0);
@@ -3228,7 +3229,7 @@ void CL_Shutdown() {
 
     recursive = true;
 
-    if (clc.waverecording) { // fretn - write wav header when we quit
+    if (clc.waverecording) {     // fretn - write wav header when we quit
         CL_WavStopRecord_f();
     }
 
@@ -3295,9 +3296,9 @@ static void CL_SetServerInfo(serverInfo_t* server, const char* info, int ping) {
             server->netType = atoi(Info_ValueForKey(info, "nettype"));
             server->minPing = atoi(Info_ValueForKey(info, "minping"));
             server->maxPing = atoi(Info_ValueForKey(info, "maxping"));
-            server->friendlyFire = atoi(Info_ValueForKey(info, "g_friendlyFire")); // NERVE - SMF
-            server->needpass = atoi(Info_ValueForKey(info, "g_needpass")); // NERVE - SMF
-            Q_strncpyz(server->gameName, Info_ValueForKey(info, "gamename"), MAX_NAME_LENGTH); // Arnout
+            server->friendlyFire = atoi(Info_ValueForKey(info, "g_friendlyFire"));                   // NERVE - SMF
+            server->needpass = atoi(Info_ValueForKey(info, "g_needpass"));                   // NERVE - SMF
+            Q_strncpyz(server->gameName, Info_ValueForKey(info, "gamename"), MAX_NAME_LENGTH);                   // Arnout
         }
 
         server->ping = ping;
@@ -3429,9 +3430,9 @@ void CL_ServerInfoPacket(netadr_t from, msg_t* msg) {
     cls.localServers[i].ping = -1;
     cls.localServers[i].game[0] = '\0';
     cls.localServers[i].netType = from.type;
-    cls.localServers[i].friendlyFire = 0; // NERVE - SMF
+    cls.localServers[i].friendlyFire = 0;       // NERVE - SMF
     cls.localServers[i].needpass = 0;
-    cls.localServers[i].gameName[0] = '\0'; // Arnout
+    cls.localServers[i].gameName[0] = '\0';         // Arnout
 
     Q_strncpyz(info, MSG_ReadString(msg), MAX_INFO_STRING);
 
@@ -3718,7 +3719,7 @@ void CL_GlobalServers_f() {
     netadr_t to;
     int count, i, masterNum;
     char command[1024], * masteraddress;
-    int protocol = atoi(Cmd_Argv(2)); // Do this right away, otherwise weird things happen when you use the ingame "Get New Servers" button.
+    int protocol = atoi(Cmd_Argv(2));                // Do this right away, otherwise weird things happen when you use the ingame "Get New Servers" button.
 
     if ((count = Cmd_Argc()) < 2 || (masterNum = atoi(Cmd_Argv(1))) < 0 || masterNum > MAX_MASTER_SERVERS - 1) {
         Cmd_PrintUsage("<master# 0-" XSTRING(MAX_MASTER_SERVERS - 1) "> [<protocol>] [<keywords>]", nullptr);
@@ -4143,7 +4144,7 @@ void CL_GetClipboardData(char* buf, int buflen) {
         return;
     }
 
-    clean = Com_ClearForeignCharacters(cbd); // yes, I know
+    clean = Com_ClearForeignCharacters(cbd);       // yes, I know
     SDL_free(cbd);
 
     i = j = 0;

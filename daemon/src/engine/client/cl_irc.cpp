@@ -352,9 +352,9 @@ static int IRC_ExecuteCTCPHandler(bool is_channel, const char* argument) {
 
 /* Structure for the delayed execution queue */
 struct irc_delayed_t {
-    irc_handler_func_t handler; // Handler to call
-    int time_left; // "Time" left before call
-    struct irc_delayed_t* next; // Next record
+    irc_handler_func_t handler;       // Handler to call
+    int time_left;                      // "Time" left before call
+    struct irc_delayed_t* next;     // Next record
 };
 
 /* Delayed execution queue head & tail */
@@ -851,7 +851,7 @@ IRC_HandleError
 #ifdef WIN32
 static void IRC_HandleError() {
     switch (WSAGetLastError()) {
-    case 0: // No error
+    case 0:             // No error
         return;
 
     case WSANOTINITIALISED:
@@ -1938,12 +1938,12 @@ Establishes the IRC connection, sets the nick, etc...
 #define CHECK_SHUTDOWN_CLOSE { if (IRC_QuitRequested) { closesocket(IRC_Socket); return IRC_CMD_FATAL; } }
 
 static int IRC_AttemptConnection() {
-    struct sockaddr_in address; // socket address
+    struct sockaddr_in address;     // socket address
 
-    struct hostent* host; // host lookup
+    struct hostent* host;          // host lookup
 
-    char host_name[100]; // host name
-    char name[32]; // player's name
+    char host_name[100];                     // host name
+    char name[32];                     // player's name
     int err_code;
     int port;
 
@@ -2165,22 +2165,22 @@ static void IRC_Thread() {
     IRC_ResetHandlers();
 
     // Init. IRC handlers
-    IRC_AddHandler("PING", &IRCH_Ping); // Ping request
-    IRC_AddHandler("ERROR", &IRCH_ServerError); // Server error
-    IRC_AddHandler("JOIN", &IRCH_Joined); // Channel join
-    IRC_AddHandler("PART", &IRCH_Part); // Channel part
-    IRC_AddHandler("QUIT", &IRCH_Quit); // Client quit
-    IRC_AddHandler("PRIVMSG", &IRCH_PrivMsg); // Message or CTCP
-    IRC_AddHandler("KICK", &IRCH_Kick); // Kick
-    IRC_AddHandler("NICK", &IRCH_Nick); // Nick change
-    IRC_AddHandler("001", &IRCH_Connected); // Connection established
-    IRC_AddHandler("404", &IRCH_Banned); // Banned (when sending message)
-    IRC_AddHandler("432", &IRCH_FatalError); // Erroneous nick name
-    IRC_AddHandler("433", &IRCH_NickError); // Nick name in use
-    IRC_AddHandler("474", &IRCH_Banned); // Banned (when joining)
+    IRC_AddHandler("PING", &IRCH_Ping);                       // Ping request
+    IRC_AddHandler("ERROR", &IRCH_ServerError);                      // Server error
+    IRC_AddHandler("JOIN", &IRCH_Joined);                       // Channel join
+    IRC_AddHandler("PART", &IRCH_Part);                       // Channel part
+    IRC_AddHandler("QUIT", &IRCH_Quit);                       // Client quit
+    IRC_AddHandler("PRIVMSG", &IRCH_PrivMsg);                    // Message or CTCP
+    IRC_AddHandler("KICK", &IRCH_Kick);                       // Kick
+    IRC_AddHandler("NICK", &IRCH_Nick);                       // Nick change
+    IRC_AddHandler("001", &IRCH_Connected);                        // Connection established
+    IRC_AddHandler("404", &IRCH_Banned);                        // Banned (when sending message)
+    IRC_AddHandler("432", &IRCH_FatalError);                        // Erroneous nick name
+    IRC_AddHandler("433", &IRCH_NickError);                        // Nick name in use
+    IRC_AddHandler("474", &IRCH_Banned);                        // Banned (when joining)
 
     // Init. CTCP handlers
-    IRC_AddCTCPHandler("ACTION", &CTCP_Action); // "/me"
+    IRC_AddCTCPHandler("ACTION", &CTCP_Action);         // "/me"
     IRC_AddCTCPHandler("PING", &CTCP_Ping);
     IRC_AddCTCPHandler("VERSION", &CTCP_Version);
 

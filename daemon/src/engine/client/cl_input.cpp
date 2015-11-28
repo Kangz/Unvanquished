@@ -66,20 +66,20 @@ static char* keyup[MAX_KEYS];
 // Arnout: doubleTap button mapping
 // FIXME: should be registered by cgame code
 static kbuttons_t dtmapping[] = {
-    KB_BUTTONS, // DT_NONE
-    KB_MOVELEFT, // DT_MOVELEFT
-    KB_MOVERIGHT, // DT_MOVERIGHT
-    KB_FORWARD, // DT_FORWARD
-    KB_BACK, // DT_BACK
-    KB_UP // DT_UP
+    KB_BUTTONS,     // DT_NONE
+    KB_MOVELEFT,     // DT_MOVELEFT
+    KB_MOVERIGHT,     // DT_MOVERIGHT
+    KB_FORWARD,     // DT_FORWARD
+    KB_BACK,     // DT_BACK
+    KB_UP     // DT_UP
 };
 
 void IN_KeyDown(kbutton_t* b) {
     bool nokey = (Cmd_Argc() > 1);
-    int k = nokey ? -1 : Key_GetKeyNumber(); // -1 if typed manually at the console for continuous down
+    int k = nokey ? -1 : Key_GetKeyNumber();          // -1 if typed manually at the console for continuous down
 
     if (k == b->down[0] || k == b->down[1]) {
-        return; // repeating key
+        return;         // repeating key
     }
 
     if (!b->down[0]) {
@@ -92,7 +92,7 @@ void IN_KeyDown(kbutton_t* b) {
     }
 
     if (b->active) {
-        return; // still down
+        return;         // still down
     }
 
     // save timestamp for partial frame summing
@@ -105,7 +105,7 @@ void IN_KeyDown(kbutton_t* b) {
 void IN_KeyUp(kbutton_t* b) {
     unsigned uptime;
     bool nokey = (Cmd_Argc() > 1);
-    int k = nokey ? -1 : Key_GetKeyNumber(); // -1 if typed manually at the console for continuous down
+    int k = nokey ? -1 : Key_GetKeyNumber();          // -1 if typed manually at the console for continuous down
 
     if (k < 0) {
         // typed manually at the console, assume for unsticking, so clear all
@@ -124,7 +124,7 @@ void IN_KeyUp(kbutton_t* b) {
     }
 
     if (b->down[0] || b->down[1]) {
-        return; // some other key is still holding it down
+        return;         // some other key is still holding it down
     }
 
     b->active = false;
@@ -270,7 +270,7 @@ void CL_KeyMove(usercmd_t* cmd) {
     // }
 
     // Arnout: double tap
-    cmd->doubleTap = DT_NONE; // reset
+    cmd->doubleTap = DT_NONE;     // reset
 
     if (!cl.doubleTap.lastdoubleTap || com_frameTime - cl.doubleTap.lastdoubleTap > cl_doubletapdelay->integer + cls.frametime) {
         int i;
@@ -1010,7 +1010,7 @@ void IN_KeysUp_f() {
                 first = false;
             }
 
-            Cmd::ExecuteCommand(va("-%s", registeredButtonCommands[i] + 1)); // command name includes '+'
+            Cmd::ExecuteCommand(va("-%s", registeredButtonCommands[i] + 1));               // command name includes '+'
         }
     }
 
@@ -1021,7 +1021,7 @@ void IN_KeysUp_f() {
                 first = false;
             }
 
-            Cmd::ExecuteCommand(va("-%s", builtinButtonCommands[i].name)); // command name doesn't include '+'
+            Cmd::ExecuteCommand(va("-%s", builtinButtonCommands[i].name));             // command name doesn't include '+'
         }
     }
 
@@ -1064,7 +1064,7 @@ void IN_PrepareKeyUp() {
         return;
     }
 
-    ++cmd; // skip the '+'
+    ++cmd;     // skip the '+'
 
     // Add the command to what's already marked for this command
     if (keyup[key]) {

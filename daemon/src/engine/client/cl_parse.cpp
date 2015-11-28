@@ -86,7 +86,7 @@ void CL_DeltaEntity(msg_t* msg, clSnapshot_t* frame, int newnum, entityState_t* 
     }
 
     if (state->number == (MAX_GENTITIES - 1)) {
-        return; // entity was delta removed
+        return;         // entity was delta removed
     }
 
     cl.parseEntitiesNum++;
@@ -116,7 +116,7 @@ void CL_ParsePacketEntities(msg_t* msg, const clSnapshot_t* oldframe, clSnapshot
         nullframe.valid = false;
 
         oldframe = &nullframe;
-        oldnum = MAX_GENTITIES; // guaranteed out of range
+        oldnum = MAX_GENTITIES;         // guaranteed out of range
     } else {
         if (oldindex >= oldframe->numEntities) {
             oldnum = MAX_GENTITIES;
@@ -267,11 +267,11 @@ void CL_ParseSnapshot(msg_t* msg) {
     // the frame, but not use it, then ask for a non-compressed
     // message
     if (newSnap.deltaNum <= 0) {
-        newSnap.valid = true; // uncompressed frame
+        newSnap.valid = true;         // uncompressed frame
         old = nullptr;
 
         if (clc.demorecording) {
-            clc.demowaiting = false; // we can start recording now
+            clc.demowaiting = false;             // we can start recording now
             // if(cl_autorecord->integer) {
             // Cvar_Set( "g_synchronousClients", "0" );
             // }
@@ -324,7 +324,7 @@ void CL_ParseSnapshot(msg_t* msg) {
         } else if (cl.parseEntitiesNum - old->parseEntitiesNum > MAX_PARSE_ENTITIES - 128) {
             Com_DPrintf("Delta parseEntitiesNum too old.\n");
         } else {
-            newSnap.valid = true; // valid delta parse
+            newSnap.valid = true;             // valid delta parse
         }
     }
 
@@ -570,7 +570,7 @@ void CL_ParseDownload(msg_t* msg) {
                                  cls.downloadName, clc.downloadSize, clc.downloadFlags);
 
             Cvar_SetValue("cl_downloadSize", clc.downloadSize);
-            clc.bWWWDl = true; // activate wwwdl client loop
+            clc.bWWWDl = true;             // activate wwwdl client loop
             CL_AddReliableCommand("wwwdl ack");
             cls.state = CA_DOWNLOADING;
 
@@ -756,8 +756,8 @@ void CL_ParseServerMessage(msg_t* msg) {
         // got data that a legacy client should ignore.
         if ((cmd == svc_EOF) && (MSG_LookaheadByte(msg) == svc_extension)) {
             SHOWNET(msg, "EXTENSION");
-            MSG_ReadByte(msg); // throw the svc_extension byte away.
-            cmd = MSG_ReadByte(msg); // something legacy clients can't do!
+            MSG_ReadByte(msg);                // throw the svc_extension byte away.
+            cmd = MSG_ReadByte(msg);                // something legacy clients can't do!
 
             // sometimes you get a svc_extension at end of stream...dangling
             // bits in the huffman decoder giving a bogus value?
